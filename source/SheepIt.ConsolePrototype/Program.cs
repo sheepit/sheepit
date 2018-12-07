@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConsolePrototype
+namespace SheepIt.ConsolePrototype
 {
     class Program
     {
