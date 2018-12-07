@@ -7,10 +7,10 @@ namespace SheepIt.ConsolePrototype
     [Verb("deploy-release")]
     public class DeployReleaseOptions
     {
-        [Option("release-id", Required = true)]
+        [Option('r', "release-id", Required = true)]
         public int ReleaseId { get; set; }
 
-        [Option("environment", Required = true)]
+        [Option('e', "environment", Required = true)]
         public string Environment { get; set; }
     }
 

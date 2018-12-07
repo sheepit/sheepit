@@ -1,4 +1,5 @@
-﻿using CommandLine;
+﻿using System;
+using CommandLine;
 
 namespace SheepIt.ConsolePrototype
 {
@@ -6,6 +7,8 @@ namespace SheepIt.ConsolePrototype
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine();
+
             Parser.Default
                 .ParseArguments<CreateReleaseOptions, DeployReleaseOptions, ShowDashboardOptions>(args)
                 .WithParsed<CreateReleaseOptions>(CreateRelease.Run)
