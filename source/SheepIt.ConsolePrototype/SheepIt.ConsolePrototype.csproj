@@ -9,6 +9,7 @@
     <PackageReference Include="CommandLineParser" Version="2.3.0" />
     <PackageReference Include="LibGit2Sharp" Version="0.25.4" />
     <PackageReference Include="LiteDB" Version="4.1.4" />
+    <PackageReference Include="YamlDotNet" Version="5.3.0" />
   </ItemGroup>
 
 </Project>

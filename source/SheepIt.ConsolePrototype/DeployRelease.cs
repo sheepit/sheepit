@@ -23,11 +23,18 @@ namespace SheepIt.ConsolePrototype
 
             Console.WriteLine($"Deploying release {options.ReleaseId} to {options.Environment} environment");
 
+
             var release = GetReleaseById(options.ReleaseId);
 
             CheckoutCommit(release.CommitSha);
 
             Console.WriteLine($"Checked out commit {release.CommitSha}");
+
+
+            var processDescription = ProcessDescriptionFile.Open();
+
+            Console.WriteLine($"Running deployment script: {processDescription.Script}");
+
 
             var deploymentId = InsertDeployment(new Deployment
             {
