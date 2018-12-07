@@ -1,12 +1,40 @@
 ﻿using System;
 using System.Linq;
+using CommandLine;
 using LiteDB;
 
 namespace SheepIt.ConsolePrototype
 {
-    class Program
+    [Verb("create-release")]
+    public class CreateReleaseOptions
     {
-        static void Main(string[] args)
+    }
+
+    [Verb("deploy-release")]
+    public class DeployReleaseOptions
+    {
+        [Option("release-id", Default = true)]
+        public int ReleaseId { get; set; }
+    }
+
+    [Verb("show-dashboard")]
+    public class ShowDashboardOptions
+    {
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            Parser.Default
+                .ParseArguments<CreateReleaseOptions, DeployReleaseOptions, ShowDashboardOptions>(args)
+                .WithParsed<CreateReleaseOptions>(CreateRelease)
+                .WithParsed<DeployReleaseOptions>(DeployRelease)
+                .WithParsed<ShowDashboardOptions>(ShowDashboard)
+                .WithNotParsed(errors => {});
+        }
+
+        private static void CreateRelease(CreateReleaseOptions options)
         {
             using (var liteDatabase = new LiteDatabase(@"C:\sheep-it\poc-database.db"))
             {
@@ -25,8 +53,16 @@ namespace SheepIt.ConsolePrototype
                 //    CreatedAt = DateTime.UtcNow
                 //});
             }
+        }
 
-            Console.ReadLine();
+        private static void DeployRelease(DeployReleaseOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void ShowDashboard(ShowDashboardOptions options)
+        {
+            throw new NotImplementedException();
         }
     }
 }
