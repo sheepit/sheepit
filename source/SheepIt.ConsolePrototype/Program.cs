@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using LiteDB;
 
 namespace SheepIt.ConsolePrototype
 {
@@ -6,7 +8,25 @@ namespace SheepIt.ConsolePrototype
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            using (var liteDatabase = new LiteDatabase(@"C:\sheep-it\poc-database.db"))
+            {
+                var releases = liteDatabase.GetCollection<Release>();
+
+                var allReleases = releases.FindAll().ToArray();
+
+                foreach (var release in allReleases)
+                {
+                    Console.WriteLine($"release {release.Id}: createdAt: {release.CreatedAt}, commitHash: {release.CommitHash}");
+                }
+
+                //releases.Insert(new Release
+                //{
+                //    CommitHash = "123",
+                //    CreatedAt = DateTime.UtcNow
+                //});
+            }
+
+            Console.ReadLine();
         }
     }
 }
