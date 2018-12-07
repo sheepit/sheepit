@@ -18,23 +18,35 @@ namespace SheepIt.ConsolePrototype
     {
         public static void Run(DeployReleaseOptions options)
         {
-            // get variables from yaml
-            // run some hardcoded script with given environment variables
-
             Console.WriteLine($"Deploying release {options.ReleaseId} to {options.Environment} environment");
+            Console.WriteLine();
 
 
             var release = GetReleaseById(options.ReleaseId);
 
+
             CheckoutCommit(release.CommitSha);
 
             Console.WriteLine($"Checked out commit {release.CommitSha}");
+            Console.WriteLine();
+
+
+            var variables = VariablesFile.Open();
+
+            Console.WriteLine("Deploying using following variables:");
+
+            foreach (var variable in variables.GetForEnvironment(options.Environment))
+            {
+                Console.WriteLine($"    {variable.Name}: {variable.Value}");
+            }
+
+            Console.WriteLine();
 
 
             var processDescription = ProcessDescriptionFile.Open();
 
             Console.WriteLine($"Running deployment script: {processDescription.Script}");
-
+            Console.WriteLine();
 
             var deploymentId = InsertDeployment(new Deployment
             {
@@ -44,6 +56,7 @@ namespace SheepIt.ConsolePrototype
             });
 
             Console.WriteLine($"Created deployment {deploymentId}");
+            Console.WriteLine();
         }
 
         private static Release GetReleaseById(int releaseId)
