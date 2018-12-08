@@ -1,28 +1,45 @@
 ﻿using System;
+using System.Globalization;
 using CommandLine;
+using LibGit2Sharp;
 
 namespace SheepIt.ConsolePrototype
 {
     [Verb("create-release")]
     public class CreateReleaseOptions
     {
+        [Option('p', "project-id", Required = true)]
+        public string ProjectId { get; set; }
     }
 
     public static class CreateRelease
     {
         public static void Run(CreateReleaseOptions options)
         {
-            var currentCommitSha = GetCurrentCommitSha();
+            var project = GetProject(options.ProjectId);
+            
+            var currentCommitSha = GetCurrentCommitSha(project);
 
             Console.WriteLine($"Current commit SHA is {currentCommitSha}");
 
             var releaseId = InsertRelease(new Release
             {
+                ProjectId = options.ProjectId,
                 CommitSha = currentCommitSha,
                 CreatedAt = DateTime.UtcNow
             });
 
             Console.WriteLine($"Created release {releaseId}");
+        }
+
+        private static Project GetProject(string projectId)
+        {
+            using (var database = Database.Open())
+            {
+                var projectCollection = database.GetCollection<Project>();
+
+                return projectCollection.FindById(projectId);
+            }
         }
 
         private static int InsertRelease(Release release)
@@ -37,9 +54,17 @@ namespace SheepIt.ConsolePrototype
             }
         }
 
-        private static string GetCurrentCommitSha()
+        private static string GetCurrentCommitSha(Project project)
         {
-            using (var repository = CurrentRepository.Open())
+            var formattedUtcNow = DateTime.UtcNow.ToString("yyyy-MM-dd_hh-mm-ss", CultureInfo.InvariantCulture);
+            var workdirPath = $"./creating-release_{project.Id}_{formattedUtcNow}";
+
+            Repository.Clone(project.RepositoryUrl, workdirPath, new CloneOptions
+            {
+                BranchName = "master" // todo: should this be configurable?
+            });
+
+            using (var repository = new Repository(workdirPath))
             {
                 return repository.Head.Tip.Sha;
             }
