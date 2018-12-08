@@ -49,6 +49,11 @@ namespace SheepIt.ConsolePrototype
             var formattedUtcNow = DateTime.UtcNow.ToString("yyyy-MM-dd_hh-mm-ss", CultureInfo.InvariantCulture);
             var workdirPath = $"./creating-release_{project.Id}_{formattedUtcNow}";
 
+            // todo: we could use git ls-remote to get same information without cloning the repo, when libgit2sharp supports it
+            // right not we could do following:
+            // https://github.com/libgit2/libgit2sharp/issues/1377#issuecomment-253177481
+            // i. e. create a new repo and get info we want
+
             Repository.Clone(project.RepositoryUrl, workdirPath, new CloneOptions
             {
                 BranchName = "master" // todo: should this be configurable?

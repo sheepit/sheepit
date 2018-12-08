@@ -8,6 +8,8 @@ namespace SheepIt.ConsolePrototype
     [Verb("show-dashboard")]
     public class ShowDashboardOptions
     {
+        [Option('p', "project-id", Required = true)]
+        public string ProjectId { get; set; }
     }
 
     public static class ShowDashboard
@@ -19,7 +21,7 @@ namespace SheepIt.ConsolePrototype
                 var deploymentCollection = database.GetCollection<Deployment>();
 
                 var environments = deploymentCollection
-                    .FindAll()
+                    .Find(deployment => deployment.ProjectIt == options.ProjectId)
                     .GroupBy(deployment => deployment.EnvironmentId)
                     .Select(grouping => new
                     {
