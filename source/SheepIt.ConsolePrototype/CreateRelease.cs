@@ -16,7 +16,7 @@ namespace SheepIt.ConsolePrototype
     {
         public static void Run(CreateReleaseOptions options)
         {
-            var project = GetProject(options.ProjectId);
+            var project = Projects.Get(options.ProjectId);
             
             var currentCommitSha = GetCurrentCommitSha(project);
 
@@ -30,16 +30,6 @@ namespace SheepIt.ConsolePrototype
             });
 
             Console.WriteLine($"Created release {releaseId}");
-        }
-
-        private static Project GetProject(string projectId)
-        {
-            using (var database = Database.Open())
-            {
-                var projectCollection = database.GetCollection<Project>();
-
-                return projectCollection.FindById(projectId);
-            }
         }
 
         private static int InsertRelease(Release release)

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.IO;
 using CommandLine;
 using LibGit2Sharp;
 
@@ -7,6 +9,9 @@ namespace SheepIt.ConsolePrototype
     [Verb("deploy-release")]
     public class DeployReleaseOptions
     {
+        [Option('p', "project-id", Required = true)]
+        public string ProjectId { get; set; }
+
         [Option('r', "release-id", Required = true)]
         public int ReleaseId { get; set; }
 
@@ -18,14 +23,25 @@ namespace SheepIt.ConsolePrototype
     {
         public static void Run(DeployReleaseOptions options)
         {
-            Console.WriteLine($"Deploying release {options.ReleaseId} to {options.Environment} environment");
+            Console.WriteLine($"Deploying project {options.ProjectId}, release {options.ReleaseId} to {options.Environment} environment");
             Console.WriteLine();
 
 
-            var release = GetReleaseById(options.ReleaseId);
+            var project = Projects.Get(options.ProjectId);
+
+            // todo: we should also verify project id
+            var release = Releases.GetReleaseById(options.ReleaseId);
 
 
-            CheckoutCommit(release.CommitSha);
+            var formattedUtcNow = DateTime.UtcNow.ToString("yyyy-MM-dd_hh-mm-ss", CultureInfo.InvariantCulture);
+            var workdirPath = $"./deploying-release_{project.Id}_{options.Environment}_{formattedUtcNow}";
+
+
+            // todo: can we do this with one command?
+            CloneRepo(project, workdirPath);
+            CheckoutCommit(release.CommitSha, workdirPath);
+
+            Directory.SetCurrentDirectory(workdirPath);
 
             Console.WriteLine($"Checked out commit {release.CommitSha}");
             Console.WriteLine();
@@ -51,6 +67,7 @@ namespace SheepIt.ConsolePrototype
             var deploymentId = InsertDeployment(new Deployment
             {
                 ReleaseId = release.Id,
+                ProjectIt = options.ProjectId,
                 DeployedAt = DateTime.UtcNow,
                 EnvironmentId = options.Environment
             });
@@ -59,19 +76,17 @@ namespace SheepIt.ConsolePrototype
             Console.WriteLine();
         }
 
-        private static Release GetReleaseById(int releaseId)
+        private static void CloneRepo(Project project, string workdirPath)
         {
-            using (var database = Database.Open())
+            Repository.Clone(project.RepositoryUrl, workdirPath, new CloneOptions
             {
-                var releaseCollection = database.GetCollection<Release>();
-
-                return releaseCollection.FindById(releaseId);
-            }
+                BranchName = "master" // todo: should this be configurable?
+            });
         }
 
-        private static void CheckoutCommit(string commitSha)
+        private static void CheckoutCommit(string commitSha, string workdirPath)
         {
-            using (var repository = CurrentRepository.Open())
+            using (var repository = new Repository(workdirPath))
             {
                 Commands.Checkout(repository, commitSha);
             }
