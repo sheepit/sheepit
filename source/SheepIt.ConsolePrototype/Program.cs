@@ -10,7 +10,8 @@ namespace SheepIt.ConsolePrototype
             Console.WriteLine();
 
             Parser.Default
-                .ParseArguments<CreateReleaseOptions, DeployReleaseOptions, ShowDashboardOptions>(args)
+                .ParseArguments<CreateReleaseOptions, DeployReleaseOptions, ShowDashboardOptions, CreateProjectOptions>(args)
+                .WithParsed<CreateProjectOptions>(CreateProject.Run)
                 .WithParsed<CreateReleaseOptions>(CreateRelease.Run)
                 .WithParsed<DeployReleaseOptions>(DeployRelease.Run)
                 .WithParsed<ShowDashboardOptions>(ShowDashboard.Run)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using CommandLine;
 
 namespace SheepIt.ConsolePrototype
