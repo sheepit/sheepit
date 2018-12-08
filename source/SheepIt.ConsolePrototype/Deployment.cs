@@ -13,6 +13,16 @@ namespace SheepIt.ConsolePrototype
 
     public static class Deployments
     {
+        public static int InsertDeployment(Deployment deployment)
+        {
+            using (var database = Database.Open())
+            {
+                var deploymentCollection = database.GetCollection<Deployment>();
 
+                var id = deploymentCollection.Insert(deployment);
+
+                return id.AsInt32;
+            }
+        }
     }
 }

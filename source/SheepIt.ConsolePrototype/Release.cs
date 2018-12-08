@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using LiteDB;
 
 namespace SheepIt.ConsolePrototype
 {
@@ -13,13 +15,14 @@ namespace SheepIt.ConsolePrototype
 
     public static class Releases
     {
-        public static Release GetReleaseById(int releaseId)
+        public static Release GetRelease(string projectId, int releaseId)
         {
             using (var database = Database.Open())
             {
-                var releaseCollection = database.GetCollection<Release>();
-
-                return releaseCollection.FindById(releaseId);
+                return database
+                    .GetCollection<Release>()
+                    .Find(release => release.ProjectId == projectId && release.Id == releaseId)
+                    .Single();
             }
         }
     }

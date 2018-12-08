@@ -4,6 +4,8 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace SheepIt.ConsolePrototype
 {
+    // todo: join these
+
     public class ProcessDescription
     {
         public string Script { get; set; }
@@ -11,9 +13,9 @@ namespace SheepIt.ConsolePrototype
 
     public static class ProcessDescriptionFile
     {
-        public static ProcessDescription Open()
+        public static ProcessDescription Open(string processDescriptionFilePath)
         {
-            using (var fileStream = File.OpenText("process.yaml"))
+            using (var fileStream = File.OpenText(processDescriptionFilePath))
             {
                 return new DeserializerBuilder()
                     .WithNamingConvention(new UnderscoredNamingConvention())

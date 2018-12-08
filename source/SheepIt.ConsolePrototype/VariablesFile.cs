@@ -18,9 +18,9 @@ namespace SheepIt.ConsolePrototype
                 .ToArray();
         }
 
-        public static VariablesFile Open()
+        public static VariablesFile Open(string path)
         {
-            using (var fileStream = File.OpenText("variables.yaml"))
+            using (var fileStream = File.OpenText(path))
             {
                 return new DeserializerBuilder()
                     .WithNamingConvention(new UnderscoredNamingConvention())

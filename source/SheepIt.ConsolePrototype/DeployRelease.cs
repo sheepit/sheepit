@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Globalization;
-using System.IO;
 using CommandLine;
-using LibGit2Sharp;
 
 namespace SheepIt.ConsolePrototype
 {
@@ -26,81 +23,62 @@ namespace SheepIt.ConsolePrototype
             Console.WriteLine($"Deploying project {options.ProjectId}, release {options.ReleaseId} to {options.Environment} environment");
             Console.WriteLine();
 
-
             var project = Projects.Get(options.ProjectId);
 
-            // todo: we should also verify project id
-            var release = Releases.GetReleaseById(options.ReleaseId);
+            var release = Releases.GetRelease(
+                projectId: options.ProjectId,
+                releaseId: options.ReleaseId
+            );
 
+            var deploymentWorkingDir = Settings.WorkingDir
+                .AddSegment(project.Id)
+                .AddSegment("deploying-releases")
+                .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{options.Environment}_release-{release.Id}")
+                .ToString();
 
-            var formattedUtcNow = DateTime.UtcNow.ToString("yyyy-MM-dd_hh-mm-ss", CultureInfo.InvariantCulture);
-            var workdirPath = $"./deploying-release_{project.Id}_{options.Environment}_{formattedUtcNow}";
-
-
-            // todo: can we do this with one command?
-            CloneRepo(project, workdirPath);
-            CheckoutCommit(release.CommitSha, workdirPath);
-
-            Directory.SetCurrentDirectory(workdirPath);
-
-            Console.WriteLine($"Checked out commit {release.CommitSha}");
-            Console.WriteLine();
-
-
-            var variables = VariablesFile.Open();
-
-            Console.WriteLine("Deploying using following variables:");
-
-            foreach (var variable in variables.GetForEnvironment(options.Environment))
+            using (var repository = ProcessRepository.Clone(project.RepositoryUrl, deploymentWorkingDir))
             {
-                Console.WriteLine($"    {variable.Name}: {variable.Value}");
-            }
+                // checkout
 
-            Console.WriteLine();
+                repository.Checkout(release.CommitSha);
 
+                Console.WriteLine($"Checked out commit {release.CommitSha}");
+                Console.WriteLine();
 
-            var processDescription = ProcessDescriptionFile.Open();
+                // read variables
 
-            Console.WriteLine($"Running deployment script: {processDescription.Script}");
-            Console.WriteLine();
+                var variables = repository.OpenVariableFile();
 
-            var deploymentId = InsertDeployment(new Deployment
-            {
-                ReleaseId = release.Id,
-                ProjectIt = options.ProjectId,
-                DeployedAt = DateTime.UtcNow,
-                EnvironmentId = options.Environment
-            });
+                Console.WriteLine("Deploying using following variables:");
 
-            Console.WriteLine($"Created deployment {deploymentId}");
-            Console.WriteLine();
-        }
+                foreach (var variable in variables.GetForEnvironment(options.Environment))
+                {
+                    Console.WriteLine($"    {variable.Name}: {variable.Value}");
+                }
 
-        private static void CloneRepo(Project project, string workdirPath)
-        {
-            Repository.Clone(project.RepositoryUrl, workdirPath, new CloneOptions
-            {
-                BranchName = "master" // todo: should this be configurable?
-            });
-        }
+                Console.WriteLine();
 
-        private static void CheckoutCommit(string commitSha, string workdirPath)
-        {
-            using (var repository = new Repository(workdirPath))
-            {
-                Commands.Checkout(repository, commitSha);
-            }
-        }
+                // run process
 
-        private static int InsertDeployment(Deployment deployment)
-        {
-            using (var database = Database.Open())
-            {
-                var deploymentCollection = database.GetCollection<Deployment>();
+                var processDescription = repository.OpenProcessDescriptionFile();
 
-                var id = deploymentCollection.Insert(deployment);
+                Console.WriteLine($"Running deployment script: {processDescription.Script}");
+                Console.WriteLine();
 
-                return id.AsInt32;
+                // save deployment
+
+                // todo: we should persist deployments at the beginning and later include information whether it succeeded or not
+
+                var deploymentId = Deployments.InsertDeployment(new Deployment
+                {
+                    ReleaseId = release.Id,
+                    ProjectIt = options.ProjectId,
+                    DeployedAt = DateTime.UtcNow,
+                    EnvironmentId = options.Environment
+                });
+
+                Console.WriteLine($"Created deployment {deploymentId}");
+                Console.WriteLine();
             }
         }
     }
