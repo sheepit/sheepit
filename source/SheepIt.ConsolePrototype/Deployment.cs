@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace SheepIt.ConsolePrototype
 {
@@ -13,15 +14,25 @@ namespace SheepIt.ConsolePrototype
 
     public static class Deployments
     {
-        public static int InsertDeployment(Deployment deployment)
+        public static int Add(Deployment deployment)
         {
             using (var database = Database.Open())
             {
                 var deploymentCollection = database.GetCollection<Deployment>();
 
-                var id = deploymentCollection.Insert(deployment);
+                return deploymentCollection.Insert(deployment);
+            }
+        }
 
-                return id.AsInt32;
+        public static Deployment[] GetAll(ShowDashboardOptions options)
+        {
+            using (var database = Database.Open())
+            {
+                var deploymentCollection = database.GetCollection<Deployment>();
+
+                return deploymentCollection
+                    .Find(deployment => deployment.ProjectIt == options.ProjectId)
+                    .ToArray();
             }
         }
     }

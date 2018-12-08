@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using LiteDB;
 
 namespace SheepIt.ConsolePrototype
 {
@@ -15,7 +13,17 @@ namespace SheepIt.ConsolePrototype
 
     public static class Releases
     {
-        public static Release GetRelease(string projectId, int releaseId)
+        public static int Add(Release release)
+        {
+            using (var liteDatabase = Database.Open())
+            {
+                var releases = liteDatabase.GetCollection<Release>();
+
+                return releases.Insert(release);
+            }
+        }
+
+        public static Release Get(string projectId, int releaseId)
         {
             using (var database = Database.Open())
             {

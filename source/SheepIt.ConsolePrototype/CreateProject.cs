@@ -6,8 +6,8 @@ namespace SheepIt.ConsolePrototype
     [Verb("create-project")]
     public class CreateProjectOptions
     {
-        [Option('i', "id", Required = true)]
-        public string Id { get; set; }
+        [Option('p', "project-id", Required = true)]
+        public string ProjectId { get; set; }
 
         [Option('r', "repository-url", Required = true)]
         public string RepositoryUrl { get; set; }
@@ -17,18 +17,13 @@ namespace SheepIt.ConsolePrototype
     {
         public static void Run(CreateProjectOptions options)
         {
-            using (var database = Database.Open())
+            Projects.Add(new Project
             {
-                var projectCollection = database.GetCollection<Project>();
+                Id = options.ProjectId,
+                RepositoryUrl = options.RepositoryUrl
+            });
 
-                projectCollection.Insert(new Project
-                {
-                    Id = options.Id,
-                    RepositoryUrl = options.RepositoryUrl
-                });
-            }
-
-            Console.WriteLine($"Created project {options.Id}");
+            Console.WriteLine($"Created project {options.ProjectId}");
         }
     }
 }

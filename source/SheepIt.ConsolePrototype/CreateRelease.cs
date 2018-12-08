@@ -35,7 +35,7 @@ namespace SheepIt.ConsolePrototype
 
                 Console.WriteLine($"Current commit SHA is {currentCommitSha}");
 
-                var releaseId = InsertRelease(new Release
+                var releaseId = Releases.Add(new Release
                 {
                     ProjectId = options.ProjectId,
                     CommitSha = currentCommitSha,
@@ -43,18 +43,6 @@ namespace SheepIt.ConsolePrototype
                 });
 
                 Console.WriteLine($"Created release {releaseId}");
-            }
-        }
-
-        private static int InsertRelease(Release release)
-        {
-            using (var liteDatabase = Database.Open())
-            {
-                var releases = liteDatabase.GetCollection<Release>();
-
-                var id = releases.Insert(release);
-
-                return id.AsInt32;
             }
         }
     }

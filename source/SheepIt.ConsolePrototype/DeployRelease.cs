@@ -23,9 +23,11 @@ namespace SheepIt.ConsolePrototype
             Console.WriteLine($"Deploying project {options.ProjectId}, release {options.ReleaseId} to {options.Environment} environment");
             Console.WriteLine();
 
-            var project = Projects.Get(options.ProjectId);
+            var project = Projects.Get(
+                projectId: options.ProjectId
+            );
 
-            var release = Releases.GetRelease(
+            var release = Releases.Get(
                 projectId: options.ProjectId,
                 releaseId: options.ReleaseId
             );
@@ -69,7 +71,7 @@ namespace SheepIt.ConsolePrototype
 
                 // todo: we should persist deployments at the beginning and later include information whether it succeeded or not
 
-                var deploymentId = Deployments.InsertDeployment(new Deployment
+                var deploymentId = Deployments.Add(new Deployment
                 {
                     ReleaseId = release.Id,
                     ProjectIt = options.ProjectId,
