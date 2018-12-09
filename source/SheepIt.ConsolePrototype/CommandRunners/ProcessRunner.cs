@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace SheepIt.ConsolePrototype.CommandRunners
 {
+    // todo: we should consider supporting powershell
+    // todo: we should handle error output for all runners
+
     public class ProcessRunner
     {
         public void Run(ProcessFile processFile, Variable[] variables, string workingDir)
