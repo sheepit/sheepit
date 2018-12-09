@@ -12,6 +12,7 @@ namespace SheepIt.ConsolePrototype.Tests
         {
             var commandRunner = new CmdCommandRunner();
 
+            // it's important to check if quotes work properly
             var output = commandRunner.Run(@"dir ""c:\program files""");
 
             output.Should().NotBeEmpty();

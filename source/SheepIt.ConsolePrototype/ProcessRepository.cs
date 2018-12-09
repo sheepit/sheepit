@@ -41,11 +41,11 @@ namespace SheepIt.ConsolePrototype
             return VariablesFile.Open(variablesFilePath);
         }
 
-        public ProcessDescription OpenProcessDescriptionFile()
+        public ProcessFile OpenProcessDescriptionFile()
         {
             var processDescriptionFilePath = RepositoryPath.AddSegment("process.yaml").ToString();
 
-            return ProcessDescriptionFile.Open(processDescriptionFilePath);
+            return ProcessFile.Open(processDescriptionFilePath);
         }
 
         private LocalPath RepositoryPath => new LocalPath(_repository.Info.WorkingDirectory);

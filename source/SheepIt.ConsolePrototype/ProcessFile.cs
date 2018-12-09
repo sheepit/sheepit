@@ -4,23 +4,18 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace SheepIt.ConsolePrototype
 {
-    // todo: join these
-
-    public class ProcessDescription
+    public class ProcessFile
     {
-        public string Script { get; set; }
-    }
+        public string[] Commands { get; set; }
 
-    public static class ProcessDescriptionFile
-    {
-        public static ProcessDescription Open(string processDescriptionFilePath)
+        public static ProcessFile Open(string processDescriptionFilePath)
         {
             using (var fileStream = File.OpenText(processDescriptionFilePath))
             {
                 return new DeserializerBuilder()
                     .WithNamingConvention(new UnderscoredNamingConvention())
                     .Build()
-                    .Deserialize<ProcessDescription>(fileStream);
+                    .Deserialize<ProcessFile>(fileStream);
             }
         }
     }

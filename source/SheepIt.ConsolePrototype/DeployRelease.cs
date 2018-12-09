@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using CommandLine;
+using SheepIt.ConsolePrototype.CommandRunners;
 
 namespace SheepIt.ConsolePrototype
 {
@@ -65,8 +65,18 @@ namespace SheepIt.ConsolePrototype
 
                 var processDescription = repository.OpenProcessDescriptionFile();
 
-                Console.WriteLine($"Running deployment script: {processDescription.Script}");
+                var commandRunner = new CmdCommandRunner();
+
+                Console.WriteLine("Running deployment commands");
                 Console.WriteLine();
+
+                foreach (var command in processDescription.Commands)
+                {
+                    var output = commandRunner.Run(command);
+
+                    Console.WriteLine(output);
+                    Console.WriteLine();
+                }
 
                 // save deployment
 
