@@ -1,0 +1,3 @@
+commands:
+    - echo deploying da app, yo
+    - dir "c:\program files"
