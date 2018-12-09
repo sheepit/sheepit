@@ -1,6 +1,15 @@
+shell: cmd
 commands:
     - echo deploying backend version %backend_version%
     - echo deploying frontend version %frontend_version%
     - echo configuring mail sender as %mail_sender%
     - echo listing program files to see if quotes are handled properly
     - dir "c:\program files"
+
+# shell: bash
+# commands:
+#     - echo deploying backend version $backend_version
+#     - echo deploying frontend version $frontend_version
+#     - echo configuring mail sender as $mail_sender
+#     - echo listing program files to see if quotes are handled properly
+#     - ls "/c/Program Files"

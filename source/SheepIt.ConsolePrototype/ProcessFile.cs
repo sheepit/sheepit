@@ -6,6 +6,7 @@ namespace SheepIt.ConsolePrototype
 {
     public class ProcessFile
     {
+        public string Shell { get; set; }
         public string[] Commands { get; set; }
 
         public static ProcessFile Open(string processDescriptionFilePath)

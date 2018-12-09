@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace SheepIt.ConsolePrototype.CommandRunners
 {
-    public class CmdCommandRunner : ICommandRunner
+    public class BashCommandRunner : ICommandRunner
     {
         public CommandResult Run(string command, IEnumerable<Variable> variables)
         {
             var processStartInfo = new ProcessStartInfo
             {
-                FileName = "cmd.exe",
-                Arguments = $"/s /c \"{command}\"", // /c parameter runs inline command, /s handles outermost quotes
+                FileName = @"C:\Program Files\Git\bin\bash.exe", // todo: obviously this shouldn't be hardcoded
+                Arguments = "-s", // -s will run command from standard input
+                RedirectStandardInput = true,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -29,6 +29,11 @@ namespace SheepIt.ConsolePrototype.CommandRunners
             };
 
             process.Start();
+            
+            // we send command via standard input rather than by -c flag to handle quotes correctly
+            process.StandardInput.Write(command);
+
+            process.StandardInput.Close(); // todo: should we close it? should we dispose it?
 
             var output = process.StandardOutput.ReadToEnd();
 
@@ -38,11 +43,5 @@ namespace SheepIt.ConsolePrototype.CommandRunners
                 WasSuccessful = process.ExitCode == 0
             };
         }
-    }
-
-    public class CommandResult
-    {
-        public bool WasSuccessful { get; set; }
-        public string Output { get; set; }
     }
 }

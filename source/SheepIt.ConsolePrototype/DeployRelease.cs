@@ -68,23 +68,10 @@ namespace SheepIt.ConsolePrototype
 
                 var processDescription = repository.OpenProcessDescriptionFile();
 
-                var commandRunner = new CmdCommandRunner();
-
-                Console.WriteLine("Running deployment commands");
-                Console.WriteLine();
-
-                foreach (var command in processDescription.Commands)
-                {
-                    var commandResult = commandRunner.Run(command, variablesForCurrentEnvironment);
-
-                    if (!commandResult.WasSuccessful)
-                    {
-                        throw new ApplicationException($"Deployment failed on following command: {command}");
-                    }
-
-                    Console.WriteLine(commandResult.Output);
-                    Console.WriteLine();
-                }
+                new ProcessRunner().Run(
+                    processFile: processDescription,
+                    variables: variablesForCurrentEnvironment
+                );
 
                 // save deployment
 
