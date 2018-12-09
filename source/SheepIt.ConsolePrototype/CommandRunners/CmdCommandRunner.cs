@@ -6,7 +6,7 @@ namespace SheepIt.ConsolePrototype.CommandRunners
 {
     public class CmdCommandRunner
     {
-        public string Run(string command, IEnumerable<Variable> variables)
+        public CommandResult Run(string command, IEnumerable<Variable> variables)
         {
             var processStartInfo = new ProcessStartInfo
             {
@@ -30,7 +30,19 @@ namespace SheepIt.ConsolePrototype.CommandRunners
 
             process.Start();
 
-            return process.StandardOutput.ReadToEnd();
+            var output = process.StandardOutput.ReadToEnd();
+
+            return new CommandResult
+            {
+                Output = output,
+                WasSuccessful = process.ExitCode == 0
+            };
         }
+    }
+
+    public class CommandResult
+    {
+        public bool WasSuccessful { get; set; }
+        public string Output { get; set; }
     }
 }

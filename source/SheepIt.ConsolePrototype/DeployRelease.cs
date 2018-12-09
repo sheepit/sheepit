@@ -75,9 +75,14 @@ namespace SheepIt.ConsolePrototype
 
                 foreach (var command in processDescription.Commands)
                 {
-                    var output = commandRunner.Run(command, variablesForCurrentEnvironment);
+                    var commandResult = commandRunner.Run(command, variablesForCurrentEnvironment);
 
-                    Console.WriteLine(output);
+                    if (!commandResult.WasSuccessful)
+                    {
+                        throw new ApplicationException($"Deployment failed on following command: {command}");
+                    }
+
+                    Console.WriteLine(commandResult.Output);
                     Console.WriteLine();
                 }
 
