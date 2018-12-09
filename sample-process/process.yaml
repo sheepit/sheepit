@@ -5,6 +5,8 @@ commands:
     - echo configuring mail sender as %mail_sender%
     - echo listing program files to see if quotes are handled properly
     - dir "c:\program files"
+    - echo listing every file in the repo
+    - dir
 
 # shell: bash
 # commands:
@@ -13,3 +15,5 @@ commands:
 #     - echo configuring mail sender as $mail_sender
 #     - echo listing program files to see if quotes are handled properly
 #     - ls "/c/Program Files"
+#     - echo listing every file in the repo
+#     - ls

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using CommandLine;
 using SheepIt.ConsolePrototype.CommandRunners;
 
@@ -66,11 +65,10 @@ namespace SheepIt.ConsolePrototype
 
                 // run process
 
-                var processDescription = repository.OpenProcessDescriptionFile();
-
                 new ProcessRunner().Run(
-                    processFile: processDescription,
-                    variables: variablesForCurrentEnvironment
+                    processFile: repository.OpenProcessDescriptionFile(),
+                    variables: variablesForCurrentEnvironment,
+                    workingDir: deploymentWorkingDir
                 );
 
                 // save deployment

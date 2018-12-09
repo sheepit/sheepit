@@ -5,12 +5,13 @@ namespace SheepIt.ConsolePrototype.CommandRunners
 {
     public class BashCommandRunner : ICommandRunner
     {
-        public CommandResult Run(string command, IEnumerable<Variable> variables)
+        public CommandResult Run(string command, IEnumerable<Variable> variables, string workingDir)
         {
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = @"C:\Program Files\Git\bin\bash.exe", // todo: obviously this shouldn't be hardcoded
                 Arguments = "-s", // -s will run command from standard input
+                WorkingDirectory = workingDir,
                 RedirectStandardInput = true,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,

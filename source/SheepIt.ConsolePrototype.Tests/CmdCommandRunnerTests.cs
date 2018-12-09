@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -11,10 +12,8 @@ namespace SheepIt.ConsolePrototype.Tests
         [Test]
         public void can_run_a_cmd_command()
         {
-            var commandRunner = new CmdCommandRunner();
-
             // it's important to check if quotes work properly
-            var result = commandRunner.Run(@"dir ""c:\program files""", Enumerable.Empty<Variable>());
+            var result = RunCommand(@"dir ""c:\program files""");
 
             result.Output.Should().NotBeEmpty();
 
@@ -24,11 +23,9 @@ namespace SheepIt.ConsolePrototype.Tests
         [Test]
         public void can_inject_some_environmental_variables_into_the_process()
         {
-            var commandRunner = new CmdCommandRunner();
-
             var variableValue = Guid.NewGuid().ToString();
 
-            var result = commandRunner.Run("echo %TEST%", new Variable[]
+            var result = RunCommand("echo %TEST%", new Variable[]
             {
                 new Variable("TEST", variableValue)
             });
@@ -39,9 +36,7 @@ namespace SheepIt.ConsolePrototype.Tests
         [Test]
         public void can_check_if_command_succeeded()
         {
-            var commandRunner = new CmdCommandRunner();
-
-            var result = commandRunner.Run("echo test", Enumerable.Empty<Variable>());
+            var result = RunCommand("echo test");
 
             result.WasSuccessful.Should().BeTrue();
         }
@@ -49,11 +44,21 @@ namespace SheepIt.ConsolePrototype.Tests
         [Test]
         public void can_check_if_command_failed()
         {
-            var commandRunner = new CmdCommandRunner();
-
-            var result = commandRunner.Run("some_unknown_command", Enumerable.Empty<Variable>());
+            var result = RunCommand("some_unknown_command");
 
             result.WasSuccessful.Should().BeFalse();
+        }
+
+        private static CommandResult RunCommand(string command)
+        {
+            return RunCommand(command, Enumerable.Empty<Variable>());
+        }
+
+        private static CommandResult RunCommand(string command, IEnumerable<Variable> variables)
+        {
+            var commandRunner = new CmdCommandRunner();
+
+            return commandRunner.Run(command, variables, TestContext.CurrentContext.TestDirectory);
         }
     }
 }

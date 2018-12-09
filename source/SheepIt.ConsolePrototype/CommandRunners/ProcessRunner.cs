@@ -5,13 +5,13 @@ namespace SheepIt.ConsolePrototype.CommandRunners
 {
     public class ProcessRunner
     {
-        public void Run(ProcessFile processFile, Variable[] variables)
+        public void Run(ProcessFile processFile, Variable[] variables, string workingDir)
         {
             var commandRunner = _commandRunners[processFile.Shell];
             
             foreach (var command in processFile.Commands)
             {
-                var commandResult = commandRunner.Run(command, variables);
+                var commandResult = commandRunner.Run(command, variables, workingDir);
 
                 if (!commandResult.WasSuccessful)
                 {
