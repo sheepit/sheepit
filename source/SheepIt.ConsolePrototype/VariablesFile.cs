@@ -8,15 +8,6 @@ namespace SheepIt.ConsolePrototype
 {
     public class VariablesFile
     {
-        public Dictionary<string, VariableValues> Variables { get; set; }
-
-        public Variable[] GetForEnvironment(string environment)
-        {
-            return Variables
-                .Select(pair => new Variable(pair.Key, pair.Value.ValueForEnvironment(environment)))
-                .ToArray();
-        }
-
         public static VariablesFile Open(string path)
         {
             using (var fileStream = File.OpenText(path))
@@ -26,6 +17,15 @@ namespace SheepIt.ConsolePrototype
                     .Build()
                     .Deserialize<VariablesFile>(fileStream);
             }
+        }
+
+        public Dictionary<string, VariableValues> Variables { get; set; }
+
+        public Variable[] GetForEnvironment(string environment)
+        {
+            return Variables
+                .Select(pair => new Variable(pair.Key, pair.Value.ValueForEnvironment(environment)))
+                .ToArray();
         }
     }
 

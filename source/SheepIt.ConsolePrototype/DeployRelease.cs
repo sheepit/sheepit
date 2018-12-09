@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CommandLine;
 using SheepIt.ConsolePrototype.CommandRunners;
 
@@ -54,7 +55,9 @@ namespace SheepIt.ConsolePrototype
 
                 Console.WriteLine("Deploying using following variables:");
 
-                foreach (var variable in variables.GetForEnvironment(options.Environment))
+                var variablesForCurrentEnvironment = variables.GetForEnvironment(options.Environment);
+
+                foreach (var variable in variablesForCurrentEnvironment)
                 {
                     Console.WriteLine($"    {variable.Name}: {variable.Value}");
                 }
@@ -72,7 +75,7 @@ namespace SheepIt.ConsolePrototype
 
                 foreach (var command in processDescription.Commands)
                 {
-                    var output = commandRunner.Run(command);
+                    var output = commandRunner.Run(command, variablesForCurrentEnvironment);
 
                     Console.WriteLine(output);
                     Console.WriteLine();
