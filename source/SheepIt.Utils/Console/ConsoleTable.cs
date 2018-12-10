@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SheepIt.Utils.Extensions;
 
 namespace SheepIt.Utils.Console
 {
@@ -83,14 +84,6 @@ namespace SheepIt.Utils.Console
                 public string[] Values { get; set; }
                 public int Width { get; set; }
             }
-        }
-    }
-
-    public static class StringExtensions
-    {
-        public static string JoinWith(this IEnumerable<string> items, string separator)
-        {
-            return string.Join(separator, items);
         }
     }
 }
