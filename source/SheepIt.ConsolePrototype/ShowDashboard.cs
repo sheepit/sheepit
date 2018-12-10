@@ -28,24 +28,12 @@ namespace SheepIt.ConsolePrototype
                 .OrderBy(environment => environment.EnvironmentId)
                 .ToArray();
 
-            Console.WriteLine(" {0,-20}| {1,-20}| {2,-20}| {3,-20}",
-                "environment",
-                "deployment date",
-                "deployment id",
-                "release id"
-            );
-
-            Console.WriteLine(" " + new string('-', 20 + 2 + 20 + 2 + 20 + 2 + 20));
-
-            foreach (var environment in environments)
-            {
-                Console.WriteLine(" {0,-20}| {1,-20}| {2,-20}| {3,-20}",
-                    environment.EnvironmentId,
-                    environment.CurrentDeployment.DeployedAt.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture),
-                    environment.CurrentDeployment.Id,
-                    environment.CurrentDeployment.ReleaseId
-                );
-            }
+            ConsoleTable.Containing(environments)
+                .WithColumn("Environment ID", environment => environment.EnvironmentId)
+                .WithColumn("Deployment date", environment => environment.CurrentDeployment.DeployedAt.ConsoleFriendlyFormat())
+                .WithColumn("Deployment ID", environment => environment.CurrentDeployment.Id.ToString(CultureInfo.InvariantCulture))
+                .WithColumn("Release ID", environment => environment.CurrentDeployment.ReleaseId.ToString(CultureInfo.InvariantCulture))
+                .Show();
         }
     }
 }
