@@ -6,7 +6,7 @@ namespace SheepIt.ConsolePrototype
     public class Deployment
     {
         public int Id { get; set; }
-        public string ProjectIt { get; set; }
+        public string ProjectIt { get; set; } // todo: it should be renamed, but it will break my current db-s
         public int ReleaseId { get; set; }
         public DateTime DeployedAt { get; set; }
         public string EnvironmentId { get; set; }
