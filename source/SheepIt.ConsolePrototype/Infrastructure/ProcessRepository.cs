@@ -1,7 +1,8 @@
 ﻿using System;
 using LibGit2Sharp;
+using SheepIt.ConsolePrototype.ScriptFiles;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.ConsolePrototype.Infrastructure
 {
     public class ProcessRepository : IDisposable
     {

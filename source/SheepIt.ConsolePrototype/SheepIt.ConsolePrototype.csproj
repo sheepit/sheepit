@@ -17,4 +17,8 @@
     <ProjectReference Include="..\SheepIt.Utils\SheepIt.Utils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\ScriptFIles" />
+  </ItemGroup>
+
 </Project>

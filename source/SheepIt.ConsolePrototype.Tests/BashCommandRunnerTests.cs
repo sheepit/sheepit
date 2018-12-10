@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.ConsolePrototype.CommandRunners;
+using SheepIt.ConsolePrototype.ScriptFiles;
 
 namespace SheepIt.ConsolePrototype.Tests
 {

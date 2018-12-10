@@ -1,5 +1,6 @@
 ﻿using System;
 using CommandLine;
+using SheepIt.ConsolePrototype.Infrastructure;
 using SheepIt.Domain;
 using SheepIt.Utils.Extensions;
 

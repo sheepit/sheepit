@@ -4,7 +4,7 @@ using System.Linq;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.ConsolePrototype.ScriptFiles
 {
     public class VariablesFile
     {

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.ConsolePrototype.Infrastructure
 {
     public class LocalPath
     {

@@ -1,4 +1,4 @@
-﻿namespace SheepIt.ConsolePrototype
+﻿namespace SheepIt.ConsolePrototype.Infrastructure
 {
     public static class Settings
     {
