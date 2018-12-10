@@ -1,5 +1,6 @@
 ﻿using System;
 using CommandLine;
+using SheepIt.ConsolePrototype.Cli;
 
 namespace SheepIt.ConsolePrototype
 {
@@ -11,21 +12,21 @@ namespace SheepIt.ConsolePrototype
 
             Parser.Default
                 .ParseArguments<
+                    CreateProjectOptions,
                     CreateReleaseOptions,
                     DeployReleaseOptions,
-                    ShowDashboardOptions,
-                    CreateProjectOptions,
-                    ListReleasesOptions,
                     ListDeploymentsOptions,
-                    ListProjectsOptions
+                    ListProjectsOptions,
+                    ListReleasesOptions,
+                    ShowDashboardOptions
                 >(args)
                 .WithParsed<CreateProjectOptions>(CreateProject.Run)
                 .WithParsed<CreateReleaseOptions>(CreateRelease.Run)
                 .WithParsed<DeployReleaseOptions>(DeployRelease.Run)
-                .WithParsed<ShowDashboardOptions>(ShowDashboard.Run)
-                .WithParsed<ListReleasesOptions>(ListReleases.Run)
                 .WithParsed<ListDeploymentsOptions>(ListDeployments.Run)
                 .WithParsed<ListProjectsOptions>(ListProjects.Run)
+                .WithParsed<ListReleasesOptions>(ListReleases.Run)
+                .WithParsed<ShowDashboardOptions>(ShowDashboard.Run)
                 .WithNotParsed(errors => {});
         }
     }

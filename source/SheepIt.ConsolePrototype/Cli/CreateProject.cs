@@ -1,7 +1,8 @@
 ﻿using System;
 using CommandLine;
+using SheepIt.Domain;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.ConsolePrototype.Cli
 {
     [Verb("create-project")]
     public class CreateProjectOptions

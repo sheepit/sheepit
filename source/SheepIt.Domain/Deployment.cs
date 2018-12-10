@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.Domain
 {
     public class Deployment
     {
@@ -24,14 +24,14 @@ namespace SheepIt.ConsolePrototype
             }
         }
 
-        public static Deployment[] GetAll(ShowDashboardOptions options)
+        public static Deployment[] GetAll(string projectId)
         {
             using (var database = Database.Open())
             {
                 var deploymentCollection = database.GetCollection<Deployment>();
 
                 return deploymentCollection
-                    .Find(deployment => deployment.ProjectIt == options.ProjectId)
+                    .Find(deployment => deployment.ProjectIt == projectId)
                     .ToArray();
             }
         }

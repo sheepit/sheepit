@@ -1,9 +1,11 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using CommandLine;
+using SheepIt.Domain;
+using SheepIt.Utils.Console;
+using SheepIt.Utils.Extensions;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.ConsolePrototype.Cli
 {
     [Verb("dashboard")]
     public class ShowDashboardOptions
@@ -16,7 +18,7 @@ namespace SheepIt.ConsolePrototype
     {
         public static void Run(ShowDashboardOptions options)
         {
-            var environments = Deployments.GetAll(options)
+            var environments = Deployments.GetAll(options.ProjectId)
                 .GroupBy(deployment => deployment.EnvironmentId)
                 .Select(grouping => new
                 {

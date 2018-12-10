@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheepIt.ConsolePrototype", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepIt.ConsolePrototype.Tests", "SheepIt.ConsolePrototype.Tests\SheepIt.ConsolePrototype.Tests.csproj", "{B7966041-DE86-4BD1-B2F9-9048094E3FFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepIt.Utils", "SheepIt.Utils\SheepIt.Utils.csproj", "{D217CA57-AE19-4F8E-99BE-C08CEEE9BB45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepIt.Domain", "SheepIt.Domain\SheepIt.Domain.csproj", "{35BC356E-D80F-4106-A7DF-A345078B7ECB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{B7966041-DE86-4BD1-B2F9-9048094E3FFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7966041-DE86-4BD1-B2F9-9048094E3FFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7966041-DE86-4BD1-B2F9-9048094E3FFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D217CA57-AE19-4F8E-99BE-C08CEEE9BB45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D217CA57-AE19-4F8E-99BE-C08CEEE9BB45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D217CA57-AE19-4F8E-99BE-C08CEEE9BB45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D217CA57-AE19-4F8E-99BE-C08CEEE9BB45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35BC356E-D80F-4106-A7DF-A345078B7ECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35BC356E-D80F-4106-A7DF-A345078B7ECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35BC356E-D80F-4106-A7DF-A345078B7ECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35BC356E-D80F-4106-A7DF-A345078B7ECB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

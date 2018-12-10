@@ -1,6 +1,6 @@
 ﻿using LiteDB;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.Domain
 {
     public static class Database
     {

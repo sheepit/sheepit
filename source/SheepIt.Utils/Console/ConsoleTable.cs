@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.Utils.Console
 {
     public class ConsoleTable
     {
@@ -48,7 +48,7 @@ namespace SheepIt.ConsolePrototype
             {
                 foreach (var line in GetLines())
                 {
-                    Console.WriteLine(line);
+                    System.Console.WriteLine(line);
                 }
             }
 

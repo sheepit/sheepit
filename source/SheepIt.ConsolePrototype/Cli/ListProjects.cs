@@ -1,8 +1,10 @@
 ﻿using System.Globalization;
 using System.Linq;
 using CommandLine;
+using SheepIt.Domain;
+using SheepIt.Utils.Console;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.ConsolePrototype.Cli
 {
     [Verb("list-projects")]
     public class ListProjectsOptions

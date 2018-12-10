@@ -1,4 +1,4 @@
-﻿namespace SheepIt.ConsolePrototype
+﻿namespace SheepIt.Domain
 {
     public class Project
     {

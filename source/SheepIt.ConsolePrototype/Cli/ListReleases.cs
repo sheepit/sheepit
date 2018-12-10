@@ -1,8 +1,11 @@
 ﻿using System.Globalization;
 using System.Linq;
 using CommandLine;
+using SheepIt.Domain;
+using SheepIt.Utils.Console;
+using SheepIt.Utils.Extensions;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.ConsolePrototype.Cli
 {
     [Verb("list-releases")]
     public class ListReleasesOptions

@@ -1,8 +1,10 @@
 ﻿using System;
 using CommandLine;
 using SheepIt.ConsolePrototype.CommandRunners;
+using SheepIt.Domain;
+using SheepIt.Utils.Extensions;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.ConsolePrototype.Cli
 {
     [Verb("deploy-release")]
     public class DeployReleaseOptions

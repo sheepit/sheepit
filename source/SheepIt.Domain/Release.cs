@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace SheepIt.ConsolePrototype
+namespace SheepIt.Domain
 {
     public class Release
     {
