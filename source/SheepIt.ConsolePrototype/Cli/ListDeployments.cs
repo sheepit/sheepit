@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
-using System.Linq;
 using CommandLine;
-using SheepIt.Domain;
+using SheepIt.ConsolePrototype.UseCases;
 using SheepIt.Utils.Console;
 using SheepIt.Utils.Extensions;
 
@@ -18,22 +17,17 @@ namespace SheepIt.ConsolePrototype.Cli
     {
         public static void Run(ListDeploymentsOptions options)
         {
-            using (var database = Database.Open())
+            var response = ListDeploymentsHandler.Handle(new ListDeploymentsRequest
             {
-                var deploymentCollection = database.GetCollection<Deployment>();
+                ProjectId = options.ProjectId
+            });
 
-                var deployments = deploymentCollection
-                    .Find(deployment => deployment.ProjectIt == options.ProjectId)
-                    .OrderBy(deployment => deployment.DeployedAt)
-                    .ToArray();
-
-                ConsoleTable.Containing(deployments)
-                    .WithColumn("Deployed at", deployment => deployment.DeployedAt.ConsoleFriendlyFormat())
-                    .WithColumn("Environment ID", deployment => deployment.EnvironmentId)
-                    .WithColumn("Deployment ID", deployment => deployment.Id.ToString(CultureInfo.InvariantCulture))
-                    .WithColumn("Release ID", deployment => deployment.ReleaseId.ToString(CultureInfo.InvariantCulture))
-                    .Show();
-            }
+            ConsoleTable.Containing(response.Deployments)
+                .WithColumn("Deployed at", deployment => deployment.DeployedAt.ConsoleFriendlyFormat())
+                .WithColumn("Environment ID", deployment => deployment.EnvironmentId)
+                .WithColumn("Deployment ID", deployment => deployment.Id.ToString(CultureInfo.InvariantCulture))
+                .WithColumn("Release ID", deployment => deployment.ReleaseId.ToString(CultureInfo.InvariantCulture))
+                .Show();
         }
     }
 }
