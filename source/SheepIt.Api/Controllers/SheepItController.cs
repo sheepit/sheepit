@@ -14,6 +14,13 @@ namespace SheepIt.Api.Controllers
             CreateProjectHandler.Handle(request);
         }
 
+        [HttpPost]
+        [Route("create-release")]
+        public object CreateProject(CreateReleaseRequest request)
+        {
+            return CreateReleaseHandler.Handle(request);
+        }
+
         [HttpGet]
         [Route("list-releases")]
         public object ListReleases(ListReleasesRequest request)

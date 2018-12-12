@@ -1,8 +1,6 @@
 ﻿using System;
 using CommandLine;
-using SheepIt.ConsolePrototype.Infrastructure;
-using SheepIt.Domain;
-using SheepIt.Utils.Extensions;
+using SheepIt.ConsolePrototype.UseCases;
 
 namespace SheepIt.ConsolePrototype.Cli
 {
@@ -17,36 +15,12 @@ namespace SheepIt.ConsolePrototype.Cli
     {
         public static void Run(CreateReleaseOptions options)
         {
-            var project = Projects.Get(options.ProjectId);
-
-            var repositoryWorkingDir = Settings.WorkingDir
-                .AddSegment(project.Id)
-                .AddSegment("creating-releases")
-                .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}");
-
-            using (var repository = ProcessRepository.Clone(project.RepositoryUrl, repositoryWorkingDir.ToString()))
+            var response = CreateReleaseHandler.Handle(new CreateReleaseRequest
             {
-                // todo: we shouldn't clone whole repo to just get a commit
-                // git ls-remote can get same information without cloning the entire repo
-                // libgit2sharp doesn't support it yet (although libgit2 does)
-                // workaround would be to create a new repo and get info we want:
-                // https://github.com/libgit2/libgit2sharp/issues/1377#issuecomment-253177481
+                ProjectId = options.ProjectId
+            });
 
-                // todo: setting branch/tag/commit should be configurable when creating a release
-                
-                var currentCommitSha  = repository.GetCurrentCommitSha();
-
-                Console.WriteLine($"Current commit SHA is {currentCommitSha}");
-
-                var releaseId = Releases.Add(new Release
-                {
-                    ProjectId = options.ProjectId,
-                    CommitSha = currentCommitSha,
-                    CreatedAt = DateTime.UtcNow
-                });
-
-                Console.WriteLine($"Created release {releaseId}");
-            }
+            Console.WriteLine($"Created release {response.CreatedFromCommitSha} from commit {response.CreatedFromCommitSha}");
         }
     }
 }
