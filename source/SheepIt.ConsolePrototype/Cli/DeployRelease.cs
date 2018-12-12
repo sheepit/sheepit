@@ -1,9 +1,7 @@
 ﻿using System;
+using System.Linq;
 using CommandLine;
-using SheepIt.ConsolePrototype.CommandRunners;
-using SheepIt.ConsolePrototype.Infrastructure;
-using SheepIt.Domain;
-using SheepIt.Utils.Extensions;
+using SheepIt.ConsolePrototype.UseCases;
 
 namespace SheepIt.ConsolePrototype.Cli
 {
@@ -27,68 +25,36 @@ namespace SheepIt.ConsolePrototype.Cli
             Console.WriteLine($"Deploying project {options.ProjectId}, release {options.ReleaseId} to {options.Environment} environment");
             Console.WriteLine();
 
-            var project = Projects.Get(
-                projectId: options.ProjectId
-            );
-
-            var release = Releases.Get(
-                projectId: options.ProjectId,
-                releaseId: options.ReleaseId
-            );
-
-            var deploymentWorkingDir = Settings.WorkingDir
-                .AddSegment(project.Id)
-                .AddSegment("deploying-releases")
-                .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{options.Environment}_release-{release.Id}")
-                .ToString();
-
-            using (var repository = ProcessRepository.Clone(project.RepositoryUrl, deploymentWorkingDir))
+            var response = DeployReleaseHandler.Handle(new DeployReleaseRequest
             {
-                // checkout
+                ProjectId = options.ProjectId,
+                ReleaseId = options.ReleaseId,
+                Environment = options.Environment
+            });
 
-                repository.Checkout(release.CommitSha);
+            Console.WriteLine($"Checked out commit {response.FromCommitSha}");
+            Console.WriteLine();
 
-                Console.WriteLine($"Checked out commit {release.CommitSha}");
-                Console.WriteLine();
+            Console.WriteLine("Deploying using following variables:");
 
-                // read variables
-
-                var variables = repository.OpenVariableFile();
-
-                Console.WriteLine("Deploying using following variables:");
-
-                var variablesForCurrentEnvironment = variables.GetForEnvironment(options.Environment);
-
-                foreach (var variable in variablesForCurrentEnvironment)
-                {
-                    Console.WriteLine($"    {variable.Name}: {variable.Value}");
-                }
-
-                Console.WriteLine();
-
-                // run process
-
-                new ProcessRunner().Run(
-                    processFile: repository.OpenProcessDescriptionFile(),
-                    variables: variablesForCurrentEnvironment,
-                    workingDir: deploymentWorkingDir
-                );
-
-                // save deployment
-
-                // todo: we should persist deployments at the beginning and later include information whether it succeeded or not
-
-                var deploymentId = Deployments.Add(new Deployment
-                {
-                    ReleaseId = release.Id,
-                    ProjectIt = options.ProjectId,
-                    DeployedAt = DateTime.UtcNow,
-                    EnvironmentId = options.Environment
-                });
-
-                Console.WriteLine($"Created deployment {deploymentId}");
-                Console.WriteLine();
+            foreach (var variable in response.UsedVariables)
+            {
+                Console.WriteLine($"    {variable.Key}: {variable.Value}");
             }
+
+            Console.WriteLine();
+
+            Console.WriteLine("Deployment output:");
+
+            foreach (var outputLine in response.ProcessResult.Steps.SelectMany(result => result.Output))
+            {
+                Console.WriteLine($"    {outputLine}");
+            }
+
+            Console.WriteLine();
+
+            Console.WriteLine($"Created deployment {response.CreatedDeploymentId}");
+            Console.WriteLine();
         }
     }
 }

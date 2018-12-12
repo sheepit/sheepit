@@ -37,7 +37,7 @@ namespace SheepIt.ConsolePrototype.CommandRunners
 
             process.StandardInput.Close(); // todo: should we close it? should we dispose it?
 
-            var output = process.StandardOutput.ReadToEnd();
+            var output = process.StandardOutput.ReadLinesToEnd();
 
             return new CommandResult
             {

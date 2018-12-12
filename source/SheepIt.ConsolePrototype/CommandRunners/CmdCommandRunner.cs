@@ -31,7 +31,7 @@ namespace SheepIt.ConsolePrototype.CommandRunners
 
             process.Start();
 
-            var output = process.StandardOutput.ReadToEnd();
+            var output = process.StandardOutput.ReadLinesToEnd();
 
             return new CommandResult
             {
@@ -44,6 +44,6 @@ namespace SheepIt.ConsolePrototype.CommandRunners
     public class CommandResult
     {
         public bool WasSuccessful { get; set; }
-        public string Output { get; set; }
+        public string[] Output { get; set; }
     }
 }

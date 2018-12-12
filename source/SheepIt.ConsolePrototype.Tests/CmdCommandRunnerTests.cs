@@ -31,7 +31,7 @@ namespace SheepIt.ConsolePrototype.Tests
                 new Variable("TEST", variableValue)
             });
 
-            result.Output.Trim().Should().Be(variableValue);
+            result.Output[0].Trim().Should().Be(variableValue);
         }
 
         [Test]
