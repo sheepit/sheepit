@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System;
+using System.Globalization;
 using CommandLine;
-using SheepIt.Domain;
+using SheepIt.ConsolePrototype.UseCases;
 using SheepIt.Utils.Console;
 using SheepIt.Utils.Extensions;
 
@@ -18,23 +18,16 @@ namespace SheepIt.ConsolePrototype.Cli
     {
         public static void Run(ShowDashboardOptions options)
         {
-            var environments = Deployments.GetAll(options.ProjectId)
-                .GroupBy(deployment => deployment.EnvironmentId)
-                .Select(grouping => new
-                {
-                    EnvironmentId = grouping.Key,
-                    CurrentDeployment = grouping
-                        .OrderByDescending(deployment => deployment.DeployedAt)
-                        .First()
-                })
-                .OrderBy(environment => environment.EnvironmentId)
-                .ToArray();
+            var response = ShowDashboardHandler.Handle(new ShowDashboardRequest
+            {
+                ProjectId = options.ProjectId
+            });
 
-            ConsoleTable.Containing(environments)
+            ConsoleTable.Containing(response.Environments)
                 .WithColumn("Environment ID", environment => environment.EnvironmentId)
-                .WithColumn("Deployment date", environment => environment.CurrentDeployment.DeployedAt.ConsoleFriendlyFormat())
-                .WithColumn("Deployment ID", environment => environment.CurrentDeployment.Id.ToString(CultureInfo.InvariantCulture))
-                .WithColumn("Release ID", environment => environment.CurrentDeployment.ReleaseId.ToString(CultureInfo.InvariantCulture))
+                .WithColumn("Deployment date", environment => environment.LastDeployedAt.ConsoleFriendlyFormat())
+                .WithColumn("Deployment ID", environment => environment.CurrentDeploymentId.ToString(CultureInfo.InvariantCulture))
+                .WithColumn("Release ID", environment => environment.CurrentReleaseId.ToString(CultureInfo.InvariantCulture))
                 .Show();
         }
     }

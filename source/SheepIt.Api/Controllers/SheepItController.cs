@@ -41,5 +41,12 @@ namespace SheepIt.Api.Controllers
         {
             return ListDeploymentsHandler.Handle(request);
         }
+
+        [HttpPost]
+        [Route("show-dashboard")]
+        public object ShowDashboard(ShowDashboardRequest request)
+        {
+            return ShowDashboardHandler.Handle(request);
+        }
     }
 }
