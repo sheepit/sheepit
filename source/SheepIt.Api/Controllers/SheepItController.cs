@@ -29,6 +29,13 @@ namespace SheepIt.Api.Controllers
         }
 
         [HttpGet]
+        [Route("list-projects")]
+        public object ListProjects()
+        {
+            return ListProjectsHandler.Handle(new ListProjectsRequest());
+        }
+
+        [HttpGet]
         [Route("list-releases")]
         public object ListReleases(ListReleasesRequest request)
         {

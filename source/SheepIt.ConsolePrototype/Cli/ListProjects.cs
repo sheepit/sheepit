@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
-using System.Linq;
 using CommandLine;
-using SheepIt.Domain;
+using SheepIt.ConsolePrototype.UseCases;
 using SheepIt.Utils.Console;
 
 namespace SheepIt.ConsolePrototype.Cli
@@ -15,20 +14,12 @@ namespace SheepIt.ConsolePrototype.Cli
     {
         public static void Run(ListProjectsOptions options)
         {
-            using (var database = Database.Open())
-            {
-                var deploymentCollection = database.GetCollection<Project>();
+            var response = ListProjectsHandler.Handle(new ListProjectsRequest());
 
-                var deployments = deploymentCollection
-                    .FindAll()
-                    .OrderBy(deployment => deployment.Id)
-                    .ToArray();
-
-                ConsoleTable.Containing(deployments)
-                    .WithColumn("Project ID", deployment => deployment.Id.ToString(CultureInfo.InvariantCulture))
-                    .WithColumn("Repository URL", deployment => deployment.RepositoryUrl)
-                    .Show();
-            }
+            ConsoleTable.Containing(response.Projects)
+                .WithColumn("Project ID", deployment => deployment.Id.ToString(CultureInfo.InvariantCulture))
+                .WithColumn("Repository URL", deployment => deployment.RepositoryUrl)
+                .Show();
         }
     }
 }
