@@ -7,6 +7,13 @@ namespace SheepIt.Api.Controllers
     [ApiController]
     public class SheepItController : ControllerBase
     {
+        [HttpPost]
+        [Route("create-project")]
+        public void CreateProject(CreateProjectRequest request)
+        {
+            CreateProjectHandler.Handle(request);
+        }
+
         [HttpGet]
         [Route("list-releases")]
         public object ListReleases(ListReleasesRequest request)

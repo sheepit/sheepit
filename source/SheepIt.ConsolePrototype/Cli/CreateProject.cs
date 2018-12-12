@@ -1,6 +1,6 @@
 ﻿using System;
 using CommandLine;
-using SheepIt.Domain;
+using SheepIt.ConsolePrototype.UseCases;
 
 namespace SheepIt.ConsolePrototype.Cli
 {
@@ -18,9 +18,9 @@ namespace SheepIt.ConsolePrototype.Cli
     {
         public static void Run(CreateProjectOptions options)
         {
-            Projects.Add(new Project
+            CreateProjectHandler.Handle(new CreateProjectRequest
             {
-                Id = options.ProjectId,
+                ProjectId = options.ProjectId,
                 RepositoryUrl = options.RepositoryUrl
             });
 
