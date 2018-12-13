@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using SheepIt.ConsolePrototype.Cli;
 using SheepIt.Domain;
 
 namespace SheepIt.ConsolePrototype.UseCases
