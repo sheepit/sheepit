@@ -81,7 +81,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"projectId\": \"foo\",\n\t\"updates\": [\n\t\t{\n\t\t\t\"name\": \"bar_service_version\",\n\t\t\t\"defaultValue\": \"0.0.1\",\n\t\t\t\"environmentValues\": {}\n\t\t}\n\t]\n}"
+					"raw": "{\n\t\"projectId\": \"tar\",\n\t\"updates\": [\n\t\t{\n\t\t\t\"name\": \"foo_service_version\",\n\t\t\t\"defaultValue\": \"0.0.1\",\n\t\t\t\"environmentValues\": {}\n\t\t}\n\t]\n}"
 				},
 				"url": {
 					"raw": "https://localhost:44380/api/update-release-variables",
@@ -112,7 +112,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"projectId\": \"foo\",\n\t\"releaseId\": 13,\n\t\"environment\": \"dev\"\n}"
+					"raw": "{\n\t\"projectId\": \"tar\",\n\t\"releaseId\": 18,\n\t\"environment\": \"dev\"\n}"
 				},
 				"url": {
 					"raw": "https://localhost:44380/api/deploy-release",

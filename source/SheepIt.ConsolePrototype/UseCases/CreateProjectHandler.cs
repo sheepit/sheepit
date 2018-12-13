@@ -1,4 +1,6 @@
-﻿using SheepIt.Domain;
+﻿using System;
+using SheepIt.ConsolePrototype.Infrastructure;
+using SheepIt.Domain;
 
 namespace SheepIt.ConsolePrototype.UseCases
 {
@@ -12,10 +14,28 @@ namespace SheepIt.ConsolePrototype.UseCases
     {
         public static void Handle(CreateProjectRequest request)
         {
-            Projects.Add(new Project
+            var project = new Project
             {
                 Id = request.ProjectId,
                 RepositoryUrl = request.RepositoryUrl
+            };
+
+            Projects.Add(project);
+
+            // first release is created so other operations can copy it
+            CreateFirstRelease(project);
+        }
+
+        private static void CreateFirstRelease(Project project)
+        {
+            var currentCommitSha = ProcessRepository.GetCurrentCommitSha(project);
+
+            ReleasesStorage.Add(new Release
+            {
+                Variables = new VariableCollection(),
+                CommitSha = currentCommitSha,
+                CreatedAt = DateTime.UtcNow,
+                ProjectId = project.Id
             });
         }
     }
