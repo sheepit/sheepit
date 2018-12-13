@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SheepIt.Domain
@@ -10,14 +9,23 @@ namespace SheepIt.Domain
         public string ProjectId { get; set; }
         public string CommitSha { get; set; }
         public DateTime CreatedAt { get; set; }
+        public VariableCollection Variables { get; set; } = new VariableCollection();
 
-        public Dictionary<string, VariableValues> Variables { get; set; } = new Dictionary<string, VariableValues>();
-
-        public Variable[] GetVariablesForEnvironment(string environment)
+        public VariableForEnvironment[] GetVariablesForEnvironment(string environment)
         {
-            return Variables
-                .Select(pair => new Variable(pair.Key, pair.Value.ValueForEnvironment(environment)))
-                .ToArray();
+            return Variables.GetForEnvironment(environment);
+        }
+
+        public Release WithUpdatedVariables(VariableValues[] newVariables)
+        {
+            return new Release
+            {
+                Id = 0,
+                ProjectId = ProjectId,
+                CommitSha = CommitSha,
+                CreatedAt = DateTime.UtcNow,
+                Variables = Variables.WithUpdatedVariables(newVariables)
+            };
         }
     }
 
@@ -41,6 +49,18 @@ namespace SheepIt.Domain
                     .GetCollection<Release>()
                     .Find(release => release.ProjectId == projectId && release.Id == releaseId)
                     .Single();
+            }
+        }
+
+        public static Release GetNewest(string projectId)
+        {
+            using (var database = Database.Open())
+            {
+                return database
+                    .GetCollection<Release>()
+                    .Find(release => release.ProjectId == projectId)
+                    .OrderByDescending(release => release.Id)
+                    .First();
             }
         }
     }

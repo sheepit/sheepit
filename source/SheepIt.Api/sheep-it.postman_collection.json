@@ -68,6 +68,37 @@
 			"response": []
 		},
 		{
+			"name": "update-release-variables",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"projectId\": \"foo\",\n\t\"updates\": [\n\t\t{\n\t\t\t\"name\": \"bar_service_version\",\n\t\t\t\"defaultValue\": \"0.0.1\",\n\t\t\t\"environmentValues\": {}\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44380/api/update-release-variables",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44380",
+					"path": [
+						"api",
+						"update-release-variables"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "deploy-release",
 			"request": {
 				"method": "POST",
@@ -81,7 +112,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"projectId\": \"foo\",\n\t\"releaseId\": 3,\n\t\"environment\": \"dev\"\n}"
+					"raw": "{\n\t\"projectId\": \"foo\",\n\t\"releaseId\": 13,\n\t\"environment\": \"dev\"\n}"
 				},
 				"url": {
 					"raw": "https://localhost:44380/api/deploy-release",

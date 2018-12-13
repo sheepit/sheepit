@@ -7,7 +7,7 @@ namespace SheepIt.ConsolePrototype.CommandRunners
 {
     public class CmdCommandRunner : ICommandRunner
     {
-        public CommandResult Run(string command, IEnumerable<Variable> variables, string workingDir)
+        public CommandResult Run(string command, IEnumerable<VariableForEnvironment> variables, string workingDir)
         {
             var processStartInfo = new ProcessStartInfo
             {

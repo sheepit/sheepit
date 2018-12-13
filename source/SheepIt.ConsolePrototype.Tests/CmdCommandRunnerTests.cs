@@ -26,9 +26,9 @@ namespace SheepIt.ConsolePrototype.Tests
         {
             var variableValue = Guid.NewGuid().ToString();
 
-            var result = RunCommand("echo %TEST%", new Variable[]
+            var result = RunCommand("echo %TEST%", new VariableForEnvironment[]
             {
-                new Variable("TEST", variableValue)
+                new VariableForEnvironment("TEST", variableValue)
             });
 
             result.Output[0].Trim().Should().Be(variableValue);
@@ -52,10 +52,10 @@ namespace SheepIt.ConsolePrototype.Tests
 
         private static CommandResult RunCommand(string command)
         {
-            return RunCommand(command, Enumerable.Empty<Variable>());
+            return RunCommand(command, Enumerable.Empty<VariableForEnvironment>());
         }
 
-        private static CommandResult RunCommand(string command, IEnumerable<Variable> variables)
+        private static CommandResult RunCommand(string command, IEnumerable<VariableForEnvironment> variables)
         {
             var commandRunner = new CmdCommandRunner();
 

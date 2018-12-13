@@ -22,9 +22,9 @@ namespace SheepIt.ConsolePrototype.CommandRunners
 
     public class ProcessRunner
     {
-        public ProcessResult Run(ProcessFile processFile, Variable[] variables, string workingDir)
+        public ProcessResult Run(ProcessFile processFile, VariableForEnvironment[] variablesForEnvironment, string workingDir)
         {
-            var processStepResults = NewMethod(processFile, variables, workingDir);
+            var processStepResults = NewMethod(processFile, variablesForEnvironment, workingDir);
 
             return new ProcessResult
             {
@@ -32,13 +32,13 @@ namespace SheepIt.ConsolePrototype.CommandRunners
             };
         }
 
-        private IEnumerable<ProcessStepResult> NewMethod(ProcessFile processFile, Variable[] variables, string workingDir)
+        private IEnumerable<ProcessStepResult> NewMethod(ProcessFile processFile, VariableForEnvironment[] variablesForEnvironment, string workingDir)
         {
             var commandRunner = _commandRunners[processFile.Shell];
 
             foreach (var command in processFile.Commands)
             {
-                var commandResult = commandRunner.Run(command, variables, workingDir);
+                var commandResult = commandRunner.Run(command, variablesForEnvironment, workingDir);
 
                 if (!commandResult.WasSuccessful)
                 {

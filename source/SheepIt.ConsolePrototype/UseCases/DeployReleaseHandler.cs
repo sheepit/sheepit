@@ -58,7 +58,7 @@ namespace SheepIt.ConsolePrototype.UseCases
 
                 var processResult = new ProcessRunner().Run(
                     processFile: repository.OpenProcessDescriptionFile(),
-                    variables: variables,
+                    variablesForEnvironment: variables,
                     workingDir: deploymentWorkingDir
                 );
 
