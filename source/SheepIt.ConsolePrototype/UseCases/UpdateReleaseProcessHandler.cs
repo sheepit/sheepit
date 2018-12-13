@@ -5,22 +5,22 @@ using SheepIt.Utils.Extensions;
 
 namespace SheepIt.ConsolePrototype.UseCases
 {
-    public class CreateReleaseRequest
+    public class UpdateReleaseProcessRequest
     {
         public string ProjectId { get; set; }
     }
 
-    public class CreateReleaseResponse
+    public class UpdateReleaseProcessResponse
     {
         public int CreatedReleaseId { get; set; }
         public string CreatedFromCommitSha { get; set; }
     }
 
-    public static class CreateReleaseHandler
+    public static class UpdateReleaseProcessHandler
     {
-        public static CreateReleaseResponse Handle(CreateReleaseRequest request)
+        public static UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest processRequest)
         {
-            var project = Projects.Get(request.ProjectId);
+            var project = Projects.Get(processRequest.ProjectId);
 
             var repositoryWorkingDir = Settings.WorkingDir
                 .AddSegment(project.Id)
@@ -41,12 +41,12 @@ namespace SheepIt.ConsolePrototype.UseCases
                 
                 var releaseId = Releases.Add(new Release
                 {
-                    ProjectId = request.ProjectId,
+                    ProjectId = processRequest.ProjectId,
                     CommitSha = currentCommitSha,
                     CreatedAt = DateTime.UtcNow
                 });
 
-                return new CreateReleaseResponse
+                return new UpdateReleaseProcessResponse
                 {
                     CreatedReleaseId = releaseId,
                     CreatedFromCommitSha = currentCommitSha

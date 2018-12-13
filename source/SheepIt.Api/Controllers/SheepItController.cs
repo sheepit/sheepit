@@ -15,10 +15,10 @@ namespace SheepIt.Api.Controllers
         }
 
         [HttpPost]
-        [Route("create-release")]
-        public object CreateProject(CreateReleaseRequest request)
+        [Route("update-release-process")]
+        public object CreateProject(UpdateReleaseProcessRequest processRequest)
         {
-            return CreateReleaseHandler.Handle(request);
+            return UpdateReleaseProcessHandler.Handle(processRequest);
         }
 
         [HttpPost]
