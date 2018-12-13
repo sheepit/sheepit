@@ -16,6 +16,18 @@ namespace SheepIt.Domain
             return Variables.GetForEnvironment(environment);
         }
 
+        public Release WithUpdatedCommitSha(string newCommitSha)
+        {
+            return new Release
+            {
+                Id = 0,
+                ProjectId = ProjectId,
+                CommitSha = newCommitSha,
+                CreatedAt = DateTime.UtcNow,
+                Variables = Variables.Clone()
+            };
+        }
+
         public Release WithUpdatedVariables(VariableValues[] newVariables)
         {
             return new Release

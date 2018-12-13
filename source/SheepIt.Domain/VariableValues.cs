@@ -32,6 +32,17 @@ namespace SheepIt.Domain
                 Variables = updatedVariables
             };
         }
+
+        // todo: clone won't be necessary, when databse document is separated from immutable domain object
+        public VariableCollection Clone()
+        {
+            return new VariableCollection
+            {
+                Variables = Variables
+                    .Select(variable => variable.Clone())
+                    .ToArray()
+            };
+        }
     }
 
     public class VariableValues
@@ -53,6 +64,19 @@ namespace SheepIt.Domain
             }
 
             return DefaultValue;
+        }
+
+        public VariableValues Clone()
+        {
+            return new VariableValues
+            {
+                Name = Name,
+                DefaultValue = DefaultValue,
+                EnvironmentValues = EnvironmentValues.ToDictionary(
+                    keySelector: pair => pair.Key,
+                    elementSelector: pair => pair.Value
+                )
+            };
         }
     }
 
