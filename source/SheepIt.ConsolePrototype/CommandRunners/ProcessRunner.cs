@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SheepIt.ConsolePrototype.ScriptFiles;
+using SheepIt.Domain;
 
 namespace SheepIt.ConsolePrototype.CommandRunners
 {

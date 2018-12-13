@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SheepIt.ConsolePrototype.CommandRunners;
 using SheepIt.ConsolePrototype.Infrastructure;
+using SheepIt.ConsolePrototype.ScriptFiles;
 using SheepIt.Domain;
 using SheepIt.Utils.Extensions;
 
@@ -50,8 +51,7 @@ namespace SheepIt.ConsolePrototype.UseCases
 
                 // read variables
 
-                var variables = repository.OpenVariableFile();
-                var variablesForCurrentEnvironment = variables.GetForEnvironment(request.Environment);
+                var variables = release.GetVariablesForEnvironment(request.Environment);
 
                 Console.WriteLine();
 
@@ -59,7 +59,7 @@ namespace SheepIt.ConsolePrototype.UseCases
 
                 var processResult = new ProcessRunner().Run(
                     processFile: repository.OpenProcessDescriptionFile(),
-                    variables: variablesForCurrentEnvironment,
+                    variables: variables,
                     workingDir: deploymentWorkingDir
                 );
 
@@ -78,7 +78,7 @@ namespace SheepIt.ConsolePrototype.UseCases
                 {
                     CreatedDeploymentId = deploymentId,
                     FromCommitSha = release.CommitSha,
-                    UsedVariables = variablesForCurrentEnvironment.ToDictionary(
+                    UsedVariables = variables.ToDictionary(
                         keySelector: variable => variable.Name,
                         elementSelector: variable => variable.Value
                     ),

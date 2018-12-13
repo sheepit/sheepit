@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SheepIt.ConsolePrototype.ScriptFiles;
+using SheepIt.Domain;
 
 namespace SheepIt.ConsolePrototype.CommandRunners
 {

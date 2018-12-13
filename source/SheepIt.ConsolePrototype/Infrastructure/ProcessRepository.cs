@@ -35,13 +35,6 @@ namespace SheepIt.ConsolePrototype.Infrastructure
             Commands.Checkout(_repository, commitSha);
         }
 
-        public VariablesFile OpenVariableFile()
-        {
-            var variablesFilePath = RepositoryPath.AddSegment("variables.yaml").ToString();
-
-            return VariablesFile.Open(variablesFilePath);
-        }
-
         public ProcessFile OpenProcessDescriptionFile()
         {
             var processDescriptionFilePath = RepositoryPath.AddSegment("process.yaml").ToString();

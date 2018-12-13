@@ -5,6 +5,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.ConsolePrototype.CommandRunners;
 using SheepIt.ConsolePrototype.ScriptFiles;
+using SheepIt.Domain;
 
 namespace SheepIt.ConsolePrototype.Tests
 {

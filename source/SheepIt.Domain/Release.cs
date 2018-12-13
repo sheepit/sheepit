@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SheepIt.Domain
@@ -9,6 +10,15 @@ namespace SheepIt.Domain
         public string ProjectId { get; set; }
         public string CommitSha { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public Dictionary<string, VariableValues> Variables { get; set; } = new Dictionary<string, VariableValues>();
+
+        public Variable[] GetVariablesForEnvironment(string environment)
+        {
+            return Variables
+                .Select(pair => new Variable(pair.Key, pair.Value.ValueForEnvironment(environment)))
+                .ToArray();
+        }
     }
 
     public static class Releases
