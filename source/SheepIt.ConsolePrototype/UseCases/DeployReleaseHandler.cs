@@ -31,7 +31,7 @@ namespace SheepIt.ConsolePrototype.UseCases
                 projectId: request.ProjectId
             );
 
-            var release = Releases.Get(
+            var release = ReleasesStorage.Get(
                 projectId: request.ProjectId,
                 releaseId: request.ReleaseId
             );

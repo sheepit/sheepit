@@ -21,7 +21,7 @@ namespace SheepIt.Domain
         }
     }
 
-    public static class Releases
+    public static class ReleasesStorage
     {
         public static int Add(Release release)
         {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SheepIt.ConsolePrototype.UseCases;
+using SheepIt.ConsolePrototype.UseCases.Releases;
 
 namespace SheepIt.Api.Controllers
 {
