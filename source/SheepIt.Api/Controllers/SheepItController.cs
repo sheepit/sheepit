@@ -43,7 +43,7 @@ namespace SheepIt.Api.Controllers
             return ListProjectsHandler.Handle(new ListProjectsRequest());
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("list-releases")]
         public object ListReleases(ListReleasesRequest request)
         {

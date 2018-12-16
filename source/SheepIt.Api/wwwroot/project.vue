@@ -7,6 +7,9 @@
         <h3 class="mt-5">Dashboard</h3>
         <project-dashboard class="mt-4" v-bind:project="project"></project-dashboard>
 
+        <h3 class="mt-5">Releases</h3>
+        <project-releases v-bind:project="project"></project-releases>
+
     </div>
 </template>
 
@@ -15,7 +18,8 @@
         name: 'project',
         
         components: {
-            'project-dashboard': httpVueLoader('project-dashboard.vue')
+            'project-dashboard': httpVueLoader('project-dashboard.vue'),
+            'project-releases': httpVueLoader('project-releases.vue')
         },
         
         props: [
