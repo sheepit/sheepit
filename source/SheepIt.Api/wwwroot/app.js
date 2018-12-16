@@ -1,6 +1,6 @@
 window.onload = function() {
     
-    const app = new Vue({
+    window.app = new Vue({
         el: '#app',
         
         components: {
@@ -25,7 +25,29 @@ window.onload = function() {
                     component: httpVueLoader('project.vue')
                 }
             ]
-        })
+        }),
+
+        data() {
+            return {
+                projects: []
+            }
+        },
+
+        created() {
+            this.updateProjects()
+        },
+
+        methods: {
+            updateProjects() {
+                return loadProjects()
+                    .then(response => this.projects = response.projects)
+            }
+        }
     })
+
+    function loadProjects() {
+        return fetch('api/list-projects')
+            .then(response => response.json())
+    }
 
 }

@@ -27,7 +27,8 @@
         methods: {
             create: function () {
                 createProject(this.projectId, this.repositoryUrl)
-                    .then(() => window.dispatchEvent(new Event('projectcreated')))
+                    .then(() => window.app.updateProjects())
+                    .then(() => this.$router.push({ name: 'project', params: { projectId: this.projectId }}))
             }
         }
     }

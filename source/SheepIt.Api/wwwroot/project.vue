@@ -1,33 +1,11 @@
 <template>
-    <div>
+    <div v-if="project">
 
-        <h3>{{ $route.params.projectId }}</h3>
+        <h2 class="display-4">{{ project.id }}</h2>
+        <p><code>{{ project.repositoryUrl }}</code></p>
 
-        <div class="row mt-4">
-            
-            <div v-for="environment in environments" class="col-md-3">
-
-                <div class="card">
-                    <div class="card-header">
-                        {{ environment.environmentId }}
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            Release: <br/>
-                            <h4>
-                                <span class="badge badge-primary">{{ environment.currentReleaseId }}</span>
-                            </h4>                            
-                        </li>
-                        <li class="list-group-item">
-                            Deployed at: <br/>
-                            <small>{{ environment.lastDeployedAt }}</small>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-            
-        </div>
+        <h3 class="mt-5">Dashboard</h3>
+        <project-dashboard class="mt-4" v-bind:project="project"></project-dashboard>
 
     </div>
 </template>
@@ -36,29 +14,45 @@
     module.exports = {
         name: 'project',
         
+        components: {
+            'project-dashboard': httpVueLoader('project-dashboard.vue')
+        },
+        
+        props: [
+            'projects'
+        ],
+        
         data() {
             return {
                 environments: []
             }
         },
 
+        computed: {
+            project() {
+                return this.projects
+                    .filter(project => project.id === this.$route.params.projectId)
+                    [0]
+            }
+        },
+
         watch: {
-            '$route': 'updateDashbaord'
+            '$route': 'updateDashboard'
         },
 
         created() {
-            this.updateDashbaord()
+            this.updateDashboard()
         },
         
         methods: {
-            updateDashbaord() {
-                getDashbaord(this.$route.params.projectId)
+            updateDashboard() {
+                getDashboard(this.$route.params.projectId)
                     .then(response => this.environments = response.environments)
             }
         }
     }
     
-    function getDashbaord(projectId) {
+    function getDashboard(projectId) {
         return postData('api/show-dashboard', { projectId })
             .then(response => response.json())
     }
