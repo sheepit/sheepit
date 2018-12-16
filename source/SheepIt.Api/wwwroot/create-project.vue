@@ -39,19 +39,4 @@
         })
     }
     
-    function postData(url, data) {
-        const fetchSettings = {
-            method: "POST",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-            },
-            referrer: "no-referrer",
-            body: JSON.stringify(data),
-        }
-        
-        return fetch(url, fetchSettings)            
-    }
 </script>
