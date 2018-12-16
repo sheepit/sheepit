@@ -1,40 +1,31 @@
-setTimeout(() => {
+window.onload = function() {
     
-    const Default = {
-        template: '<h4>Welcome to Sheep It</h4>'
-    }
-    
-    const CreateProject = {
-        template: '<div>creating project!</div>' 
-    }
-    
-    const Project = { 
-        template: '<div>{{ $route.params.projectId }}</div>' 
-    }
-
-    const router = new VueRouter({
-        routes: [
-            {
-                path: '/',
-                name: 'default',
-                component: Default
-            },
-            {
-                path: '/create-project',
-                name: 'create-project',
-                component: CreateProject
-            },
-            {
-                path: '/project/:projectId',
-                name: 'project',
-                component: Project
-            }
-        ]
-    })
-
     const app = new Vue({
         el: '#app',
-        router
+        
+        components: {
+            'navigation': httpVueLoader('navigation.vue')
+        },
+
+        router: new VueRouter({
+            routes: [
+                {
+                    path: '/',
+                    name: 'default',
+                    component: httpVueLoader('default.vue')
+                },
+                {
+                    path: '/create-project',
+                    name: 'create-project',
+                    component: httpVueLoader('create-project.vue')
+                },
+                {
+                    path: '/project/:projectId',
+                    name: 'project',
+                    component: httpVueLoader('project.vue')
+                }
+            ]
+        })
     })
 
-}, 0)
+}
