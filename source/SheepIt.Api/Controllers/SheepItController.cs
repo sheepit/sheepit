@@ -17,6 +17,7 @@ namespace SheepIt.Api.Controllers
             CreateProjectHandler.Handle(request);
         }
 
+        // currently used for editing variables
         [HttpPost]
         [Route("get-last-release")]
         public object GetLastRelease(GetLastReleaseRequest request)
@@ -25,12 +26,20 @@ namespace SheepIt.Api.Controllers
         }
         
         [HttpPost]
+        [Route("edit-release-variables")]
+        public object EditReleaseVariables(EditReleaseVariablesRequest request)
+        {
+            return EditReleaseVariablesHandler.Handle(request);
+        }
+        
+        [HttpPost]
         [Route("update-release-process")]
         public object UpdateReleaseProcess(UpdateReleaseProcessRequest request)
         {
             return UpdateReleaseProcessHandler.Handle(request);
         }
-
+        
+        // meant to be used programatically via public API, e. g. when you want to update single variable, like service version 
         [HttpPost]
         [Route("update-release-variables")]
         public object UpdateReleaseVariables(UpdateReleaseVariablesRequest request)

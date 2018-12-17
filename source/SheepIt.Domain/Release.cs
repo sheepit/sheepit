@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SheepIt.Domain
@@ -37,6 +38,21 @@ namespace SheepIt.Domain
                 CommitSha = CommitSha,
                 CreatedAt = DateTime.UtcNow,
                 Variables = Variables.WithUpdatedVariables(newVariables)
+            };
+        }
+
+        public Release WithNewVariables(IEnumerable<VariableValues> newVariables)
+        {
+            return new Release
+            {
+                Id = 0,
+                ProjectId = ProjectId,
+                CommitSha = CommitSha,
+                CreatedAt = DateTime.UtcNow,
+                Variables = new VariableCollection()
+                {
+                    Variables = newVariables.ToArray()
+                }
             };
         }
     }

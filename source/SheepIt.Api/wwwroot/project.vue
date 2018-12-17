@@ -1,9 +1,20 @@
 <template>
     <div v-if="project">
 
-        <h2 class="display-4">{{ project.id }}</h2>
-        <p><code>{{ project.repositoryUrl }}</code></p>
-
+        <div class="row">
+            <div class="col">
+                <h2 class="display-4">{{ project.id }}</h2>
+                <p><code>{{ project.repositoryUrl }}</code></p>
+            </div>
+            <div class="col text-right">
+                <p>
+                    <router-link class="btn btn-primary" :to="{ name: 'create-release', params: { projectId: project.id }}">
+                        Edit variables
+                    </router-link>
+                </p>
+            </div>
+        </div>
+        
         <h3 class="mt-5">Dashboard</h3>
         <project-dashboard class="mt-4" v-bind:project="project"></project-dashboard>
 
