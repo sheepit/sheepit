@@ -10,6 +10,9 @@
         <h3 class="mt-5">Releases</h3>
         <project-releases v-bind:project="project"></project-releases>
 
+        <h3 class="mt-5">Deployments</h3>
+        <project-deployments v-bind:project="project"></project-deployments>
+
     </div>
 </template>
 
@@ -19,7 +22,8 @@
         
         components: {
             'project-dashboard': httpVueLoader('project-dashboard.vue'),
-            'project-releases': httpVueLoader('project-releases.vue')
+            'project-releases': httpVueLoader('project-releases.vue'),
+            'project-deployments': httpVueLoader('project-deployments.vue')
         },
         
         props: [

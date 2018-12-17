@@ -1,6 +1,8 @@
 window.onload = function() {
 
     httpVueLoader.register(Vue, 'expanding-list.vue')
+    httpVueLoader.register(Vue, 'humanized-date.vue')
+    httpVueLoader.register(Vue, 'tooltip.vue')
     
     window.app = new Vue({
         el: '#app',

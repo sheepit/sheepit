@@ -1,5 +1,5 @@
 <template>
-    <expanding-list class="mt-4" v-bind:all-items="allReleases" initial-length="5">
+    <expanding-list class="mt-4" v-bind:all-items="releases" initial-length="5">
         <template slot-scope="{ items }">
             <table class="table table-bordered">
                 <thead>
@@ -33,19 +33,10 @@
         
         data() {
             return {
-                showAll: false,
-                allReleases: []
+                releases: []
             }
         },
         
-        computed: {
-            releases() {
-                return this.showAll
-                    ? this.allReleases
-                    : this.allReleases.slice(0, 5)
-            }
-        },
-
         watch: {
             project: {
                 immediate: true,
@@ -56,7 +47,7 @@
         methods: {
             updateReleases() {
                 getReleases(this.project.id)
-                    .then(response => this.allReleases = response.releases.reverse())
+                    .then(response => this.releases = response.releases.reverse())
             }
         }
     }

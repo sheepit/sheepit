@@ -50,7 +50,7 @@ namespace SheepIt.Api.Controllers
             return ListReleasesHandler.Handle(request);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("list-deployments")]
         public object ListDeployments(ListDeploymentsRequest request)
         {
