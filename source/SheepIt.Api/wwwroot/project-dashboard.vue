@@ -15,8 +15,8 @@
                         </h4>
                     </li>
                     <li class="list-group-item">
-                        Deployed at: <br/>
-                        <small>{{ environment.lastDeployedAt }}</small>
+                        Deployed: <br/>
+                        <humanized-date v-bind:date="environment.lastDeployedAt"></humanized-date>
                     </li>
                 </ul>
             </div>

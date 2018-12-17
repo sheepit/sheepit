@@ -7,16 +7,16 @@
                         <th scope="col">id</th>
                         <th scope="col">release id</th>
                         <th scope="col">environment id</th>
-                        <th scope="col">deployed at</th>
+                        <th scope="col">deployed</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="deployment in items">
                         <th scope="row">
-                            <span class="badge badge-secondary">{{ deployment.id }}</span>
+                            <span class="badge badge-success">{{ deployment.id }}</span>
                         </th>
                         <td>
-                            <span class="badge badge-success">{{ deployment.releaseId }}</span>
+                            <span class="badge badge-primary">{{ deployment.releaseId }}</span>
                         </td>
                         <td>
                             <span class="badge badge-warning">{{ deployment.environmentId }}</span>

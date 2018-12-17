@@ -5,7 +5,7 @@
                 <thead>
                 <tr>
                     <th scope="col">id</th>
-                    <th scope="col">created at</th>
+                    <th scope="col">created</th>
                     <th scope="col">commit sha</th>
                 </tr>
                 </thead>
@@ -14,8 +14,14 @@
                     <th scope="row">
                         <span class="badge badge-primary">{{ release.id }}</span>
                     </th>
-                    <td>{{ release.createdAt }}</td>
-                    <td><code>{{ release.commitSha }}</code></td>
+                    <td>
+                        <humanized-date v-bind:date="release.createdAt"></humanized-date>
+                    </td>
+                    <td>
+                        <tooltip v-bind:text="release.commitSha">
+                            <code>{{ shortCommitSha(release.commitSha) }}</code>
+                        </tooltip>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -48,6 +54,9 @@
             updateReleases() {
                 getReleases(this.project.id)
                     .then(response => this.releases = response.releases.reverse())
+            },
+            shortCommitSha(commitSha) {
+                return commitSha.substring(0, 7)
             }
         }
     }
