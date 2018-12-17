@@ -4,6 +4,8 @@ using SheepIt.ConsolePrototype.UseCases.Releases;
 
 namespace SheepIt.Api.Controllers
 {
+    // todo: there should be a clear distinction between api used in web app and public api
+    
     [Route("api")]
     [ApiController]
     public class SheepItController : ControllerBase
@@ -15,6 +17,13 @@ namespace SheepIt.Api.Controllers
             CreateProjectHandler.Handle(request);
         }
 
+        [HttpPost]
+        [Route("get-last-release")]
+        public object GetLastRelease(GetLastReleaseRequest request)
+        {
+            return GetLastReleaseHandler.Handle(request);
+        }
+        
         [HttpPost]
         [Route("update-release-process")]
         public object UpdateReleaseProcess(UpdateReleaseProcessRequest request)
