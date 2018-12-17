@@ -12,6 +12,11 @@
                         Edit variables
                     </router-link>
                 </p>
+                <p>
+                    <button class="btn btn-primary" v-on:click="updateProcess()">
+                        Update process
+                    </button>
+                </p>
             </div>
         </div>
         
@@ -56,23 +61,28 @@
         },
 
         watch: {
-            '$route': 'updateDashboard'
+            'project': 'updateDashboard'
         },
 
-        created() {
-            this.updateDashboard()
-        },
-        
         methods: {
             updateDashboard() {
-                getDashboard(this.$route.params.projectId)
+                getDashboard(this.project.id)
                     .then(response => this.environments = response.environments)
+            },
+            updateProcess() {
+                updateProcess(this.project.id)
+                    .then(() => window.app.updateProjects())
             }
         }
     }
     
     function getDashboard(projectId) {
         return postData('api/show-dashboard', { projectId })
+            .then(response => response.json())
+    }
+    
+    function updateProcess(projectId) {
+        return postData('api/update-release-process', { projectId })
             .then(response => response.json())
     }
 </script>
