@@ -1,27 +1,26 @@
 <template>
-    <div>
-        <p>releases for {{project.id}}</p>
-
-        <table class="table table-bordered">
-            <thead>
+    <expanding-list class="mt-4" v-bind:all-items="allReleases" initial-length="5">
+        <template slot-scope="{ items }">
+            <table class="table table-bordered">
+                <thead>
                 <tr>
                     <th scope="col">id</th>
                     <th scope="col">created at</th>
                     <th scope="col">commit sha</th>
                 </tr>
-            </thead>
-            <tbody>
-                <tr v-for="release in releases">
+                </thead>
+                <tbody>
+                <tr v-for="release in items">
                     <th scope="row">
-                        <span class="badge badge-primary">{{ release.id }}</span>                        
+                        <span class="badge badge-primary">{{ release.id }}</span>
                     </th>
                     <td>{{ release.createdAt }}</td>
                     <td><code>{{ release.commitSha }}</code></td>
                 </tr>
-            </tbody>
-        </table>
-
-    </div>
+                </tbody>
+            </table>
+        </template>
+    </expanding-list>
 </template>
 
 <script>
@@ -34,22 +33,30 @@
         
         data() {
             return {
-                releases: []
+                showAll: false,
+                allReleases: []
+            }
+        },
+        
+        computed: {
+            releases() {
+                return this.showAll
+                    ? this.allReleases
+                    : this.allReleases.slice(0, 5)
             }
         },
 
         watch: {
-            'project': 'updateReleases'
+            project: {
+                immediate: true,
+                handler: 'updateReleases'
+            }
         },
 
-        created() {
-            this.updateReleases()
-        },
-        
         methods: {
             updateReleases() {
                 getReleases(this.project.id)
-                    .then(response => this.releases = response.releases)
+                    .then(response => this.allReleases = response.releases.reverse())
             }
         }
     }

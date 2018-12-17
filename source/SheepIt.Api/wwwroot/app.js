@@ -1,4 +1,6 @@
 window.onload = function() {
+
+    httpVueLoader.register(Vue, 'expanding-list.vue')
     
     window.app = new Vue({
         el: '#app',
