@@ -13,7 +13,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>deployment id</th>
+                    <th>id</th>
                     <th>status</th>
                     <th>release id</th>
                     <th>environment id</th>
@@ -23,7 +23,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <span class="badge badge-success">{{ deployment.id }}</span>
+                        <deployment-badge v-bind:project-id="project.id" v-bind:deployment-id="deployment.id"></deployment-badge>
                     </td>
                     <td>
                         <deployment-status-badge v-bind:status="deployment.status"></deployment-status-badge>

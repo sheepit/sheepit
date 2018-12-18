@@ -14,7 +14,7 @@
                 <tbody>
                     <tr v-for="deployment in items">
                         <th scope="row">
-                            <span class="badge badge-success">{{ deployment.id }}</span>
+                            <deployment-badge v-bind:project-id="project.id" v-bind:deployment-id="deployment.id"></deployment-badge>
                         </th>
                         <td>
                             <deployment-status-badge v-bind:status="deployment.status"></deployment-status-badge>
