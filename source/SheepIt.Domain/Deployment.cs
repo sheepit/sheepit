@@ -8,8 +8,16 @@ namespace SheepIt.Domain
         public int Id { get; set; }
         public string ProjectId { get; set; }
         public int ReleaseId { get; set; }
-        public DateTime DeployedAt { get; set; }
+        public DateTime DeployedAt { get; set; } // todo: started at?
         public string EnvironmentId { get; set; }
+        public DeploymentStatus Status { get; set; }
+    }
+
+    public enum DeploymentStatus
+    {
+        InProgress,
+        Succeeded,
+        Failed
     }
 
     public static class Deployments
@@ -18,9 +26,9 @@ namespace SheepIt.Domain
         {
             using (var database = Database.Open())
             {
-                var deploymentCollection = database.GetCollection<Deployment>();
+                var collection = database.GetCollection<Deployment>();
 
-                return deploymentCollection.Insert(deployment);
+                return collection.Insert(deployment);
             }
         }
 
@@ -28,11 +36,25 @@ namespace SheepIt.Domain
         {
             using (var database = Database.Open())
             {
-                var deploymentCollection = database.GetCollection<Deployment>();
+                var collection = database.GetCollection<Deployment>();
 
-                return deploymentCollection
+                return collection
                     .Find(deployment => deployment.ProjectId == projectId)
                     .ToArray();
+            }
+        }
+
+        public static void ChangeDeploymentStatus(int deploymentId, DeploymentStatus newStatus)
+        {
+            using (var database = Database.Open())
+            {
+                var collection = database.GetCollection<Deployment>();
+
+                var deployment = collection.FindById(deploymentId);
+
+                deployment.Status = newStatus;
+
+                collection.Update(deployment);
             }
         }
     }

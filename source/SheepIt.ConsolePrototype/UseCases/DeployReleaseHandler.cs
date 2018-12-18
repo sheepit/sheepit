@@ -12,7 +12,7 @@ namespace SheepIt.ConsolePrototype.UseCases
     {
         public string ProjectId { get; set; }
         public int ReleaseId { get; set; }
-        public string Environment { get; set; }
+        public string EnvironmentId { get; set; }
     }
 
     public class DeployReleaseResponse
@@ -35,43 +35,51 @@ namespace SheepIt.ConsolePrototype.UseCases
                 projectId: request.ProjectId,
                 releaseId: request.ReleaseId
             );
+            
+            var deploymentId = Deployments.Add(new Deployment
+            {
+                ReleaseId = release.Id,
+                ProjectId = request.ProjectId,
+                DeployedAt = DateTime.UtcNow,
+                EnvironmentId = request.EnvironmentId,
+                Status = DeploymentStatus.InProgress
+            });
 
+            try
+            {
+                var response = Deploy(project, release, deploymentId, request.EnvironmentId);
+               
+                Deployments.ChangeDeploymentStatus(deploymentId, DeploymentStatus.Succeeded);
+                
+                return response;
+            }
+            catch (Exception)
+            {
+                Deployments.ChangeDeploymentStatus(deploymentId, DeploymentStatus.Failed);
+                
+                throw;
+            }
+        }
+
+        private static DeployReleaseResponse Deploy(Project project, Release release, int deploymentId, string environmentId)
+        {
+            var variables = release.GetVariablesForEnvironment(environmentId);
+            
             var deploymentWorkingDir = Settings.WorkingDir
                 .AddSegment(project.Id)
                 .AddSegment("deploying-releases")
-                .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{request.Environment}_release-{release.Id}")
+                .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{environmentId}_release-{release.Id}")
                 .ToString();
 
             using (var repository = ProcessRepository.Clone(project.RepositoryUrl, deploymentWorkingDir))
             {
-                // checkout
-
                 repository.Checkout(release.CommitSha);
-
-                // read variables
-
-                var variables = release.GetVariablesForEnvironment(request.Environment);
-
-                Console.WriteLine();
-
-                // run process
 
                 var processResult = new ProcessRunner().Run(
                     processFile: repository.OpenProcessDescriptionFile(),
                     variablesForEnvironment: variables,
                     workingDir: deploymentWorkingDir
                 );
-
-                // save deployment
-
-                // todo: we should persist deployments at the beginning and later include information whether it succeeded or not
-                var deploymentId = Deployments.Add(new Deployment
-                {
-                    ReleaseId = release.Id,
-                    ProjectId = request.ProjectId,
-                    DeployedAt = DateTime.UtcNow,
-                    EnvironmentId = request.Environment
-                });
 
                 return new DeployReleaseResponse
                 {
