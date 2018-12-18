@@ -6,6 +6,7 @@ window.onload = function() {
     httpVueLoader.register(Vue, 'release-badge.vue')
     httpVueLoader.register(Vue, 'deployment-badge.vue')
     httpVueLoader.register(Vue, 'deployment-status-badge.vue')
+    httpVueLoader.register(Vue, 'project-breadcrumbs.vue')
     
     window.app = new Vue({
         el: '#app',

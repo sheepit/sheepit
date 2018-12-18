@@ -1,6 +1,9 @@
 <template>
     <div v-if="project">
-
+        
+        <project-breadcrumbs v-bind:project-id="project.id">
+        </project-breadcrumbs>
+        
         <div class="row">
             <div class="col">
                 <h2 class="display-4">{{ project.id }}</h2>

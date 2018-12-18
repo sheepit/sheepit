@@ -1,15 +1,15 @@
 <template>
     <div v-if="deployment">
 
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Projects</a></li>
-                <li class="breadcrumb-item"><a href="#">{{ project.id }}</a></li>
-                <li class="breadcrumb-item"><a href="#">Deployments</a></li>
-                <li class="breadcrumb-item active">{{ deployment.id }}</li>
-            </ol>
-        </nav>
-
+        <project-breadcrumbs v-bind:project-id="project.id">
+            <li class="breadcrumb-item">
+                deployments
+            </li>
+            <li class="breadcrumb-item active">
+                {{ deployment.id }}
+            </li>
+        </project-breadcrumbs>
+        
         <table class="table table-bordered">
             <thead>
                 <tr>

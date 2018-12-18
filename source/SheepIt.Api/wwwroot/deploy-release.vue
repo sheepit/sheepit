@@ -1,6 +1,20 @@
 <template>
     <div>
-        <h4>Deploy <release-badge v-bind:project-id="project.id" v-bind:release-id="releaseId"></release-badge> to:</h4>
+        <project-breadcrumbs v-bind:project-id="project.id">
+            <li class="breadcrumb-item">
+                releases
+            </li>
+            <li class="breadcrumb-item">
+                {{ releaseId }}
+            </li>
+            <li class="breadcrumb-item">
+                deploy
+            </li>
+        </project-breadcrumbs>
+        
+        <h4 class="mt-4">
+            Deploy <release-badge v-bind:project-id="project.id" v-bind:release-id="releaseId"></release-badge> to:
+        </h4>
         <p>
             <button v-for="environment in environments" v-on:click="deploy(environment)" type="button" class="btn btn-outline-success mr-1">
                 {{ environment }}

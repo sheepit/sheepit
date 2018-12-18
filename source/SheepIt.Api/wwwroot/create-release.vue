@@ -1,11 +1,17 @@
 <template>
     <div>
 
+        <project-breadcrumbs v-bind:project-id="project.id">
+            <li class="breadcrumb-item">
+                edit variables
+            </li>
+        </project-breadcrumbs>
+        
         <div v-if="release">
-            
-            <h3>Creating release for project {{ project.id }} based on release {{ release.id }}</h3>
-            
-            <h4>Variables</h4>
+            <h4 class="mt-5">
+                Editing variables based on
+                <release-badge v-bind:project-id="project.id" v-bind:release-id="release.id"></release-badge>
+            </h4>
             
             <variable-editor v-bind:variables="release.variables" v-bind:environments="['dev', 'test', 'prod']">
             </variable-editor>
