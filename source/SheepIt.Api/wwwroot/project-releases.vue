@@ -7,6 +7,7 @@
                     <th scope="col">id</th>
                     <th scope="col">created</th>
                     <th scope="col">commit sha</th>
+                    <th scope="col">operations</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -21,6 +22,11 @@
                         <tooltip v-bind:text="release.commitSha">
                             <code>{{ shortCommitSha(release.commitSha) }}</code>
                         </tooltip>
+                    </td>
+                    <td>
+                        <router-link tag="button" v-bind:to="{ name: 'deploy-release', params: { projectId: project.id, releaseId: release.id } }" class="btn btn-success">
+                            Deploy!
+                        </router-link>
                     </td>
                 </tr>
                 </tbody>

@@ -37,6 +37,11 @@ window.onload = function() {
                     path: '/project/:projectId/deployment-details/:deploymentId',
                     name: 'deployment-details',
                     component: httpVueLoader('deployment-details.vue')
+                },
+                {
+                    path: '/project/:projectId/deploy-release/:releaseId',
+                    name: 'deploy-release',
+                    component: httpVueLoader('deploy-release.vue')
                 }
             ]
         }),
