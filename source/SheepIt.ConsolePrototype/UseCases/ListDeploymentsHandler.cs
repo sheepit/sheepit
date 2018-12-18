@@ -31,7 +31,7 @@ namespace SheepIt.ConsolePrototype.UseCases
                 var deploymentCollection = database.GetCollection<Deployment>();
 
                 var deployments = deploymentCollection
-                    .Find(deployment => deployment.ProjectIt == options.ProjectId)
+                    .Find(deployment => deployment.ProjectId == options.ProjectId)
                     .OrderBy(deployment => deployment.DeployedAt)
                     .Select(Map)
                     .ToArray();

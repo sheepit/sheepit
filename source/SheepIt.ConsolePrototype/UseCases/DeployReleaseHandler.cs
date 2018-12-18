@@ -68,7 +68,7 @@ namespace SheepIt.ConsolePrototype.UseCases
                 var deploymentId = Deployments.Add(new Deployment
                 {
                     ReleaseId = release.Id,
-                    ProjectIt = request.ProjectId,
+                    ProjectId = request.ProjectId,
                     DeployedAt = DateTime.UtcNow,
                     EnvironmentId = request.Environment
                 });

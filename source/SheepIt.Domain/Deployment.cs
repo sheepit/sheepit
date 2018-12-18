@@ -6,7 +6,7 @@ namespace SheepIt.Domain
     public class Deployment
     {
         public int Id { get; set; }
-        public string ProjectIt { get; set; } // todo: it should be renamed, but it will break my current db-s
+        public string ProjectId { get; set; }
         public int ReleaseId { get; set; }
         public DateTime DeployedAt { get; set; }
         public string EnvironmentId { get; set; }
@@ -31,7 +31,7 @@ namespace SheepIt.Domain
                 var deploymentCollection = database.GetCollection<Deployment>();
 
                 return deploymentCollection
-                    .Find(deployment => deployment.ProjectIt == projectId)
+                    .Find(deployment => deployment.ProjectId == projectId)
                     .ToArray();
             }
         }
