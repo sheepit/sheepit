@@ -13,6 +13,8 @@
     module.exports = {
         name: 'deploy-release',
         
+        props: ['project'],
+        
         data() {
             return {
                 // todo: should not be hardcoded
@@ -23,16 +25,13 @@
         computed: {
             releaseId() {
                 return this.$route.params.releaseId
-            },
-            projectId() {
-                return this.$route.params.projectId
             }
         },
         
         methods: {
             deploy(environmentId) {
                 const request = {
-                    projectId: this.projectId,
+                    projectId: this.project.id,
                     releaseId: this.releaseId,
                     environmentId: environmentId
                 }
@@ -45,7 +44,7 @@
                 this.$router.push({
                     name: 'deployment-details',
                     params: {
-                        projectId: this.projectId,
+                        projectId: this.project.id,
                         deploymentId: deploymentId
                     }
                 })

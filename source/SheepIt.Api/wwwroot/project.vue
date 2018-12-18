@@ -43,7 +43,7 @@
         },
         
         props: [
-            'projects'
+            'project'
         ],
         
         data() {
@@ -51,15 +51,7 @@
                 environments: []
             }
         },
-
-        computed: {
-            project() {
-                return this.projects
-                    .filter(project => project.id === this.$route.params.projectId)
-                    [0]
-            }
-        },
-
+        
         watch: {
             'project': 'getDeploymentDetails'
         },

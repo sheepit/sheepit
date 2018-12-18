@@ -23,7 +23,7 @@
             'variable-editor': httpVueLoader('variable-editor.vue')
         },
         
-        props: ['projects'],
+        props: ['project'],
         
         data() {
             return {
@@ -31,24 +31,10 @@
             }
         },
 
-        computed: {
-            project() {
-                return this.projects
-                    .filter(project => project.id === this.$route.params.projectId)
-                    [0]
-            }
-        },
-        
-        created() {
-            // todo: y tho
-            if (this.project) {
-                this.getRelease()
-            }
-        },
-        
         watch: {
-            project() {
-                this.getRelease()
+            project: {
+                immediate: true,
+                handler: 'getRelease'
             }
         },
 

@@ -58,7 +58,7 @@
         name: 'deployment-details',
 
         props: [
-            'projects'
+            'project'
         ],
         
         data() {
@@ -76,12 +76,6 @@
         },
 
         computed: {
-            // todo: this is duplicated all over the place
-            project() {
-                return this.projects
-                    .filter(project => project.id === this.$route.params.projectId)
-                    [0]
-            },
             deploymentId() {
                 return this.$route.params.deploymentId
             }
@@ -100,10 +94,8 @@
         
         methods: {
             getDeploymentDetails() {
-                if (this.project) {
-                    getDeploymentDetails(this.project.id, this.deploymentId)
-                        .then(response => this.deployment = response)
-                }                
+                getDeploymentDetails(this.project.id, this.deploymentId)
+                    .then(response => this.deployment = response)
             }
         }
     }
