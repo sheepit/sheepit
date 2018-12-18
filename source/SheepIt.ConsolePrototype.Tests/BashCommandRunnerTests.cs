@@ -50,6 +50,7 @@ namespace SheepIt.ConsolePrototype.Tests
             var result = RunCommand("some_unknown_command");
 
             result.Successful.Should().BeFalse();
+            result.Output.Should().NotBeEmpty();
         }
 
         private static ProcessStepResult RunCommand(string command)

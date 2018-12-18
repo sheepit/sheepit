@@ -42,7 +42,7 @@ namespace SheepIt.ConsolePrototype.UseCases
 
             var release = ReleasesStorage.Get(
                 projectId: request.ProjectId,
-                releaseId: deployment.Id
+                releaseId: deployment.ReleaseId
             );
             
             return new GetDeploymentDetailsResponse

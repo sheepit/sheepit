@@ -31,10 +31,10 @@
                         </span>
                     </td>
                     <td>
-                        <span class="badge badge-warning">{{ deployment.environmentId }}</span>
+                        <span class="badge badge-primary">{{ deployment.releaseId }}</span>
                     </td>
                     <td>
-                        <span class="badge badge-primary">{{ deployment.releaseId }}</span>
+                        <span class="badge badge-warning">{{ deployment.environmentId }}</span>
                     </td>
                     <td>
                         <humanized-date v-bind:date="deployment.deployedAt"></humanized-date>
@@ -100,8 +100,10 @@
         
         methods: {
             getDeploymentDetails() {
-                getDeploymentDetails(this.project.id, this.deploymentId)
-                    .then(response => this.deployment = response)
+                if (this.project) {
+                    getDeploymentDetails(this.project.id, this.deploymentId)
+                        .then(response => this.deployment = response)
+                }                
             }
         }
     }

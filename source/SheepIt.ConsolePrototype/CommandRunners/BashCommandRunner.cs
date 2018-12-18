@@ -9,41 +9,19 @@ namespace SheepIt.ConsolePrototype.CommandRunners
     {
         public ProcessStepResult Run(string command, IEnumerable<VariableForEnvironment> variables, string workingDir)
         {
-            var processStartInfo = new ProcessStartInfo
-            {
-                FileName = @"C:\Program Files\Git\bin\bash.exe", // todo: obviously this shouldn't be hardcoded
-                Arguments = "-s", // -s will run command from standard input
-                WorkingDirectory = workingDir,
-                RedirectStandardInput = true,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true
-            };
-
-            foreach (var variable in variables)
-            {
-                processStartInfo.EnvironmentVariables[variable.Name] = variable.Value;
-            }
-
-            var process = new Process
-            {
-                StartInfo = processStartInfo
-            };
-
-            process.Start();
+            var systemProcessResult = SystemProcessRunner.RunProcess(
+                workingDir: workingDir,
+                fileName: @"C:\Program Files\Git\bin\bash.exe", // todo: obviously this shouldn't be hardcoded
+                arguments: "-s", // -s will read command from standard input
+                variables: variables,
+                standardInputOrNull: command
+            );
             
-            // we send command via standard input rather than by -c flag to handle quotes correctly
-            process.StandardInput.Write(command);
-
-            process.StandardInput.Close(); // todo: should we close it? should we dispose it?
-
-            var output = process.StandardOutput.ReadLinesToEnd();
-
             return new ProcessStepResult
             {
-                Output = output,
-                Successful = process.ExitCode == 0
+                Command = command,
+                Successful = systemProcessResult.Successful,
+                Output = systemProcessResult.Output
             };
         }
     }
