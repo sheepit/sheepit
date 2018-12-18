@@ -41,15 +41,15 @@
         },
 
         watch: {
-            'project': 'updateDashboard'
+            'project': 'getDeploymentDetails'
         },
 
         created() {
-            this.updateDashboard()
+            this.getDeploymentDetails()
         },
 
         methods: {
-            updateDashboard() {
+            getDeploymentDetails() {
                 getDashboard(this.project.id)
                     .then(response => this.environments = response.environments)
             }

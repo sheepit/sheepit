@@ -53,6 +53,13 @@ namespace SheepIt.Api.Controllers
         {
             return DeployReleaseHandler.Handle(request);
         }
+        
+        [HttpPost]
+        [Route("get-deployment-details")]
+        public object GetDeploymentDetails(GetDeploymentDetailsRequest request)
+        {
+            return GetDeploymentDetailsHandler.Handle(request);
+        }
 
         [HttpGet]
         [Route("list-projects")]

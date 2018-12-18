@@ -70,6 +70,18 @@ namespace SheepIt.Domain
             }
         }
 
+        public static Deployment Get(string projectId, int deploymentId)
+        {
+            using (var database = Database.Open())
+            {
+                var collection = database.GetCollection<Deployment>();
+
+                return collection
+                    .Find(deployment => deployment.ProjectId == projectId && deployment.Id == deploymentId)
+                    .Single();
+            }
+        }
+
         public static Deployment[] GetAll(string projectId)
         {
             using (var database = Database.Open())

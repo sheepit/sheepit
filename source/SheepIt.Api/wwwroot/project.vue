@@ -61,11 +61,11 @@
         },
 
         watch: {
-            'project': 'updateDashboard'
+            'project': 'getDeploymentDetails'
         },
 
         methods: {
-            updateDashboard() {
+            getDeploymentDetails() {
                 getDashboard(this.project.id)
                     .then(response => this.environments = response.environments)
             },

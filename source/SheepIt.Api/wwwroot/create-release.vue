@@ -2,7 +2,7 @@
     <div>
 
         <div v-if="release">
-
+            
             <h3>Creating release for project {{ project.id }} based on release {{ release.id }}</h3>
             
             <h4>Variables</h4>
