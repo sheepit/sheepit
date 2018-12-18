@@ -26,9 +26,7 @@
                         <span class="badge badge-success">{{ deployment.id }}</span>
                     </td>
                     <td>
-                        <span class="badge" v-bind:class="'badge-' + deploymentStatusStyles[deployment.status]">
-                            {{ deployment.status }}
-                        </span>
+                        <deployment-status-badge v-bind:status="deployment.status"></deployment-status-badge>
                     </td>
                     <td>
                         <span class="badge badge-primary">{{ deployment.releaseId }}</span>
