@@ -41,7 +41,7 @@ namespace SheepIt.ConsolePrototype.Tests
         {
             var result = RunCommand("echo test");
 
-            result.WasSuccessful.Should().BeTrue();
+            result.Successful.Should().BeTrue();
         }
 
         [Test]
@@ -49,15 +49,15 @@ namespace SheepIt.ConsolePrototype.Tests
         {
             var result = RunCommand("some_unknown_command");
 
-            result.WasSuccessful.Should().BeFalse();
+            result.Successful.Should().BeFalse();
         }
 
-        private static CommandResult RunCommand(string command)
+        private static ProcessStepResult RunCommand(string command)
         {
             return RunCommand(command, Enumerable.Empty<VariableForEnvironment>());
         }
 
-        private static CommandResult RunCommand(string command, IEnumerable<VariableForEnvironment> variables)
+        private static ProcessStepResult RunCommand(string command, IEnumerable<VariableForEnvironment> variables)
         {
             var commandRunner = new BashCommandRunner();
 

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using SheepIt.ConsolePrototype.CommandRunners;
 using SheepIt.ConsolePrototype.Infrastructure;
 using SheepIt.Domain;
@@ -18,9 +16,6 @@ namespace SheepIt.ConsolePrototype.UseCases
     public class DeployReleaseResponse
     {
         public int CreatedDeploymentId { get; set; }
-        public string FromCommitSha { get; set; }
-        public Dictionary<string, string> UsedVariables { get; set; }
-        public ProcessResult ProcessResult { get; set; }
     }
 
     public static class DeployReleaseHandler
@@ -35,62 +30,60 @@ namespace SheepIt.ConsolePrototype.UseCases
                 projectId: request.ProjectId,
                 releaseId: request.ReleaseId
             );
-            
-            var deploymentId = Deployments.Add(new Deployment
+
+            var deployment = new Deployment
             {
                 ReleaseId = release.Id,
                 ProjectId = request.ProjectId,
                 DeployedAt = DateTime.UtcNow,
                 EnvironmentId = request.EnvironmentId,
                 Status = DeploymentStatus.InProgress
-            });
+            };
+            
+            var deploymentId = Deployments.Add(deployment);
 
+            RunDeployment(project, release, deployment);
+
+            return new DeployReleaseResponse
+            {
+                CreatedDeploymentId = deploymentId
+            };
+        }
+
+        private static void RunDeployment(Project project, Release release, Deployment deployment)
+        {
             try
             {
-                var response = Deploy(project, release, deploymentId, request.EnvironmentId);
-               
-                Deployments.ChangeDeploymentStatus(deploymentId, DeploymentStatus.Succeeded);
-                
-                return response;
+                var deploymentWorkingDir = Settings.WorkingDir
+                    .AddSegment(project.Id)
+                    .AddSegment("deploying-releases")
+                    .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_release-{release.Id}")
+                    .ToString();
+
+                using (var repository = ProcessRepository.Clone(project.RepositoryUrl, deploymentWorkingDir))
+                {
+                    repository.Checkout(release.CommitSha);
+
+                    var processOutput = new ProcessRunner().Run(
+                        processFile: repository.OpenProcessDescriptionFile(),
+                        variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId),
+                        workingDir: deploymentWorkingDir
+                    );
+
+                    deployment.MarkFinished(processOutput);
+
+                    Deployments.Update(deployment);
+                }
             }
             catch (Exception)
             {
-                Deployments.ChangeDeploymentStatus(deploymentId, DeploymentStatus.Failed);
-                
+                // todo: log exception
+
+                deployment.MarkExecutionFailed();
+
+                Deployments.Update(deployment);
+
                 throw;
-            }
-        }
-
-        private static DeployReleaseResponse Deploy(Project project, Release release, int deploymentId, string environmentId)
-        {
-            var variables = release.GetVariablesForEnvironment(environmentId);
-            
-            var deploymentWorkingDir = Settings.WorkingDir
-                .AddSegment(project.Id)
-                .AddSegment("deploying-releases")
-                .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{environmentId}_release-{release.Id}")
-                .ToString();
-
-            using (var repository = ProcessRepository.Clone(project.RepositoryUrl, deploymentWorkingDir))
-            {
-                repository.Checkout(release.CommitSha);
-
-                var processResult = new ProcessRunner().Run(
-                    processFile: repository.OpenProcessDescriptionFile(),
-                    variablesForEnvironment: variables,
-                    workingDir: deploymentWorkingDir
-                );
-
-                return new DeployReleaseResponse
-                {
-                    CreatedDeploymentId = deploymentId,
-                    FromCommitSha = release.CommitSha,
-                    UsedVariables = variables.ToDictionary(
-                        keySelector: variable => variable.Name,
-                        elementSelector: variable => variable.Value
-                    ),
-                    ProcessResult = processResult
-                };
             }
         }
     }

@@ -11,13 +11,41 @@ namespace SheepIt.Domain
         public DateTime DeployedAt { get; set; } // todo: started at?
         public string EnvironmentId { get; set; }
         public DeploymentStatus Status { get; set; }
+        public ProcessOutput ProcessOutput { get; set; }
+
+        public void MarkFinished(ProcessOutput processOutput)
+        {
+            ProcessOutput = processOutput;
+
+            Status = processOutput.Steps.All(result => result.Successful)
+                ? DeploymentStatus.Succeeded
+                : DeploymentStatus.ProcessFailed;
+        }
+
+        public void MarkExecutionFailed()
+        {
+            Status = DeploymentStatus.ExecutionFailed;
+        }
     }
 
     public enum DeploymentStatus
     {
         InProgress,
         Succeeded,
-        Failed
+        ProcessFailed,
+        ExecutionFailed
+    }
+    
+    public class ProcessOutput
+    {
+        public ProcessStepResult[] Steps{ get; set; }
+    }
+
+    public class ProcessStepResult
+    {
+        public bool Successful { get; set; }
+        public string Command { get; set; }
+        public string[] Output { get; set; }
     }
 
     public static class Deployments
@@ -32,6 +60,16 @@ namespace SheepIt.Domain
             }
         }
 
+        public static void Update(Deployment deployment)
+        {
+            using (var database = Database.Open())
+            {
+                var collection = database.GetCollection<Deployment>();
+
+                collection.Update(deployment);
+            }
+        }
+
         public static Deployment[] GetAll(string projectId)
         {
             using (var database = Database.Open())
@@ -41,20 +79,6 @@ namespace SheepIt.Domain
                 return collection
                     .Find(deployment => deployment.ProjectId == projectId)
                     .ToArray();
-            }
-        }
-
-        public static void ChangeDeploymentStatus(int deploymentId, DeploymentStatus newStatus)
-        {
-            using (var database = Database.Open())
-            {
-                var collection = database.GetCollection<Deployment>();
-
-                var deployment = collection.FindById(deploymentId);
-
-                deployment.Status = newStatus;
-
-                collection.Update(deployment);
             }
         }
     }

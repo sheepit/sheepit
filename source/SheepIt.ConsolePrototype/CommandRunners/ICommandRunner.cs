@@ -6,6 +6,6 @@ namespace SheepIt.ConsolePrototype.CommandRunners
 {
     public interface ICommandRunner
     {
-        CommandResult Run(string command, IEnumerable<VariableForEnvironment> variables, string workingDir);
+        ProcessStepResult Run(string command, IEnumerable<VariableForEnvironment> variables, string workingDir);
     }
 }

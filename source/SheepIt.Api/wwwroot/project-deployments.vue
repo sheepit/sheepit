@@ -51,7 +51,8 @@
                 deploymentStatusStyles: {
                     InProgress: 'info',
                     Succeeded: 'success',
-                    Failed: 'danger'
+                    ProcessFailed: 'danger',
+                    ExecutionFailed: 'danger'
                 }
             }
         },

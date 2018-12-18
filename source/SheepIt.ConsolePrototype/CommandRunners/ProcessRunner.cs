@@ -9,24 +9,13 @@ namespace SheepIt.ConsolePrototype.CommandRunners
     // todo: we should consider supporting powershell
     // todo: we should handle error output for all runners
 
-    public class ProcessResult
-    {
-        public ProcessStepResult[] Steps{ get; set; }
-    }
-
-    public class ProcessStepResult
-    {
-        public string Command { get; set; }
-        public string[] Output { get; set; }
-    }
-
     public class ProcessRunner
     {
-        public ProcessResult Run(ProcessFile processFile, VariableForEnvironment[] variablesForEnvironment, string workingDir)
+        public ProcessOutput Run(ProcessFile processFile, VariableForEnvironment[] variablesForEnvironment, string workingDir)
         {
             var processStepResults = NewMethod(processFile, variablesForEnvironment, workingDir);
 
-            return new ProcessResult
+            return new ProcessOutput
             {
                 Steps = processStepResults.ToArray()
             };
@@ -40,16 +29,12 @@ namespace SheepIt.ConsolePrototype.CommandRunners
             {
                 var commandResult = commandRunner.Run(command, variablesForEnvironment, workingDir);
 
-                if (!commandResult.WasSuccessful)
+                yield return commandResult;
+                
+                if (!commandResult.Successful)
                 {
-                    throw new ApplicationException($"Deployment failed on following command: {command}");
+                    yield break;
                 }
-
-                yield return new ProcessStepResult
-                {
-                    Command = command,
-                    Output = commandResult.Output
-                };
             }
         }
 

@@ -7,7 +7,7 @@ namespace SheepIt.ConsolePrototype.CommandRunners
 {
     public class BashCommandRunner : ICommandRunner
     {
-        public CommandResult Run(string command, IEnumerable<VariableForEnvironment> variables, string workingDir)
+        public ProcessStepResult Run(string command, IEnumerable<VariableForEnvironment> variables, string workingDir)
         {
             var processStartInfo = new ProcessStartInfo
             {
@@ -40,10 +40,10 @@ namespace SheepIt.ConsolePrototype.CommandRunners
 
             var output = process.StandardOutput.ReadLinesToEnd();
 
-            return new CommandResult
+            return new ProcessStepResult
             {
                 Output = output,
-                WasSuccessful = process.ExitCode == 0
+                Successful = process.ExitCode == 0
             };
         }
     }
