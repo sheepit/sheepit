@@ -13,7 +13,7 @@
                 <tbody>
                 <tr v-for="release in items">
                     <th scope="row">
-                        <span class="badge badge-primary">{{ release.id }}</span>
+                        <release-badge v-bind:project-id="project.id" v-bind:release-id="release.id"></release-badge>
                     </th>
                     <td>
                         <humanized-date v-bind:date="release.createdAt"></humanized-date>

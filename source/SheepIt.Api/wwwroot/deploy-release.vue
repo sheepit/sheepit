@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4>Deploy release <span class="badge badge-primary">{{ releaseId }}</span> to:</h4>
+        <h4>Deploy <release-badge v-bind:project-id="project.id" v-bind:release-id="releaseId"></release-badge> to:</h4>
         <p>
             <button v-for="environment in environments" v-on:click="deploy(environment)" type="button" class="btn btn-outline-success mr-1">
                 {{ environment }}

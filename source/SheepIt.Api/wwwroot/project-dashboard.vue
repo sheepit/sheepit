@@ -8,11 +8,13 @@
                     {{ environment.environmentId }}
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        Release: <br/>
-                        <h4>
-                            <span class="badge badge-primary">{{ environment.currentReleaseId }}</span>
-                        </h4>
+                    <li class="list-group-item lead">
+                        <div>
+                            <release-badge v-bind:project-id="project.id" v-bind:release-id="environment.currentReleaseId"></release-badge>
+                        </div>
+                        <div>
+                            <deployment-badge v-bind:project-id="project.id" v-bind:deployment-id="environment.currentDeploymentId"></deployment-badge>
+                        </div>
                     </li>
                     <li class="list-group-item">
                         Deployed: <br/>

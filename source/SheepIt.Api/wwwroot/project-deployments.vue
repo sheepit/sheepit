@@ -20,7 +20,7 @@
                             <deployment-status-badge v-bind:status="deployment.status"></deployment-status-badge>
                         </td>
                         <td>
-                            <span class="badge badge-primary">{{ deployment.releaseId }}</span>
+                            <release-badge v-bind:project-id="project.id" v-bind:release-id="deployment.releaseId"></release-badge>
                         </td>
                         <td>
                             <span class="badge badge-warning">{{ deployment.environmentId }}</span>
