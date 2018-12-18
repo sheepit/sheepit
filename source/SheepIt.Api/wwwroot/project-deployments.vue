@@ -5,6 +5,7 @@
                 <thead>
                     <tr>
                         <th scope="col">id</th>
+                        <th scope="col">status</th>
                         <th scope="col">release id</th>
                         <th scope="col">environment id</th>
                         <th scope="col">deployed</th>
@@ -15,6 +16,11 @@
                         <th scope="row">
                             <span class="badge badge-success">{{ deployment.id }}</span>
                         </th>
+                        <td>
+                            <span class="badge" v-bind:class="'badge-' + deploymentStatusStyles[deployment.status]">
+                                {{ deployment.status }}
+                            </span>
+                        </td>
                         <td>
                             <span class="badge badge-primary">{{ deployment.releaseId }}</span>
                         </td>
@@ -41,7 +47,12 @@
         
         data() {
             return {
-                deployments: []
+                deployments: [],
+                deploymentStatusStyles: {
+                    InProgress: 'info',
+                    Succeeded: 'success',
+                    Failed: 'danger'
+                }
             }
         },
         

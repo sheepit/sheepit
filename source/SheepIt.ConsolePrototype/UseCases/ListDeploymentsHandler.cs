@@ -19,6 +19,7 @@ namespace SheepIt.ConsolePrototype.UseCases
             public int ReleaseId { get; set; }
             public DateTime DeployedAt { get; set; }
             public string EnvironmentId { get; set; }
+            public string Status { get; set; }
         }
     }
 
@@ -50,7 +51,8 @@ namespace SheepIt.ConsolePrototype.UseCases
                 Id = deployment.Id,
                 EnvironmentId = deployment.EnvironmentId,
                 DeployedAt = deployment.DeployedAt,
-                ReleaseId = deployment.ReleaseId
+                ReleaseId = deployment.ReleaseId,
+                Status = deployment.Status.ToString()
             };
         }
     }
