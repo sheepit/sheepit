@@ -1,12 +1,12 @@
 window.onload = function() {
 
-    httpVueLoader.register(Vue, 'expanding-list.vue')
-    httpVueLoader.register(Vue, 'humanized-date.vue')
-    httpVueLoader.register(Vue, 'tooltip.vue')
-    httpVueLoader.register(Vue, 'release-badge.vue')
-    httpVueLoader.register(Vue, 'deployment-badge.vue')
-    httpVueLoader.register(Vue, 'deployment-status-badge.vue')
-    httpVueLoader.register(Vue, 'project-breadcrumbs.vue')
+    httpVueLoader.register(Vue, 'expanding-list.vue');
+    httpVueLoader.register(Vue, 'humanized-date.vue');
+    httpVueLoader.register(Vue, 'tooltip.vue');
+    httpVueLoader.register(Vue, 'release-badge.vue');
+    httpVueLoader.register(Vue, 'deployment-badge.vue');
+    httpVueLoader.register(Vue, 'deployment-status-badge.vue');
+    httpVueLoader.register(Vue, 'project-breadcrumbs.vue');
     
     window.app = new Vue({
         el: '#app',
@@ -40,6 +40,11 @@ window.onload = function() {
                             path: 'deploy-release/:releaseId',
                             name: 'deploy-release',
                             component: httpVueLoader('deploy-release.vue')
+                        },
+                        {
+                            path: 'release-details/:releaseId',
+                            name: 'release-details',
+                            component: httpVueLoader('release-details.vue')
                         }
                     ]
                 },

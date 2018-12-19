@@ -24,7 +24,14 @@ namespace SheepIt.Api.Controllers
         {
             return GetLastReleaseHandler.Handle(request);
         }
-        
+
+        [HttpPost]
+        [Route("get-release-details")]
+        public object GetReleaseDetails(GetReleaseDetailsRequest request)
+        {
+            return GetReleaseDetailsHandler.Handle(request);
+        }
+
         [HttpPost]
         [Route("edit-release-variables")]
         public object EditReleaseVariables(EditReleaseVariablesRequest request)
