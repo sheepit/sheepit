@@ -4,7 +4,7 @@
 
         <project-breadcrumbs v-bind:project-id="project.id">
             <li class="breadcrumb-item">
-                deployments
+                releases
             </li>
             <li class="breadcrumb-item active">
                 {{ release.id }}
@@ -39,10 +39,9 @@
             </div>
         </div>
         
-        <div>
-            <variable-details v-bind:variables="release.variables" v-bind:environments="['dev', 'test', 'prod']">
-            </variable-details>
-        </div>
+        <variable-details v-bind:variables="release.variables" v-bind:environments="['dev', 'test', 'prod']"></variable-details>
+
+        <release-deployments v-bind:project="project" v-bind:release="release"></release-deployments>
     </div>
 </template>
 
@@ -51,7 +50,8 @@
         name: 'release-details',
 
         components: {
-            'variable-details': httpVueLoader('variable-details.vue')
+            'variable-details': httpVueLoader('variable-details.vue'),
+            'release-deployments': httpVueLoader('release-deployments.vue')
         },
 
         props: [

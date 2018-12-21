@@ -7,6 +7,7 @@ namespace SheepIt.ConsolePrototype.UseCases
     public class ListDeploymentsRequest
     {
         public string ProjectId { get; set; }
+        public int? ReleaseId { get; set; }
     }
 
     public class ListDeploymentResponse
@@ -31,8 +32,13 @@ namespace SheepIt.ConsolePrototype.UseCases
             {
                 var deploymentCollection = database.GetCollection<Deployment>();
 
-                var deployments = deploymentCollection
-                    .Find(deployment => deployment.ProjectId == options.ProjectId)
+                var query = deploymentCollection
+                    .Find(deployment => deployment.ProjectId == options.ProjectId);
+                    
+                if(options.ReleaseId.HasValue)
+                    query = query.Where(x => x.ReleaseId == options.ReleaseId);
+                    
+                var deployments = query
                     .OrderBy(deployment => deployment.DeployedAt)
                     .Select(Map)
                     .ToArray();

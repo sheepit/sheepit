@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4>Variables</h4>
+        <h3 class="mt-5">Variables</h3>
         <table class="table table-bordered">
             <thead>
                 <tr>

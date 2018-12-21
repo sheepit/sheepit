@@ -1,17 +1,18 @@
 <template>
-    <expanding-list class="mt-4" v-bind:all-items="deployments" initial-length="5">
-        <template slot-scope="{ items }">
-            <table class="table table-bordered">
-                <thead>
+    <div>
+        <h3 class="mt-5">Deployments</h3>
+        <expanding-list class="mt-4" v-bind:all-items="deployments" initial-length="5">
+            <template slot-scope="{ items }">
+                <table class="table table-bordered">
+                    <thead>
                     <tr>
                         <th scope="col">id</th>
                         <th scope="col">status</th>
-                        <th scope="col">release id</th>
                         <th scope="col">environment id</th>
                         <th scope="col">deployed</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <tr v-for="deployment in items">
                         <th scope="row">
                             <deployment-badge v-bind:project-id="project.id" v-bind:deployment-id="deployment.id"></deployment-badge>
@@ -20,37 +21,40 @@
                             <deployment-status-badge v-bind:status="deployment.status"></deployment-status-badge>
                         </td>
                         <td>
-                            <release-badge v-bind:project-id="project.id" v-bind:release-id="deployment.releaseId"></release-badge>
-                        </td>
-                        <td>
                             <span class="badge badge-warning">{{ deployment.environmentId }}</span>
                         </td>
                         <td>
-                            <humanized-date v-bind:date="deployment.deployedAt"></humanized-date>                            
+                            <humanized-date v-bind:date="deployment.deployedAt"></humanized-date>
                         </td>
                     </tr>
-                </tbody>
-            </table>
-        </template>
-    </expanding-list>
+                    </tbody>
+                </table>
+            </template>
+        </expanding-list>
+    </div>
 </template>
 
 <script>
     module.exports = {
-        name: "project-deployments",
+        name: "release-deployments",
 
         props: [
-            'project'
+            'project',
+            'release'
         ],
-        
+
         data() {
             return {
                 deployments: []
             }
         },
-        
+
         watch: {
             project: {
+                immediate: true,
+                handler: 'updateDeployments'
+            },
+            release: {
                 immediate: true,
                 handler: 'updateDeployments'
             }
@@ -58,14 +62,14 @@
 
         methods: {
             updateDeployments() {
-                getDeployments(this.project.id)
+                getDeployments(this.project.id, this.release.id)
                     .then(response => this.deployments = response.deployments.reverse())
             }
         }
     };
-    
-    function getDeployments(projectId) {
-        return postData('api/list-deployments', { projectId })
+
+    function getDeployments(projectId, releaseId) {
+        return postData('api/list-deployments', { projectId, releaseId })
             .then(response => response.json())
     }
 </script>
