@@ -38,12 +38,21 @@
                 <humanized-date v-bind:date="release.createdAt"></humanized-date>
             </div>
         </div>
+        
+        <div>
+            <variable-details v-bind:variables="release.variables" v-bind:environments="['dev', 'test', 'prod']">
+            </variable-details>
+        </div>
     </div>
 </template>
 
 <script>
     module.exports = {
         name: 'release-details',
+
+        components: {
+            'variable-details': httpVueLoader('variable-details.vue')
+        },
 
         props: [
             'project'
