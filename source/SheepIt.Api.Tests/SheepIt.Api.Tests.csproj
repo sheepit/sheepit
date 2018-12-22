@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>SheepIt.ConsolePrototype.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
