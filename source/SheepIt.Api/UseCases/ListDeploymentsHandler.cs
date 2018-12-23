@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases
@@ -21,6 +22,18 @@ namespace SheepIt.Api.UseCases
             public DateTime DeployedAt { get; set; }
             public string EnvironmentId { get; set; }
             public string Status { get; set; }
+        }
+    }
+
+    [Route("api")]
+    [ApiController]
+    public class ListDeploymentsController : ControllerBase
+    {
+        [HttpPost]
+        [Route("list-deployments")]
+        public object ListDeployments(ListDeploymentsRequest request)
+        {
+            return ListDeploymentsHandler.Handle(request);
         }
     }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases
@@ -24,6 +25,18 @@ namespace SheepIt.Api.UseCases
             public string Command { get; set; }
             public bool Successful { get; set; }
             public string[] Output { get; set; }
+        }
+    }
+
+    [Route("api")]
+    [ApiController]
+    public class GetDeploymentDetailsController : ControllerBase
+    {
+        [HttpPost]
+        [Route("get-deployment-details")]
+        public object GetDeploymentDetails(GetDeploymentDetailsRequest request)
+        {
+            return GetDeploymentDetailsHandler.Handle(request);
         }
     }
 

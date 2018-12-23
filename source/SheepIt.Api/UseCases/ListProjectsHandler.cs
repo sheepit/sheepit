@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases
@@ -15,6 +16,18 @@ namespace SheepIt.Api.UseCases
         {
             public string Id { get; set; }
             public string RepositoryUrl { get; set; }
+        }
+    }
+
+    [Route("api")]
+    [ApiController]
+    public class ListProjectsController : ControllerBase
+    {
+        [HttpGet]
+        [Route("list-projects")]
+        public object ListProjects()
+        {
+            return ListProjectsHandler.Handle(new ListProjectsRequest());
         }
     }
 

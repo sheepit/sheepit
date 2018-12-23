@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Domain;
 
@@ -8,6 +9,18 @@ namespace SheepIt.Api.UseCases
     {
         public string ProjectId { get; set; }
         public string RepositoryUrl { get; set; }
+    }
+
+    [Route("api")]
+    [ApiController]
+    public class CreateProjectController : ControllerBase
+    {
+        [HttpPost]
+        [Route("create-project")]
+        public void CreateProject(CreateProjectRequest request)
+        {
+            CreateProjectHandler.Handle(request);
+        }
     }
 
     public static class CreateProjectHandler

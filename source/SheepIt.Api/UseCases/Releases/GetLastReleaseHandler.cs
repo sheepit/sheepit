@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
@@ -25,7 +26,20 @@ namespace SheepIt.Api.UseCases.Releases
             public Dictionary<string, string> EnvironmentValues { get; set; }
         }
     }
-    
+
+    [Route("api")]
+    [ApiController]
+    public class GetLastReleaseController : ControllerBase
+    {
+        // currently used for editing variables
+        [HttpPost]
+        [Route("get-last-release")]
+        public object GetLastRelease(GetLastReleaseRequest request)
+        {
+            return GetLastReleaseHandler.Handle(request);
+        }
+    }
+
     public static class GetLastReleaseHandler
     {
         public static GetLastReleaseResponse Handle(GetLastReleaseRequest request)

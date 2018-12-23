@@ -1,4 +1,5 @@
-﻿using SheepIt.Api.Infrastructure;
+﻿using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Infrastructure;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
@@ -12,6 +13,18 @@ namespace SheepIt.Api.UseCases.Releases
     {
         public int CreatedReleaseId { get; set; }
         public string CreatedFromCommitSha { get; set; }
+    }
+
+    [Route("api")]
+    [ApiController]
+    public class UpdateReleaseProcessController : ControllerBase
+    {
+        [HttpPost]
+        [Route("update-release-process")]
+        public object UpdateReleaseProcess(UpdateReleaseProcessRequest request)
+        {
+            return UpdateReleaseProcessHandler.Handle(request);
+        }
     }
 
     public static class UpdateReleaseProcessHandler

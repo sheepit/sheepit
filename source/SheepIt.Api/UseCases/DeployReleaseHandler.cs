@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.CommandRunners;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Domain;
@@ -16,6 +17,18 @@ namespace SheepIt.Api.UseCases
     public class DeployReleaseResponse
     {
         public int CreatedDeploymentId { get; set; }
+    }
+
+    [Route("api")]
+    [ApiController]
+    public class DeployReleaseController : ControllerBase
+    {
+        [HttpPost]
+        [Route("deploy-release")]
+        public object DeployRelease(DeployReleaseRequest request)
+        {
+            return DeployReleaseHandler.Handle(request);
+        }
     }
 
     public static class DeployReleaseHandler

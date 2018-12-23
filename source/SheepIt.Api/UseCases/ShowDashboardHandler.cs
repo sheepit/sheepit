@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases
@@ -19,6 +20,18 @@ namespace SheepIt.Api.UseCases
             public DateTime LastDeployedAt { get; set; }
             public int CurrentDeploymentId { get; set; }
             public int CurrentReleaseId { get; set; }
+        }
+    }
+
+    [Route("api")]
+    [ApiController]
+    public class ShowDashboardController : ControllerBase
+    {  
+        [HttpPost]
+        [Route("show-dashboard")]
+        public object ShowDashboard(ShowDashboardRequest request)
+        {
+            return ShowDashboardHandler.Handle(request);
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
@@ -20,6 +21,19 @@ namespace SheepIt.Api.UseCases.Releases
     public class UpdateReleaseVariablesResponse
     {
         public int CreatedReleaseId { get; set; }
+    }
+
+    [Route("api")]
+    [ApiController]
+    public class UpdateReleaseVariablesController : ControllerBase
+    {
+        // meant to be used programatically via public API, e. g. when you want to update single variable, like service version 
+        [HttpPost]
+        [Route("update-release-variables")]
+        public object UpdateReleaseVariables(UpdateReleaseVariablesRequest request)
+        {
+            return UpdateReleaseVariablesHandler.Handle(request);
+        }
     }
 
     public static class UpdateReleaseVariablesHandler

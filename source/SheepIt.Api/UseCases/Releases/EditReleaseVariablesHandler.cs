@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
@@ -20,7 +21,19 @@ namespace SheepIt.Api.UseCases.Releases
     public class EditReleaseVariablesResponse
     {
     }
-    
+
+    [Route("api")]
+    [ApiController]
+    public class EditReleaseVariablesController : ControllerBase
+    {
+        [HttpPost]
+        [Route("edit-release-variables")]
+        public object EditReleaseVariables(EditReleaseVariablesRequest request)
+        {
+            return EditReleaseVariablesHandler.Handle(request);
+        }
+    }
+
     public static class EditReleaseVariablesHandler
     {
         public static EditReleaseVariablesResponse Handle(EditReleaseVariablesRequest request)
