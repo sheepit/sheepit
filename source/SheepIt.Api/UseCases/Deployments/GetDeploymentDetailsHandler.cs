@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Domain;
 
-namespace SheepIt.Api.UseCases
+namespace SheepIt.Api.UseCases.Deployments
 {
     public class GetDeploymentDetailsRequest
     {
@@ -48,7 +48,7 @@ namespace SheepIt.Api.UseCases
                 projectId: request.ProjectId
             );
 
-            var deployment = Deployments.Get(
+            var deployment = Domain.Deployments.Get(
                 projectId: request.ProjectId,
                 deploymentId: request.DeploymentId
             );

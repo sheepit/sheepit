@@ -53,7 +53,7 @@ namespace SheepIt.Api.UseCases
                 Status = DeploymentStatus.InProgress
             };
             
-            var deploymentId = Deployments.Add(deployment);
+            var deploymentId = Domain.Deployments.Add(deployment);
 
             RunDeployment(project, release, deployment);
 
@@ -85,7 +85,7 @@ namespace SheepIt.Api.UseCases
 
                     deployment.MarkFinished(processOutput);
 
-                    Deployments.Update(deployment);
+                    Domain.Deployments.Update(deployment);
                 }
             }
             catch (Exception)
@@ -94,7 +94,7 @@ namespace SheepIt.Api.UseCases
 
                 deployment.MarkExecutionFailed();
 
-                Deployments.Update(deployment);
+                Domain.Deployments.Update(deployment);
 
                 throw;
             }

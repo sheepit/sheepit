@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Domain;
 
-namespace SheepIt.Api.UseCases
+namespace SheepIt.Api.UseCases.Deployments
 {
     public class ListDeploymentsRequest
     {

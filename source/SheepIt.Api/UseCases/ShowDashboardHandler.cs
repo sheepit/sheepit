@@ -39,7 +39,7 @@ namespace SheepIt.Api.UseCases
     {
         public static ShowDashboardResponse Handle(ShowDashboardRequest options)
         {
-            var environments = Deployments.GetAll(options.ProjectId)
+            var environments = Domain.Deployments.GetAll(options.ProjectId)
                 .GroupBy(deployment => deployment.EnvironmentId)
                 .Select(grouping => MapDeployment(
                         environmentId: grouping.Key,
