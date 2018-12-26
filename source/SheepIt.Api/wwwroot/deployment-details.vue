@@ -47,6 +47,8 @@
                 <pre v-bind:class="stepResult.successful ? '' : 'text-danger'"><code>{{ stepResult.output.join("\n") }}</code></pre>
             </div>
         </div>
+        
+        <deployment-used-variables v-bind:used-variables="usedVariables"></deployment-used-variables>
 
     </div>
 </template>
@@ -55,6 +57,10 @@
     module.exports = {
         name: 'deployment-details',
 
+        components: {
+            'deployment-used-variables': httpVueLoader('deployment-used-variables.vue')
+        },
+        
         props: [
             'project'
         ],
@@ -62,6 +68,7 @@
         data() {
             return {
                 deployment: null,
+                usedVariables: null,
                 
                 // todo: this is duplicated
                 deploymentStatusStyles: {
@@ -94,12 +101,23 @@
             getDeploymentDetails() {
                 getDeploymentDetails(this.project.id, this.deploymentId)
                     .then(response => this.deployment = response)
+                    .then(() => getDeploymentUsedVariables(
+                        this.project.id,
+                        this.deploymentId,
+                        this.deployment.environmentId)
+                    )
+                    .then(response => this.usedVariables = response.values);
             }
         }
-    }
+    };
 
     function getDeploymentDetails(projectId, deploymentId) {
         return postData('api/get-deployment-details', { projectId, deploymentId })
+            .then(response => response.json())
+    }
+
+    function getDeploymentUsedVariables(projectId, deploymentId, environmentId) {
+        return postData('api/get-geployment-used-variables', { projectId, deploymentId, environmentId })
             .then(response => response.json())
     }
 </script>
