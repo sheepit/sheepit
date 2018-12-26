@@ -9,7 +9,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(variable, variableIndex) in usedVariables">
+                <tr v-for="(variable) in usedVariables">
                     <td>
                         <span>{{ variable.name }}</span>
                     </td>

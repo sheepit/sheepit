@@ -27,7 +27,7 @@ namespace SheepIt.Api.UseCases.Deployments
     public class GetDeploymentUsedVariablesController : ControllerBase
     {  
         [HttpPost]
-        [Route("get-geployment-used-variables")]
+        [Route("get-deployment-used-variables")]
         public object ShowDashboard(GetDeploymentUsedVariablesRequest request)
         {
             return GetDeploymentUsedVariablesHandler.Handle(request);

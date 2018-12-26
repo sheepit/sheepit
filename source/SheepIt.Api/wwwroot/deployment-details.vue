@@ -117,7 +117,7 @@
     }
 
     function getDeploymentUsedVariables(projectId, deploymentId, environmentId) {
-        return postData('api/get-geployment-used-variables', { projectId, deploymentId, environmentId })
+        return postData('api/get-deployment-used-variables', { projectId, deploymentId, environmentId })
             .then(response => response.json())
     }
 </script>
