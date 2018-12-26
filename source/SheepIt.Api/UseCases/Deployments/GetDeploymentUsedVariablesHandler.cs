@@ -64,10 +64,7 @@ namespace SheepIt.Api.UseCases.Deployments
 
         public static VariablesForEnvironmentDto[] ConvertToDto(VariableForEnvironment[] values)
         {
-            if (values == null)
-                return new VariablesForEnvironmentDto[0];
-
-            return values.Select(x => new VariablesForEnvironmentDto()
+            return values.Select(x => new VariablesForEnvironmentDto
             {
                 Name = x.Name,
                 Value = x.Value
