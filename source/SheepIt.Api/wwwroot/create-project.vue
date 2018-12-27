@@ -10,6 +10,14 @@
                 <label for="sourceUrl">Git repository URL</label>
                 <input type="text" v-model="repositoryUrl" class="form-control" id="sourceUrl">
             </div>
+
+            <div class="form-group">
+                <label>Environments (names):</label>
+                <input type="text" v-model="environments[environmentIndex]" class="form-control"
+                       v-for="(environment, environmentIndex) in environments">
+                <button class="btn btn-secondary" v-on:click="newEnvironment()">Add new</button>
+            </div>
+
             <button type="button" v-on:click="create()" class="btn btn-primary">Create</button>
         </form>
     </div>
@@ -21,22 +29,28 @@
         data() {
             return {
                 projectId: "",
-                repositoryUrl: ""
+                repositoryUrl: "",
+                environments: ['']
             }
         },
         methods: {
             create: function () {
-                createProject(this.projectId, this.repositoryUrl)
+                createProject(this.projectId, this.repositoryUrl, this.environments)
                     .then(() => window.app.updateProjects())
                     .then(() => this.$router.push({ name: 'project', params: { projectId: this.projectId }}))
+            },
+
+            newEnvironment: function () {
+                this.environments.push('');
             }
         }
     }
-    
-    function createProject(projectId, repositoryUrl) {
+
+    function createProject(projectId, repositoryUrl, environmentNames) {
         return postData('api/create-project', {
             projectId: projectId,
-            repositoryUrl: repositoryUrl
+            repositoryUrl: repositoryUrl,
+            environmentNames: environmentNames
         })
     }
     
