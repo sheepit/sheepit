@@ -9,6 +9,7 @@ namespace SheepIt.Api.UseCases
     {
         public string ProjectId { get; set; }
         public string RepositoryUrl { get; set; }
+        public string[] EnvironmentNames { get; set; }
     }
 
     [Route("api")]
@@ -35,10 +36,21 @@ namespace SheepIt.Api.UseCases
 
             Projects.Add(project);
 
+            CreateEnvironments(request);
+
             // first release is created so other operations can copy it
             CreateFirstRelease(project);
         }
 
+        private static void CreateEnvironments(CreateProjectRequest request)
+        {
+            foreach (var environmentName in request.EnvironmentNames)
+            {
+                var environment = new Domain.Environment(request.ProjectId, environmentName);
+                Environments.Add(environment);
+            }
+        }
+        
         private static void CreateFirstRelease(Project project)
         {
             var currentCommitSha = ProcessRepository.GetCurrentCommitSha(project);
