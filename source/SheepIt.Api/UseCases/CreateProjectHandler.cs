@@ -47,7 +47,7 @@ namespace SheepIt.Api.UseCases
             foreach (var environmentName in request.EnvironmentNames)
             {
                 var environment = new Domain.Environment(request.ProjectId, environmentName);
-                Environments.Add(environment);
+                Domain.Environments.Add(environment);
             }
         }
         
