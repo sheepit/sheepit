@@ -17,8 +17,8 @@ namespace SheepIt.Api.Infrastructure
             
             return new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", false, false)
-                .AddJsonFile($"appsettings.{environment}.json", true)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+                .AddJsonFile($"appsettings.{environment}.json", optional: true)
                 .AddEnvironmentVariables()
                 .Build();
         }

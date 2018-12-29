@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Serilog;
@@ -15,26 +14,30 @@ namespace SheepIt.Api.Infrastructure.Logger
         private readonly RequestDelegate _next;
         public SerilogMiddleware(RequestDelegate next) => _next = next ?? throw new ArgumentNullException(nameof(next));
  
-        private const string MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+        private const string MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed} ms";
         
         public async Task Invoke(HttpContext httpContext)
         {
             if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
 
-            var start = Stopwatch.GetTimestamp();
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             try
             {
                 await _next(httpContext);
-                var elapsedMs = GetElapsedMilliseconds(start, Stopwatch.GetTimestamp());
 
                 var statusCode = httpContext.Response?.StatusCode;
                 var level = statusCode > 499 ? LogEventLevel.Error : LogEventLevel.Information;
 
                 var log = level == LogEventLevel.Error ? LogForErrorContext(httpContext) : Log;
-                log.Write(level, MessageTemplate, httpContext.Request.Method, httpContext.Request.Path, statusCode, elapsedMs);
+                log.Write(level, MessageTemplate, httpContext.Request.Method, httpContext.Request.Path, statusCode,
+                    stopwatch.ElapsedMilliseconds);
             }
-            
-            catch (Exception ex) when (LogException(httpContext, GetElapsedMilliseconds(start, Stopwatch.GetTimestamp()), ex)) { }
+            catch (Exception ex)
+            {
+                LogException(httpContext, stopwatch.ElapsedMilliseconds, ex);
+            }
         }
 
         static bool LogException(HttpContext httpContext, double elapsedMs, Exception ex)
@@ -50,16 +53,10 @@ namespace SheepIt.Api.Infrastructure.Logger
             var request = httpContext.Request;
 
             var result = Log
-                .ForContext("RequestHeaders", request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
                 .ForContext("RequestHost", request.Host)
                 .ForContext("RequestProtocol", request.Protocol);
 
-            if (request.HasFormContentType)
-                result = result.ForContext("RequestForm", request.Form.ToDictionary(v => v.Key, v => v.Value.ToString()));
-
             return result;
         }
-
-        static double GetElapsedMilliseconds(long start, long stop) => (stop - start) * 1000 / (double)Stopwatch.Frequency;
     }
 }
