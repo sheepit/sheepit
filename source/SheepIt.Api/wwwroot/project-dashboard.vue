@@ -5,9 +5,9 @@
 
             <div class="card">
                 <div class="card-header">
-                    {{ environment.environmentId }}
+                    {{ environment.displayName }}
                 </div>
-                <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush" v-if="environment.deployment">
                     <li class="list-group-item lead">
                         <div>
                             <release-badge v-bind:project-id="project.id" v-bind:release-id="environment.currentReleaseId"></release-badge>
@@ -20,6 +20,9 @@
                         Deployed: <br/>
                         <humanized-date v-bind:date="environment.lastDeployedAt"></humanized-date>
                     </li>
+                </ul>
+                <ul class="list-group list-group-flush" v-else>
+                    <li class="list-group-item lead"></li>
                 </ul>
             </div>
 
@@ -47,7 +50,7 @@
         },
 
         created() {
-            this.getDeploymentDetails()
+            this.getDeploymentDetails();
         },
 
         methods: {
@@ -56,7 +59,7 @@
                     .then(response => this.environments = response.environments)
             }
         }
-    }
+    };
 
     function getDashboard(projectId) {
         return postData('api/show-dashboard', { projectId })

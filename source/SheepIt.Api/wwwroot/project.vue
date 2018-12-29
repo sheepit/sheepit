@@ -69,7 +69,7 @@
                     .then(() => window.app.updateProjects())
             }
         }
-    }
+    };
     
     function getDashboard(projectId) {
         return postData('api/show-dashboard', { projectId })
