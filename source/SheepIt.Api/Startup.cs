@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SheepIt.Api.Infrastructure.Logger;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace SheepIt.Api
@@ -46,6 +47,8 @@ namespace SheepIt.Api
             {
                 ServeUnknownFileTypes = true
             });
+
+            app.UseMiddleware<SerilogMiddleware>();
 
             app.UseMvc();
             

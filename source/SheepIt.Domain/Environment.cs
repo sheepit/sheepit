@@ -8,6 +8,10 @@ namespace SheepIt.Domain
         public string ProjectId { get; set; }
         public string DisplayName { get; set; }
 
+        public Environment()
+        {
+        }
+        
         public Environment(string projectId, string displayName)
         {
             ProjectId = projectId;

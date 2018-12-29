@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using SheepIt.Api.Infrastructure;
+using SheepIt.Api.Infrastructure.Logger;
 
 namespace SheepIt.Api
 {
@@ -14,11 +11,30 @@ namespace SheepIt.Api
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var configuration = ConfigurationFactory.CreateConfiguration();
+            Log.Logger = LoggerFactory.CreateLogger(configuration);
+            
+            try
+            {
+                Log.Information("Starting web host");
+                CreateWebHostBuilder(args).Build().Run();
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e.ToString(), "Terminated unexpectedly!");
+                Log.Fatal(e, "Terminated unexpectedly!");
+                throw;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseSerilog();
     }
 }
