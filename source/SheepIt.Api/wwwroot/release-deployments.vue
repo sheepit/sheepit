@@ -8,7 +8,7 @@
                     <tr>
                         <th scope="col">id</th>
                         <th scope="col">status</th>
-                        <th scope="col">environment id</th>
+                        <th scope="col">environment</th>
                         <th scope="col">deployed</th>
                     </tr>
                     </thead>
@@ -21,7 +21,7 @@
                             <deployment-status-badge v-bind:status="deployment.status"></deployment-status-badge>
                         </td>
                         <td>
-                            <span class="badge badge-warning">{{ deployment.environmentId }}</span>
+                            <span class="badge badge-warning">{{ deployment.environmentDisplayName }}</span>
                         </td>
                         <td>
                             <humanized-date v-bind:date="deployment.deployedAt"></humanized-date>
