@@ -16,8 +16,8 @@
             Deploy <release-badge v-bind:project-id="project.id" v-bind:release-id="releaseId"></release-badge> to:
         </h4>
         <p>
-            <button v-for="environment in environments" v-on:click="deploy(environment)" type="button" class="btn btn-outline-success mr-1">
-                {{ environment }}
+            <button v-for="environment in environments" v-on:click="deploy(environment.id)" type="button" class="btn btn-outline-success mr-1">
+                {{ environment.displayName }}
             </button>
         </p>
     </div>
@@ -31,8 +31,7 @@
         
         data() {
             return {
-                // todo: should not be hardcoded
-                environments: ['dev', 'test', 'prod']
+                environments: null
             }
         },
         
@@ -41,14 +40,18 @@
                 return this.$route.params.releaseId
             }
         },
-        
+
+        created() {
+            this.getEnvironments(this.project.id);
+        },
+
         methods: {
             deploy(environmentId) {
                 const request = {
                     projectId: this.project.id,
                     releaseId: this.releaseId,
                     environmentId: environmentId
-                }
+                };
                 
                 postData('api/deploy-release', request)
                     .then(response => response.json())
@@ -62,6 +65,11 @@
                         deploymentId: deploymentId
                     }
                 })
+            },
+            getEnvironments(projectId) {
+                postData('api/list-environments', { projectId })
+                    .then(response => response.json())
+                    .then(response => this.environments = response.environments)
             }
         }
     }

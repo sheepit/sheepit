@@ -9,7 +9,7 @@ namespace SheepIt.Domain
         public string ProjectId { get; set; }
         public int ReleaseId { get; set; }
         public DateTime DeployedAt { get; set; } // todo: started at?
-        public string EnvironmentId { get; set; }
+        public int EnvironmentId { get; set; }
         public DeploymentStatus Status { get; set; }
         public ProcessOutput ProcessOutput { get; set; }
 

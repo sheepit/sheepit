@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Domain;
-using SheepIt.Utils.Extensions;
 
 namespace SheepIt.Api.UseCases
 {
@@ -66,7 +65,7 @@ namespace SheepIt.Api.UseCases
         private static ShowDashboardResponse.EnvironmentDto[] GetDeploymentsInfoForEnvironments(string projectId)
         {
             var environments = Domain.Deployments.GetAll(projectId)
-                .GroupBy(deployment => deployment.EnvironmentId.ToInt())
+                .GroupBy(deployment => deployment.EnvironmentId)
                 .Select(grouping => MapDeployment(
                         environmentId: grouping.Key,
                         deployment: grouping

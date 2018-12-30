@@ -11,7 +11,7 @@ namespace SheepIt.Api.UseCases
     {
         public string ProjectId { get; set; }
         public int ReleaseId { get; set; }
-        public string EnvironmentId { get; set; }
+        public int EnvironmentId { get; set; }
     }
 
     public class DeployReleaseResponse
@@ -79,7 +79,7 @@ namespace SheepIt.Api.UseCases
 
                     var processOutput = new ProcessRunner().Run(
                         processFile: repository.OpenProcessDescriptionFile(),
-                        variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId),
+                        variablesForEnvironment: release.GetVariablesForEnvironment("dev"), // variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId), TODO: hardcoded environment
                         workingDir: deploymentWorkingDir
                     );
 

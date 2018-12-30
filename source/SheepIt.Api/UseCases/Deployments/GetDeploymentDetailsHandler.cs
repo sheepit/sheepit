@@ -63,7 +63,7 @@ namespace SheepIt.Api.UseCases.Deployments
                 Id = deployment.Id,
                 Status = deployment.Status.ToString(),
                 ReleaseId = deployment.ReleaseId,
-                EnvironmentId = deployment.EnvironmentId,
+                EnvironmentId = "dev", //deployment.EnvironmentId, TODO: hardcoded environment
                 DeployedAt = deployment.DeployedAt,
                 StepResults = GetStepResults(deployment)
             };
