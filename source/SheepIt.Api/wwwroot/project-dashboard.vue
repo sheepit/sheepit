@@ -10,15 +10,15 @@
                 <ul class="list-group list-group-flush" v-if="environment.deployment">
                     <li class="list-group-item lead">
                         <div>
-                            <release-badge v-bind:project-id="project.id" v-bind:release-id="environment.currentReleaseId"></release-badge>
+                            <release-badge v-bind:project-id="project.id" v-bind:release-id="environment.deployment.currentReleaseId"></release-badge>
                         </div>
                         <div>
-                            <deployment-badge v-bind:project-id="project.id" v-bind:deployment-id="environment.currentDeploymentId"></deployment-badge>
+                            <deployment-badge v-bind:project-id="project.id" v-bind:deployment-id="environment.deployment.currentDeploymentId"></deployment-badge>
                         </div>
                     </li>
                     <li class="list-group-item">
                         Deployed: <br/>
-                        <humanized-date v-bind:date="environment.lastDeployedAt"></humanized-date>
+                        <humanized-date v-bind:date="environment.deployment.lastDeployedAt"></humanized-date>
                     </li>
                 </ul>
                 <ul class="list-group list-group-flush" v-else>
