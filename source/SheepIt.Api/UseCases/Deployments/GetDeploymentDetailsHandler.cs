@@ -16,7 +16,8 @@ namespace SheepIt.Api.UseCases.Deployments
         public int Id { get; set; }
         public string Status { get; set; }
         public int ReleaseId { get; set; }
-        public string EnvironmentId { get; set; }
+        public int EnvironmentId { get; set; }
+        public string EnvironmentDisplayName { get; set; }
         public DateTime DeployedAt { get; set; }
         public CommandOutput[] StepResults { get; set; }
 
@@ -53,6 +54,9 @@ namespace SheepIt.Api.UseCases.Deployments
                 deploymentId: request.DeploymentId
             );
 
+            var environment = Domain.Environments.Get(
+                environmentId: deployment.EnvironmentId);
+            
             var release = ReleasesStorage.Get(
                 projectId: request.ProjectId,
                 releaseId: deployment.ReleaseId
@@ -63,7 +67,8 @@ namespace SheepIt.Api.UseCases.Deployments
                 Id = deployment.Id,
                 Status = deployment.Status.ToString(),
                 ReleaseId = deployment.ReleaseId,
-                EnvironmentId = "dev", //deployment.EnvironmentId, TODO: hardcoded environment
+                EnvironmentId = environment.Id,
+                EnvironmentDisplayName = environment.DisplayName,
                 DeployedAt = deployment.DeployedAt,
                 StepResults = GetStepResults(deployment)
             };

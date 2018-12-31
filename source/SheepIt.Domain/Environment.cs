@@ -31,6 +31,16 @@ namespace SheepIt.Domain
             }
         }
 
+        public static Environment Get(int environmentId)
+        {
+            using (var database = Database.Open())
+            {
+                var environmentCollection = database.GetCollection<Environment>();
+
+                return environmentCollection.FindById(environmentId);
+            }
+        }
+
         public static Environment[] GetAll(string projectId)
         {
             using (var database = Database.Open())
