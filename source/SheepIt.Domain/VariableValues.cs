@@ -7,10 +7,10 @@ namespace SheepIt.Domain
     {
         public VariableValues[] Variables { get; set; } = new VariableValues[0];
 
-        public VariableForEnvironment[] GetForEnvironment(string environment)
+        public VariableForEnvironment[] GetForEnvironment(int environmentId)
         {
             return Variables
-                .Select(variable => variable.ForEnvironment(environment))
+                .Select(variable => variable.ForEnvironment(environmentId))
                 .ToArray();
         }
 
@@ -49,16 +49,16 @@ namespace SheepIt.Domain
     {
         public string Name { get; set; }
         public string DefaultValue { get; set; }
-        public Dictionary<string, string> EnvironmentValues { get; set; }
+        public Dictionary<int, string> EnvironmentValues { get; set; }
 
-        public VariableForEnvironment ForEnvironment(string environment)
+        public VariableForEnvironment ForEnvironment(int environmentId)
         {
-            return new VariableForEnvironment(Name, ValueForEnvironment(environment));
+            return new VariableForEnvironment(Name, ValueForEnvironment(environmentId));
         }
 
-        private string ValueForEnvironment(string environment)
+        private string ValueForEnvironment(int environmentId)
         {
-            if (EnvironmentValues != null && EnvironmentValues.TryGetValue(environment, out var environmentSpecificValue))
+            if (EnvironmentValues != null && EnvironmentValues.TryGetValue(environmentId, out var environmentSpecificValue))
             {
                 return environmentSpecificValue;
             }

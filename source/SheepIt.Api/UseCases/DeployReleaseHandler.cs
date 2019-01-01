@@ -79,7 +79,7 @@ namespace SheepIt.Api.UseCases
 
                     var processOutput = new ProcessRunner().Run(
                         processFile: repository.OpenProcessDescriptionFile(),
-                        variablesForEnvironment: release.GetVariablesForEnvironment("dev"), // variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId), TODO: hardcoded environment
+                        variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId),
                         workingDir: deploymentWorkingDir
                     );
 

@@ -24,7 +24,7 @@ namespace SheepIt.Api.UseCases.Releases
         {
             public string Name { get; set; }
             public string DefaultValue { get; set; }
-            public Dictionary<string, string> EnvironmentValues { get; set; }
+            public Dictionary<int, string> EnvironmentValues { get; set; }
         }
     }
 

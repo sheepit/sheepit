@@ -8,7 +8,7 @@ namespace SheepIt.Api.UseCases.Deployments
     {
         public string ProjectId { get; set; }
         public int DeploymentId { get; set; }
-        public string EnvironmentId { get; set; }
+        public int EnvironmentId { get; set; }
     }
 
     public class GetDeploymentUsedVariablesResponse

@@ -12,9 +12,9 @@ namespace SheepIt.Domain
         public DateTime CreatedAt { get; set; }
         public VariableCollection Variables { get; set; } = new VariableCollection();
 
-        public VariableForEnvironment[] GetVariablesForEnvironment(string environment)
+        public VariableForEnvironment[] GetVariablesForEnvironment(int environmentId)
         {
-            return Variables.GetForEnvironment(environment);
+            return Variables.GetForEnvironment(environmentId);
         }
 
         public Release WithUpdatedCommitSha(string newCommitSha)
