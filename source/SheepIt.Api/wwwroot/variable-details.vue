@@ -6,7 +6,7 @@
                 <tr>
                     <th>name</th>
                     <th>default value</th>
-                    <th v-for="environment in environments">{{ environment }}</th>
+                    <th v-for="environment in environments">{{ environment.displayName }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -18,7 +18,7 @@
                         <span>{{ variable.defaultValue }}</span>
                     </td>
                     <td v-for="environment in environments">
-                        <span>{{ variable.environmentValues[environment] }}</span>
+                        <span>{{ variable.environmentValues[environment.id] }}</span>
                     </td>
                 </tr>
             </tbody>

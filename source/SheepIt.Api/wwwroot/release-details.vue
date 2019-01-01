@@ -39,7 +39,7 @@
             </div>
         </div>
         
-        <variable-details v-bind:variables="release.variables" v-bind:environments="['dev', 'test', 'prod']"></variable-details>
+        <variable-details v-bind:variables="release.variables" v-bind:environments="environments"></variable-details>
 
         <release-deployments v-bind:project="project" v-bind:release="release"></release-deployments>
     </div>
@@ -60,8 +60,13 @@
         
         data() {
             return {
-                release: null
+                release: null,
+                environments: null
             }
+        },
+
+        created() {
+            this.getProjectEnvironments();
         },
 
         computed: {
@@ -84,7 +89,15 @@
         methods: {
             getReleaseDetails() {
                 getReleaseDetails(this.project.id, this.releaseId)
-                    .then(response => this.release = response)
+                    .then(response => this.release = response);
+
+                this.getProjectEnvironments();
+            },
+            
+            getProjectEnvironments() {
+                postData('api/list-environments', { projectId: this.project.id })
+                    .then(response => response.json())
+                    .then(response => this.environments = response.environments);
             }
         }
     };
