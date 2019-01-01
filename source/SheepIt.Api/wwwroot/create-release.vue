@@ -13,7 +13,7 @@
                 <release-badge v-bind:project-id="project.id" v-bind:release-id="release.id"></release-badge>
             </h4>
             
-            <variable-editor v-bind:variables="release.variables" v-bind:environments="['dev', 'test', 'prod']">
+            <variable-editor v-bind:variables="release.variables" v-bind:environments="environments">
             </variable-editor>
         </div>
         
@@ -33,7 +33,8 @@
         
         data() {
             return {
-                release: null
+                release: null,
+                environments: null
             }
         },
 
@@ -47,7 +48,9 @@
         methods: {
             getRelease() {
                 getLatestRelease(this.project.id)
-                    .then(response => this.release = response)
+                    .then(response => this.release = response);
+                
+                this.getProjectEnvironments();
             },
             createRelease() {
                 
@@ -58,9 +61,14 @@
                 
                 postData('api/edit-release-variables', request)
                     .then(() => this.$router.push({ name: 'project', params: { projectId: this.project.id }}))
+            },
+            getProjectEnvironments() {
+                postData('api/list-environments', { projectId: this.project.id })
+                    .then(response => response.json())
+                    .then(response => this.environments = response.environments);
             }
         }
-    }
+    };
     
     function getLatestRelease(projectId) {
         return postData('api/get-last-release', { projectId })
