@@ -1,8 +1,13 @@
 <template>
     
     <div class="row">
+        <draggable v-model="environments">
+            <div v-for="element in environments" :key="element.id" class="item">
+                {{element.displayName}}
+            </div>
+        </draggable>
+        
         <div v-for="environment in environments" class="col-md-3">
-
             <div class="card">
                 <div class="card-header">
                     {{ environment.displayName }}

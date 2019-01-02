@@ -7,6 +7,7 @@ namespace SheepIt.Domain
         public int Id { get; set; }
         public string ProjectId { get; set; }
         public string DisplayName { get; set; }
+        public int Rank { get; set; }
 
         public Environment()
         {
@@ -21,13 +22,17 @@ namespace SheepIt.Domain
 
     public static class Environments
     {
-        public static int Add(Environment environment)
+        public static void Add(Environment environment)
         {
+            var environemntsForProject = GetAll(environment.ProjectId);
+
+            environment.Rank = environemntsForProject.Length + 1;
+            
             using (var database = Database.Open())
             {
                 var collection = database.GetCollection<Environment>();
 
-                return collection.Insert(environment);
+                collection.Insert(environment);
             }
         }
 
@@ -49,6 +54,7 @@ namespace SheepIt.Domain
 
                 return collection
                     .Find(environment => environment.ProjectId == projectId)
+                    .OrderBy(environment => environment.Rank)
                     .ToArray();
             }
         }
