@@ -42,7 +42,7 @@ namespace SheepIt.Api.UseCases.Environments
 
                 var items = environmentCollection
                     .Find(environment => environment.ProjectId == options.ProjectId)
-                    .OrderBy(environment => environment.DisplayName)
+                    .OrderBy(environment => environment.Rank)
                     .Select(Map)
                     .ToArray();
 
