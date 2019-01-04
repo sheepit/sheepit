@@ -1,10 +1,11 @@
 <template>
 
     <draggable v-model="environments" class="row" @end="onEnvironmentDragEnd">
-        <div v-for="environment in environments" class="col-md-3">
+        <div v-for="(environment, index) in environments" class="col-md-3">
             <div class="card">
                 <div class="card-header">
-                    {{ environment.displayName }}
+                    <span v-show="focusedIndex !== index" @click="focusField(index)">{{ environment.displayName }}</span>
+                    <input v-show="focusedIndex === index" v-model="environment.displayName" @focus="focusField(index)" @blur="blurField()" type="text" />
                 </div>
                 <ul class="list-group list-group-flush" v-if="environment.deployment">
                     <li class="list-group-item lead">
@@ -39,7 +40,8 @@
 
         data() {
             return {
-                environments: []
+                environments: [],
+                focusedIndex: null
             }
         },
 
@@ -60,6 +62,14 @@
             onEnvironmentDragEnd($event) {
                 const environmentIds = this.environments.map(f => (f.environmentId));
                 updateEnvironmentRank(environmentIds);
+            },
+
+            focusField(index) {
+                this.focusedIndex = index;
+            },
+
+            blurField() {
+                this.focusedIndex = null;
             }
         }
     };
