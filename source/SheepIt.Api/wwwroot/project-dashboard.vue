@@ -1,6 +1,6 @@
 <template>
 
-    <draggable v-model="environments" class="row">
+    <draggable v-model="environments" class="row" @end="onEnvironmentDragEnd">
         <div v-for="environment in environments" class="col-md-3">
             <div class="card">
                 <div class="card-header">
@@ -55,6 +55,11 @@
             getDeploymentDetails() {
                 getDashboard(this.project.id)
                     .then(response => this.environments = response.environments)
+            },
+
+            onEnvironmentDragEnd($event) {
+                const environmentIds = this.environments.map(f => (f.environmentId));
+                updateEnvironmentRank(environmentIds);
             }
         }
     };
@@ -62,6 +67,14 @@
     function getDashboard(projectId) {
         return postData('api/show-dashboard', { projectId })
             .then(response => response.json())
+    }
+
+    function updateEnvironmentRank(environmentIds) {
+        const request = {
+            environmentIds: environmentIds
+        };
+
+        postData('api/update-environments-rank', request);
     }
 </script>
 
