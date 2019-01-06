@@ -1,12 +1,10 @@
-﻿using LiteDB;
-
-namespace SheepIt.Domain
+﻿namespace SheepIt.Domain
 {
     public static class Database
     {
-        public static LiteDatabase Open()
+        public static TempMongoDatabase Open()
         {
-            return new LiteDatabase(@"C:\sheep-it\poc-database.db");
+            return new TempMongoDatabase();
         }
     }
 }

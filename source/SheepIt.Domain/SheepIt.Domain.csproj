@@ -5,7 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="LiteDB" Version="4.1.4" />
+      <PackageReference Include="MongoDB.Driver" Version="2.7.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SheepIt.Utils\SheepIt.Utils.csproj" />
     </ItemGroup>
 
 </Project>

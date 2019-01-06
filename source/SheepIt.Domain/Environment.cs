@@ -1,9 +1,14 @@
 using System.Linq;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SheepIt.Domain
 {
-    public class Environment
+    public class Environment : IDocumentWithId<int>
     {
+        [BsonId]
+        public ObjectId ObjectId { get; set; }
+        
         public int Id { get; set; }
         public string ProjectId { get; set; }
         public string DisplayName { get; set; }
@@ -29,15 +34,15 @@ namespace SheepIt.Domain
     {
         public static void Add(Environment environment)
         {
-            var environemntsForProject = GetAll(environment.ProjectId);
+            var environmentsForProject = GetAll(environment.ProjectId);
 
-            environment.SetRank(environemntsForProject.Length + 1);
+            environment.SetRank(environmentsForProject.Length + 1);
             
             using (var database = Database.Open())
             {
                 var collection = database.GetCollection<Environment>();
 
-                collection.Insert(environment);
+                collection.InsertWithIntId(environment);
             }
         }
 

@@ -5,6 +5,7 @@ using SheepIt.Utils.Extensions;
 
 namespace SheepIt.Utils.Console
 {
+    // todo: remove
     public class ConsoleTable
     {
         public static Builder<T> Containing<T>(IEnumerable<T> data)

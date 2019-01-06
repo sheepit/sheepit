@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Linq;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SheepIt.Domain
 {
-    public class Deployment
+    public class Deployment : IDocumentWithId<int>
     {
+        [BsonId]
+        public ObjectId ObjectId { get; set; }
+        
         public int Id { get; set; }
         public string ProjectId { get; set; }
         public int ReleaseId { get; set; }
@@ -56,7 +61,7 @@ namespace SheepIt.Domain
             {
                 var collection = database.GetCollection<Deployment>();
 
-                return collection.Insert(deployment);
+                return collection.InsertWithIntId(deployment);
             }
         }
 

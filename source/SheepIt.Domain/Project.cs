@@ -1,7 +1,13 @@
-﻿namespace SheepIt.Domain
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace SheepIt.Domain
 {
-    public class Project
+    public class Project : IDocumentWithId<string>
     {
+        [BsonId]
+        public ObjectId ObjectId { get; set; }
+        
         public string Id { get; set; }
         public string RepositoryUrl { get; set; }
     }

@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SheepIt.Domain
 {
-    public class Release
+    public class Release : IDocumentWithId<int>
     {
+        [BsonId]
+        public ObjectId ObjectId { get; set; }
+        
         public int Id { get; set; }
         public string ProjectId { get; set; }
         public string CommitSha { get; set; }
@@ -65,7 +70,7 @@ namespace SheepIt.Domain
             {
                 var releases = liteDatabase.GetCollection<Release>();
 
-                return releases.Insert(release);
+                return releases.InsertWithIntId(release);
             }
         }
 

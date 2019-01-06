@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using MongoDB.Bson.Serialization.Attributes;
+using SheepIt.Utils.Extensions;
 
 namespace SheepIt.Domain
 {
@@ -49,8 +53,17 @@ namespace SheepIt.Domain
     {
         public string Name { get; set; }
         public string DefaultValue { get; set; }
-        public Dictionary<int, string> EnvironmentValues { get; set; }
+        
+        // todo: mongo requires string id-s in dictionaries
+        public Dictionary<string, string> ActualEnvironmentValues { get; set; }
 
+        [BsonIgnore]
+        public Dictionary<int, string> EnvironmentValues
+        {
+            get => ActualEnvironmentValues.ToDictionary(pair => pair.Key.ToInt(), pair => pair.Value);
+            set => ActualEnvironmentValues = value.ToDictionary(pair => pair.Key.ToString(CultureInfo.InvariantCulture), pair => pair.Value);
+        }
+        
         public VariableForEnvironment ForEnvironment(int environmentId)
         {
             return new VariableForEnvironment(Name, ValueForEnvironment(environmentId));
