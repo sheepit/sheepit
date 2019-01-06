@@ -19,10 +19,10 @@ namespace SheepIt.Api.UseCases
         {
             public int EnvironmentId { get; set; }
             public string DisplayName { get; set; }
-            public EnvironmentDepoloymentDto Deployment { get; set; }
+            public EnvironmentDeploymentDto Deployment { get; set; }
         }
         
-        public class EnvironmentDepoloymentDto
+        public class EnvironmentDeploymentDto
         {
             public DateTime LastDeployedAt { get; set; }
             public int CurrentDeploymentId { get; set; }
@@ -84,7 +84,7 @@ namespace SheepIt.Api.UseCases
             return new ShowDashboardResponse.EnvironmentDto
             {
                 EnvironmentId = environmentId,
-                Deployment = new ShowDashboardResponse.EnvironmentDepoloymentDto
+                Deployment = new ShowDashboardResponse.EnvironmentDeploymentDto
                 {
                     LastDeployedAt = deployment.DeployedAt,
                     CurrentDeploymentId = deployment.Id,

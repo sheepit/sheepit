@@ -34,14 +34,14 @@ namespace SheepIt.Api.UseCases.Environments
 
     public static class ListEnvironmentsHandler
     {
-        public static ListEnvironmentsResponse Handle(ListEnvironmentsRequest options)
+        public static ListEnvironmentsResponse Handle(ListEnvironmentsRequest request)
         {
             using (var database = Database.Open())
             {
                 var environmentCollection = database.GetCollection<Environment>();
 
                 var items = environmentCollection
-                    .Find(environment => environment.ProjectId == options.ProjectId)
+                    .Find(environment => environment.ProjectId == request.ProjectId)
                     .OrderBy(environment => environment.Rank)
                     .Select(Map)
                     .ToArray();
