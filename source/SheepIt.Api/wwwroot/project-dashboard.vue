@@ -61,7 +61,7 @@
 
             onEnvironmentDragEnd($event) {
                 const environmentIds = this.environments.map(f => (f.environmentId));
-                updateEnvironmentRank(environmentIds);
+                updateEnvironmentRank(this.project.id, environmentIds);
             },
 
             focusField(index) {
@@ -79,15 +79,12 @@
             .then(response => response.json())
     }
 
-    function updateEnvironmentRank(environmentIds) {
+    function updateEnvironmentRank(projectId, environmentIds) {
         const request = {
+            projectId: projectId,
             environmentIds: environmentIds
         };
 
         postData('api/update-environments-rank', request);
     }
 </script>
-
-<style scoped>
-    
-</style>
