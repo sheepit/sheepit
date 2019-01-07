@@ -27,7 +27,7 @@ namespace SheepIt.Domain
 
             var collection = _mongoDatabase.GetCollection<TDocument>(collectionName);
 
-            return new TempCollection<TDocument>(collection); 
+            return new TempCollection<TDocument>(collection);
         }
 
         public void Dispose()
@@ -98,12 +98,16 @@ namespace SheepIt.Domain
         } 
     }
 
-    // todo: temp, remove later
+    public interface IDocumentInProject
+    {
+        string ProjectId { get; set; }
+    }
+
     public interface IDocumentWithId<TId> : IDocument
     {
         TId Id { get; set; }
     }
-
+    
     public interface IDocument
     {
         ObjectId ObjectId { get; set; }
