@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver;
 
 namespace SheepIt.Domain
 {
-    public class Release : IDocumentWithId<int>
+    public class Release : IDocumentWithId<int>, IDocumentInProject
     {
         [BsonId]
         public ObjectId ObjectId { get; set; }
@@ -64,37 +65,31 @@ namespace SheepIt.Domain
 
     public static class ReleasesStorage
     {
+        private static readonly SheepItDatabase _database = new SheepItDatabase();
+        
         public static int Add(Release release)
         {
-            using (var liteDatabase = Database.Open())
-            {
-                var releases = liteDatabase.GetCollection<Release>();
+            var nextId = _database.Releases.GetNextId();
+            
+            release.Id = nextId;
 
-                return releases.InsertWithIntId(release);
-            }
+            _database.Releases.InsertOne(release);
+
+            return nextId;
         }
 
         public static Release Get(string projectId, int releaseId)
         {
-            using (var database = Database.Open())
-            {
-                return database
-                    .GetCollection<Release>()
-                    .Find(release => release.ProjectId == projectId && release.Id == releaseId)
-                    .Single();
-            }
+            return _database.Releases
+                .FindByProjectAndId(projectId, releaseId);
         }
 
         public static Release GetNewest(string projectId)
         {
-            using (var database = Database.Open())
-            {
-                return database
-                    .GetCollection<Release>()
-                    .Find(release => release.ProjectId == projectId)
-                    .OrderByDescending(release => release.Id)
-                    .First();
-            }
+            return _database.Releases
+                .Find(filter => filter.FromProject(projectId))
+                .Sort(sort => sort.Descending(release => release.Id))
+                .First();
         }
     }
 }

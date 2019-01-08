@@ -59,6 +59,21 @@ namespace SheepIt.Domain
             
             return foundDocumentOrNull;
         }
+        
+        public static TDocument FindByProjectAndId<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, string projectId, TId id)
+            where TDocument : IDocumentWithId<TId>, IDocumentInProject
+        {
+            var foundDocumentOrNull = mongoCollection
+                .Find(filter => filter.FromProject(projectId) & filter.WithId(id))
+                .SingleOrDefault();
+            
+            if (foundDocumentOrNull == null)
+            {
+                throw new InvalidOperationException($"Document of type {typeof(TDocument).Name} with id {id} in project {projectId} could not be found.");
+            }
+            
+            return foundDocumentOrNull;
+        }
 
         public static int GetNextId<TDocument>(this IMongoCollection<TDocument> databaseEnvironments)
             where TDocument : IDocumentWithId<int>
