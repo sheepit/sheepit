@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver;
 
 namespace SheepIt.Domain
 {
@@ -14,24 +15,18 @@ namespace SheepIt.Domain
 
     public static class Projects
     {
+        private static readonly SheepItDatabase _database = new SheepItDatabase();
+        
         public static void Add(Project project)
         {
-            using (var database = Database.Open())
-            {
-                var projectCollection = database.GetCollection<Project>();
-
-                projectCollection.Insert(project);
-            }
+            _database.Projects
+                .InsertOne(project);
         }
 
         public static Project Get(string projectId)
         {
-            using (var database = Database.Open())
-            {
-                var projectCollection = database.GetCollection<Project>();
-
-                return projectCollection.FindById(projectId);
-            }
+            return _database.Projects
+                .FindById(projectId);
         }
     }
 }

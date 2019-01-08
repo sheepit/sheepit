@@ -72,13 +72,6 @@ namespace SheepIt.Domain
 
     public static class TempMongoCollectionExtensions
     {
-        public static TDocument FindById<TDocument, TId>(this TempCollection<TDocument> collection, TId id)
-            where TDocument : IDocumentWithId<TId>
-        {
-            return collection.FindAll()
-                .Single(document => document.Id.Equals(id));
-        }
-        
         public static int InsertWithIntId<TDocument>(this TempCollection<TDocument> collection, TDocument document)
             where TDocument : IDocumentWithId<int>
         {
