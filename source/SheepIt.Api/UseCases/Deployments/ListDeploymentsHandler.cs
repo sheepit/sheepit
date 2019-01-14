@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using SheepIt.Domain;
 using Environment = SheepIt.Domain.Environment;
 
@@ -16,7 +17,7 @@ namespace SheepIt.Api.UseCases.Deployments
     public class ListDeploymentResponse
     {
         public DeploymentDto[] Deployments { get; set; }
-
+        
         public class DeploymentDto
         {
             public int Id { get; set; }
@@ -42,64 +43,59 @@ namespace SheepIt.Api.UseCases.Deployments
 
     public static class ListDeploymentsHandler
     {
+        private static readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+
         public static ListDeploymentResponse Handle(ListDeploymentsRequest options)
         {
-            var deployments = GetDeployments(options).ToArray();
-            var environments = GetEnvironments(options.ProjectId);
+            var deployments = sheepItDatabase.Deployments
+                .Find(GetDeploymentFilter(projectId: options.ProjectId, releaseIdOrNull: options.ReleaseId))
+                .SortBy(deployment => deployment.DeployedAt)
+                .ToArray();
+            
+            var environments = Domain.Environments
+                .GetAll(options.ProjectId);
 
-            var deploymentsData = MergeData(deployments, environments);
+            var deploymentDtos = deployments.Join(
+                inner: environments,
+                outerKeySelector: deployment => deployment.EnvironmentId,
+                innerKeySelector: environment => environment.Id,
+                resultSelector: MapDeployment
+            );
 
             return new ListDeploymentResponse
             {
-                Deployments = deploymentsData.ToArray()
+                Deployments = deploymentDtos.ToArray()
             };
         }
 
-        private static IEnumerable<Deployment> GetDeployments(ListDeploymentsRequest options)
+        private static FilterDefinition<Deployment> GetDeploymentFilter(string projectId, int? releaseIdOrNull)
         {
-            using (var database = Database.Open())
+            var deploymentFilters = Builders<Deployment>.Filter;
+
+            return deploymentFilters.And(filters: GetFilters());
+
+            IEnumerable<FilterDefinition<Deployment>> GetFilters()
             {
-                var deploymentCollection = database.GetCollection<Deployment>();
+                yield return deploymentFilters.FromProject(projectId);
 
-                var query = deploymentCollection
-                    .Find(deployment => deployment.ProjectId == options.ProjectId);
-
-                if (options.ReleaseId.HasValue)
-                    query = query.Where(x => x.ReleaseId == options.ReleaseId);
-
-                var deployments = query
-                    .OrderBy(deployment => deployment.DeployedAt);
-
-                return deployments;
-            }
-        }
-
-        private static Environment[] GetEnvironments(string projectId)
-        {
-            return Domain.Environments.GetAll(projectId);
-        }
-
-        private static List<ListDeploymentResponse.DeploymentDto> MergeData(
-            Deployment[] deployments, Environment[] environments)
-        {
-            var result = new List<ListDeploymentResponse.DeploymentDto>();
-            
-            foreach (var deployment in deployments)
-            {
-                var environment = environments.Single(x => x.Id == deployment.EnvironmentId);
-                
-                result.Add(new ListDeploymentResponse.DeploymentDto
+                if (releaseIdOrNull.HasValue)
                 {
-                    Id = deployment.Id,
-                    EnvironmentId = environment.Id,
-                    EnvironmentDisplayName = environment.DisplayName,
-                    DeployedAt = deployment.DeployedAt,
-                    ReleaseId = deployment.ReleaseId,
-                    Status = deployment.Status.ToString()
-                });
+                    yield return deploymentFilters.OfRelease(releaseIdOrNull.Value);
+                }
             }
+        }
 
-            return result;
+        private static ListDeploymentResponse.DeploymentDto MapDeployment(Deployment deployment, Environment environment)
+        {
+            return new ListDeploymentResponse.DeploymentDto
+            {
+                Id = deployment.Id,
+                EnvironmentId = environment.Id,
+                EnvironmentDisplayName = environment.DisplayName,
+                DeployedAt = deployment.DeployedAt,
+                ReleaseId = deployment.ReleaseId,
+                Status = deployment.Status.ToString()
+            };
         }
     }
 }

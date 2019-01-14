@@ -2,10 +2,11 @@
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver;
 
 namespace SheepIt.Domain
 {
-    public class Deployment : IDocumentWithId<int>
+    public class Deployment : IDocumentWithId<int>, IDocumentInProject
     {
         [BsonId]
         public ObjectId ObjectId { get; set; }
@@ -55,48 +56,45 @@ namespace SheepIt.Domain
 
     public static class Deployments
     {
+        private static readonly SheepItDatabase _database = new SheepItDatabase();
+        
         public static int Add(Deployment deployment)
         {
-            using (var database = Database.Open())
-            {
-                var collection = database.GetCollection<Deployment>();
+            var nextId = _database.Deployments.GetNextId();
+            
+            deployment.Id = nextId;
 
-                return collection.InsertWithIntId(deployment);
-            }
+            _database.Deployments
+                .InsertOne(deployment);
+
+            return nextId;
         }
 
         public static void Update(Deployment deployment)
         {
-            using (var database = Database.Open())
-            {
-                var collection = database.GetCollection<Deployment>();
-
-                collection.Update(deployment);
-            }
+            _database.Deployments
+                .ReplaceOneById(deployment);
         }
 
         public static Deployment Get(string projectId, int deploymentId)
         {
-            using (var database = Database.Open())
-            {
-                var collection = database.GetCollection<Deployment>();
-
-                return collection
-                    .Find(deployment => deployment.ProjectId == projectId && deployment.Id == deploymentId)
-                    .Single();
-            }
+            return _database.Deployments
+                .FindByProjectAndId(projectId, deploymentId);
         }
 
         public static Deployment[] GetAll(string projectId)
         {
-            using (var database = Database.Open())
-            {
-                var collection = database.GetCollection<Deployment>();
+            return _database.Deployments
+                .Find(filter => filter.FromProject(projectId))
+                .ToArray();
+        }
+    }
 
-                return collection
-                    .Find(deployment => deployment.ProjectId == projectId)
-                    .ToArray();
-            }
+    public static class DeploymentFilters
+    {
+        public static FilterDefinition<Deployment> OfRelease(this FilterDefinitionBuilder<Deployment> filter, int releaseId)
+        {
+            return filter.Eq(deployment => deployment.ReleaseId, releaseId);
         }
     }
 }
