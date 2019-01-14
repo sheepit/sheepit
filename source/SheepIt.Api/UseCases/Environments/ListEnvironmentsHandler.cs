@@ -1,5 +1,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Environments
@@ -34,25 +35,23 @@ namespace SheepIt.Api.UseCases.Environments
 
     public static class ListEnvironmentsHandler
     {
+        private static readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+        
         public static ListEnvironmentsResponse Handle(ListEnvironmentsRequest request)
         {
-            using (var database = Database.Open())
+            var environments = sheepItDatabase.Environments
+                .Find(filter => filter.FromProject(request.ProjectId))
+                .SortBy(environment => environment.Rank)
+                .ToEnumerable()
+                .Select(Map)
+                .ToArray();
+            
+            return new ListEnvironmentsResponse
             {
-                var environmentCollection = database.GetCollection<Environment>();
-
-                var items = environmentCollection
-                    .Find(environment => environment.ProjectId == request.ProjectId)
-                    .OrderBy(environment => environment.Rank)
-                    .Select(Map)
-                    .ToArray();
-
-                return new ListEnvironmentsResponse
-                {
-                    Environments = items
-                };
-            }
+                Environments = environments
+            };
         }
-        
+
         private static ListEnvironmentsResponse.EnvironmentDto Map(Environment environment)
         {
             return new ListEnvironmentsResponse.EnvironmentDto
