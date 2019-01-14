@@ -1,7 +1,7 @@
 <template>
     <div>
         <h4>Create new project</h4>
-        <form>
+        <div>
             <div class="form-group">
                 <label for="projectId">Project id</label>
                 <input type="text" v-model="projectId" class="form-control" id="projectId">
@@ -13,13 +13,15 @@
 
             <div class="form-group">
                 <label>Environments (names):</label>
+                
                 <input type="text" v-model="environments[environmentIndex]" class="form-control"
                        v-for="(environment, environmentIndex) in environments">
+                
                 <button class="btn btn-secondary" v-on:click="newEnvironment()">Add new</button>
             </div>
 
             <button type="button" v-on:click="create()" class="btn btn-primary">Create</button>
-        </form>
+        </div>
     </div>
 </template>
 
