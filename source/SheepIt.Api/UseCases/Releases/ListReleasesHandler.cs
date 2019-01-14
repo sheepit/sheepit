@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
@@ -36,23 +37,21 @@ namespace SheepIt.Api.UseCases.Releases
 
     public static class ListReleasesHandler
     {
+        private static readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+        
         public static ListReleaseResponse Handle(ListReleasesRequest options)
         {
-            using (var database = Database.Open())
+            var releases = sheepItDatabase.Releases
+                .Find(filter => filter.FromProject(options.ProjectId))
+                .SortBy(release => release.CreatedAt)
+                .ToEnumerable()
+                .Select(Map)
+                .ToArray();
+
+            return new ListReleaseResponse
             {
-                var releaseCollection = database.GetCollection<Release>();
-
-                var releases = releaseCollection
-                    .Find(release => release.ProjectId == options.ProjectId)
-                    .OrderBy(release => release.CreatedAt)
-                    .Select(Map)
-                    .ToArray();
-
-                return new ListReleaseResponse
-                {
-                    Releases = releases
-                };
-            }
+                Releases = releases
+            };
         }
 
         private static ListReleaseResponse.ReleaseDto Map(Release release)
