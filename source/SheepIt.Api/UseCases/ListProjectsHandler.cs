@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases
@@ -33,23 +34,21 @@ namespace SheepIt.Api.UseCases
 
     public static class ListProjectsHandler
     {
+        private static readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+        
         public static ListProjectsResponse Handle(ListProjectsRequest options)
         {
-            using (var database = Database.Open())
+            var projects = sheepItDatabase.Projects
+                .FindAll()
+                .SortBy(deployment => deployment.Id)
+                .ToEnumerable()
+                .Select(Map)
+                .ToArray();
+
+            return new ListProjectsResponse
             {
-                var projectCollection = database.GetCollection<Project>();
-
-                var projects = projectCollection
-                    .FindAll()
-                    .OrderBy(deployment => deployment.Id)
-                    .Select(Map)
-                    .ToArray();
-
-                return new ListProjectsResponse
-                {
-                    Projects = projects
-                };
-            }
+                Projects = projects
+            };
         }
 
         private static ListProjectsResponse.ProjectDto Map(Project project)
