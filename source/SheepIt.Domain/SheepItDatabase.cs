@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace SheepIt.Domain
@@ -18,5 +19,20 @@ namespace SheepIt.Domain
         public IMongoCollection<Project> Projects => MongoDatabase.GetCollection<Project>();
         public IMongoCollection<Deployment> Deployments => MongoDatabase.GetCollection<Deployment>();
         public IMongoCollection<Release> Releases => MongoDatabase.GetCollection<Release>();
+    }
+    
+    public interface IDocumentInProject
+    {
+        string ProjectId { get; }
+    }
+
+    public interface IDocumentWithId<out TId> : IDocument
+    {
+        TId Id { get; }
+    }
+
+    public interface IDocument
+    {
+        ObjectId ObjectId { get; }
     }
 }

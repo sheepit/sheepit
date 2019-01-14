@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using MongoDB.Driver;
 
 namespace SheepIt.Domain
@@ -17,9 +18,8 @@ namespace SheepIt.Domain
 
         public static TDocument[] ToArray<TDocument>(this IFindFluent<TDocument, TDocument> findFluent)
         {
-            // todo: well, that doesn't seem very fast
             return findFluent
-                .ToList()
+                .ToEnumerable()
                 .ToArray();
         }
     }
