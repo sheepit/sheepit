@@ -1,5 +1,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using SheepIt.Domain;
 using SheepIt.Utils.Extensions;
 
@@ -29,27 +30,25 @@ namespace SheepIt.Api.UseCases.Environments
 
     public static class UpdateEnvironmentsRankHandler
     {
+        private static readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+        
         public static UpdateEnvironmentsRankResponse Handle(UpdateEnvironmentsRankRequest request)
         {
-            using (var database = Database.Open())
+            var environmentsById = sheepItDatabase.Environments
+                .Find(filter => filter.FromProject(request.ProjectId))
+                .ToEnumerable()
+                .IndexBy(environment => environment.Id);
+
+            var orderedEnvironments = request.EnvironmentIds
+                .Select(environmentId => environmentsById[environmentId])
+                .ToArray();
+
+            orderedEnvironments.ForEach((environment, index) =>
             {
-                // todo: we should filter it by project id, as in the future environments in different projects might have same ids
-                var environmentsById = database
-                    .GetCollection<Environment>()
-                    .Find(environment => environment.ProjectId == request.ProjectId)
-                    .IndexBy(environment => environment.Id);
+                environment.SetRank(index + 1);
+                Domain.Environments.Update(environment);
+            });
 
-                var orderedEnvironments = request.EnvironmentIds
-                    .Select(environmentId => environmentsById[environmentId])
-                    .ToArray();
-
-                orderedEnvironments.ForEach((environment, index) =>
-                {
-                    environment.SetRank(index + 1);
-                    Domain.Environments.Update(environment);
-                });
-            }
-            
             return new UpdateEnvironmentsRankResponse();
         }
     }
