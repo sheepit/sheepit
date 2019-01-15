@@ -5,9 +5,9 @@ using SheepIt.Domain;
 
 namespace SheepIt.Api.CommandRunners
 {
-    public static class SystemProcessRunner
+    public class SystemProcessRunner
     {
-        public static SystemProcessResult RunProcess(
+        public SystemProcessResult RunProcess(
             string workingDir,
             string fileName,
             string arguments,
@@ -50,7 +50,7 @@ namespace SheepIt.Api.CommandRunners
             public bool Successful { get; set; }
         }
 
-        private static string[] RunProcessAndGetOutput(Process process, string standardInputOrNull)
+        private string[] RunProcessAndGetOutput(Process process, string standardInputOrNull)
         {
             // todo: exception handling
 

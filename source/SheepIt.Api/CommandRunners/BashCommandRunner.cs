@@ -5,9 +5,11 @@ namespace SheepIt.Api.CommandRunners
 {
     public class BashCommandRunner : ICommandRunner
     {
+        private readonly SystemProcessRunner _systemProcessRunner = new SystemProcessRunner();
+        
         public ProcessStepResult Run(string command, IEnumerable<VariableForEnvironment> variables, string workingDir)
         {
-            var systemProcessResult = SystemProcessRunner.RunProcess(
+            var systemProcessResult = _systemProcessRunner.RunProcess(
                 workingDir: workingDir,
                 fileName: @"C:\Program Files\Git\bin\bash.exe", // todo: obviously this shouldn't be hardcoded
                 arguments: "-s", // -s will read command from standard input
