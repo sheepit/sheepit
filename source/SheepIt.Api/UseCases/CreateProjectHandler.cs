@@ -30,6 +30,7 @@ namespace SheepIt.Api.UseCases
     {
         private readonly Projects _projects = new Projects();
         private readonly Domain.Environments _environments = new Domain.Environments();
+        private readonly ReleasesStorage _releasesStorage = new ReleasesStorage();
         
         public void Handle(CreateProjectRequest request)
         {
@@ -61,7 +62,7 @@ namespace SheepIt.Api.UseCases
         {
             var currentCommitSha = ProcessRepository.GetCurrentCommitSha(project);
 
-            ReleasesStorage.Add(new Release
+            _releasesStorage.Add(new Release
             {
                 Variables = new VariableCollection(),
                 CommitSha = currentCommitSha,

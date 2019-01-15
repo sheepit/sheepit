@@ -41,12 +41,13 @@ namespace SheepIt.Api.UseCases.Releases
     public class UpdateReleaseVariablesHandler
     {
         private readonly Projects _projects = new Projects();
+        private readonly ReleasesStorage _releasesStorage = new ReleasesStorage();
         
         public UpdateReleaseVariablesResponse Handle(UpdateReleaseVariablesRequest request)
         {
             var project = _projects.Get(request.ProjectId);
 
-            var release = ReleasesStorage.GetNewest(request.ProjectId);
+            var release = _releasesStorage.GetNewest(request.ProjectId);
 
             var variableValueses = request.Updates
                 .Select(update => new VariableValues
@@ -57,9 +58,9 @@ namespace SheepIt.Api.UseCases.Releases
                 })
                 .ToArray();
 
-            var newReleasee = release.WithUpdatedVariables(variableValueses);
+            var newRelease = release.WithUpdatedVariables(variableValueses);
 
-            var newReleaseId = ReleasesStorage.Add(newReleasee);
+            var newReleaseId = _releasesStorage.Add(newRelease);
 
             return new UpdateReleaseVariablesResponse
             {

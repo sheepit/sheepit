@@ -44,9 +44,11 @@ namespace SheepIt.Api.UseCases.Releases
 
     public class GetLastReleaseHandler
     {
+        private readonly ReleasesStorage _releasesStorage = new ReleasesStorage();
+        
         public GetLastReleaseResponse Handle(GetLastReleaseRequest request)
         {
-            var release = ReleasesStorage.GetNewest(request.ProjectId);
+            var release = _releasesStorage.GetNewest(request.ProjectId);
 
             return new GetLastReleaseResponse
             {

@@ -32,6 +32,7 @@ namespace SheepIt.Api.UseCases.Releases
     public class UpdateReleaseProcessHandler
     {
         private readonly Projects _projects = new Projects();
+        private readonly ReleasesStorage _releasesStorage = new ReleasesStorage();
         
         public UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest request)
         {
@@ -39,11 +40,11 @@ namespace SheepIt.Api.UseCases.Releases
 
             var currentCommitSha = ProcessRepository.GetCurrentCommitSha(project);
 
-            var release = ReleasesStorage.GetNewest(request.ProjectId);
+            var release = _releasesStorage.GetNewest(request.ProjectId);
 
             var newRelease = release.WithUpdatedCommitSha(currentCommitSha);
 
-            var releaseId = ReleasesStorage.Add(newRelease);
+            var releaseId = _releasesStorage.Add(newRelease);
 
             return new UpdateReleaseProcessResponse
             {

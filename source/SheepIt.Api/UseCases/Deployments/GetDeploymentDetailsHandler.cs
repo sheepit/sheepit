@@ -48,6 +48,7 @@ namespace SheepIt.Api.UseCases.Deployments
         private readonly Domain.Deployments _deployments = new Domain.Deployments();
         private readonly Domain.Environments _environments = new Domain.Environments();
         private readonly Projects _projects = new Projects();
+        private readonly ReleasesStorage _releasesStorage = new ReleasesStorage();
 
         public GetDeploymentDetailsResponse Handle(GetDeploymentDetailsRequest request)
         {
@@ -63,7 +64,7 @@ namespace SheepIt.Api.UseCases.Deployments
             var environment = _environments.Get(
                 environmentId: deployment.EnvironmentId);
 
-            var release = ReleasesStorage.Get(
+            var release = _releasesStorage.Get(
                 projectId: request.ProjectId,
                 releaseId: deployment.ReleaseId
             );

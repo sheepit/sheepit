@@ -63,11 +63,11 @@ namespace SheepIt.Domain
         }
     }
 
-    public static class ReleasesStorage
+    public class ReleasesStorage
     {
-        private static readonly SheepItDatabase _database = new SheepItDatabase();
+        private readonly SheepItDatabase _database = new SheepItDatabase();
         
-        public static int Add(Release release)
+        public int Add(Release release)
         {
             var nextId = _database.Releases.GetNextId();
             
@@ -78,13 +78,13 @@ namespace SheepIt.Domain
             return nextId;
         }
 
-        public static Release Get(string projectId, int releaseId)
+        public Release Get(string projectId, int releaseId)
         {
             return _database.Releases
                 .FindByProjectAndId(projectId, releaseId);
         }
 
-        public static Release GetNewest(string projectId)
+        public Release GetNewest(string projectId)
         {
             return _database.Releases
                 .Find(filter => filter.FromProject(projectId))
