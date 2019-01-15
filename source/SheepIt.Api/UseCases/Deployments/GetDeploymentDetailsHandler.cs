@@ -38,7 +38,7 @@ namespace SheepIt.Api.UseCases.Deployments
         public object GetDeploymentDetails(GetDeploymentDetailsRequest request)
         {
             var handler = new GetDeploymentDetailsHandler();
-            
+
             return handler.Handle(request);
         }
     }
@@ -47,10 +47,11 @@ namespace SheepIt.Api.UseCases.Deployments
     {
         private readonly Domain.Deployments _deployments = new Domain.Deployments();
         private readonly Domain.Environments _environments = new Domain.Environments();
-        
+        private readonly Projects _projects = new Projects();
+
         public GetDeploymentDetailsResponse Handle(GetDeploymentDetailsRequest request)
         {
-            var project = Projects.Get(
+            var project = _projects.Get(
                 projectId: request.ProjectId
             );
 
@@ -61,12 +62,12 @@ namespace SheepIt.Api.UseCases.Deployments
 
             var environment = _environments.Get(
                 environmentId: deployment.EnvironmentId);
-            
+
             var release = ReleasesStorage.Get(
                 projectId: request.ProjectId,
                 releaseId: deployment.ReleaseId
             );
-            
+
             return new GetDeploymentDetailsResponse
             {
                 Id = deployment.Id,
@@ -83,7 +84,7 @@ namespace SheepIt.Api.UseCases.Deployments
         {
             // todo: this is ugly af
             var steps = deployment.ProcessOutput?.Steps ?? Enumerable.Empty<ProcessStepResult>();
-            
+
             return steps
                 .Select(MapCommandOutput)
                 .ToArray();

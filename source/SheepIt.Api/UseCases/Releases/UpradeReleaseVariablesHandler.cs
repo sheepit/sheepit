@@ -40,9 +40,11 @@ namespace SheepIt.Api.UseCases.Releases
 
     public class UpdateReleaseVariablesHandler
     {
+        private readonly Projects _projects = new Projects();
+        
         public UpdateReleaseVariablesResponse Handle(UpdateReleaseVariablesRequest request)
         {
-            var project = Projects.Get(request.ProjectId);
+            var project = _projects.Get(request.ProjectId);
 
             var release = ReleasesStorage.GetNewest(request.ProjectId);
 

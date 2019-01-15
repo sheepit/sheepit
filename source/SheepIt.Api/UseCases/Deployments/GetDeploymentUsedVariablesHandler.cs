@@ -1,4 +1,5 @@
 using System.Linq;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Domain;
 
@@ -39,10 +40,11 @@ namespace SheepIt.Api.UseCases.Deployments
     public class GetDeploymentUsedVariablesHandler
     {
         private readonly Domain.Deployments _deployments = new Domain.Deployments();
+        private readonly Projects _projects = new Projects();
         
         public GetDeploymentUsedVariablesResponse Handle(GetDeploymentUsedVariablesRequest request)
         {
-            var project = Projects.Get(
+            var project = _projects.Get(
                 projectId: request.ProjectId
             );
 

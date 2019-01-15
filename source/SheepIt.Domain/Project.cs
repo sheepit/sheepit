@@ -12,17 +12,17 @@ namespace SheepIt.Domain
         public string RepositoryUrl { get; set; }
     }
 
-    public static class Projects
+    public class Projects
     {
-        private static readonly SheepItDatabase _database = new SheepItDatabase();
+        private readonly SheepItDatabase _database = new SheepItDatabase();
         
-        public static void Add(Project project)
+        public void Add(Project project)
         {
             _database.Projects
                 .InsertOne(project);
         }
 
-        public static Project Get(string projectId)
+        public Project Get(string projectId)
         {
             return _database.Projects
                 .FindById(projectId);

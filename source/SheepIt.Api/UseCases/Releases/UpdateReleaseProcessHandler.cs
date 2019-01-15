@@ -31,9 +31,11 @@ namespace SheepIt.Api.UseCases.Releases
 
     public class UpdateReleaseProcessHandler
     {
+        private readonly Projects _projects = new Projects();
+        
         public UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest request)
         {
-            var project = Projects.Get(request.ProjectId);
+            var project = _projects.Get(request.ProjectId);
 
             var currentCommitSha = ProcessRepository.GetCurrentCommitSha(project);
 

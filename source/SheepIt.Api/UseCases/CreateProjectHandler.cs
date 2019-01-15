@@ -28,6 +28,7 @@ namespace SheepIt.Api.UseCases
 
     public class CreateProjectHandler
     {
+        private readonly Projects _projects = new Projects();
         private readonly Domain.Environments _environments = new Domain.Environments();
         
         public void Handle(CreateProjectRequest request)
@@ -38,7 +39,7 @@ namespace SheepIt.Api.UseCases
                 RepositoryUrl = request.RepositoryUrl
             };
 
-            Projects.Add(project);
+            _projects.Add(project);
 
             CreateEnvironments(request);
 

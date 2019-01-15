@@ -36,10 +36,11 @@ namespace SheepIt.Api.UseCases
     public class DeployReleaseHandler
     {
         private readonly Domain.Deployments _deployments = new Domain.Deployments();
+        private readonly Projects _projects = new Projects();
         
         public DeployReleaseResponse Handle(DeployReleaseRequest request)
         {
-            var project = Projects.Get(
+            var project = _projects.Get(
                 projectId: request.ProjectId
             );
 
