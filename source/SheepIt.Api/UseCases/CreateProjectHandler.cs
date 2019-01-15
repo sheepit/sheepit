@@ -20,13 +20,15 @@ namespace SheepIt.Api.UseCases
         [Route("create-project")]
         public void CreateProject(CreateProjectRequest request)
         {
-            CreateProjectHandler.Handle(request);
+            var handler = new CreateProjectHandler();
+            
+            handler.Handle(request);
         }
     }
 
-    public static class CreateProjectHandler
+    public class CreateProjectHandler
     {
-        public static void Handle(CreateProjectRequest request)
+        public void Handle(CreateProjectRequest request)
         {
             var project = new Project
             {
@@ -42,7 +44,7 @@ namespace SheepIt.Api.UseCases
             CreateFirstRelease(project);
         }
 
-        private static void CreateEnvironments(CreateProjectRequest request)
+        private void CreateEnvironments(CreateProjectRequest request)
         {
             foreach (var environmentName in request.EnvironmentNames)
             {
@@ -51,7 +53,7 @@ namespace SheepIt.Api.UseCases
             }
         }
         
-        private static void CreateFirstRelease(Project project)
+        private void CreateFirstRelease(Project project)
         {
             var currentCommitSha = ProcessRepository.GetCurrentCommitSha(project);
 

@@ -29,15 +29,17 @@ namespace SheepIt.Api.UseCases.Environments
         [Route("list-environments")]
         public object ListEnvironments(ListEnvironmentsRequest request)
         {
-            return ListEnvironmentsHandler.Handle(request);
+            var handler = new ListEnvironmentsHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class ListEnvironmentsHandler
+    public class ListEnvironmentsHandler
     {
-        private static readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+        private readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
         
-        public static ListEnvironmentsResponse Handle(ListEnvironmentsRequest request)
+        public ListEnvironmentsResponse Handle(ListEnvironmentsRequest request)
         {
             var environments = sheepItDatabase.Environments
                 .Find(filter => filter.FromProject(request.ProjectId))
@@ -52,7 +54,7 @@ namespace SheepIt.Api.UseCases.Environments
             };
         }
 
-        private static ListEnvironmentsResponse.EnvironmentDto Map(Environment environment)
+        private ListEnvironmentsResponse.EnvironmentDto Map(Environment environment)
         {
             return new ListEnvironmentsResponse.EnvironmentDto
             {

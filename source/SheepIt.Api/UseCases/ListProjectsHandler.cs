@@ -28,15 +28,17 @@ namespace SheepIt.Api.UseCases
         [Route("list-projects")]
         public object ListProjects()
         {
-            return ListProjectsHandler.Handle(new ListProjectsRequest());
+            var handler = new ListProjectsHandler();
+
+            return handler.Handle(new ListProjectsRequest());
         }
     }
 
-    public static class ListProjectsHandler
+    public class ListProjectsHandler
     {
-        private static readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+        private readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
         
-        public static ListProjectsResponse Handle(ListProjectsRequest options)
+        public ListProjectsResponse Handle(ListProjectsRequest options)
         {
             var projects = sheepItDatabase.Projects
                 .FindAll()
@@ -51,7 +53,7 @@ namespace SheepIt.Api.UseCases
             };
         }
 
-        private static ListProjectsResponse.ProjectDto Map(Project project)
+        private ListProjectsResponse.ProjectDto Map(Project project)
         {
             return new ListProjectsResponse.ProjectDto
             {

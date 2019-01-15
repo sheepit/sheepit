@@ -37,15 +37,17 @@ namespace SheepIt.Api.UseCases.Deployments
         [Route("list-deployments")]
         public object ListDeployments(ListDeploymentsRequest request)
         {
-            return ListDeploymentsHandler.Handle(request);
+            var handler = new ListDeploymentsHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class ListDeploymentsHandler
+    public class ListDeploymentsHandler
     {
-        private static readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+        private readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
 
-        public static ListDeploymentResponse Handle(ListDeploymentsRequest options)
+        public ListDeploymentResponse Handle(ListDeploymentsRequest options)
         {
             var deployments = sheepItDatabase.Deployments
                 .Find(GetDeploymentFilter(projectId: options.ProjectId, releaseIdOrNull: options.ReleaseId))
@@ -68,7 +70,7 @@ namespace SheepIt.Api.UseCases.Deployments
             };
         }
 
-        private static FilterDefinition<Deployment> GetDeploymentFilter(string projectId, int? releaseIdOrNull)
+        private FilterDefinition<Deployment> GetDeploymentFilter(string projectId, int? releaseIdOrNull)
         {
             var deploymentFilters = Builders<Deployment>.Filter;
 
@@ -85,7 +87,7 @@ namespace SheepIt.Api.UseCases.Deployments
             }
         }
 
-        private static ListDeploymentResponse.DeploymentDto MapDeployment(Deployment deployment, Environment environment)
+        private ListDeploymentResponse.DeploymentDto MapDeployment(Deployment deployment, Environment environment)
         {
             return new ListDeploymentResponse.DeploymentDto
             {

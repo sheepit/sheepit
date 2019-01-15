@@ -32,13 +32,15 @@ namespace SheepIt.Api.UseCases.Releases
         [Route("update-release-variables")]
         public object UpdateReleaseVariables(UpdateReleaseVariablesRequest request)
         {
-            return UpdateReleaseVariablesHandler.Handle(request);
+            var handler = new UpdateReleaseVariablesHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class UpdateReleaseVariablesHandler
+    public class UpdateReleaseVariablesHandler
     {
-        public static UpdateReleaseVariablesResponse Handle(UpdateReleaseVariablesRequest request)
+        public UpdateReleaseVariablesResponse Handle(UpdateReleaseVariablesRequest request)
         {
             var project = Projects.Get(request.ProjectId);
 

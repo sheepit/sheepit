@@ -37,13 +37,15 @@ namespace SheepIt.Api.UseCases.Deployments
         [Route("get-deployment-details")]
         public object GetDeploymentDetails(GetDeploymentDetailsRequest request)
         {
-            return GetDeploymentDetailsHandler.Handle(request);
+            var handler = new GetDeploymentDetailsHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class GetDeploymentDetailsHandler
+    public class GetDeploymentDetailsHandler
     {
-        public static GetDeploymentDetailsResponse Handle(GetDeploymentDetailsRequest request)
+        public GetDeploymentDetailsResponse Handle(GetDeploymentDetailsRequest request)
         {
             var project = Projects.Get(
                 projectId: request.ProjectId
@@ -74,7 +76,7 @@ namespace SheepIt.Api.UseCases.Deployments
             };
         }
 
-        private static GetDeploymentDetailsResponse.CommandOutput[] GetStepResults(Deployment deployment)
+        private GetDeploymentDetailsResponse.CommandOutput[] GetStepResults(Deployment deployment)
         {
             // todo: this is ugly af
             var steps = deployment.ProcessOutput?.Steps ?? Enumerable.Empty<ProcessStepResult>();
@@ -84,7 +86,7 @@ namespace SheepIt.Api.UseCases.Deployments
                 .ToArray();
         }
 
-        private static GetDeploymentDetailsResponse.CommandOutput MapCommandOutput(ProcessStepResult result)
+        private GetDeploymentDetailsResponse.CommandOutput MapCommandOutput(ProcessStepResult result)
         {
             return new GetDeploymentDetailsResponse.CommandOutput
             {

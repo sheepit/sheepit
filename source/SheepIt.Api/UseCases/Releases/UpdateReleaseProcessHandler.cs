@@ -23,13 +23,15 @@ namespace SheepIt.Api.UseCases.Releases
         [Route("update-release-process")]
         public object UpdateReleaseProcess(UpdateReleaseProcessRequest request)
         {
-            return UpdateReleaseProcessHandler.Handle(request);
+            var handler = new UpdateReleaseProcessHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class UpdateReleaseProcessHandler
+    public class UpdateReleaseProcessHandler
     {
-        public static UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest request)
+        public UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest request)
         {
             var project = Projects.Get(request.ProjectId);
 

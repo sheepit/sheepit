@@ -38,13 +38,15 @@ namespace SheepIt.Api.UseCases
         [Route("show-dashboard")]
         public object ShowDashboard(ShowDashboardRequest request)
         {
-            return ShowDashboardHandler.Handle(request);
+            var handler = new ShowDashboardHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class ShowDashboardHandler
+    public class ShowDashboardHandler
     {
-        public static ShowDashboardResponse Handle(ShowDashboardRequest options)
+        public ShowDashboardResponse Handle(ShowDashboardRequest options)
         {
             var projectEnvironments = GetProjectEnvironments(options.ProjectId);
             var deploymentInfoForEnvironments = GetDeploymentsInfoForEnvironments(options.ProjectId);
@@ -57,12 +59,12 @@ namespace SheepIt.Api.UseCases
             };
         }
 
-        private static Domain.Environment[] GetProjectEnvironments(string projectId)
+        private Domain.Environment[] GetProjectEnvironments(string projectId)
         {
             return Domain.Environments.GetAll(projectId);
         }
 
-        private static ShowDashboardResponse.EnvironmentDto[] GetDeploymentsInfoForEnvironments(string projectId)
+        private ShowDashboardResponse.EnvironmentDto[] GetDeploymentsInfoForEnvironments(string projectId)
         {
             var environments = Domain.Deployments.GetAll(projectId)
                 .GroupBy(deployment => deployment.EnvironmentId)
@@ -79,7 +81,7 @@ namespace SheepIt.Api.UseCases
             return environments;
         }
 
-        private static ShowDashboardResponse.EnvironmentDto MapDeployment(int environmentId, Deployment deployment)
+        private ShowDashboardResponse.EnvironmentDto MapDeployment(int environmentId, Deployment deployment)
         {
             return new ShowDashboardResponse.EnvironmentDto
             {
@@ -93,7 +95,7 @@ namespace SheepIt.Api.UseCases
             };
         }
 
-        private static ShowDashboardResponse.EnvironmentDto[] FillEnvironmentsWithDeploymentDetails(
+        private ShowDashboardResponse.EnvironmentDto[] FillEnvironmentsWithDeploymentDetails(
             Domain.Environment[] projectEnvironments,
             ShowDashboardResponse.EnvironmentDto[] deploymentInfoForEnvironments
             )

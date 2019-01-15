@@ -27,13 +27,15 @@ namespace SheepIt.Api.UseCases
         [Route("deploy-release")]
         public object DeployRelease(DeployReleaseRequest request)
         {
-            return DeployReleaseHandler.Handle(request);
+            var handler = new DeployReleaseHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class DeployReleaseHandler
+    public class DeployReleaseHandler
     {
-        public static DeployReleaseResponse Handle(DeployReleaseRequest request)
+        public DeployReleaseResponse Handle(DeployReleaseRequest request)
         {
             var project = Projects.Get(
                 projectId: request.ProjectId
@@ -63,7 +65,7 @@ namespace SheepIt.Api.UseCases
             };
         }
 
-        private static void RunDeployment(Project project, Release release, Deployment deployment)
+        private void RunDeployment(Project project, Release release, Deployment deployment)
         {
             try
             {

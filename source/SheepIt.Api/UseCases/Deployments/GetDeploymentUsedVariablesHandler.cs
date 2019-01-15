@@ -30,13 +30,15 @@ namespace SheepIt.Api.UseCases.Deployments
         [Route("get-deployment-used-variables")]
         public object ShowDashboard(GetDeploymentUsedVariablesRequest request)
         {
-            return GetDeploymentUsedVariablesHandler.Handle(request);
+            var handler = new GetDeploymentUsedVariablesHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class GetDeploymentUsedVariablesHandler
+    public class GetDeploymentUsedVariablesHandler
     {
-        public static GetDeploymentUsedVariablesResponse Handle(GetDeploymentUsedVariablesRequest request)
+        public GetDeploymentUsedVariablesResponse Handle(GetDeploymentUsedVariablesRequest request)
         {
             var project = Projects.Get(
                 projectId: request.ProjectId
@@ -62,7 +64,7 @@ namespace SheepIt.Api.UseCases.Deployments
             return response;
         }
 
-        public static VariablesForEnvironmentDto[] ConvertToDto(VariableForEnvironment[] values)
+        public VariablesForEnvironmentDto[] ConvertToDto(VariableForEnvironment[] values)
         {
             return values.Select(x => new VariablesForEnvironmentDto
             {

@@ -30,13 +30,15 @@ namespace SheepIt.Api.UseCases.Releases
         [Route("edit-release-variables")]
         public object EditReleaseVariables(EditReleaseVariablesRequest request)
         {
-            return EditReleaseVariablesHandler.Handle(request);
+            var handler = new EditReleaseVariablesHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class EditReleaseVariablesHandler
+    public class EditReleaseVariablesHandler
     {
-        public static EditReleaseVariablesResponse Handle(EditReleaseVariablesRequest request)
+        public EditReleaseVariablesResponse Handle(EditReleaseVariablesRequest request)
         {
             var project = Projects.Get(request.ProjectId);
 

@@ -31,15 +31,17 @@ namespace SheepIt.Api.UseCases.Releases
         [Route("list-releases")]
         public object ListReleases(ListReleasesRequest request)
         {
-            return ListReleasesHandler.Handle(request);
+            var handler = new ListReleasesHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class ListReleasesHandler
+    public class ListReleasesHandler
     {
-        private static readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+        private readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
         
-        public static ListReleaseResponse Handle(ListReleasesRequest options)
+        public ListReleaseResponse Handle(ListReleasesRequest options)
         {
             var releases = sheepItDatabase.Releases
                 .Find(filter => filter.FromProject(options.ProjectId))
@@ -54,7 +56,7 @@ namespace SheepIt.Api.UseCases.Releases
             };
         }
 
-        private static ListReleaseResponse.ReleaseDto Map(Release release)
+        private ListReleaseResponse.ReleaseDto Map(Release release)
         {
             return new ListReleaseResponse.ReleaseDto
             {

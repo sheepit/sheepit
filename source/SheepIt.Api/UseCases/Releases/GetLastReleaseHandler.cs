@@ -36,13 +36,15 @@ namespace SheepIt.Api.UseCases.Releases
         [Route("get-last-release")]
         public object GetLastRelease(GetLastReleaseRequest request)
         {
-            return GetLastReleaseHandler.Handle(request);
+            var handler = new GetLastReleaseHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class GetLastReleaseHandler
+    public class GetLastReleaseHandler
     {
-        public static GetLastReleaseResponse Handle(GetLastReleaseRequest request)
+        public GetLastReleaseResponse Handle(GetLastReleaseRequest request)
         {
             var release = ReleasesStorage.GetNewest(request.ProjectId);
 

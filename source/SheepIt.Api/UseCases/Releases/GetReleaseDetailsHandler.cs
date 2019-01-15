@@ -36,13 +36,15 @@ namespace SheepIt.Api.UseCases.Releases
         [Route("get-release-details")]
         public object GetReleaseDetails(GetReleaseDetailsRequest request)
         {
-            return GetReleaseDetailsHandler.Handle(request);
+            var handler = new GetReleaseDetailsHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class GetReleaseDetailsHandler
+    public class GetReleaseDetailsHandler
     {
-        public static GetReleaseDetailsResponse Handle(GetReleaseDetailsRequest request)
+        public GetReleaseDetailsResponse Handle(GetReleaseDetailsRequest request)
         {
             var release = ReleasesStorage.Get(
                 projectId: request.ProjectId,

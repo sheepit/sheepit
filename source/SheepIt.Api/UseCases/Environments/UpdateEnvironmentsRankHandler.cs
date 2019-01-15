@@ -24,15 +24,17 @@ namespace SheepIt.Api.UseCases.Environments
         [Route("update-environments-rank")]
         public object UpdateEnvironmentsRank(UpdateEnvironmentsRankRequest request)
         {
-            return UpdateEnvironmentsRankHandler.Handle(request);
+            var handler = new UpdateEnvironmentsRankHandler();
+            
+            return handler.Handle(request);
         }
     }
 
-    public static class UpdateEnvironmentsRankHandler
+    public class UpdateEnvironmentsRankHandler
     {
-        private static readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+        private readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
         
-        public static UpdateEnvironmentsRankResponse Handle(UpdateEnvironmentsRankRequest request)
+        public UpdateEnvironmentsRankResponse Handle(UpdateEnvironmentsRankRequest request)
         {
             var environmentsById = sheepItDatabase.Environments
                 .Find(filter => filter.FromProject(request.ProjectId))
