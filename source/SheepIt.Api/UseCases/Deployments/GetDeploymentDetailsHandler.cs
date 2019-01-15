@@ -45,13 +45,15 @@ namespace SheepIt.Api.UseCases.Deployments
 
     public class GetDeploymentDetailsHandler
     {
+        private readonly Domain.Deployments _deployments = new Domain.Deployments();
+        
         public GetDeploymentDetailsResponse Handle(GetDeploymentDetailsRequest request)
         {
             var project = Projects.Get(
                 projectId: request.ProjectId
             );
 
-            var deployment = Domain.Deployments.Get(
+            var deployment = _deployments.Get(
                 projectId: request.ProjectId,
                 deploymentId: request.DeploymentId
             );

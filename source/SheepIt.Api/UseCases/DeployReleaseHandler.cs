@@ -35,6 +35,8 @@ namespace SheepIt.Api.UseCases
 
     public class DeployReleaseHandler
     {
+        private readonly Domain.Deployments _deployments = new Domain.Deployments();
+        
         public DeployReleaseResponse Handle(DeployReleaseRequest request)
         {
             var project = Projects.Get(
@@ -55,7 +57,7 @@ namespace SheepIt.Api.UseCases
                 Status = DeploymentStatus.InProgress
             };
             
-            var deploymentId = Domain.Deployments.Add(deployment);
+            var deploymentId = _deployments.Add(deployment);
 
             RunDeployment(project, release, deployment);
 
@@ -87,7 +89,7 @@ namespace SheepIt.Api.UseCases
 
                     deployment.MarkFinished(processOutput);
 
-                    Domain.Deployments.Update(deployment);
+                    _deployments.Update(deployment);
                 }
             }
             catch (Exception)
@@ -96,7 +98,7 @@ namespace SheepIt.Api.UseCases
 
                 deployment.MarkExecutionFailed();
 
-                Domain.Deployments.Update(deployment);
+                _deployments.Update(deployment);
 
                 throw;
             }

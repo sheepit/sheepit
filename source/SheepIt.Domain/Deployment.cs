@@ -54,11 +54,11 @@ namespace SheepIt.Domain
         public string[] Output { get; set; }
     }
 
-    public static class Deployments
+    public class Deployments
     {
-        private static readonly SheepItDatabase _database = new SheepItDatabase();
+        private readonly SheepItDatabase _database = new SheepItDatabase();
         
-        public static int Add(Deployment deployment)
+        public int Add(Deployment deployment)
         {
             var nextId = _database.Deployments.GetNextId();
             
@@ -70,19 +70,19 @@ namespace SheepIt.Domain
             return nextId;
         }
 
-        public static void Update(Deployment deployment)
+        public void Update(Deployment deployment)
         {
             _database.Deployments
                 .ReplaceOneById(deployment);
         }
 
-        public static Deployment Get(string projectId, int deploymentId)
+        public Deployment Get(string projectId, int deploymentId)
         {
             return _database.Deployments
                 .FindByProjectAndId(projectId, deploymentId);
         }
 
-        public static Deployment[] GetAll(string projectId)
+        public Deployment[] GetAll(string projectId)
         {
             return _database.Deployments
                 .Find(filter => filter.FromProject(projectId))

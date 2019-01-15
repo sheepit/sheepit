@@ -38,13 +38,15 @@ namespace SheepIt.Api.UseCases.Deployments
 
     public class GetDeploymentUsedVariablesHandler
     {
+        private readonly Domain.Deployments _deployments = new Domain.Deployments();
+        
         public GetDeploymentUsedVariablesResponse Handle(GetDeploymentUsedVariablesRequest request)
         {
             var project = Projects.Get(
                 projectId: request.ProjectId
             );
 
-            var deployment = Domain.Deployments.Get(
+            var deployment = _deployments.Get(
                 projectId: request.ProjectId,
                 deploymentId: request.DeploymentId
             );
@@ -64,7 +66,7 @@ namespace SheepIt.Api.UseCases.Deployments
             return response;
         }
 
-        public VariablesForEnvironmentDto[] ConvertToDto(VariableForEnvironment[] values)
+        private VariablesForEnvironmentDto[] ConvertToDto(VariableForEnvironment[] values)
         {
             return values.Select(x => new VariablesForEnvironmentDto
             {

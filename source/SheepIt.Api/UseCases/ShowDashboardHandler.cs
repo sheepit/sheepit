@@ -46,6 +46,8 @@ namespace SheepIt.Api.UseCases
 
     public class ShowDashboardHandler
     {
+        private readonly Domain.Deployments _deployments = new Domain.Deployments();
+        
         public ShowDashboardResponse Handle(ShowDashboardRequest options)
         {
             var projectEnvironments = GetProjectEnvironments(options.ProjectId);
@@ -66,7 +68,7 @@ namespace SheepIt.Api.UseCases
 
         private ShowDashboardResponse.EnvironmentDto[] GetDeploymentsInfoForEnvironments(string projectId)
         {
-            var environments = Domain.Deployments.GetAll(projectId)
+            var environments = _deployments.GetAll(projectId)
                 .GroupBy(deployment => deployment.EnvironmentId)
                 .Select(grouping => MapDeployment(
                         environmentId: grouping.Key,
