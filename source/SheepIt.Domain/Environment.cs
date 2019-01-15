@@ -29,11 +29,11 @@ namespace SheepIt.Domain
         }
     }
 
-    public static class Environments
+    public class Environments
     {
-        private static readonly SheepItDatabase _database = new SheepItDatabase();
+        private readonly SheepItDatabase _database = new SheepItDatabase();
         
-        public static void Add(Environment environment)
+        public void Add(Environment environment)
         {
             // todo: we should set rank and id when creating document, not when saving it, IMO
             environment.SetRank(GetNextRank(environment));
@@ -43,7 +43,7 @@ namespace SheepIt.Domain
                 .InsertOne(environment);
         }
 
-        private static int GetNextRank(Environment environment)
+        private int GetNextRank(Environment environment)
         {
             var environmentsCount = _database.Environments
                 .Find(filter => filter.FromProject(environment.ProjectId))
@@ -52,14 +52,14 @@ namespace SheepIt.Domain
             return (int) environmentsCount + 1;
         }
 
-        public static Environment Get(int environmentId)
+        public Environment Get(int environmentId)
         {
             // todo: we need to also check project id, as environment ids will duplicate in the future!
             return _database.Environments
                 .FindById(environmentId);
         }
 
-        public static Environment[] GetAll(string projectId)
+        public Environment[] GetAll(string projectId)
         {
             return _database.Environments
                 .Find(filter => filter.FromProject(projectId))
@@ -67,7 +67,7 @@ namespace SheepIt.Domain
                 .ToArray();
         }
         
-        public static void Update(Environment environment)
+        public void Update(Environment environment)
         {
             _database.Environments
                 .ReplaceOneById(environment);

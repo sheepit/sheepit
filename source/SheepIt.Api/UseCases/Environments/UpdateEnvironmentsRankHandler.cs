@@ -33,6 +33,7 @@ namespace SheepIt.Api.UseCases.Environments
     public class UpdateEnvironmentsRankHandler
     {
         private readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+        private readonly Domain.Environments _environments = new Domain.Environments();
         
         public UpdateEnvironmentsRankResponse Handle(UpdateEnvironmentsRankRequest request)
         {
@@ -48,7 +49,7 @@ namespace SheepIt.Api.UseCases.Environments
             orderedEnvironments.ForEach((environment, index) =>
             {
                 environment.SetRank(index + 1);
-                Domain.Environments.Update(environment);
+                _environments.Update(environment);
             });
 
             return new UpdateEnvironmentsRankResponse();

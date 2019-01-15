@@ -28,6 +28,8 @@ namespace SheepIt.Api.UseCases
 
     public class CreateProjectHandler
     {
+        private readonly Domain.Environments _environments = new Domain.Environments();
+        
         public void Handle(CreateProjectRequest request)
         {
             var project = new Project
@@ -49,7 +51,8 @@ namespace SheepIt.Api.UseCases
             foreach (var environmentName in request.EnvironmentNames)
             {
                 var environment = new Domain.Environment(request.ProjectId, environmentName);
-                Domain.Environments.Add(environment);
+                
+                _environments.Add(environment);
             }
         }
         

@@ -46,6 +46,7 @@ namespace SheepIt.Api.UseCases.Deployments
     public class ListDeploymentsHandler
     {
         private readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
+        private readonly Domain.Environments _environments = new Domain.Environments();
 
         public ListDeploymentResponse Handle(ListDeploymentsRequest options)
         {
@@ -54,7 +55,7 @@ namespace SheepIt.Api.UseCases.Deployments
                 .SortBy(deployment => deployment.DeployedAt)
                 .ToArray();
             
-            var environments = Domain.Environments
+            var environments = _environments
                 .GetAll(options.ProjectId);
 
             var deploymentDtos = deployments.Join(

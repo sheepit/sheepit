@@ -47,6 +47,7 @@ namespace SheepIt.Api.UseCases
     public class ShowDashboardHandler
     {
         private readonly Domain.Deployments _deployments = new Domain.Deployments();
+        private readonly Domain.Environments _environments = new Domain.Environments();
         
         public ShowDashboardResponse Handle(ShowDashboardRequest options)
         {
@@ -63,7 +64,7 @@ namespace SheepIt.Api.UseCases
 
         private Domain.Environment[] GetProjectEnvironments(string projectId)
         {
-            return Domain.Environments.GetAll(projectId);
+            return _environments.GetAll(projectId);
         }
 
         private ShowDashboardResponse.EnvironmentDto[] GetDeploymentsInfoForEnvironments(string projectId)
