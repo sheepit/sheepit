@@ -2,24 +2,27 @@ using System;
 using Autofac;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
+using SheepIt.Api.Infrastructure.Api;
 
 namespace SheepIt.Api
 {
     public class WebApp : IDisposable
     {
         private readonly ILifetimeScope _rootScope;
+        private readonly IConfiguration _configuration;
         
         private IWebHost _webHost;
 
-        public WebApp(ILifetimeScope rootScope)
+        public WebApp(ILifetimeScope rootScope, IConfiguration configuration)
         {
             _rootScope = rootScope;
+            _configuration = configuration;
         }
 
-        public void Run(string[] args)
+        public void StartAndWait(string[] args)
         {
             _webHost = WebHost
                 .CreateDefaultBuilder(args)
@@ -28,13 +31,14 @@ namespace SheepIt.Api
                 .ConfigureServices(ConfigureServices)
                 .Build();
             
-            // use start for integration tests
+            // use Start() for integration tests
             _webHost.Run();
         }
 
         private void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.Replace(new ServiceDescriptor(typeof(ILifetimeScope), _rootScope));
+            serviceCollection.AddInstance(_rootScope);
+            serviceCollection.ReplaceWithInstance(_configuration);
         }
 
         public void Dispose()

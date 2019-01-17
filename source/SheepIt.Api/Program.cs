@@ -2,6 +2,7 @@
 using Autofac;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Logger;
@@ -12,7 +13,8 @@ namespace SheepIt.Api
     {
         public static void Main(string[] args)
         {
-            var configuration = ConfigurationFactory.CreateConfiguration();
+            var configuration = ConfigurationFactory.CreateConfiguration(args);
+            
             Log.Logger = LoggerFactory.CreateLogger(configuration);
             
             try
@@ -23,30 +25,29 @@ namespace SheepIt.Api
 
                 containerBuilder.RegisterModule<SheepItModule>();
 
+                containerBuilder.RegisterInstance(configuration)
+                    .As<IConfiguration>()
+                    .SingleInstance();
+
                 using (var container = containerBuilder.Build())
                 {
                     var webApp = container.Resolve<WebApp>();
 
-                    webApp.Run(args);
+                    webApp.StartAndWait(args);
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.Error.WriteLine(e.ToString(), "Terminated unexpectedly!");
-                Log.Fatal(e, "Terminated unexpectedly!");
+                Console.Error.WriteLine(exception.ToString(), "Terminated unexpectedly!");
+                
+                Log.Fatal(exception, "Terminated unexpectedly!");
+                
                 throw;
             }
             finally
             {
                 Log.CloseAndFlush();
             }
-        }
-
-        private static IWebHostBuilder CreateWebHostBuilder(string[] args)
-        {
-            return WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseSerilog();
         }
     }
 }
