@@ -1,8 +1,10 @@
 using Autofac;
+using SheepIt.Api.CommandRunners;
 using SheepIt.Api.UseCases;
 using SheepIt.Api.UseCases.Deployments;
 using SheepIt.Api.UseCases.Environments;
 using SheepIt.Api.UseCases.Releases;
+using SheepIt.Domain;
 
 namespace SheepIt.Api
 {
@@ -13,8 +15,19 @@ namespace SheepIt.Api
             // todo: divide into many modules
             
             builder.RegisterType<WebApp>().AsSelf();
+
+            builder.RegisterType<SheepItDatabase>()
+                .AsSelf()
+                .SingleInstance();
+
+            builder.RegisterType<ProcessRunner>()
+                .AsSelf()
+                .SingleInstance();
             
-            
+            builder.RegisterType<Deployments>().AsSelf();
+            builder.RegisterType<Environments>().AsSelf();
+            builder.RegisterType<Projects>().AsSelf();
+            builder.RegisterType<ReleasesStorage>().AsSelf();
             
             builder.RegisterType<CreateProjectHandler>().AsSelf();
             builder.RegisterType<DeployReleaseHandler>().AsSelf();

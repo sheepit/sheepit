@@ -44,10 +44,17 @@ namespace SheepIt.Api.UseCases.Deployments
 
     public class GetDeploymentUsedVariablesHandler
     {
-        private readonly Domain.Deployments _deployments = new Domain.Deployments();
-        private readonly Projects _projects = new Projects();
-        private readonly ReleasesStorage _releasesStorage = new ReleasesStorage();
-        
+        private readonly Domain.Deployments _deployments;
+        private readonly Projects _projects;
+        private readonly ReleasesStorage _releasesStorage;
+
+        public GetDeploymentUsedVariablesHandler(Domain.Deployments deployments, Projects projects, ReleasesStorage releasesStorage)
+        {
+            _deployments = deployments;
+            _projects = projects;
+            _releasesStorage = releasesStorage;
+        }
+
         public GetDeploymentUsedVariablesResponse Handle(GetDeploymentUsedVariablesRequest request)
         {
             var project = _projects.Get(

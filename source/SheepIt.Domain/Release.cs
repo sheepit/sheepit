@@ -65,8 +65,13 @@ namespace SheepIt.Domain
 
     public class ReleasesStorage
     {
-        private readonly SheepItDatabase _database = new SheepItDatabase();
-        
+        private readonly SheepItDatabase _database;
+
+        public ReleasesStorage(SheepItDatabase database)
+        {
+            _database = database;
+        }
+
         public int Add(Release release)
         {
             var nextId = _database.Releases.GetNextId();

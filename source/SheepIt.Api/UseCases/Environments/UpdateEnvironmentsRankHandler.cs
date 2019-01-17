@@ -37,9 +37,15 @@ namespace SheepIt.Api.UseCases.Environments
 
     public class UpdateEnvironmentsRankHandler
     {
-        private readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
-        private readonly Domain.Environments _environments = new Domain.Environments();
-        
+        private readonly SheepItDatabase sheepItDatabase;
+        private readonly Domain.Environments _environments;
+
+        public UpdateEnvironmentsRankHandler(SheepItDatabase sheepItDatabase, Domain.Environments environments)
+        {
+            this.sheepItDatabase = sheepItDatabase;
+            _environments = environments;
+        }
+
         public UpdateEnvironmentsRankResponse Handle(UpdateEnvironmentsRankRequest request)
         {
             var environmentsById = sheepItDatabase.Environments

@@ -50,10 +50,18 @@ namespace SheepIt.Api.UseCases.Deployments
 
     public class GetDeploymentDetailsHandler
     {
-        private readonly Domain.Deployments _deployments = new Domain.Deployments();
-        private readonly Domain.Environments _environments = new Domain.Environments();
-        private readonly Projects _projects = new Projects();
-        private readonly ReleasesStorage _releasesStorage = new ReleasesStorage();
+        private readonly Domain.Deployments _deployments;
+        private readonly Domain.Environments _environments;
+        private readonly Projects _projects;
+        private readonly ReleasesStorage _releasesStorage;
+
+        public GetDeploymentDetailsHandler(Domain.Deployments deployments, Domain.Environments environments, Projects projects, ReleasesStorage releasesStorage)
+        {
+            _deployments = deployments;
+            _environments = environments;
+            _projects = projects;
+            _releasesStorage = releasesStorage;
+        }
 
         public GetDeploymentDetailsResponse Handle(GetDeploymentDetailsRequest request)
         {

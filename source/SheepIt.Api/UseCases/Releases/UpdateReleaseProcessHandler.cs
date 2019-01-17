@@ -36,9 +36,15 @@ namespace SheepIt.Api.UseCases.Releases
 
     public class UpdateReleaseProcessHandler
     {
-        private readonly Projects _projects = new Projects();
-        private readonly ReleasesStorage _releasesStorage = new ReleasesStorage();
-        
+        private readonly Projects _projects;
+        private readonly ReleasesStorage _releasesStorage;
+
+        public UpdateReleaseProcessHandler(Projects projects, ReleasesStorage releasesStorage)
+        {
+            _projects = projects;
+            _releasesStorage = releasesStorage;
+        }
+
         public UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest request)
         {
             var project = _projects.Get(request.ProjectId);

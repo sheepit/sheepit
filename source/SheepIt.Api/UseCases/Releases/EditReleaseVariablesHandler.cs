@@ -43,9 +43,15 @@ namespace SheepIt.Api.UseCases.Releases
 
     public class EditReleaseVariablesHandler
     {
-        private readonly Projects _projects = new Projects();
-        private readonly ReleasesStorage _releasesStorage = new ReleasesStorage();
-        
+        private readonly Projects _projects;
+        private readonly ReleasesStorage _releasesStorage;
+
+        public EditReleaseVariablesHandler(Projects projects, ReleasesStorage releasesStorage)
+        {
+            _projects = projects;
+            _releasesStorage = releasesStorage;
+        }
+
         public EditReleaseVariablesResponse Handle(EditReleaseVariablesRequest request)
         {
             var project = _projects.Get(request.ProjectId);

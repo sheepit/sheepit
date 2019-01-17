@@ -42,8 +42,13 @@ namespace SheepIt.Api.UseCases.Environments
 
     public class ListEnvironmentsHandler
     {
-        private readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
-        
+        private readonly SheepItDatabase sheepItDatabase;
+
+        public ListEnvironmentsHandler(SheepItDatabase sheepItDatabase)
+        {
+            this.sheepItDatabase = sheepItDatabase;
+        }
+
         public ListEnvironmentsResponse Handle(ListEnvironmentsRequest request)
         {
             var environments = sheepItDatabase.Environments

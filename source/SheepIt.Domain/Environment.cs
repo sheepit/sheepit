@@ -31,8 +31,13 @@ namespace SheepIt.Domain
 
     public class Environments
     {
-        private readonly SheepItDatabase _database = new SheepItDatabase();
-        
+        private readonly SheepItDatabase _database;
+
+        public Environments(SheepItDatabase database)
+        {
+            _database = database;
+        }
+
         public void Add(Environment environment)
         {
             // todo: we should set rank and id when creating document, not when saving it, IMO

@@ -56,8 +56,13 @@ namespace SheepIt.Domain
 
     public class Deployments
     {
-        private readonly SheepItDatabase _database = new SheepItDatabase();
-        
+        private readonly SheepItDatabase _database;
+
+        public Deployments(SheepItDatabase database)
+        {
+            _database = database;
+        }
+
         public int Add(Deployment deployment)
         {
             var nextId = _database.Deployments.GetNextId();

@@ -14,8 +14,13 @@ namespace SheepIt.Domain
 
     public class Projects
     {
-        private readonly SheepItDatabase _database = new SheepItDatabase();
-        
+        private readonly SheepItDatabase _database;
+
+        public Projects(SheepItDatabase database)
+        {
+            _database = database;
+        }
+
         public void Add(Project project)
         {
             _database.Projects

@@ -33,10 +33,17 @@ namespace SheepIt.Api.UseCases
 
     public class CreateProjectHandler
     {
-        private readonly Projects _projects = new Projects();
-        private readonly Domain.Environments _environments = new Domain.Environments();
-        private readonly ReleasesStorage _releasesStorage = new ReleasesStorage();
-        
+        private readonly Projects _projects;
+        private readonly Domain.Environments _environments;
+        private readonly ReleasesStorage _releasesStorage;
+
+        public CreateProjectHandler(Projects projects, Domain.Environments environments, ReleasesStorage releasesStorage)
+        {
+            _projects = projects;
+            _environments = environments;
+            _releasesStorage = releasesStorage;
+        }
+
         public void Handle(CreateProjectRequest request)
         {
             var project = new Project

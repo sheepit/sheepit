@@ -44,11 +44,16 @@ namespace SheepIt.Api.UseCases.Releases
 
     public class ListReleasesHandler
     {
-        private readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
-        
+        private readonly SheepItDatabase _sheepItDatabase;
+
+        public ListReleasesHandler(SheepItDatabase sheepItDatabase)
+        {
+            this._sheepItDatabase = sheepItDatabase;
+        }
+
         public ListReleaseResponse Handle(ListReleasesRequest options)
         {
-            var releases = sheepItDatabase.Releases
+            var releases = _sheepItDatabase.Releases
                 .Find(filter => filter.FromProject(options.ProjectId))
                 .SortBy(release => release.CreatedAt)
                 .ToEnumerable()

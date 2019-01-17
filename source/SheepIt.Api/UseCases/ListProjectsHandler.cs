@@ -41,8 +41,13 @@ namespace SheepIt.Api.UseCases
 
     public class ListProjectsHandler
     {
-        private readonly SheepItDatabase sheepItDatabase = new SheepItDatabase();
-        
+        private readonly SheepItDatabase sheepItDatabase;
+
+        public ListProjectsHandler(SheepItDatabase sheepItDatabase)
+        {
+            this.sheepItDatabase = sheepItDatabase;
+        }
+
         public ListProjectsResponse Handle(ListProjectsRequest options)
         {
             var projects = sheepItDatabase.Projects
