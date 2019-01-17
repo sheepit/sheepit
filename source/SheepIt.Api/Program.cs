@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
@@ -7,7 +8,7 @@ using SheepIt.Api.Infrastructure.Logger;
 
 namespace SheepIt.Api
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -17,7 +18,17 @@ namespace SheepIt.Api
             try
             {
                 Log.Information("Starting web host");
-                CreateWebHostBuilder(args).Build().Run();
+
+                var containerBuilder = new ContainerBuilder();
+
+                containerBuilder.RegisterModule<SheepItModule>();
+
+                using (var container = containerBuilder.Build())
+                {
+                    var webApp = container.Resolve<WebApp>();
+
+                    webApp.Run(args);
+                }
             }
             catch (Exception e)
             {
@@ -29,12 +40,13 @@ namespace SheepIt.Api
             {
                 Log.CloseAndFlush();
             }
-
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseSerilog();
+        }
     }
 }
