@@ -16,13 +16,18 @@ namespace SheepIt.Api.UseCases
     [ApiController]
     public class CreateProjectController : ControllerBase
     {
+        private readonly CreateProjectHandler _handler;
+
+        public CreateProjectController(CreateProjectHandler handler)
+        {
+            _handler = handler;
+        }
+
         [HttpPost]
         [Route("create-project")]
         public void CreateProject(CreateProjectRequest request)
         {
-            var handler = new CreateProjectHandler();
-            
-            handler.Handle(request);
+            _handler.Handle(request);
         }
     }
 

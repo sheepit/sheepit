@@ -25,13 +25,18 @@ namespace SheepIt.Api.UseCases.Environments
     [ApiController]
     public class ListEnvironmentsController : ControllerBase
     {
+        private readonly ListEnvironmentsHandler _handler;
+
+        public ListEnvironmentsController(ListEnvironmentsHandler handler)
+        {
+            _handler = handler;
+        }
+
         [HttpPost]
         [Route("list-environments")]
         public object ListEnvironments(ListEnvironmentsRequest request)
         {
-            var handler = new ListEnvironmentsHandler();
-            
-            return handler.Handle(request);
+            return _handler.Handle(request);
         }
     }
 

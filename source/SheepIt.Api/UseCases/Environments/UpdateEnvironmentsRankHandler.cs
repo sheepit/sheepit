@@ -20,13 +20,18 @@ namespace SheepIt.Api.UseCases.Environments
     [ApiController]
     public class UpdateEnvironmentsRankController : ControllerBase
     {
+        private readonly UpdateEnvironmentsRankHandler _handler;
+
+        public UpdateEnvironmentsRankController(UpdateEnvironmentsRankHandler handler)
+        {
+            _handler = handler;
+        }
+
         [HttpPost]
         [Route("update-environments-rank")]
         public object UpdateEnvironmentsRank(UpdateEnvironmentsRankRequest request)
         {
-            var handler = new UpdateEnvironmentsRankHandler();
-            
-            return handler.Handle(request);
+            return _handler.Handle(request);
         }
     }
 

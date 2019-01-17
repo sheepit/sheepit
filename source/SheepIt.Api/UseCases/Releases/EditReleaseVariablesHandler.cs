@@ -26,13 +26,18 @@ namespace SheepIt.Api.UseCases.Releases
     [ApiController]
     public class EditReleaseVariablesController : ControllerBase
     {
+        private readonly EditReleaseVariablesHandler _handler;
+
+        public EditReleaseVariablesController(EditReleaseVariablesHandler handler)
+        {
+            _handler = handler;
+        }
+
         [HttpPost]
         [Route("edit-release-variables")]
         public object EditReleaseVariables(EditReleaseVariablesRequest request)
         {
-            var handler = new EditReleaseVariablesHandler();
-            
-            return handler.Handle(request);
+            return _handler.Handle(request);
         }
     }
 

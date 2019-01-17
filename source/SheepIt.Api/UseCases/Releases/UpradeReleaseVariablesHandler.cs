@@ -27,14 +27,19 @@ namespace SheepIt.Api.UseCases.Releases
     [ApiController]
     public class UpdateReleaseVariablesController : ControllerBase
     {
+        private readonly UpdateReleaseVariablesHandler _handler;
+
+        public UpdateReleaseVariablesController(UpdateReleaseVariablesHandler handler)
+        {
+            _handler = handler;
+        }
+
         // meant to be used programatically via public API, e. g. when you want to update single variable, like service version 
         [HttpPost]
         [Route("update-release-variables")]
         public object UpdateReleaseVariables(UpdateReleaseVariablesRequest request)
         {
-            var handler = new UpdateReleaseVariablesHandler();
-            
-            return handler.Handle(request);
+            return _handler.Handle(request);
         }
     }
 

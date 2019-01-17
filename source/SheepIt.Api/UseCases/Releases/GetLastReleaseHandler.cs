@@ -31,14 +31,19 @@ namespace SheepIt.Api.UseCases.Releases
     [ApiController]
     public class GetLastReleaseController : ControllerBase
     {
+        private readonly GetLastReleaseHandler _handler;
+
+        public GetLastReleaseController(GetLastReleaseHandler handler)
+        {
+            _handler = handler;
+        }
+
         // currently used for editing variables
         [HttpPost]
         [Route("get-last-release")]
         public object GetLastRelease(GetLastReleaseRequest request)
         {
-            var handler = new GetLastReleaseHandler();
-            
-            return handler.Handle(request);
+            return _handler.Handle(request);
         }
     }
 

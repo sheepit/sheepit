@@ -10,7 +10,11 @@ namespace SheepIt.Api
     {
         protected override void Load(ContainerBuilder builder)
         {
+            // todo: divide into many modules
+            
             builder.RegisterType<WebApp>().AsSelf();
+            
+            
             
             builder.RegisterType<CreateProjectHandler>().AsSelf();
             builder.RegisterType<DeployReleaseHandler>().AsSelf();

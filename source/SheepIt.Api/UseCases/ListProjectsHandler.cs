@@ -24,13 +24,18 @@ namespace SheepIt.Api.UseCases
     [ApiController]
     public class ListProjectsController : ControllerBase
     {
+        private readonly ListProjectsHandler _handler;
+
+        public ListProjectsController(ListProjectsHandler handler)
+        {
+            _handler = handler;
+        }
+
         [HttpGet]
         [Route("list-projects")]
         public object ListProjects()
         {
-            var handler = new ListProjectsHandler();
-
-            return handler.Handle(new ListProjectsRequest());
+            return _handler.Handle(new ListProjectsRequest());
         }
     }
 

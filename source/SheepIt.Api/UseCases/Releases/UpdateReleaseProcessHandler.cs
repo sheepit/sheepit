@@ -19,13 +19,18 @@ namespace SheepIt.Api.UseCases.Releases
     [ApiController]
     public class UpdateReleaseProcessController : ControllerBase
     {
+        private readonly UpdateReleaseProcessHandler _handler;
+
+        public UpdateReleaseProcessController(UpdateReleaseProcessHandler handler)
+        {
+            _handler = handler;
+        }
+
         [HttpPost]
         [Route("update-release-process")]
         public object UpdateReleaseProcess(UpdateReleaseProcessRequest request)
         {
-            var handler = new UpdateReleaseProcessHandler();
-            
-            return handler.Handle(request);
+            return _handler.Handle(request);
         }
     }
 

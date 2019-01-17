@@ -23,13 +23,18 @@ namespace SheepIt.Api.UseCases
     [ApiController]
     public class DeployReleaseController : ControllerBase
     {
+        private readonly DeployReleaseHandler _handler;
+
+        public DeployReleaseController(DeployReleaseHandler handler)
+        {
+            _handler = handler;
+        }
+
         [HttpPost]
         [Route("deploy-release")]
         public object DeployRelease(DeployReleaseRequest request)
         {
-            var handler = new DeployReleaseHandler();
-            
-            return handler.Handle(request);
+            return _handler.Handle(request);
         }
     }
 

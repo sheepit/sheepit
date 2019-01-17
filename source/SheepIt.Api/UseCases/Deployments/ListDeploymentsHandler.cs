@@ -33,13 +33,18 @@ namespace SheepIt.Api.UseCases.Deployments
     [ApiController]
     public class ListDeploymentsController : ControllerBase
     {
+        private readonly ListDeploymentsHandler _handler;
+
+        public ListDeploymentsController(ListDeploymentsHandler handler)
+        {
+            _handler = handler;
+        }
+
         [HttpPost]
         [Route("list-deployments")]
         public object ListDeployments(ListDeploymentsRequest request)
         {
-            var handler = new ListDeploymentsHandler();
-            
-            return handler.Handle(request);
+            return _handler.Handle(request);
         }
     }
 

@@ -33,14 +33,19 @@ namespace SheepIt.Api.UseCases
     [Route("api")]
     [ApiController]
     public class ShowDashboardController : ControllerBase
-    {  
+    {
+        private readonly ShowDashboardHandler _handler;
+
+        public ShowDashboardController(ShowDashboardHandler handler)
+        {
+            _handler = handler;
+        }
+
         [HttpPost]
         [Route("show-dashboard")]
         public object ShowDashboard(ShowDashboardRequest request)
         {
-            var handler = new ShowDashboardHandler();
-            
-            return handler.Handle(request);
+            return _handler.Handle(request);
         }
     }
 

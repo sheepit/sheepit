@@ -26,14 +26,19 @@ namespace SheepIt.Api.UseCases.Deployments
     [Route("api")]
     [ApiController]
     public class GetDeploymentUsedVariablesController : ControllerBase
-    {  
+    {
+        private readonly GetDeploymentUsedVariablesHandler _handler;
+
+        public GetDeploymentUsedVariablesController(GetDeploymentUsedVariablesHandler handler)
+        {
+            _handler = handler;
+        }
+
         [HttpPost]
         [Route("get-deployment-used-variables")]
         public object ShowDashboard(GetDeploymentUsedVariablesRequest request)
         {
-            var handler = new GetDeploymentUsedVariablesHandler();
-            
-            return handler.Handle(request);
+            return _handler.Handle(request);
         }
     }
 

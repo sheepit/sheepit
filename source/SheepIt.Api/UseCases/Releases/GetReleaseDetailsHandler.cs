@@ -32,13 +32,18 @@ namespace SheepIt.Api.UseCases.Releases
     [ApiController]
     public class GetReleaseDetailsController : ControllerBase
     {
+        private readonly GetReleaseDetailsHandler _handler;
+
+        public GetReleaseDetailsController(GetReleaseDetailsHandler handler)
+        {
+            _handler = handler;
+        }
+
         [HttpPost]
         [Route("get-release-details")]
         public object GetReleaseDetails(GetReleaseDetailsRequest request)
         {
-            var handler = new GetReleaseDetailsHandler();
-            
-            return handler.Handle(request);
+            return _handler.Handle(request);
         }
     }
 
