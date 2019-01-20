@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
 {
-    public class ListReleasesRequest
+    public class ListReleasesRequest : IRequest<ListReleasesResponse>
     {
         public string ProjectId { get; set; }
     }
 
-    public class ListReleaseResponse
+    public class ListReleasesResponse
     {
         public ReleaseDto[] Releases { get; set; }
 
@@ -25,33 +27,26 @@ namespace SheepIt.Api.UseCases.Releases
 
     [Route("api")]
     [ApiController]
-    public class ListReleasesController : ControllerBase
+    public class ListReleasesController : MediatorController
     {
-        private readonly ListReleasesHandler _handler;
-
-        public ListReleasesController(ListReleasesHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("list-releases")]
-        public object ListReleases(ListReleasesRequest request)
+        public async Task<ListReleasesResponse> ListReleases(ListReleasesRequest request)
         {
-            return _handler.Handle(request);
+            return await Handle(request);
         }
     }
 
-    public class ListReleasesHandler
+    public class ListReleasesHandler : ISyncHandler<ListReleasesRequest, ListReleasesResponse>
     {
         private readonly SheepItDatabase _sheepItDatabase;
 
         public ListReleasesHandler(SheepItDatabase sheepItDatabase)
         {
-            this._sheepItDatabase = sheepItDatabase;
+            _sheepItDatabase = sheepItDatabase;
         }
 
-        public ListReleaseResponse Handle(ListReleasesRequest options)
+        public ListReleasesResponse Handle(ListReleasesRequest options)
         {
             var releases = _sheepItDatabase.Releases
                 .Find(filter => filter.FromProject(options.ProjectId))
@@ -60,15 +55,15 @@ namespace SheepIt.Api.UseCases.Releases
                 .Select(Map)
                 .ToArray();
 
-            return new ListReleaseResponse
+            return new ListReleasesResponse
             {
                 Releases = releases
             };
         }
 
-        private ListReleaseResponse.ReleaseDto Map(Release release)
+        private ListReleasesResponse.ReleaseDto Map(Release release)
         {
-            return new ListReleaseResponse.ReleaseDto
+            return new ListReleasesResponse.ReleaseDto
             {
                 Id = release.Id,
                 CommitSha = release.CommitSha,

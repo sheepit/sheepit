@@ -1,54 +1,45 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 using SheepIt.Utils.Extensions;
 
 namespace SheepIt.Api.UseCases.Environments
 {
-    public class UpdateEnvironmentsRankRequest
+    public class UpdateEnvironmentsRankRequest : IRequest
     {
         public string ProjectId { get; set; }
         public int[] EnvironmentIds { get; set; }
     }
 
-    public class UpdateEnvironmentsRankResponse
-    {
-    }
-    
     [Route("api")]
     [ApiController]
-    public class UpdateEnvironmentsRankController : ControllerBase
+    public class UpdateEnvironmentsRankController : MediatorController
     {
-        private readonly UpdateEnvironmentsRankHandler _handler;
-
-        public UpdateEnvironmentsRankController(UpdateEnvironmentsRankHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("update-environments-rank")]
-        public object UpdateEnvironmentsRank(UpdateEnvironmentsRankRequest request)
+        public async Task UpdateEnvironmentsRank(UpdateEnvironmentsRankRequest request)
         {
-            return _handler.Handle(request);
+            await Handle(request);
         }
     }
 
-    public class UpdateEnvironmentsRankHandler
+    public class UpdateEnvironmentsRankHandler : ISyncHandler<UpdateEnvironmentsRankRequest>
     {
-        private readonly SheepItDatabase sheepItDatabase;
+        private readonly SheepItDatabase _sheepItDatabase;
         private readonly Domain.Environments _environments;
 
         public UpdateEnvironmentsRankHandler(SheepItDatabase sheepItDatabase, Domain.Environments environments)
         {
-            this.sheepItDatabase = sheepItDatabase;
+            _sheepItDatabase = sheepItDatabase;
             _environments = environments;
         }
 
-        public UpdateEnvironmentsRankResponse Handle(UpdateEnvironmentsRankRequest request)
+        public void Handle(UpdateEnvironmentsRankRequest request)
         {
-            var environmentsById = sheepItDatabase.Environments
+            var environmentsById = _sheepItDatabase.Environments
                 .Find(filter => filter.FromProject(request.ProjectId))
                 .ToEnumerable()
                 .IndexBy(environment => environment.Id);
@@ -62,8 +53,6 @@ namespace SheepIt.Api.UseCases.Environments
                 environment.SetRank(index + 1);
                 _environments.Update(environment);
             });
-
-            return new UpdateEnvironmentsRankResponse();
         }
     }
 }

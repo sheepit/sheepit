@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
 {
-    public class UpdateReleaseVariablesRequest
+    public class UpdateReleaseVariablesRequest : IRequest<UpdateReleaseVariablesResponse>
     {
         public string ProjectId { get; set; }
         public UpdateVariable[] Updates { get; set; }
@@ -25,25 +27,18 @@ namespace SheepIt.Api.UseCases.Releases
 
     [Route("api")]
     [ApiController]
-    public class UpdateReleaseVariablesController : ControllerBase
+    public class UpdateReleaseVariablesController : MediatorController
     {
-        private readonly UpdateReleaseVariablesHandler _handler;
-
-        public UpdateReleaseVariablesController(UpdateReleaseVariablesHandler handler)
-        {
-            _handler = handler;
-        }
-
         // meant to be used programatically via public API, e. g. when you want to update single variable, like service version 
         [HttpPost]
         [Route("update-release-variables")]
-        public object UpdateReleaseVariables(UpdateReleaseVariablesRequest request)
+        public async Task<UpdateReleaseVariablesResponse> UpdateReleaseVariables(UpdateReleaseVariablesRequest request)
         {
-            return _handler.Handle(request);
+            return await Handle(request);
         }
     }
 
-    public class UpdateReleaseVariablesHandler
+    public class UpdateReleaseVariablesHandler : ISyncHandler<UpdateReleaseVariablesRequest, UpdateReleaseVariablesResponse>
     {
         private readonly Projects _projects;
         private readonly ReleasesStorage _releasesStorage;
@@ -60,7 +55,7 @@ namespace SheepIt.Api.UseCases.Releases
 
             var release = _releasesStorage.GetNewest(request.ProjectId);
 
-            var variableValueses = request.Updates
+            var variableValues = request.Updates
                 .Select(update => new VariableValues
                 {
                     Name = update.Name,
@@ -69,7 +64,7 @@ namespace SheepIt.Api.UseCases.Releases
                 })
                 .ToArray();
 
-            var newRelease = release.WithUpdatedVariables(variableValueses);
+            var newRelease = release.WithUpdatedVariables(variableValues);
 
             var newReleaseId = _releasesStorage.Add(newRelease);
 

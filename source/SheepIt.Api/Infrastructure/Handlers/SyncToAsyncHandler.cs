@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.Infrastructure.Handlers
 {
@@ -23,10 +24,10 @@ namespace SheepIt.Api.Infrastructure.Handlers
 
     public static class ToAsyncHandlerExtensions
     {
-        public static SyncToAsyncHandler<TRequest, TResponse> ToAsyncHandler<TRequest, TResponse>(
-            this ISyncHandler<TRequest, TResponse> innerSyncHandler)
+        public static IResolver<IHandler<TRequest, TResponse>> AsAsyncHandler<TRequest, TResponse>(
+            this IResolver<ISyncHandler<TRequest, TResponse>> innerResolver)
         {
-            return new SyncToAsyncHandler<TRequest, TResponse>(innerSyncHandler);
+            return innerResolver.Select(handler => new SyncToAsyncHandler<TRequest, TResponse>(handler));
         }
     }
 }

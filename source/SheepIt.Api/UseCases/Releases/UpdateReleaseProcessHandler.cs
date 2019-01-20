@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Infrastructure;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
 {
-    public class UpdateReleaseProcessRequest
+    public class UpdateReleaseProcessRequest : IRequest<UpdateReleaseProcessResponse>
     {
         public string ProjectId { get; set; }
     }
@@ -17,24 +19,17 @@ namespace SheepIt.Api.UseCases.Releases
 
     [Route("api")]
     [ApiController]
-    public class UpdateReleaseProcessController : ControllerBase
+    public class UpdateReleaseProcessController : MediatorController
     {
-        private readonly UpdateReleaseProcessHandler _handler;
-
-        public UpdateReleaseProcessController(UpdateReleaseProcessHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("update-release-process")]
-        public object UpdateReleaseProcess(UpdateReleaseProcessRequest request)
+        public async Task<UpdateReleaseProcessResponse> UpdateReleaseProcess(UpdateReleaseProcessRequest request)
         {
-            return _handler.Handle(request);
+            return await Handle(request);
         }
     }
 
-    public class UpdateReleaseProcessHandler
+    public class UpdateReleaseProcessHandler : ISyncHandler<UpdateReleaseProcessRequest, UpdateReleaseProcessResponse>
     {
         private readonly Projects _projects;
         private readonly ReleasesStorage _releasesStorage;

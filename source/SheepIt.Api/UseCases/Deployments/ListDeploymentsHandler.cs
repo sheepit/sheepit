@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 using Environment = SheepIt.Domain.Environment;
 
 namespace SheepIt.Api.UseCases.Deployments
 {
-    public class ListDeploymentsRequest
+    public class ListDeploymentsRequest : IRequest<ListDeploymentsResponse>
     {
         public string ProjectId { get; set; }
         public int? ReleaseId { get; set; }
     }
 
-    public class ListDeploymentResponse
+    public class ListDeploymentsResponse
     {
         public DeploymentDto[] Deployments { get; set; }
         
@@ -31,24 +33,17 @@ namespace SheepIt.Api.UseCases.Deployments
 
     [Route("api")]
     [ApiController]
-    public class ListDeploymentsController : ControllerBase
+    public class ListDeploymentsController : MediatorController
     {
-        private readonly ListDeploymentsHandler _handler;
-
-        public ListDeploymentsController(ListDeploymentsHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("list-deployments")]
-        public object ListDeployments(ListDeploymentsRequest request)
+        public async Task<ListDeploymentsResponse> ListDeployments(ListDeploymentsRequest request)
         {
-            return _handler.Handle(request);
+            return await Handle(request);
         }
     }
 
-    public class ListDeploymentsHandler
+    public class ListDeploymentsHandler : ISyncHandler<ListDeploymentsRequest, ListDeploymentsResponse>
     {
         private readonly SheepItDatabase sheepItDatabase;
         private readonly Domain.Environments _environments;
@@ -59,7 +54,7 @@ namespace SheepIt.Api.UseCases.Deployments
             _environments = environments;
         }
 
-        public ListDeploymentResponse Handle(ListDeploymentsRequest options)
+        public ListDeploymentsResponse Handle(ListDeploymentsRequest options)
         {
             var deployments = sheepItDatabase.Deployments
                 .Find(GetDeploymentFilter(projectId: options.ProjectId, releaseIdOrNull: options.ReleaseId))
@@ -76,7 +71,7 @@ namespace SheepIt.Api.UseCases.Deployments
                 resultSelector: MapDeployment
             );
 
-            return new ListDeploymentResponse
+            return new ListDeploymentsResponse
             {
                 Deployments = deploymentDtos.ToArray()
             };
@@ -99,9 +94,9 @@ namespace SheepIt.Api.UseCases.Deployments
             }
         }
 
-        private ListDeploymentResponse.DeploymentDto MapDeployment(Deployment deployment, Environment environment)
+        private ListDeploymentsResponse.DeploymentDto MapDeployment(Deployment deployment, Environment environment)
         {
-            return new ListDeploymentResponse.DeploymentDto
+            return new ListDeploymentsResponse.DeploymentDto
             {
                 Id = deployment.Id,
                 EnvironmentId = environment.Id,

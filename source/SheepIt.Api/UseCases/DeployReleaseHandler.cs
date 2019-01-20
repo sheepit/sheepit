@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.CommandRunners;
 using SheepIt.Api.Infrastructure;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 using SheepIt.Utils.Extensions;
 
 namespace SheepIt.Api.UseCases
 {
-    public class DeployReleaseRequest
+    public class DeployReleaseRequest : IRequest<DeployReleaseResponse>
     {
         public string ProjectId { get; set; }
         public int ReleaseId { get; set; }
@@ -21,24 +23,17 @@ namespace SheepIt.Api.UseCases
 
     [Route("api")]
     [ApiController]
-    public class DeployReleaseController : ControllerBase
+    public class DeployReleaseController : MediatorController
     {
-        private readonly DeployReleaseHandler _handler;
-
-        public DeployReleaseController(DeployReleaseHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("deploy-release")]
-        public object DeployRelease(DeployReleaseRequest request)
+        public async Task<DeployReleaseResponse> DeployRelease(DeployReleaseRequest request)
         {
-            return _handler.Handle(request);
+            return await Handle(request);
         }
     }
 
-    public class DeployReleaseHandler
+    public class DeployReleaseHandler : ISyncHandler<DeployReleaseRequest, DeployReleaseResponse>
     {
         private readonly Domain.Deployments _deployments;
         private readonly Projects _projects;

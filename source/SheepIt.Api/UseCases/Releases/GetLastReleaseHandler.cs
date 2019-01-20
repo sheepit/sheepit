@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
 {
-    public class GetLastReleaseRequest
+    public class GetLastReleaseRequest : IRequest<GetLastReleaseResponse>
     {
         public string ProjectId { get; set; }
     }
@@ -29,25 +31,18 @@ namespace SheepIt.Api.UseCases.Releases
 
     [Route("api")]
     [ApiController]
-    public class GetLastReleaseController : ControllerBase
+    public class GetLastReleaseController : MediatorController
     {
-        private readonly GetLastReleaseHandler _handler;
-
-        public GetLastReleaseController(GetLastReleaseHandler handler)
-        {
-            _handler = handler;
-        }
-
         // currently used for editing variables
         [HttpPost]
         [Route("get-last-release")]
-        public object GetLastRelease(GetLastReleaseRequest request)
+        public async Task<GetLastReleaseResponse> GetLastRelease(GetLastReleaseRequest request)
         {
-            return _handler.Handle(request);
+            return await Handle(request);
         }
     }
 
-    public class GetLastReleaseHandler
+    public class GetLastReleaseHandler : ISyncHandler<GetLastReleaseRequest, GetLastReleaseResponse>
     {
         private readonly ReleasesStorage _releasesStorage;
 

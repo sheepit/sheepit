@@ -1,11 +1,13 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Deployments
 {
-    public class GetDeploymentDetailsRequest
+    public class GetDeploymentDetailsRequest : IRequest<GetDeploymentDetailsResponse>
     {
         public string ProjectId { get; set; }
         public int DeploymentId { get; set; }
@@ -31,24 +33,17 @@ namespace SheepIt.Api.UseCases.Deployments
 
     [Route("api")]
     [ApiController]
-    public class GetDeploymentDetailsController : ControllerBase
+    public class GetDeploymentDetailsController : MediatorController
     {
-        private readonly GetDeploymentDetailsHandler _handler;
-
-        public GetDeploymentDetailsController(GetDeploymentDetailsHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("get-deployment-details")]
-        public object GetDeploymentDetails(GetDeploymentDetailsRequest request)
+        public async Task<GetDeploymentDetailsResponse> GetDeploymentDetails(GetDeploymentDetailsRequest request)
         {
-            return _handler.Handle(request);
+            return await Handle(request);
         }
     }
 
-    public class GetDeploymentDetailsHandler
+    public class GetDeploymentDetailsHandler : ISyncHandler<GetDeploymentDetailsRequest, GetDeploymentDetailsResponse>
     {
         private readonly Domain.Deployments _deployments;
         private readonly Domain.Environments _environments;

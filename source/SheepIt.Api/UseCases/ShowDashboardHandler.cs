@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases
 {
-    public class ShowDashboardRequest
+    public class ShowDashboardRequest : IRequest<ShowDashboardResponse>
     {
         public string ProjectId { get; set; }
     }
@@ -32,24 +34,17 @@ namespace SheepIt.Api.UseCases
 
     [Route("api")]
     [ApiController]
-    public class ShowDashboardController : ControllerBase
+    public class ShowDashboardController : MediatorController
     {
-        private readonly ShowDashboardHandler _handler;
-
-        public ShowDashboardController(ShowDashboardHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("show-dashboard")]
-        public object ShowDashboard(ShowDashboardRequest request)
+        public async Task<ShowDashboardResponse> ShowDashboard(ShowDashboardRequest request)
         {
-            return _handler.Handle(request);
+            return await Handle(request);
         }
     }
 
-    public class ShowDashboardHandler
+    public class ShowDashboardHandler : ISyncHandler<ShowDashboardRequest, ShowDashboardResponse>
     {
         private readonly Domain.Deployments _deployments;
         private readonly Domain.Environments _environments;

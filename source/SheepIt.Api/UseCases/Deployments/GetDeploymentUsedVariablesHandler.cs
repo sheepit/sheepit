@@ -1,11 +1,13 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Deployments
 {
-    public class GetDeploymentUsedVariablesRequest
+    public class GetDeploymentUsedVariablesRequest : IRequest<GetDeploymentUsedVariablesResponse>
     {
         public string ProjectId { get; set; }
         public int DeploymentId { get; set; }
@@ -25,24 +27,17 @@ namespace SheepIt.Api.UseCases.Deployments
 
     [Route("api")]
     [ApiController]
-    public class GetDeploymentUsedVariablesController : ControllerBase
+    public class GetDeploymentUsedVariablesController : MediatorController
     {
-        private readonly GetDeploymentUsedVariablesHandler _handler;
-
-        public GetDeploymentUsedVariablesController(GetDeploymentUsedVariablesHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("get-deployment-used-variables")]
-        public object ShowDashboard(GetDeploymentUsedVariablesRequest request)
+        public async Task<GetDeploymentUsedVariablesResponse> ShowDashboard(GetDeploymentUsedVariablesRequest request)
         {
-            return _handler.Handle(request);
+            return await Handle(request);
         }
     }
 
-    public class GetDeploymentUsedVariablesHandler
+    public class GetDeploymentUsedVariablesHandler : ISyncHandler<GetDeploymentUsedVariablesRequest, GetDeploymentUsedVariablesResponse>
     {
         private readonly Domain.Deployments _deployments;
         private readonly Projects _projects;

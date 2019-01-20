@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
 {
-    public class EditReleaseVariablesRequest
+    public class EditReleaseVariablesRequest : IRequest
     {
         public string ProjectId { get; set; }
         public VariableDto[] NewVariables { get; set; }
@@ -18,30 +20,19 @@ namespace SheepIt.Api.UseCases.Releases
         }
     }
 
-    public class EditReleaseVariablesResponse
-    {
-    }
-
     [Route("api")]
     [ApiController]
-    public class EditReleaseVariablesController : ControllerBase
+    public class EditReleaseVariablesController : MediatorController
     {
-        private readonly EditReleaseVariablesHandler _handler;
-
-        public EditReleaseVariablesController(EditReleaseVariablesHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("edit-release-variables")]
-        public object EditReleaseVariables(EditReleaseVariablesRequest request)
+        public async Task EditReleaseVariables(EditReleaseVariablesRequest request)
         {
-            return _handler.Handle(request);
+            await Handle(request);
         }
     }
 
-    public class EditReleaseVariablesHandler
+    public class EditReleaseVariablesHandler : ISyncHandler<EditReleaseVariablesRequest>
     {
         private readonly Projects _projects;
         private readonly ReleasesStorage _releasesStorage;
@@ -52,7 +43,7 @@ namespace SheepIt.Api.UseCases.Releases
             _releasesStorage = releasesStorage;
         }
 
-        public EditReleaseVariablesResponse Handle(EditReleaseVariablesRequest request)
+        public void Handle(EditReleaseVariablesRequest request)
         {
             var project = _projects.Get(request.ProjectId);
 
@@ -70,8 +61,6 @@ namespace SheepIt.Api.UseCases.Releases
             var newRelease = release.WithNewVariables(variableValues);
 
             _releasesStorage.Add(newRelease);
-            
-            return new EditReleaseVariablesResponse();
         }
     }
 }

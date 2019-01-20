@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Infrastructure;
+using SheepIt.Api.Infrastructure.Api;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases
 {
-    public class CreateProjectRequest
+    public class CreateProjectRequest : IRequest
     {
         public string ProjectId { get; set; }
         public string RepositoryUrl { get; set; }
@@ -14,24 +17,17 @@ namespace SheepIt.Api.UseCases
 
     [Route("api")]
     [ApiController]
-    public class CreateProjectController : ControllerBase
+    public class CreateProjectController : MediatorController
     {
-        private readonly CreateProjectHandler _handler;
-
-        public CreateProjectController(CreateProjectHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("create-project")]
-        public void CreateProject(CreateProjectRequest request)
+        public async Task CreateProject(CreateProjectRequest request)
         {
-            _handler.Handle(request);
+            await Handle(request);
         }
     }
 
-    public class CreateProjectHandler
+    public class CreateProjectHandler : ISyncHandler<CreateProjectRequest>
     {
         private readonly Projects _projects;
         private readonly Domain.Environments _environments;

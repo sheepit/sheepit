@@ -1,11 +1,13 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Environments
 {
-    public class ListEnvironmentsRequest
+    public class ListEnvironmentsRequest : IRequest<ListEnvironmentsResponse>
     {
         public string ProjectId { get; set; }
     }
@@ -23,24 +25,17 @@ namespace SheepIt.Api.UseCases.Environments
     
     [Route("api")]
     [ApiController]
-    public class ListEnvironmentsController : ControllerBase
+    public class ListEnvironmentsController : MediatorController
     {
-        private readonly ListEnvironmentsHandler _handler;
-
-        public ListEnvironmentsController(ListEnvironmentsHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("list-environments")]
-        public object ListEnvironments(ListEnvironmentsRequest request)
+        public async Task<ListEnvironmentsResponse> ListEnvironments(ListEnvironmentsRequest request)
         {
-            return _handler.Handle(request);
+            return await Handle(request);
         }
     }
 
-    public class ListEnvironmentsHandler
+    public class ListEnvironmentsHandler : ISyncHandler<ListEnvironmentsRequest, ListEnvironmentsResponse>
     {
         private readonly SheepItDatabase sheepItDatabase;
 

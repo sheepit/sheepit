@@ -1,5 +1,9 @@
+using System.Linq;
 using Autofac;
+using Autofac.Features.ResolveAnything;
 using SheepIt.Api.CommandRunners;
+using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.UseCases;
 using SheepIt.Api.UseCases.Deployments;
 using SheepIt.Api.UseCases.Environments;
@@ -24,29 +28,79 @@ namespace SheepIt.Api
                 .AsSelf()
                 .SingleInstance();
             
+            // this is mainly used to resolve handlers before decorating them
+            builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
+            
             builder.RegisterType<Deployments>().AsSelf();
             builder.RegisterType<Environments>().AsSelf();
             builder.RegisterType<Projects>().AsSelf();
             builder.RegisterType<ReleasesStorage>().AsSelf();
             
-            builder.RegisterType<CreateProjectHandler>().AsSelf();
-            builder.RegisterType<DeployReleaseHandler>().AsSelf();
-            builder.RegisterType<ListProjectsHandler>().AsSelf();
-            builder.RegisterType<ShowDashboardHandler>().AsSelf();
+            // todo: move into specific handlers
             
-            builder.RegisterType<GetDeploymentDetailsHandler>().AsSelf();
-            builder.RegisterType<GetDeploymentUsedVariablesHandler>().AsSelf();
-            builder.RegisterType<ListDeploymentsHandler>().AsSelf();
+            BuildRegistration.Type<CreateProjectHandler>()
+                .WithDefaultResponse()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
             
-            builder.RegisterType<ListEnvironmentsHandler>().AsSelf();
-            builder.RegisterType<UpdateEnvironmentsRankHandler>().AsSelf();
+            BuildRegistration.Type<ListProjectsHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
             
-            builder.RegisterType<EditReleaseVariablesHandler>().AsSelf();
-            builder.RegisterType<GetLastReleaseHandler>().AsSelf();
-            builder.RegisterType<GetReleaseDetailsHandler>().AsSelf();
-            builder.RegisterType<ListReleasesHandler>().AsSelf();
-            builder.RegisterType<UpdateReleaseProcessHandler>().AsSelf();
-            builder.RegisterType<UpdateReleaseVariablesHandler>().AsSelf();
+            BuildRegistration.Type<ShowDashboardHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<DeployReleaseHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<GetDeploymentDetailsHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<GetDeploymentUsedVariablesHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<ListDeploymentsHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<ListEnvironmentsHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<UpdateEnvironmentsRankHandler>()
+                .WithDefaultResponse()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<EditReleaseVariablesHandler>()
+                .WithDefaultResponse()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<GetLastReleaseHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<GetReleaseDetailsHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<ListReleasesHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<UpdateReleaseProcessHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
+            BuildRegistration.Type<UpdateReleaseVariablesHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
+
         }
     }
 }

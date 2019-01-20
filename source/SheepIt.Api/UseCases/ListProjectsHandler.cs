@@ -1,11 +1,13 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases
 {
-    public class ListProjectsRequest
+    public class ListProjectsRequest : IRequest<ListProjectsResponse>
     {
     }
 
@@ -22,24 +24,17 @@ namespace SheepIt.Api.UseCases
 
     [Route("api")]
     [ApiController]
-    public class ListProjectsController : ControllerBase
+    public class ListProjectsController : MediatorController
     {
-        private readonly ListProjectsHandler _handler;
-
-        public ListProjectsController(ListProjectsHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpGet]
         [Route("list-projects")]
-        public object ListProjects()
+        public async Task<ListProjectsResponse> ListProjects()
         {
-            return _handler.Handle(new ListProjectsRequest());
+            return await Handle(new ListProjectsRequest());
         }
     }
 
-    public class ListProjectsHandler
+    public class ListProjectsHandler : ISyncHandler<ListProjectsRequest, ListProjectsResponse>
     {
         private readonly SheepItDatabase sheepItDatabase;
 

@@ -4,6 +4,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.Tests.Infrastructure.Handlers
 {
@@ -21,9 +22,10 @@ namespace SheepIt.Api.Tests.Infrastructure.Handlers
             builder.RegisterInstance(handlerMock.Object)
                 .As<IHandler<RequestWithNoResponse>>();
 
-            builder.Register(context => context.Resolve<IHandler<RequestWithNoResponse>>().WithNoResult())
-                .As<IHandler<RequestWithNoResponse, Nothing>>();
-
+            BuildRegistration.Instance(handlerMock.Object)
+                .WithDefaultResponse()
+                .RegisterHandlerIn(builder);
+            
             builder.RegisterType<HandlerMediator>()
                 .AsSelf();
 

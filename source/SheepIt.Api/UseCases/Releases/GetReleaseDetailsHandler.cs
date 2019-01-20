@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
 {
-    public class GetReleaseDetailsRequest
+    public class GetReleaseDetailsRequest : IRequest<GetReleaseDetailsResponse>
     {
         public string ProjectId { get; set; }
         public int ReleaseId { get; set; }
@@ -30,24 +32,17 @@ namespace SheepIt.Api.UseCases.Releases
 
     [Route("api")]
     [ApiController]
-    public class GetReleaseDetailsController : ControllerBase
+    public class GetReleaseDetailsController : MediatorController
     {
-        private readonly GetReleaseDetailsHandler _handler;
-
-        public GetReleaseDetailsController(GetReleaseDetailsHandler handler)
-        {
-            _handler = handler;
-        }
-
         [HttpPost]
         [Route("get-release-details")]
-        public object GetReleaseDetails(GetReleaseDetailsRequest request)
+        public async Task<GetReleaseDetailsResponse> GetReleaseDetails(GetReleaseDetailsRequest request)
         {
-            return _handler.Handle(request);
+            return await Handle(request);
         }
     }
 
-    public class GetReleaseDetailsHandler
+    public class GetReleaseDetailsHandler : ISyncHandler<GetReleaseDetailsRequest, GetReleaseDetailsResponse>
     {
         private readonly ReleasesStorage _releasesStorage;
 
