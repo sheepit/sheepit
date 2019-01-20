@@ -22,7 +22,7 @@ namespace SheepIt.Api.Infrastructure.Handlers
         }
     }
 
-    public static class ToAsyncHandlerExtensions
+    public static class SyncToAsyncHandlerExtensions
     {
         public static IResolver<IHandler<TRequest, TResponse>> AsAsyncHandler<TRequest, TResponse>(
             this IResolver<ISyncHandler<TRequest, TResponse>> innerResolver)

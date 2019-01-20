@@ -5,7 +5,7 @@ namespace SheepIt.Api.Infrastructure.Handlers
 {
     public static class HandlerResolverExtensions
     {
-        public static void RegisterHandlerIn<TRequest, TResponse>(
+        public static void RegisterAsHandlerIn<TRequest, TResponse>(
             this IResolver<IHandler<TRequest, TResponse>> handlerResolver,
             ContainerBuilder builder)
         {

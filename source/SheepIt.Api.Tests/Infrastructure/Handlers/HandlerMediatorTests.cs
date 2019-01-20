@@ -5,6 +5,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.Tests.Infrastructure.Handlers
 {
@@ -12,6 +13,7 @@ namespace SheepIt.Api.Tests.Infrastructure.Handlers
     {
         private IContainer _container;
         private HandlerMediator _mediator;
+        
         private Mock<IHandler<RequestWithResponse, Response>> _handlerWithResponseMock;
         private Mock<IHandler<RequestWithNoResponse, Nothing>> _handlerWithNoResponseMock;
 
@@ -23,15 +25,17 @@ namespace SheepIt.Api.Tests.Infrastructure.Handlers
             
             var builder = new ContainerBuilder();
 
-            builder.RegisterInstance(_handlerWithResponseMock.Object)
-                .As<IHandler<RequestWithResponse, Response>>();
-            
-            builder.RegisterInstance(_handlerWithNoResponseMock.Object)
-                .As<IHandler<RequestWithNoResponse, Nothing>>();
+            BuildRegistration.Instance(_handlerWithResponseMock.Object)
+                .RegisterAsHandlerIn(builder);
+
+            BuildRegistration.Instance(_handlerWithNoResponseMock.Object)
+                .RegisterAsHandlerIn(builder);
+
+            builder.RegisterType<HandlerMediator>();
             
             _container = builder.Build();
 
-            _mediator = new HandlerMediator(_container);
+            _mediator = _container.Resolve<HandlerMediator>();
         }
 
         [TearDown]

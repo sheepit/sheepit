@@ -1,11 +1,11 @@
 namespace SheepIt.Api.Infrastructure.Handlers
 {
-    public interface ISyncHandler<TRequest, TResponse>
+    public interface ISyncHandler<in TRequest, out TResponse>
     {
         TResponse Handle(TRequest request);
     }
     
-    public interface ISyncHandler<TRequest>
+    public interface ISyncHandler<in TRequest>
     {
         void Handle(TRequest request);
     }

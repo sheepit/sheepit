@@ -2,12 +2,12 @@ using System.Threading.Tasks;
 
 namespace SheepIt.Api.Infrastructure.Handlers
 {
-    public interface IHandler<TRequest, TResponse>
+    public interface IHandler<in TRequest, TResponse>
     {
         Task<TResponse> Handle(TRequest request);
     }
 
-    public interface IHandler<TRequest>
+    public interface IHandler<in TRequest>
     {
         Task Handle(TRequest request);
     }

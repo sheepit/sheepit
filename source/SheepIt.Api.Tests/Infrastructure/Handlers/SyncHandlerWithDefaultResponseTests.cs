@@ -8,19 +8,20 @@ using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.Tests.Infrastructure.Handlers
 {
-    public class HandlerWithDefaultResponseTests
+    public class SyncHandlerWithDefaultResponseTests
     {
         [Test]
         public async Task can_decorate_a_handler_without_response_to_return_default_response()
         {
             // given
 
-            var handlerMock = new Mock<IHandler<RequestWithNoResponse>>();
+            var syncHandlerMock = new Mock<ISyncHandler<RequestWithNoResponse>>();
 
             var builder = new ContainerBuilder();
 
-            BuildRegistration.Instance(handlerMock.Object)
+            BuildRegistration.Instance(syncHandlerMock.Object)
                 .WithDefaultResponse()
+                .AsAsyncHandler()
                 .RegisterAsHandlerIn(builder);
             
             builder.RegisterType<HandlerMediator>()
@@ -40,7 +41,7 @@ namespace SheepIt.Api.Tests.Infrastructure.Handlers
 
                 response.Should().BeSameAs(Nothing.Value);
 
-                handlerMock.Verify(handler => handler.Handle(request), Times.Once);
+                syncHandlerMock.Verify(handler => handler.Handle(request), Times.Once);
             }
         }
 
