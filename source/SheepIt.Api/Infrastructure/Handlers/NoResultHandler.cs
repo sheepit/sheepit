@@ -21,6 +21,7 @@ namespace SheepIt.Api.Infrastructure.Handlers
 
     public static class NoResultHandlerExtensions
     {
+        // todo: with default response
         public static NoResultHandler<TRequest> WithNoResult<TRequest>(this IHandler<TRequest> innerHandler)
         {
             return new NoResultHandler<TRequest>(innerHandler);
