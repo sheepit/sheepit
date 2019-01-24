@@ -1,6 +1,7 @@
 using System.Linq;
 using Autofac;
 using Autofac.Features.ResolveAnything;
+using Microsoft.Extensions.Configuration;
 using SheepIt.Api.CommandRunners;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -20,6 +21,12 @@ namespace SheepIt.Api
             
             builder.RegisterType<WebApp>().AsSelf();
 
+            builder.Register(context => context
+                .Resolve<IConfiguration>()
+                .GetSection("Mongo")
+                .Get<MongoSettings>()
+            );
+            
             builder.RegisterType<SheepItDatabase>()
                 .AsSelf()
                 .SingleInstance();

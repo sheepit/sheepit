@@ -5,14 +5,13 @@ namespace SheepIt.Domain
 {
     public class SheepItDatabase
     {
+        public MongoClient MongoClient { get; }
         public IMongoDatabase MongoDatabase { get; }
 
-        public SheepItDatabase()
+        public SheepItDatabase(MongoSettings settings)
         {
-            var mongoClient = new MongoClient();
-
-            // todo: get name from settings
-            MongoDatabase = mongoClient.GetDatabase(name: "sheep-it");
+            MongoClient = new MongoClient(settings.ConnectionString);
+            MongoDatabase = MongoClient.GetDatabase(name: settings.DatabaseName);
         }
 
         public IMongoCollection<Environment> Environments => MongoDatabase.GetCollection<Environment>();
