@@ -18,6 +18,11 @@ EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B2348789-3031-40AB-BE3C-04F57ADF9475}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "env", "env", "{39C45C75-D28B-46C5-A391-3F9944EF35A0}"
+ProjectSection(SolutionItems) = preProject
+	..\env\docker-compose.yml = ..\env\docker-compose.yml
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
