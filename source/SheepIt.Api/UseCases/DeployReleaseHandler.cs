@@ -38,12 +38,16 @@ namespace SheepIt.Api.UseCases
         private readonly Domain.Deployments _deployments;
         private readonly Projects _projects;
         private readonly ReleasesStorage _releasesStorage;
+        private readonly ProcessSettings _processSettings;
+        private readonly ProcessRepositoryFactory _processRepositoryFactory;
 
-        public DeployReleaseHandler(Domain.Deployments deployments, Projects projects, ReleasesStorage releasesStorage)
+        public DeployReleaseHandler(Domain.Deployments deployments, Projects projects, ReleasesStorage releasesStorage, ProcessSettings processSettings, ProcessRepositoryFactory processRepositoryFactory)
         {
             _deployments = deployments;
             _projects = projects;
             _releasesStorage = releasesStorage;
+            _processSettings = processSettings;
+            _processRepositoryFactory = processRepositoryFactory;
         }
 
         public DeployReleaseResponse Handle(DeployReleaseRequest request)
@@ -80,13 +84,13 @@ namespace SheepIt.Api.UseCases
         {
             try
             {
-                var deploymentWorkingDir = Settings.WorkingDir
+                var deploymentWorkingDir = _processSettings.WorkingDir
                     .AddSegment(project.Id)
                     .AddSegment("deploying-releases")
                     .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_release-{release.Id}")
                     .ToString();
 
-                using (var repository = ProcessRepository.Clone(project.RepositoryUrl, deploymentWorkingDir))
+                using (var repository = _processRepositoryFactory.Clone(project.RepositoryUrl, deploymentWorkingDir))
                 {
                     repository.Checkout(release.CommitSha);
 

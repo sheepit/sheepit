@@ -33,18 +33,20 @@ namespace SheepIt.Api.UseCases.Releases
     {
         private readonly Projects _projects;
         private readonly ReleasesStorage _releasesStorage;
+        private readonly ProcessRepositoryFactory _processRepositoryFactory;
 
-        public UpdateReleaseProcessHandler(Projects projects, ReleasesStorage releasesStorage)
+        public UpdateReleaseProcessHandler(Projects projects, ReleasesStorage releasesStorage, ProcessRepositoryFactory processRepositoryFactory)
         {
             _projects = projects;
             _releasesStorage = releasesStorage;
+            _processRepositoryFactory = processRepositoryFactory;
         }
 
         public UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest request)
         {
             var project = _projects.Get(request.ProjectId);
 
-            var currentCommitSha = ProcessRepository.GetCurrentCommitSha(project);
+            var currentCommitSha = _processRepositoryFactory.GetCurrentCommitSha(project);
 
             var release = _releasesStorage.GetNewest(request.ProjectId);
 
