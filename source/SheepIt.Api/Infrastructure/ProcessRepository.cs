@@ -1,5 +1,6 @@
 ﻿using System;
 using LibGit2Sharp;
+using Microsoft.Extensions.Configuration;
 using SheepIt.Api.ScriptFiles;
 using SheepIt.Domain;
 using SheepIt.Utils.Extensions;
@@ -8,9 +9,12 @@ namespace SheepIt.Api.Infrastructure
 {
     public class ProcessRepository : IDisposable
     {
-        public static string GetCurrentCommitSha(Project project)
+        public static string GetCurrentCommitSha(Project project, IConfiguration configuration)
         {
-            var repositoryWorkingDir = Settings.WorkingDir
+            var workingDirectoryPath = configuration["WorkingDirectory"];
+            var workingDirectory = new LocalPath(workingDirectoryPath);
+            
+            var repositoryWorkingDir = workingDirectory
                 .AddSegment(project.Id)
                 .AddSegment("creating-releases")
                 .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}");

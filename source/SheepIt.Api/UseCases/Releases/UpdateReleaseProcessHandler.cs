@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
@@ -33,18 +34,23 @@ namespace SheepIt.Api.UseCases.Releases
     {
         private readonly Projects _projects;
         private readonly ReleasesStorage _releasesStorage;
+        private readonly IConfiguration _configuration;
 
-        public UpdateReleaseProcessHandler(Projects projects, ReleasesStorage releasesStorage)
+        public UpdateReleaseProcessHandler(
+            Projects projects,
+            ReleasesStorage releasesStorage,
+            IConfiguration configuration)
         {
             _projects = projects;
             _releasesStorage = releasesStorage;
+            _configuration = configuration;
         }
 
         public UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest request)
         {
             var project = _projects.Get(request.ProjectId);
 
-            var currentCommitSha = ProcessRepository.GetCurrentCommitSha(project);
+            var currentCommitSha = ProcessRepository.GetCurrentCommitSha(project, _configuration);
 
             var release = _releasesStorage.GetNewest(request.ProjectId);
 

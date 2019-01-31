@@ -34,7 +34,7 @@ namespace SheepIt.Api
             builder.RegisterType<ProcessRunner>()
                 .AsSelf()
                 .SingleInstance();
-            
+
             // this is mainly used to resolve handlers before decorating them
             builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
             

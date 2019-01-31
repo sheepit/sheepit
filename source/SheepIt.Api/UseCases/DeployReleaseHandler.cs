@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using SheepIt.Api.CommandRunners;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
@@ -38,12 +39,18 @@ namespace SheepIt.Api.UseCases
         private readonly Domain.Deployments _deployments;
         private readonly Projects _projects;
         private readonly ReleasesStorage _releasesStorage;
+        private readonly IConfiguration _configuration;
 
-        public DeployReleaseHandler(Domain.Deployments deployments, Projects projects, ReleasesStorage releasesStorage)
+        public DeployReleaseHandler(
+            Domain.Deployments deployments,
+            Projects projects,
+            ReleasesStorage releasesStorage,
+            IConfiguration configuration)
         {
             _deployments = deployments;
             _projects = projects;
             _releasesStorage = releasesStorage;
+            _configuration = configuration;
         }
 
         public DeployReleaseResponse Handle(DeployReleaseRequest request)
@@ -80,7 +87,10 @@ namespace SheepIt.Api.UseCases
         {
             try
             {
-                var deploymentWorkingDir = Settings.WorkingDir
+                var workingDirectoryPath = _configuration["WorkingDirectory"];
+                var workingDirectory = new LocalPath(workingDirectoryPath);
+                
+                var deploymentWorkingDir = workingDirectory
                     .AddSegment(project.Id)
                     .AddSegment("deploying-releases")
                     .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_release-{release.Id}")
