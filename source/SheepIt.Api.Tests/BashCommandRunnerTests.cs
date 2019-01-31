@@ -6,7 +6,7 @@ using NUnit.Framework;
 using SheepIt.Api.CommandRunners;
 using SheepIt.Domain;
 
-namespace SheepIt.ConsolePrototype.Tests
+namespace SheepIt.Api.Tests
 {
     // todo: there is a lot of duplication between cmd and bash tests
 
@@ -60,9 +60,10 @@ namespace SheepIt.ConsolePrototype.Tests
 
         private static ProcessStepResult RunCommand(string command, IEnumerable<VariableForEnvironment> variables)
         {
-            var commandRunner = new BashCommandRunner();
+            // todo: [ts] put here real configuration
+            var commandRunner = new BashCommandRunner(null);
 
-            return commandRunner.Run(command, variables, TestContext.CurrentContext.TestDirectory);
+            return commandRunner.Run(command, variables);
         }
     }
 }

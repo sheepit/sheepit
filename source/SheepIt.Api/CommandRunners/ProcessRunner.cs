@@ -11,11 +11,15 @@ namespace SheepIt.Api.CommandRunners
 
     public class ProcessRunner
     {
-        private readonly IConfiguration _configuration;
+        private readonly Dictionary<string, ICommandRunner> _commandRunners;
 
         public ProcessRunner(IConfiguration configuration)
         {
-            _configuration = configuration;
+            _commandRunners = new Dictionary<string, ICommandRunner>
+            {
+                { "cmd", new CmdCommandRunner(configuration) },
+                { "bash", new BashCommandRunner(configuration) }
+            };
         }
 
         public ProcessOutput Run(ProcessFile processFile, VariableForEnvironment[] variablesForEnvironment, string workingDir)
@@ -31,12 +35,10 @@ namespace SheepIt.Api.CommandRunners
         private IEnumerable<ProcessStepResult> NewMethod(ProcessFile processFile, VariableForEnvironment[] variablesForEnvironment, string workingDir)
         {
             var commandRunner = _commandRunners[processFile.Shell];
-            var shells = _configuration.GetSection("Shell").Get<Dictionary<string, string>>();
-            var shellPath = shells[processFile.Shell];
 
             foreach (var command in processFile.Commands)
             {
-                var commandResult = commandRunner.Run(command, variablesForEnvironment, workingDir, shellPath);
+                var commandResult = commandRunner.Run(command, variablesForEnvironment);
 
                 yield return commandResult;
                 
@@ -47,10 +49,6 @@ namespace SheepIt.Api.CommandRunners
             }
         }
 
-        private readonly Dictionary<string, ICommandRunner> _commandRunners = new Dictionary<string, ICommandRunner>
-        {
-            { "cmd", new CmdCommandRunner() },
-            { "bash", new BashCommandRunner() }
-        };
+        
     }
 }

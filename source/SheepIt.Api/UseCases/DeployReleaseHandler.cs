@@ -40,17 +40,20 @@ namespace SheepIt.Api.UseCases
         private readonly Projects _projects;
         private readonly ReleasesStorage _releasesStorage;
         private readonly IConfiguration _configuration;
+        private readonly ProcessRunner _processRunner;
 
         public DeployReleaseHandler(
             Domain.Deployments deployments,
             Projects projects,
             ReleasesStorage releasesStorage,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ProcessRunner processRunner)
         {
             _deployments = deployments;
             _projects = projects;
             _releasesStorage = releasesStorage;
             _configuration = configuration;
+            _processRunner = processRunner;
         }
 
         public DeployReleaseResponse Handle(DeployReleaseRequest request)
@@ -100,7 +103,7 @@ namespace SheepIt.Api.UseCases
                 {
                     repository.Checkout(release.CommitSha);
 
-                    var processOutput = new ProcessRunner().Run(
+                    var processOutput = _processRunner.Run(
                         processFile: repository.OpenProcessDescriptionFile(),
                         variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId),
                         workingDir: deploymentWorkingDir

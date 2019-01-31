@@ -6,7 +6,7 @@ using NUnit.Framework;
 using SheepIt.Api.CommandRunners;
 using SheepIt.Domain;
 
-namespace SheepIt.ConsolePrototype.Tests
+namespace SheepIt.Api.Tests
 {
     public class CmdCommandRunnerTests
     {
@@ -58,9 +58,10 @@ namespace SheepIt.ConsolePrototype.Tests
 
         private static ProcessStepResult RunCommand(string command, IEnumerable<VariableForEnvironment> variables)
         {
-            var commandRunner = new CmdCommandRunner();
+            // todo: [ts] put here real configuration
+            var commandRunner = new CmdCommandRunner(null);
 
-            return commandRunner.Run(command, variables, TestContext.CurrentContext.TestDirectory);
+            return commandRunner.Run(command, variables);
         }
     }
 }
