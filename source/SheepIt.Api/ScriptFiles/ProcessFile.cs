@@ -11,6 +11,10 @@ namespace SheepIt.Api.ScriptFiles
 
         public static ProcessFile Open(string processDescriptionFilePath)
         {
+            // TODO: [ts] Should we have add here some validation i.e. if the file exists.
+            // If it is in correct format etc.
+            // File validator with appropriate message to the user would be welcome.
+
             using (var fileStream = File.OpenText(processDescriptionFilePath))
             {
                 return new DeserializerBuilder()
