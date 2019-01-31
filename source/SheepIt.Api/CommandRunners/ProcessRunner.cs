@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using SheepIt.Api.ScriptFiles;
 using SheepIt.Domain;
 
@@ -10,6 +11,13 @@ namespace SheepIt.Api.CommandRunners
 
     public class ProcessRunner
     {
+        private readonly IConfiguration _configuration;
+
+        public ProcessRunner(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public ProcessOutput Run(ProcessFile processFile, VariableForEnvironment[] variablesForEnvironment, string workingDir)
         {
             var processStepResults = NewMethod(processFile, variablesForEnvironment, workingDir);
@@ -23,10 +31,12 @@ namespace SheepIt.Api.CommandRunners
         private IEnumerable<ProcessStepResult> NewMethod(ProcessFile processFile, VariableForEnvironment[] variablesForEnvironment, string workingDir)
         {
             var commandRunner = _commandRunners[processFile.Shell];
+            var shells = _configuration.GetSection("Shell").Get<Dictionary<string, string>>();
+            var shellPath = shells[processFile.Shell];
 
             foreach (var command in processFile.Commands)
             {
-                var commandResult = commandRunner.Run(command, variablesForEnvironment, workingDir);
+                var commandResult = commandRunner.Run(command, variablesForEnvironment, workingDir, shellPath);
 
                 yield return commandResult;
                 

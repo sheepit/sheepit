@@ -7,7 +7,7 @@ namespace SheepIt.Api.CommandRunners
     {
         private readonly SystemProcessRunner _systemProcessRunner = new SystemProcessRunner();
         
-        public ProcessStepResult Run(string command, IEnumerable<VariableForEnvironment> variables, string workingDir)
+        public ProcessStepResult Run(string command, IEnumerable<VariableForEnvironment> variables, string workingDir, string shellPath)
         {
             var systemProcessResult = _systemProcessRunner.RunProcess(
                 workingDir: workingDir,
