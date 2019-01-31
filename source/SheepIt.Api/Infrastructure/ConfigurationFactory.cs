@@ -13,6 +13,7 @@ namespace SheepIt.Api.Infrastructure
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.ToLower();
             
+            // TODO: [ts] Does that line works? Check and remove if not...
             Logger.Information("Environment variable: '{environment}'", environment);
 
             return new ConfigurationBuilder()
