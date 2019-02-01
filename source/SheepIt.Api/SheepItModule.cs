@@ -2,7 +2,9 @@ using System.Linq;
 using Autofac;
 using Autofac.Features.ResolveAnything;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using SheepIt.Api.CommandRunners;
+using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.UseCases;
@@ -31,6 +33,14 @@ namespace SheepIt.Api
                 .AsSelf()
                 .SingleInstance();
 
+            builder.RegisterType<ProcessSettings>()
+                .AsSelf()
+                .SingleInstance();
+            
+            builder.RegisterType<ProcessRepositoryFactory>()
+                .AsSelf()
+                .SingleInstance();
+            
             builder.RegisterType<ProcessRunner>()
                 .AsSelf()
                 .SingleInstance();
@@ -44,7 +54,7 @@ namespace SheepIt.Api
             builder.RegisterType<ReleasesStorage>().AsSelf();
             
             // todo: move into specific handlers
-            
+
             BuildRegistration.Type<CreateProjectHandler>()
                 .WithDefaultResponse()
                 .AsAsyncHandler()

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
@@ -32,18 +31,14 @@ namespace SheepIt.Api.UseCases
         private readonly Projects _projects;
         private readonly Domain.Environments _environments;
         private readonly ReleasesStorage _releasesStorage;
-        private readonly IConfiguration _configuration;
+        private readonly ProcessRepositoryFactory _processRepositoryFactory;
 
-        public CreateProjectHandler(
-            Projects projects,
-            Domain.Environments environments,
-            ReleasesStorage releasesStorage,
-            IConfiguration configuration)
+        public CreateProjectHandler(Projects projects, Domain.Environments environments, ReleasesStorage releasesStorage, ProcessRepositoryFactory processRepositoryFactory)
         {
             _projects = projects;
             _environments = environments;
             _releasesStorage = releasesStorage;
-            _configuration = configuration;
+            _processRepositoryFactory = processRepositoryFactory;
         }
 
         public void Handle(CreateProjectRequest request)
@@ -74,7 +69,7 @@ namespace SheepIt.Api.UseCases
         
         private void CreateFirstRelease(Project project)
         {
-            var currentCommitSha = ProcessRepository.GetCurrentCommitSha(project, _configuration);
+            var currentCommitSha = _processRepositoryFactory.GetCurrentCommitSha(project);
 
             _releasesStorage.Add(new Release
             {

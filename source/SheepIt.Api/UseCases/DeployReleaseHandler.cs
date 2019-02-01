@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using SheepIt.Api.CommandRunners;
-using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 using SheepIt.Utils.Extensions;
@@ -39,21 +37,16 @@ namespace SheepIt.Api.UseCases
         private readonly Domain.Deployments _deployments;
         private readonly Projects _projects;
         private readonly ReleasesStorage _releasesStorage;
-        private readonly IConfiguration _configuration;
-        private readonly ProcessRunner _processRunner;
+        private readonly ProcessSettings _processSettings;
+        private readonly ProcessRepositoryFactory _processRepositoryFactory;
 
-        public DeployReleaseHandler(
-            Domain.Deployments deployments,
-            Projects projects,
-            ReleasesStorage releasesStorage,
-            IConfiguration configuration,
-            ProcessRunner processRunner)
+        public DeployReleaseHandler(Domain.Deployments deployments, Projects projects, ReleasesStorage releasesStorage, ProcessSettings processSettings, ProcessRepositoryFactory processRepositoryFactory)
         {
             _deployments = deployments;
             _projects = projects;
             _releasesStorage = releasesStorage;
-            _configuration = configuration;
-            _processRunner = processRunner;
+            _processSettings = processSettings;
+            _processRepositoryFactory = processRepositoryFactory;
         }
 
         public DeployReleaseResponse Handle(DeployReleaseRequest request)
@@ -90,20 +83,17 @@ namespace SheepIt.Api.UseCases
         {
             try
             {
-                var workingDirectoryPath = _configuration["WorkingDirectory"];
-                var workingDirectory = new LocalPath(workingDirectoryPath);
-                
-                var deploymentWorkingDir = workingDirectory
+                var deploymentWorkingDir = _processSettings.WorkingDir
                     .AddSegment(project.Id)
                     .AddSegment("deploying-releases")
                     .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_release-{release.Id}")
                     .ToString();
 
-                using (var repository = ProcessRepository.Clone(project.RepositoryUrl, deploymentWorkingDir))
+                using (var repository = _processRepositoryFactory.Clone(project.RepositoryUrl, deploymentWorkingDir))
                 {
                     repository.Checkout(release.CommitSha);
 
-                    var processOutput = _processRunner.Run(
+                    var processOutput = new ProcessRunner().Run(
                         processFile: repository.OpenProcessDescriptionFile(),
                         variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId),
                         workingDir: deploymentWorkingDir
