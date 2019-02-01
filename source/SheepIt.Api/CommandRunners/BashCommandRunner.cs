@@ -1,23 +1,25 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
+using SheepIt.Api.Infrastructure;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.CommandRunners
 {
     public class BashCommandRunner : ICommandRunner
     {
-        private readonly IConfiguration _configuration;
+        private readonly ProcessSettings _processSettings;
+        private readonly ShellSettings _shellSettings;
         private readonly SystemProcessRunner _systemProcessRunner = new SystemProcessRunner();
 
-        public BashCommandRunner(IConfiguration configuration)
+        public BashCommandRunner(ProcessSettings processSettings, ShellSettings shellSettings)
         {
-            _configuration = configuration;
+            _processSettings = processSettings;
+            _shellSettings = shellSettings;
         }
         
         public ProcessStepResult Run(string command, IEnumerable<VariableForEnvironment> variables)
         {
-            var workingDir = _configuration["WorkingDirectory"];
-            var bashPath = _configuration["Shell:Bash"];
+            var workingDir = _processSettings.WorkingDir.ToString();
+            var bashPath = _shellSettings.Bash.ToString();
 
             var systemProcessResult = _systemProcessRunner.RunProcess(
                 workingDir: workingDir,

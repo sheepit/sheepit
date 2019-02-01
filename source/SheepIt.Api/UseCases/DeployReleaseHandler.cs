@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.CommandRunners;
+using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Domain;
 using SheepIt.Utils.Extensions;
@@ -39,14 +40,22 @@ namespace SheepIt.Api.UseCases
         private readonly ReleasesStorage _releasesStorage;
         private readonly ProcessSettings _processSettings;
         private readonly ProcessRepositoryFactory _processRepositoryFactory;
+        private readonly ShellSettings _shellSettings;
 
-        public DeployReleaseHandler(Domain.Deployments deployments, Projects projects, ReleasesStorage releasesStorage, ProcessSettings processSettings, ProcessRepositoryFactory processRepositoryFactory)
+        public DeployReleaseHandler(
+            Domain.Deployments deployments,
+            Projects projects,
+            ReleasesStorage releasesStorage,
+            ProcessSettings processSettings,
+            ProcessRepositoryFactory processRepositoryFactory,
+            ShellSettings shellSettings)
         {
             _deployments = deployments;
             _projects = projects;
             _releasesStorage = releasesStorage;
             _processSettings = processSettings;
             _processRepositoryFactory = processRepositoryFactory;
+            _shellSettings = shellSettings;
         }
 
         public DeployReleaseResponse Handle(DeployReleaseRequest request)
@@ -93,7 +102,7 @@ namespace SheepIt.Api.UseCases
                 {
                     repository.Checkout(release.CommitSha);
 
-                    var processOutput = new ProcessRunner().Run(
+                    var processOutput = new ProcessRunner(_processSettings, _shellSettings).Run(
                         processFile: repository.OpenProcessDescriptionFile(),
                         variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId),
                         workingDir: deploymentWorkingDir

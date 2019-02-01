@@ -1,8 +1,6 @@
-using System.Linq;
 using Autofac;
 using Autofac.Features.ResolveAnything;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using SheepIt.Api.CommandRunners;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
@@ -42,6 +40,10 @@ namespace SheepIt.Api
                 .SingleInstance();
             
             builder.RegisterType<ProcessRunner>()
+                .AsSelf()
+                .SingleInstance();
+
+            builder.RegisterType<ShellSettings>()
                 .AsSelf()
                 .SingleInstance();
 

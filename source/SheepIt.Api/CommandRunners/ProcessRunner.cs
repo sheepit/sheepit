@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
+using SheepIt.Api.Infrastructure;
 using SheepIt.Api.ScriptFiles;
 using SheepIt.Domain;
 
@@ -13,12 +13,12 @@ namespace SheepIt.Api.CommandRunners
     {
         private readonly Dictionary<string, ICommandRunner> _commandRunners;
 
-        public ProcessRunner(IConfiguration configuration)
+        public ProcessRunner(ProcessSettings processSettings, ShellSettings shellSettings)
         {
             _commandRunners = new Dictionary<string, ICommandRunner>
             {
-                { "cmd", new CmdCommandRunner(configuration) },
-                { "bash", new BashCommandRunner(configuration) }
+                { "cmd", new CmdCommandRunner(processSettings, shellSettings) },
+                { "bash", new BashCommandRunner(processSettings, shellSettings) }
             };
         }
 
@@ -47,8 +47,6 @@ namespace SheepIt.Api.CommandRunners
                     yield break;
                 }
             }
-        }
-
-        
+        }     
     }
 }

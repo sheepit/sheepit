@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.Api.CommandRunners;
+using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Domain;
 
@@ -64,7 +65,10 @@ namespace SheepIt.Api.Tests
             var config = TestConfigurationFactory.Build();
             config["WorkingDirectory"] = TestContext.CurrentContext.TestDirectory;
 
-            var commandRunner = new BashCommandRunner(config);
+            var processSettings = new ProcessSettings(config);
+            var shellSettings = new ShellSettings(config);
+            
+            var commandRunner = new BashCommandRunner(processSettings, shellSettings);
 
             return commandRunner.Run(command, variables);
         }
