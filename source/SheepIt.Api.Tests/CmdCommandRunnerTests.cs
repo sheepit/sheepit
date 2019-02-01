@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.Api.CommandRunners;
+using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.Tests
@@ -58,8 +59,10 @@ namespace SheepIt.Api.Tests
 
         private static ProcessStepResult RunCommand(string command, IEnumerable<VariableForEnvironment> variables)
         {
-            // todo: [ts] put here real configuration
-            var commandRunner = new CmdCommandRunner(null);
+            var config = TestConfigurationFactory.Build();
+            config["WorkingDirectory"] = TestContext.CurrentContext.TestDirectory;
+
+            var commandRunner = new CmdCommandRunner(config);
 
             return commandRunner.Run(command, variables);
         }

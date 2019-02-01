@@ -1,4 +1,3 @@
-using System.IO;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 
@@ -8,10 +7,7 @@ namespace SheepIt.Api.Tests.TestInfrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
-                .Build();
+            var configuration = TestConfigurationFactory.Build();
 
             builder.RegisterInstance(configuration)
                 .As<IConfiguration>()
