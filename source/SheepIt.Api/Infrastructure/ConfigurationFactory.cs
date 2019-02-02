@@ -1,29 +1,30 @@
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.Configuration;
-using Serilog;
 
 namespace SheepIt.Api.Infrastructure
 {
     internal class ConfigurationFactory
     {
-        private static readonly ILogger Logger = Log.ForContext<ConfigurationFactory>();
-        
         public static IConfiguration CreateConfiguration(string[] args)
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.ToLower();
-            
-            // TODO: [ts] Does that line works? Check and remove if not...
-            Logger.Information("Environment variable: '{environment}'", environment);
 
-            return new ConfigurationBuilder()
+            var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
-                .AddJsonFile($"appsettings.{environment}.json", optional: true)
+                .AddJsonFile($"appsettings.{environment}.json", optional: true);
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                configurationBuilder.AddJsonFile($"appsettings.{environment}.linux.json", optional: true);
+            }
+
+            return configurationBuilder
                 .AddCommandLine(args)
                 .AddEnvironmentVariables()
                 .Build();
         }
     }
-
 }
