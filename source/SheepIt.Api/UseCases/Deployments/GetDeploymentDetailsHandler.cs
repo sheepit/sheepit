@@ -3,9 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
-using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Deployments
 {
@@ -47,31 +49,31 @@ namespace SheepIt.Api.UseCases.Deployments
 
     public class GetDeploymentDetailsHandler : ISyncHandler<GetDeploymentDetailsRequest, GetDeploymentDetailsResponse>
     {
-        private readonly Domain.Deployments _deployments;
-        private readonly Domain.Environments _environments;
-        private readonly Projects _projects;
+        private readonly Core.Deployments.DeploymentsStorage _deploymentsStorage;
+        private readonly Core.Environments.EnvironmentsStorage _environmentsStorage;
+        private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
 
-        public GetDeploymentDetailsHandler(Domain.Deployments deployments, Domain.Environments environments, Projects projects, ReleasesStorage releasesStorage)
+        public GetDeploymentDetailsHandler(Core.Deployments.DeploymentsStorage deploymentsStorage, Core.Environments.EnvironmentsStorage environmentsStorage, ProjectsStorage projectsStorage, ReleasesStorage releasesStorage)
         {
-            _deployments = deployments;
-            _environments = environments;
-            _projects = projects;
+            _deploymentsStorage = deploymentsStorage;
+            _environmentsStorage = environmentsStorage;
+            _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
         }
 
         public GetDeploymentDetailsResponse Handle(GetDeploymentDetailsRequest request)
         {
-            var project = _projects.Get(
+            var project = _projectsStorage.Get(
                 projectId: request.ProjectId
             );
 
-            var deployment = _deployments.Get(
+            var deployment = _deploymentsStorage.Get(
                 projectId: request.ProjectId,
                 deploymentId: request.DeploymentId
             );
 
-            var environment = _environments.Get(
+            var environment = _environmentsStorage.Get(
                 environmentId: deployment.EnvironmentId);
 
             var release = _releasesStorage.Get(

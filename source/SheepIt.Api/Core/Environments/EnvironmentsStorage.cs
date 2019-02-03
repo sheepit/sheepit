@@ -1,39 +1,12 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using SheepIt.Api.Infrastructure.Mongo;
 
-namespace SheepIt.Domain
+namespace SheepIt.Api.Core.Environments
 {
-    public class Environment : IDocumentWithId<int>, IDocumentInProject
-    {
-        [BsonId]
-        public ObjectId ObjectId { get; set; }
-        
-        public int Id { get; set; }
-        public string ProjectId { get; set; }
-        public string DisplayName { get; set; }
-        public int Rank { get; set; }
-
-        public Environment()
-        {
-        }
-        
-        public Environment(string projectId, string displayName)
-        {
-            ProjectId = projectId;
-            DisplayName = displayName;
-        }
-
-        public void SetRank(int rank)
-        {
-            Rank = rank;
-        }
-    }
-
-    public class Environments
+    public class EnvironmentsStorage
     {
         private readonly SheepItDatabase _database;
 
-        public Environments(SheepItDatabase database)
+        public EnvironmentsStorage(SheepItDatabase database)
         {
             _database = database;
         }

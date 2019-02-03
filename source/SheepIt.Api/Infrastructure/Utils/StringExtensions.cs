@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 
-namespace SheepIt.Utils.Extensions
+namespace SheepIt.Api.Infrastructure.Utils
 {
     public static class StringExtensions
     {

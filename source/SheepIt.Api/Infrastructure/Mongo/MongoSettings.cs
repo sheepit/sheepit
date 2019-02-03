@@ -1,4 +1,4 @@
-namespace SheepIt.Domain
+namespace SheepIt.Api.Infrastructure.Mongo
 {
     public class MongoSettings
     {

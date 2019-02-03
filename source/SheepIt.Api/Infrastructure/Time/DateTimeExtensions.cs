@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace SheepIt.Utils.Extensions
+namespace SheepIt.Api.Infrastructure.Time
 {
     public static class DateTimeExtensions
     {

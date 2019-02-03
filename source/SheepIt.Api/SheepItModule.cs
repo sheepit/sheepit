@@ -2,14 +2,18 @@ using Autofac;
 using Autofac.Features.ResolveAnything;
 using Microsoft.Extensions.Configuration;
 using SheepIt.Api.CommandRunners;
+using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Environments;
+using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.UseCases;
 using SheepIt.Api.UseCases.Deployments;
 using SheepIt.Api.UseCases.Environments;
 using SheepIt.Api.UseCases.Releases;
-using SheepIt.Domain;
 
 namespace SheepIt.Api
 {
@@ -50,9 +54,9 @@ namespace SheepIt.Api
             // this is mainly used to resolve handlers before decorating them
             builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
             
-            builder.RegisterType<Deployments>().AsSelf();
-            builder.RegisterType<Environments>().AsSelf();
-            builder.RegisterType<Projects>().AsSelf();
+            builder.RegisterType<DeploymentsStorage>().AsSelf();
+            builder.RegisterType<EnvironmentsStorage>().AsSelf();
+            builder.RegisterType<ProjectsStorage>().AsSelf();
             builder.RegisterType<ReleasesStorage>().AsSelf();
             
             // todo: move into specific handlers

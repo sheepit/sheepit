@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.CommandRunners;
+using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
-using SheepIt.Domain;
-using SheepIt.Utils.Extensions;
+using SheepIt.Api.Infrastructure.Time;
 
 namespace SheepIt.Api.UseCases
 {
@@ -37,23 +39,23 @@ namespace SheepIt.Api.UseCases
 
     public class DeployReleaseHandler : ISyncHandler<DeployReleaseRequest, DeployReleaseResponse>
     {
-        private readonly Domain.Deployments _deployments;
-        private readonly Projects _projects;
+        private readonly Core.Deployments.DeploymentsStorage _deploymentsStorage;
+        private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
         private readonly ProcessSettings _processSettings;
         private readonly ProcessRepositoryFactory _processRepositoryFactory;
         private readonly ShellSettings _shellSettings;
 
         public DeployReleaseHandler(
-            Domain.Deployments deployments,
-            Projects projects,
+            Core.Deployments.DeploymentsStorage deploymentsStorage,
+            ProjectsStorage projectsStorage,
             ReleasesStorage releasesStorage,
             ProcessSettings processSettings,
             ProcessRepositoryFactory processRepositoryFactory,
             ShellSettings shellSettings)
         {
-            _deployments = deployments;
-            _projects = projects;
+            _deploymentsStorage = deploymentsStorage;
+            _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
             _processSettings = processSettings;
             _processRepositoryFactory = processRepositoryFactory;
@@ -62,7 +64,7 @@ namespace SheepIt.Api.UseCases
 
         public DeployReleaseResponse Handle(DeployReleaseRequest request)
         {
-            var project = _projects.Get(
+            var project = _projectsStorage.Get(
                 projectId: request.ProjectId
             );
 
@@ -80,7 +82,7 @@ namespace SheepIt.Api.UseCases
                 Status = DeploymentStatus.InProgress
             };
             
-            var deploymentId = _deployments.Add(deployment);
+            var deploymentId = _deploymentsStorage.Add(deployment);
 
             RunDeployment(project, release, deployment);
 
@@ -112,7 +114,7 @@ namespace SheepIt.Api.UseCases
 
                     deployment.MarkFinished(processOutput);
 
-                    _deployments.Update(deployment);
+                    _deploymentsStorage.Update(deployment);
                 }
             }
             catch (Exception)
@@ -121,7 +123,7 @@ namespace SheepIt.Api.UseCases
 
                 deployment.MarkExecutionFailed();
 
-                _deployments.Update(deployment);
+                _deploymentsStorage.Update(deployment);
 
                 throw;
             }

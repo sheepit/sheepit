@@ -3,9 +3,10 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
-using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases
 {

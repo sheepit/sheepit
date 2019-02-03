@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Autofac;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Domain;
+using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Tests.TestInfrastructure
 {

@@ -2,8 +2,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Deployments
 {
@@ -39,24 +40,24 @@ namespace SheepIt.Api.UseCases.Deployments
 
     public class GetDeploymentUsedVariablesHandler : ISyncHandler<GetDeploymentUsedVariablesRequest, GetDeploymentUsedVariablesResponse>
     {
-        private readonly Domain.Deployments _deployments;
-        private readonly Projects _projects;
+        private readonly Core.Deployments.DeploymentsStorage _deploymentsStorage;
+        private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
 
-        public GetDeploymentUsedVariablesHandler(Domain.Deployments deployments, Projects projects, ReleasesStorage releasesStorage)
+        public GetDeploymentUsedVariablesHandler(Core.Deployments.DeploymentsStorage deploymentsStorage, ProjectsStorage projectsStorage, ReleasesStorage releasesStorage)
         {
-            _deployments = deployments;
-            _projects = projects;
+            _deploymentsStorage = deploymentsStorage;
+            _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
         }
 
         public GetDeploymentUsedVariablesResponse Handle(GetDeploymentUsedVariablesRequest request)
         {
-            var project = _projects.Get(
+            var project = _projectsStorage.Get(
                 projectId: request.ProjectId
             );
 
-            var deployment = _deployments.Get(
+            var deployment = _deploymentsStorage.Get(
                 projectId: request.ProjectId,
                 deploymentId: request.DeploymentId
             );

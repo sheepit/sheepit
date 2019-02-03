@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
 {
@@ -40,18 +41,18 @@ namespace SheepIt.Api.UseCases.Releases
 
     public class UpdateReleaseVariablesHandler : ISyncHandler<UpdateReleaseVariablesRequest, UpdateReleaseVariablesResponse>
     {
-        private readonly Projects _projects;
+        private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
 
-        public UpdateReleaseVariablesHandler(Projects projects, ReleasesStorage releasesStorage)
+        public UpdateReleaseVariablesHandler(ProjectsStorage projectsStorage, ReleasesStorage releasesStorage)
         {
-            _projects = projects;
+            _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
         }
 
         public UpdateReleaseVariablesResponse Handle(UpdateReleaseVariablesRequest request)
         {
-            var project = _projects.Get(request.ProjectId);
+            var project = _projectsStorage.Get(request.ProjectId);
 
             var release = _releasesStorage.GetNewest(request.ProjectId);
 

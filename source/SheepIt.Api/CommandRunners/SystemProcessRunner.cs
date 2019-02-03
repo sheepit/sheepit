@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using SheepIt.Domain;
+using SheepIt.Api.Core.Releases;
 
 namespace SheepIt.Api.CommandRunners
 {

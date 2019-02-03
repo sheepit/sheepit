@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using MongoDB.Bson.Serialization.Attributes;
-using SheepIt.Utils.Extensions;
+using SheepIt.Api.Infrastructure.Utils;
 
-namespace SheepIt.Domain
+namespace SheepIt.Api.Core.Releases
 {
     public class VariableCollection
     {

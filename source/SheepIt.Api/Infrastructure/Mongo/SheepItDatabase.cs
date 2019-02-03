@@ -1,7 +1,11 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
+using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Environments;
+using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Core.Releases;
 
-namespace SheepIt.Domain
+namespace SheepIt.Api.Infrastructure.Mongo
 {
     public class SheepItDatabase
     {

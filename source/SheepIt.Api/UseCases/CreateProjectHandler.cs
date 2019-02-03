@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
-using SheepIt.Domain;
+using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.UseCases
 {
@@ -30,15 +32,15 @@ namespace SheepIt.Api.UseCases
 
     public class CreateProjectHandler : ISyncHandler<CreateProjectRequest>
     {
-        private readonly Projects _projects;
-        private readonly Domain.Environments _environments;
+        private readonly ProjectsStorage _projectsStorage;
+        private readonly Core.Environments.EnvironmentsStorage _environmentsStorage;
         private readonly ReleasesStorage _releasesStorage;
         private readonly ProcessRepositoryFactory _processRepositoryFactory;
 
-        public CreateProjectHandler(Projects projects, Domain.Environments environments, ReleasesStorage releasesStorage, ProcessRepositoryFactory processRepositoryFactory)
+        public CreateProjectHandler(ProjectsStorage projectsStorage, Core.Environments.EnvironmentsStorage environmentsStorage, ReleasesStorage releasesStorage, ProcessRepositoryFactory processRepositoryFactory)
         {
-            _projects = projects;
-            _environments = environments;
+            _projectsStorage = projectsStorage;
+            _environmentsStorage = environmentsStorage;
             _releasesStorage = releasesStorage;
             _processRepositoryFactory = processRepositoryFactory;
         }
@@ -51,7 +53,7 @@ namespace SheepIt.Api.UseCases
                 RepositoryUrl = request.RepositoryUrl
             };
 
-            _projects.Add(project);
+            _projectsStorage.Add(project);
 
             CreateEnvironments(request);
 
@@ -63,9 +65,9 @@ namespace SheepIt.Api.UseCases
         {
             foreach (var environmentName in request.EnvironmentNames)
             {
-                var environment = new Domain.Environment(request.ProjectId, environmentName);
+                var environment = new Environment(request.ProjectId, environmentName);
                 
-                _environments.Add(environment);
+                _environmentsStorage.Add(environment);
             }
         }
         

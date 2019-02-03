@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
-using SheepIt.Utils.Extensions;
+using SheepIt.Api.Infrastructure.Utils;
 
 namespace SheepIt.Api.Tests.Utils.Extensions
 {

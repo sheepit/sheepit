@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Releases
 {
@@ -31,20 +32,20 @@ namespace SheepIt.Api.UseCases.Releases
 
     public class UpdateReleaseProcessHandler : ISyncHandler<UpdateReleaseProcessRequest, UpdateReleaseProcessResponse>
     {
-        private readonly Projects _projects;
+        private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
         private readonly ProcessRepositoryFactory _processRepositoryFactory;
 
-        public UpdateReleaseProcessHandler(Projects projects, ReleasesStorage releasesStorage, ProcessRepositoryFactory processRepositoryFactory)
+        public UpdateReleaseProcessHandler(ProjectsStorage projectsStorage, ReleasesStorage releasesStorage, ProcessRepositoryFactory processRepositoryFactory)
         {
-            _projects = projects;
+            _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
             _processRepositoryFactory = processRepositoryFactory;
         }
 
         public UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest request)
         {
-            var project = _projects.Get(request.ProjectId);
+            var project = _projectsStorage.Get(request.ProjectId);
 
             var currentCommitSha = _processRepositoryFactory.GetCurrentCommitSha(project);
 

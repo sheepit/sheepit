@@ -1,8 +1,8 @@
 ﻿using System;
 using LibGit2Sharp;
+using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure;
-using SheepIt.Domain;
-using SheepIt.Utils.Extensions;
+using SheepIt.Api.Infrastructure.Time;
 
 namespace SheepIt.Api.Infrastructure
 {

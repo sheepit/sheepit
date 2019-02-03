@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Domain;
-using Environment = SheepIt.Domain.Environment;
+using SheepIt.Api.Infrastructure.Mongo;
+using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.UseCases.Deployments
 {
@@ -46,12 +47,12 @@ namespace SheepIt.Api.UseCases.Deployments
     public class ListDeploymentsHandler : ISyncHandler<ListDeploymentsRequest, ListDeploymentsResponse>
     {
         private readonly SheepItDatabase sheepItDatabase;
-        private readonly Domain.Environments _environments;
+        private readonly Core.Environments.EnvironmentsStorage _environmentsStorage;
 
-        public ListDeploymentsHandler(SheepItDatabase sheepItDatabase, Domain.Environments environments)
+        public ListDeploymentsHandler(SheepItDatabase sheepItDatabase, Core.Environments.EnvironmentsStorage environmentsStorage)
         {
             this.sheepItDatabase = sheepItDatabase;
-            _environments = environments;
+            _environmentsStorage = environmentsStorage;
         }
 
         public ListDeploymentsResponse Handle(ListDeploymentsRequest options)
@@ -61,7 +62,7 @@ namespace SheepIt.Api.UseCases.Deployments
                 .SortBy(deployment => deployment.DeployedAt)
                 .ToArray();
             
-            var environments = _environments
+            var environments = _environmentsStorage
                 .GetAll(options.ProjectId);
 
             var deploymentDtos = deployments.Join(

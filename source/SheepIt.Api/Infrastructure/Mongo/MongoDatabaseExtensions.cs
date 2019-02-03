@@ -1,6 +1,6 @@
 using MongoDB.Driver;
 
-namespace SheepIt.Domain
+namespace SheepIt.Api.Infrastructure.Mongo
 {
     public static class MongoDatabaseExtensions
     {

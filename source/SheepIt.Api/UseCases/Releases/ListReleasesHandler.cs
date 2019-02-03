@@ -3,8 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Domain;
+using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.UseCases.Releases
 {

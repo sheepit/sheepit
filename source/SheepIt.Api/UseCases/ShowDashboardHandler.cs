@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
-using SheepIt.Domain;
+using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.UseCases
 {
@@ -48,13 +49,13 @@ namespace SheepIt.Api.UseCases
 
     public class ShowDashboardHandler : ISyncHandler<ShowDashboardRequest, ShowDashboardResponse>
     {
-        private readonly Domain.Deployments _deployments;
-        private readonly Domain.Environments _environments;
+        private readonly Core.Deployments.DeploymentsStorage _deploymentsStorage;
+        private readonly Core.Environments.EnvironmentsStorage _environmentsStorage;
 
-        public ShowDashboardHandler(Domain.Deployments deployments, Domain.Environments environments)
+        public ShowDashboardHandler(Core.Deployments.DeploymentsStorage deploymentsStorage, Core.Environments.EnvironmentsStorage environmentsStorage)
         {
-            _deployments = deployments;
-            _environments = environments;
+            _deploymentsStorage = deploymentsStorage;
+            _environmentsStorage = environmentsStorage;
         }
 
         public ShowDashboardResponse Handle(ShowDashboardRequest options)
@@ -70,14 +71,14 @@ namespace SheepIt.Api.UseCases
             };
         }
 
-        private Domain.Environment[] GetProjectEnvironments(string projectId)
+        private Environment[] GetProjectEnvironments(string projectId)
         {
-            return _environments.GetAll(projectId);
+            return _environmentsStorage.GetAll(projectId);
         }
 
         private ShowDashboardResponse.EnvironmentDto[] GetDeploymentsInfoForEnvironments(string projectId)
         {
-            var environments = _deployments.GetAll(projectId)
+            var environments = _deploymentsStorage.GetAll(projectId)
                 .GroupBy(deployment => deployment.EnvironmentId)
                 .Select(grouping => MapDeployment(
                         environmentId: grouping.Key,
@@ -107,7 +108,7 @@ namespace SheepIt.Api.UseCases
         }
 
         private ShowDashboardResponse.EnvironmentDto[] FillEnvironmentsWithDeploymentDetails(
-            Domain.Environment[] projectEnvironments,
+            Environment[] projectEnvironments,
             ShowDashboardResponse.EnvironmentDto[] deploymentInfoForEnvironments
             )
         {

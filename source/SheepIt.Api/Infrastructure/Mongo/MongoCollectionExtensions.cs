@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using MongoDB.Driver;
 
-namespace SheepIt.Domain
+namespace SheepIt.Api.Infrastructure.Mongo
 {
     public static class MongoCollectionExtensions
     {

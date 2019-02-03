@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SheepIt.Utils.Extensions
+namespace SheepIt.Api.Infrastructure.Utils
 {
     public static class EnumerableIndexBy
     {

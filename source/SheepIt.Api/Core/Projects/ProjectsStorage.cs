@@ -1,22 +1,12 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using SheepIt.Api.Infrastructure.Mongo;
 
-namespace SheepIt.Domain
+namespace SheepIt.Api.Core.Projects
 {
-    public class Project : IDocumentWithId<string>
-    {
-        [BsonId]
-        public ObjectId ObjectId { get; set; }
-        
-        public string Id { get; set; }
-        public string RepositoryUrl { get; set; }
-    }
-
-    public class Projects
+    public class ProjectsStorage
     {
         private readonly SheepItDatabase _database;
 
-        public Projects(SheepItDatabase database)
+        public ProjectsStorage(SheepItDatabase database)
         {
             _database = database;
         }

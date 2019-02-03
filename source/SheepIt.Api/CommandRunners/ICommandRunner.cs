@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using SheepIt.Domain;
+using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Releases;
 
 namespace SheepIt.Api.CommandRunners
 {

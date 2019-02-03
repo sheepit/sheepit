@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.ScriptFiles;
-using SheepIt.Domain;
 
 namespace SheepIt.Api.CommandRunners
 {

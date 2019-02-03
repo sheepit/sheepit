@@ -4,9 +4,10 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.Api.CommandRunners;
+using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Tests.TestInfrastructure;
-using SheepIt.Domain;
 
 namespace SheepIt.Api.Tests.CommandRunners
 {
