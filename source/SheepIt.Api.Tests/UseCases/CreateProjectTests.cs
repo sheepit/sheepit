@@ -1,16 +1,15 @@
-using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Api.UseCases;
 
-namespace SheepIt.Api.Tests
+namespace SheepIt.Api.Tests.UseCases
 {
-    public class SampleIntegrationTests : Test<IntegrationTestsFixture>
+    public class CreateProjectTests : Test<IntegrationTestsFixture>
     {
         [Test]
-        public async Task can_run_some_handler()
+        public async Task can_create_a_project()
         {
             // given
             
@@ -26,11 +25,17 @@ namespace SheepIt.Api.Tests
             var projects = await Fixture.Handle(new ListProjectsRequest());
             
             // then
-
-            projects.Projects.Single().Should().BeEquivalentTo(new ListProjectsResponse.ProjectDto
+            
+            projects.Should().BeEquivalentTo(new ListProjectsResponse
             {
-                Id = "foo",
-                RepositoryUrl = "c:\\sheep-it\\sample-process"
+                Projects = new[]
+                {
+                    new ListProjectsResponse.ProjectDto
+                    {
+                        Id = "foo",
+                        RepositoryUrl = "c:\\sheep-it\\sample-process"
+                    }
+                }
             });
         }
     }

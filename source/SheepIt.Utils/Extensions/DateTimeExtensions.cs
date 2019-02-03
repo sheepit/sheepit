@@ -9,10 +9,5 @@ namespace SheepIt.Utils.Extensions
         {
             return dateTime.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture);
         }
-
-        public static string ConsoleFriendlyFormat(this DateTime dateTime)
-        {
-            return dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture);
-        }
     }
 }

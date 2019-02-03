@@ -3,7 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.Utils.Extensions;
 
-namespace SheepIt.Api.Tests
+namespace SheepIt.Api.Tests.Utils.Extensions
 {
     public class EnumerableForEachTests
     {

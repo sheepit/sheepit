@@ -8,17 +8,15 @@ using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Domain;
 
-namespace SheepIt.Api.Tests
+namespace SheepIt.Api.Tests.CommandRunners
 {
-    // todo: there is a lot of duplication between cmd and bash tests
-
-    public class BashCommandRunnerTests
+    public class CmdCommandRunnerTests
     {
         [Test]
         public void can_run_a_cmd_command()
         {
             // it's important to check if quotes work properly
-            var result = RunCommand(@"ls ""/c/Program Files""");
+            var result = RunCommand(@"dir ""c:\program files""");
 
             result.Output.Should().NotBeEmpty();
 
@@ -30,7 +28,7 @@ namespace SheepIt.Api.Tests
         {
             var variableValue = Guid.NewGuid().ToString();
 
-            var result = RunCommand("echo $TEST", new VariableForEnvironment[]
+            var result = RunCommand("echo %TEST%", new VariableForEnvironment[]
             {
                 new VariableForEnvironment("TEST", variableValue)
             });
@@ -67,8 +65,8 @@ namespace SheepIt.Api.Tests
 
             var processSettings = new ProcessSettings(config);
             var shellSettings = new ShellSettings(config);
-            
-            var commandRunner = new BashCommandRunner(processSettings, shellSettings);
+
+            var commandRunner = new CmdCommandRunner(processSettings, shellSettings);
 
             return commandRunner.Run(command, variables);
         }
