@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure;
@@ -34,20 +35,20 @@ namespace SheepIt.Api.UseCases.Releases
     {
         private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
-        private readonly ProcessRepositoryFactory _processRepositoryFactory;
+        private readonly DeploymentProcessGitRepositoryFactory _deploymentProcessGitRepositoryFactory;
 
-        public UpdateReleaseProcessHandler(ProjectsStorage projectsStorage, ReleasesStorage releasesStorage, ProcessRepositoryFactory processRepositoryFactory)
+        public UpdateReleaseProcessHandler(ProjectsStorage projectsStorage, ReleasesStorage releasesStorage, DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory)
         {
             _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
-            _processRepositoryFactory = processRepositoryFactory;
+            _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
         }
 
         public UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest request)
         {
             var project = _projectsStorage.Get(request.ProjectId);
 
-            var currentCommitSha = _processRepositoryFactory.GetCurrentCommitSha(project);
+            var currentCommitSha = _deploymentProcessGitRepositoryFactory.GetCurrentCommitSha(project);
 
             var release = _releasesStorage.GetNewest(request.ProjectId);
 

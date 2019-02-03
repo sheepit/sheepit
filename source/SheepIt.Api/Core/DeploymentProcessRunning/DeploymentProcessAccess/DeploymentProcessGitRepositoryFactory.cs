@@ -1,23 +1,22 @@
 ﻿using System;
 using LibGit2Sharp;
 using SheepIt.Api.Core.Projects;
-using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Time;
 
-namespace SheepIt.Api.Infrastructure
+namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
 {
-    public class ProcessRepositoryFactory
+    public class DeploymentProcessGitRepositoryFactory
     {
-        private readonly ProcessSettings _processSettings;
+        private readonly DeploymentProcessSettings _deploymentProcessSettings;
 
-        public ProcessRepositoryFactory(ProcessSettings processSettings)
+        public DeploymentProcessGitRepositoryFactory(DeploymentProcessSettings deploymentProcessSettings)
         {
-            _processSettings = processSettings;
+            _deploymentProcessSettings = deploymentProcessSettings;
         }
 
         public string GetCurrentCommitSha(Project project)
         {
-            var repositoryWorkingDir = _processSettings.WorkingDir
+            var repositoryWorkingDir = _deploymentProcessSettings.WorkingDir
                 .AddSegment(project.Id)
                 .AddSegment("creating-releases")
                 .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}");
@@ -36,7 +35,7 @@ namespace SheepIt.Api.Infrastructure
             }
         }
 
-        public ProcessRepository Clone(string repositoryUrl, string toDirectory)
+        public DeploymentProcessGitRepository Clone(string repositoryUrl, string toDirectory)
         {
             Repository.Clone(repositoryUrl, toDirectory, new CloneOptions
             {
@@ -45,7 +44,7 @@ namespace SheepIt.Api.Infrastructure
 
             var repository = new Repository(toDirectory);
 
-            return new ProcessRepository(repository);
+            return new DeploymentProcessGitRepository(repository);
         }
     }
 }

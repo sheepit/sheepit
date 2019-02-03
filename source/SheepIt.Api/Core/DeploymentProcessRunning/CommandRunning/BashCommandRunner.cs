@@ -1,32 +1,33 @@
 ﻿using System.Collections.Generic;
+using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Releases;
-using SheepIt.Api.Infrastructure;
 
-namespace SheepIt.Api.CommandRunners
+namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandRunning
 {
-    public class CmdCommandRunner : ICommandRunner
+    public class BashCommandRunner : ICommandRunner
     {
-        private readonly ProcessSettings _processSettings;
+        private readonly DeploymentProcessSettings _deploymentProcessSettings;
         private readonly ShellSettings _shellSettings;
         private readonly SystemProcessRunner _systemProcessRunner = new SystemProcessRunner();
 
-        public CmdCommandRunner(ProcessSettings processSettings, ShellSettings shellSettings)
+        public BashCommandRunner(DeploymentProcessSettings deploymentProcessSettings, ShellSettings shellSettings)
         {
-            _processSettings = processSettings;
+            _deploymentProcessSettings = deploymentProcessSettings;
             _shellSettings = shellSettings;
         }
-
+        
         public ProcessStepResult Run(string command, IEnumerable<VariableForEnvironment> variables)
         {
-            var workingDir = _processSettings.WorkingDir.ToString();
-            var cmdPath = _shellSettings.Cmd.ToString();
+            var workingDir = _deploymentProcessSettings.WorkingDir.ToString();
+            var bashPath = _shellSettings.Bash.ToString();
 
             var systemProcessResult = _systemProcessRunner.RunProcess(
                 workingDir: workingDir,
-                fileName: cmdPath,
-                arguments: $"/s /c \"{command}\"", // /c parameter runs inline command, /s handles outermost quotes
-                variables: variables
+                fileName: bashPath,
+                arguments: "-s", // -s will read command from standard input
+                variables: variables,
+                standardInputOrNull: command
             );
             
             return new ProcessStepResult

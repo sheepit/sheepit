@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure;
@@ -35,14 +36,14 @@ namespace SheepIt.Api.UseCases
         private readonly ProjectsStorage _projectsStorage;
         private readonly Core.Environments.EnvironmentsStorage _environmentsStorage;
         private readonly ReleasesStorage _releasesStorage;
-        private readonly ProcessRepositoryFactory _processRepositoryFactory;
+        private readonly DeploymentProcessGitRepositoryFactory _deploymentProcessGitRepositoryFactory;
 
-        public CreateProjectHandler(ProjectsStorage projectsStorage, Core.Environments.EnvironmentsStorage environmentsStorage, ReleasesStorage releasesStorage, ProcessRepositoryFactory processRepositoryFactory)
+        public CreateProjectHandler(ProjectsStorage projectsStorage, Core.Environments.EnvironmentsStorage environmentsStorage, ReleasesStorage releasesStorage, DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory)
         {
             _projectsStorage = projectsStorage;
             _environmentsStorage = environmentsStorage;
             _releasesStorage = releasesStorage;
-            _processRepositoryFactory = processRepositoryFactory;
+            _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
         }
 
         public void Handle(CreateProjectRequest request)
@@ -73,7 +74,7 @@ namespace SheepIt.Api.UseCases
         
         private void CreateFirstRelease(Project project)
         {
-            var currentCommitSha = _processRepositoryFactory.GetCurrentCommitSha(project);
+            var currentCommitSha = _deploymentProcessGitRepositoryFactory.GetCurrentCommitSha(project);
 
             _releasesStorage.Add(new Release
             {

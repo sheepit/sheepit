@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using SheepIt.Api.Infrastructure;
 
-namespace SheepIt.Api.Infrastructure
+namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
 {
     public class ShellSettings
     {

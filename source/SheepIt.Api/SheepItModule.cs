@@ -1,7 +1,8 @@
 using Autofac;
 using Autofac.Features.ResolveAnything;
 using Microsoft.Extensions.Configuration;
-using SheepIt.Api.CommandRunners;
+using SheepIt.Api.Core.DeploymentProcessRunning;
+using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Projects;
@@ -35,15 +36,15 @@ namespace SheepIt.Api
                 .AsSelf()
                 .SingleInstance();
 
-            builder.RegisterType<ProcessSettings>()
+            builder.RegisterType<DeploymentProcessSettings>()
                 .AsSelf()
                 .SingleInstance();
             
-            builder.RegisterType<ProcessRepositoryFactory>()
+            builder.RegisterType<DeploymentProcessGitRepositoryFactory>()
                 .AsSelf()
                 .SingleInstance();
             
-            builder.RegisterType<ProcessRunner>()
+            builder.RegisterType<DeploymentProcessRunner>()
                 .AsSelf()
                 .SingleInstance();
 

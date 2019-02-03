@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
-using SheepIt.Api.CommandRunners;
+using SheepIt.Api.Core.DeploymentProcessRunning;
+using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
@@ -42,23 +43,23 @@ namespace SheepIt.Api.UseCases
         private readonly Core.Deployments.DeploymentsStorage _deploymentsStorage;
         private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
-        private readonly ProcessSettings _processSettings;
-        private readonly ProcessRepositoryFactory _processRepositoryFactory;
+        private readonly DeploymentProcessSettings _deploymentProcessSettings;
+        private readonly DeploymentProcessGitRepositoryFactory _deploymentProcessGitRepositoryFactory;
         private readonly ShellSettings _shellSettings;
 
         public DeployReleaseHandler(
             Core.Deployments.DeploymentsStorage deploymentsStorage,
             ProjectsStorage projectsStorage,
             ReleasesStorage releasesStorage,
-            ProcessSettings processSettings,
-            ProcessRepositoryFactory processRepositoryFactory,
+            DeploymentProcessSettings deploymentProcessSettings,
+            DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory,
             ShellSettings shellSettings)
         {
             _deploymentsStorage = deploymentsStorage;
             _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
-            _processSettings = processSettings;
-            _processRepositoryFactory = processRepositoryFactory;
+            _deploymentProcessSettings = deploymentProcessSettings;
+            _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
             _shellSettings = shellSettings;
         }
 
@@ -96,18 +97,18 @@ namespace SheepIt.Api.UseCases
         {
             try
             {
-                var deploymentWorkingDir = _processSettings.WorkingDir
+                var deploymentWorkingDir = _deploymentProcessSettings.WorkingDir
                     .AddSegment(project.Id)
                     .AddSegment("deploying-releases")
                     .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_release-{release.Id}")
                     .ToString();
 
-                using (var repository = _processRepositoryFactory.Clone(project.RepositoryUrl, deploymentWorkingDir))
+                using (var repository = _deploymentProcessGitRepositoryFactory.Clone(project.RepositoryUrl, deploymentWorkingDir))
                 {
                     repository.Checkout(release.CommitSha);
 
-                    var processOutput = new ProcessRunner(_processSettings, _shellSettings).Run(
-                        processFile: repository.OpenProcessDescriptionFile(),
+                    var processOutput = new DeploymentProcessRunner(_deploymentProcessSettings, _shellSettings).Run(
+                        deploymentProcessFile: repository.OpenProcessDescriptionFile(),
                         variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId),
                         workingDir: deploymentWorkingDir
                     );

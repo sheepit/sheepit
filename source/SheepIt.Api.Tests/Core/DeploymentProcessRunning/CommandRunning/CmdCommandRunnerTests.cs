@@ -3,23 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using SheepIt.Api.CommandRunners;
+using SheepIt.Api.Core.DeploymentProcessRunning.CommandRunning;
+using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Releases;
-using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Tests.TestInfrastructure;
 
-namespace SheepIt.Api.Tests.CommandRunners
+namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandRunning
 {
-    // todo: there is a lot of duplication between cmd and bash tests
-
-    public class BashCommandRunnerTests
+    public class CmdCommandRunnerTests
     {
         [Test]
         public void can_run_a_cmd_command()
         {
             // it's important to check if quotes work properly
-            var result = RunCommand(@"ls ""/c/Program Files""");
+            var result = RunCommand(@"dir ""c:\program files""");
 
             result.Output.Should().NotBeEmpty();
 
@@ -31,7 +29,7 @@ namespace SheepIt.Api.Tests.CommandRunners
         {
             var variableValue = Guid.NewGuid().ToString();
 
-            var result = RunCommand("echo $TEST", new VariableForEnvironment[]
+            var result = RunCommand("echo %TEST%", new VariableForEnvironment[]
             {
                 new VariableForEnvironment("TEST", variableValue)
             });
@@ -66,10 +64,10 @@ namespace SheepIt.Api.Tests.CommandRunners
             var config = TestConfigurationFactory.Build();
             config["WorkingDirectory"] = TestContext.CurrentContext.TestDirectory;
 
-            var processSettings = new ProcessSettings(config);
+            var processSettings = new DeploymentProcessSettings(config);
             var shellSettings = new ShellSettings(config);
-            
-            var commandRunner = new BashCommandRunner(processSettings, shellSettings);
+
+            var commandRunner = new CmdCommandRunner(processSettings, shellSettings);
 
             return commandRunner.Run(command, variables);
         }

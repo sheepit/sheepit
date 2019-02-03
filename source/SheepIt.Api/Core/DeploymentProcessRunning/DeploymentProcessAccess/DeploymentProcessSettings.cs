@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
+using SheepIt.Api.Infrastructure;
 
-namespace SheepIt.Api.Infrastructure
+namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
 {
-    public class ProcessSettings
+    public class DeploymentProcessSettings
     {
         public LocalPath WorkingDir { get; }
 
-        public ProcessSettings(IConfiguration configuration)
+        public DeploymentProcessSettings(IConfiguration configuration)
         {
             var workingDirString = configuration.GetValue<string>("WorkingDir");
 

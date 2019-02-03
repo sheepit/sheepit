@@ -2,14 +2,16 @@
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace SheepIt.Api.ScriptFiles
+// ReSharper disable ClassNeverInstantiated.Global - it is instantiated by yaml deserializer
+
+namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
 {
-    public class ProcessFile
+    public class DeploymentProcessFile
     {
         public string Shell { get; set; }
         public string[] Commands { get; set; }
 
-        public static ProcessFile Open(string processDescriptionFilePath)
+        public static DeploymentProcessFile Open(string processDescriptionFilePath)
         {
             // TODO: [ts] Should we have add here some validation i.e. if the file exists.
             // If it is in correct format etc.
@@ -20,7 +22,7 @@ namespace SheepIt.Api.ScriptFiles
                 return new DeserializerBuilder()
                     .WithNamingConvention(new UnderscoredNamingConvention())
                     .Build()
-                    .Deserialize<ProcessFile>(fileStream);
+                    .Deserialize<DeploymentProcessFile>(fileStream);
             }
         }
     }

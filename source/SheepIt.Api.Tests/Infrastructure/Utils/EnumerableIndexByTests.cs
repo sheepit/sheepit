@@ -5,7 +5,7 @@ using SheepIt.Api.Infrastructure.Utils;
 
 // ReSharper disable NotAccessedField.Local - it's accessed by fluent assertions
 
-namespace SheepIt.Api.Tests.Utils.Extensions
+namespace SheepIt.Api.Tests.Infrastructure.Utils
 {
     public class EnumerableIndexByTests
     {
