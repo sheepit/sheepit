@@ -1,10 +1,11 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization.Policy;
+using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.Deployments
 {
@@ -84,6 +85,16 @@ namespace SheepIt.Api.UseCases.Deployments
                 Name = x.Name,
                 Value = x.Value
             }).ToArray();
+        }
+    }
+    
+    public class GetDeploymentUsedVariablesModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<GetDeploymentUsedVariablesHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
         }
     }
 }

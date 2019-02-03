@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
+using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Utils;
 
 namespace SheepIt.Api.UseCases.Environments
@@ -53,6 +55,17 @@ namespace SheepIt.Api.UseCases.Environments
                 environment.SetRank(index + 1);
                 _environmentsStorage.Update(environment);
             });
+        }
+    }
+    
+    public class UpdateEnvironmentsRankModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<UpdateEnvironmentsRankHandler>()
+                .WithDefaultResponse()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
         }
     }
 }

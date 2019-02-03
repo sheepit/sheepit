@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
-using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.Releases
 {
@@ -61,6 +62,16 @@ namespace SheepIt.Api.UseCases.Releases
                 CreatedReleaseId = releaseId,
                 CreatedFromCommitSha = currentCommitSha
             };
+        }
+    }
+    
+    public class UpdateReleaseProcessModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<UpdateReleaseProcessHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
         }
     }
 }

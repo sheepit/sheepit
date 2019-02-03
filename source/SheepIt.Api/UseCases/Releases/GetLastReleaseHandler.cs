@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.Releases
 {
@@ -70,6 +72,16 @@ namespace SheepIt.Api.UseCases.Releases
                     })
                     .ToArray()
             };
+        }
+    }
+    
+    public class GetLastReleaseModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<GetLastReleaseHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
         }
     }
 }
