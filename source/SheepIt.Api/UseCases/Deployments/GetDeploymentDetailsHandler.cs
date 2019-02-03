@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases.Deployments
@@ -107,6 +109,16 @@ namespace SheepIt.Api.UseCases.Deployments
                 Successful = result.Successful,
                 Output = result.Output.ToArray()
             };
+        }
+    }
+    
+    public class GetDeploymentDetailsModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<GetDeploymentDetailsHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
         }
     }
 }

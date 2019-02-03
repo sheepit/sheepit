@@ -56,27 +56,9 @@ namespace SheepIt.Api
             builder.RegisterType<ReleasesStorage>().AsSelf();
             
             // todo: move into specific handlers
+            RegisterHandlers(builder);
+                
 
-            BuildRegistration.Type<CreateProjectHandler>()
-                .WithDefaultResponse()
-                .AsAsyncHandler()
-                .RegisterIn(builder);
-            
-            BuildRegistration.Type<ListProjectsHandler>()
-                .AsAsyncHandler()
-                .RegisterIn(builder);
-            
-            BuildRegistration.Type<ShowDashboardHandler>()
-                .AsAsyncHandler()
-                .RegisterIn(builder);
-
-            BuildRegistration.Type<DeployReleaseHandler>()
-                .AsAsyncHandler()
-                .RegisterIn(builder);
-
-            BuildRegistration.Type<GetDeploymentDetailsHandler>()
-                .AsAsyncHandler()
-                .RegisterIn(builder);
 
             BuildRegistration.Type<GetDeploymentUsedVariablesHandler>()
                 .AsAsyncHandler()
@@ -120,6 +102,15 @@ namespace SheepIt.Api
                 .AsAsyncHandler()
                 .RegisterIn(builder);
 
+        }
+
+        private void RegisterHandlers(ContainerBuilder builder)
+        {
+            builder.RegisterModule<CreateProjectModule>();
+            builder.RegisterModule<ListProjectsModule>();
+            builder.RegisterModule<DeployReleaseModule>();
+            builder.RegisterModule<ShowDashboardModule>();
+            builder.RegisterModule<GetDeploymentDetailsModule>();
         }
     }
 }

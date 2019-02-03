@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases
@@ -65,6 +67,16 @@ namespace SheepIt.Api.UseCases
                 Id = project.Id,
                 RepositoryUrl = project.RepositoryUrl
             };
+        }
+    }
+    
+    public class ListProjectsModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<ListProjectsHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.CommandRunners;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Domain;
 using SheepIt.Utils.Extensions;
 
@@ -123,6 +125,16 @@ namespace SheepIt.Api.UseCases
 
                 throw;
             }
+        }
+    }
+    
+    public class DeployReleaseModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<DeployReleaseHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
         }
     }
 }

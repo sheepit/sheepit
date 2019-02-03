@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Domain;
 
 namespace SheepIt.Api.UseCases
@@ -129,6 +131,16 @@ namespace SheepIt.Api.UseCases
             }
 
             return result.ToArray();
+        }
+    }
+    
+    public class ShowDashboardModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<ShowDashboardHandler>()
+                .AsAsyncHandler()
+                .RegisterIn(builder);
         }
     }
 }
