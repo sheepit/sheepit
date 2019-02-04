@@ -53,7 +53,7 @@
                     environmentId: environmentId
                 };
                 
-                postData('api/deploy-release', request)
+                postData('api/project/deployment/deploy-release', request)
                     .then(response => response.json())
                     .then(response => this.redirectToDeployment(response.createdDeploymentId))
             },

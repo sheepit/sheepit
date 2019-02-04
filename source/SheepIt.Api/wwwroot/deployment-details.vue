@@ -112,7 +112,7 @@
     };
 
     function getDeploymentDetails(projectId, deploymentId) {
-        return postData('api/get-deployment-details', { projectId, deploymentId })
+        return postData('api/project/deployment/get-deployment-details', { projectId, deploymentId })
             .then(response => response.json())
     }
 

@@ -30,7 +30,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
     public class DeployReleaseController : MediatorController
     {
         [HttpPost]
-        [Route("deploy-release")]
+        [Route("project/deployment/deploy-release")]
         public async Task<DeployReleaseResponse> DeployRelease(DeployReleaseRequest request)
         {
             return await Handle(request);

@@ -40,7 +40,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
     public class ShowDashboardController : MediatorController
     {
         [HttpPost]
-        [Route("show-dashboard")]
+        [Route("project/dashboard/show-dashboard")]
         public async Task<ShowDashboardResponse> ShowDashboard(ShowDashboardRequest request)
         {
             return await Handle(request);

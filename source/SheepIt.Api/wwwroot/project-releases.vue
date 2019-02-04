@@ -68,7 +68,7 @@
     }
     
     function getReleases(projectId) {
-        return postData('api/projects/dashboard/list-releases', { projectId })
+        return postData('api/project/dashboard/list-releases', { projectId })
             .then(response => response.json())
     }
 </script>

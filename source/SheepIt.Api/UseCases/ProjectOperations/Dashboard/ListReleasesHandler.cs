@@ -33,7 +33,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
     public class ListReleasesController : MediatorController
     {
         [HttpPost]
-        [Route("projects/dashboard/list-releases")]
+        [Route("project/dashboard/list-releases")]
         public async Task<ListReleasesResponse> ListReleases(ListReleasesRequest request)
         {
             return await Handle(request);

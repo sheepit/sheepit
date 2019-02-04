@@ -40,7 +40,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
     public class GetDeploymentDetailsController : MediatorController
     {
         [HttpPost]
-        [Route("get-deployment-details")]
+        [Route("project/deployment/get-deployment-details")]
         public async Task<GetDeploymentDetailsResponse> GetDeploymentDetails(GetDeploymentDetailsRequest request)
         {
             return await Handle(request);

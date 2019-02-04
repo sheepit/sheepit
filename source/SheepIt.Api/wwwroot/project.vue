@@ -72,7 +72,7 @@
     };
     
     function getDashboard(projectId) {
-        return postData('api/show-dashboard', { projectId })
+        return postData('api/project/dashboard/show-dashboard', { projectId })
             .then(response => response.json())
     }
     
