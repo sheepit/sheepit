@@ -27,7 +27,7 @@ namespace SheepIt.Api
             // this is mainly used to resolve handlers before decorating them
             builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
 
-            RegisterStorage(builder);
+            RegisterEntitiesStorage(builder);
             RegisterHandlers(builder);
         }
 
@@ -59,7 +59,7 @@ namespace SheepIt.Api
             builder.RegisterModule<UpdateReleaseVariablesModule>();
         }
 
-        private void RegisterStorage(ContainerBuilder builder)
+        private void RegisterEntitiesStorage(ContainerBuilder builder)
         {
             builder.RegisterType<DeploymentsStorage>().AsSelf();
             builder.RegisterType<EnvironmentsStorage>().AsSelf();
