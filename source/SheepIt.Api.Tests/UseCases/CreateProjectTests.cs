@@ -3,6 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Api.UseCases;
+using SheepIt.Api.UseCases.ProjectManagement;
 
 namespace SheepIt.Api.Tests.UseCases
 {

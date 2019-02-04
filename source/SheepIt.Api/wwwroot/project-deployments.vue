@@ -65,7 +65,7 @@
     };
     
     function getDeployments(projectId) {
-        return postData('api/list-deployments', { projectId })
+        return postData('api/project/dashboard/list-deployments', { projectId })
             .then(response => response.json())
     }
 </script>

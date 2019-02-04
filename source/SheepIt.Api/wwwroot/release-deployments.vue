@@ -56,7 +56,7 @@
             },
             release: {
                 immediate: true,
-                handler: 'updateDeployments'
+                handler: 'updateDeployments'``
             }
         },
 
@@ -69,7 +69,7 @@
     };
 
     function getDeployments(projectId, releaseId) {
-        return postData('api/list-deployments', { projectId, releaseId })
+        return postData('api/project/release/list-deployments', { projectId, releaseId })
             .then(response => response.json())
     }
 </script>

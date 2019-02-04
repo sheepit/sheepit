@@ -8,7 +8,7 @@ using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases
+namespace SheepIt.Api.UseCases.ProjectManagement
 {
     public class ListProjectsRequest : IRequest<ListProjectsResponse>
     {

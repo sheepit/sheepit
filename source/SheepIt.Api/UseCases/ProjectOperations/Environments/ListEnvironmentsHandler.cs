@@ -8,7 +8,7 @@ using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases.Environments
+namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 {
     public class ListEnvironmentsRequest : IRequest<ListEnvironmentsResponse>
     {

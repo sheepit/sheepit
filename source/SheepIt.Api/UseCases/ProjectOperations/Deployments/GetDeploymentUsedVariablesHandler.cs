@@ -7,7 +7,7 @@ using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases.Deployments
+namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 {
     public class GetDeploymentUsedVariablesRequest : IRequest<GetDeploymentUsedVariablesResponse>
     {

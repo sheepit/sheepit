@@ -7,12 +7,11 @@ using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
-using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Time;
 
-namespace SheepIt.Api.UseCases
+namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 {
     public class DeployReleaseRequest : IRequest<DeployReleaseResponse>
     {

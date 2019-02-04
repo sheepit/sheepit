@@ -9,7 +9,7 @@ using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 using Environment = SheepIt.Api.Core.Environments.Environment;
 
-namespace SheepIt.Api.UseCases
+namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 {
     public class ShowDashboardRequest : IRequest<ShowDashboardResponse>
     {

@@ -5,12 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
-using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 using Environment = SheepIt.Api.Core.Environments.Environment;
 
-namespace SheepIt.Api.UseCases
+namespace SheepIt.Api.UseCases.ProjectManagement
 {
     public class CreateProjectRequest : IRequest
     {

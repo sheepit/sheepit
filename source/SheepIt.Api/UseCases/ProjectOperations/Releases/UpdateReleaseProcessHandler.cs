@@ -7,7 +7,7 @@ using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases.Releases
+namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 {
     public class UpdateReleaseProcessRequest : IRequest<UpdateReleaseProcessResponse>
     {

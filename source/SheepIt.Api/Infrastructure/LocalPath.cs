@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace SheepIt.Api.Infrastructure
 {
@@ -8,7 +9,7 @@ namespace SheepIt.Api.Infrastructure
 
         public LocalPath(string path)
         {
-            _path = path;
+            _path = path ?? throw new ArgumentNullException(nameof(path));
         }
 
         public LocalPath AddSegment(string pathSegment)

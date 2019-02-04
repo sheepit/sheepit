@@ -10,7 +10,7 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
 
         public DeploymentProcessSettings(IConfiguration configuration)
         {
-            var workingDirString = configuration.GetValue<string>("WorkingDir");
+            var workingDirString = configuration.GetValue<string>("DeploymentProcess:WorkingDir");
             WorkingDir = new LocalPath(workingDirString);
 
             Shell = new ShellSettings(configuration);

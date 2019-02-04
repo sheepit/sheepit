@@ -8,7 +8,7 @@ using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Utils;
 
-namespace SheepIt.Api.UseCases.Environments
+namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 {
     public class UpdateEnvironmentsRankRequest : IRequest
     {

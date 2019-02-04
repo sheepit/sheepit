@@ -8,14 +8,15 @@ using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases.Releases
+namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 {
-    public class GetLastReleaseRequest : IRequest<GetLastReleaseResponse>
+    public class GetReleaseDetailsRequest : IRequest<GetReleaseDetailsResponse>
     {
         public string ProjectId { get; set; }
+        public int ReleaseId { get; set; }
     }
 
-    public class GetLastReleaseResponse
+    public class GetReleaseDetailsResponse
     {
         public int Id { get; set; }
         public string ProjectId { get; set; }
@@ -33,38 +34,40 @@ namespace SheepIt.Api.UseCases.Releases
 
     [Route("api")]
     [ApiController]
-    public class GetLastReleaseController : MediatorController
+    public class GetReleaseDetailsController : MediatorController
     {
-        // currently used for editing variables
         [HttpPost]
-        [Route("get-last-release")]
-        public async Task<GetLastReleaseResponse> GetLastRelease(GetLastReleaseRequest request)
+        [Route("get-release-details")]
+        public async Task<GetReleaseDetailsResponse> GetReleaseDetails(GetReleaseDetailsRequest request)
         {
             return await Handle(request);
         }
     }
 
-    public class GetLastReleaseHandler : ISyncHandler<GetLastReleaseRequest, GetLastReleaseResponse>
+    public class GetReleaseDetailsHandler : ISyncHandler<GetReleaseDetailsRequest, GetReleaseDetailsResponse>
     {
         private readonly ReleasesStorage _releasesStorage;
 
-        public GetLastReleaseHandler(ReleasesStorage releasesStorage)
+        public GetReleaseDetailsHandler(ReleasesStorage releasesStorage)
         {
             _releasesStorage = releasesStorage;
         }
 
-        public GetLastReleaseResponse Handle(GetLastReleaseRequest request)
+        public GetReleaseDetailsResponse Handle(GetReleaseDetailsRequest request)
         {
-            var release = _releasesStorage.GetNewest(request.ProjectId);
+            var release = _releasesStorage.Get(
+                projectId: request.ProjectId,
+                releaseId: request.ReleaseId
+            );
 
-            return new GetLastReleaseResponse
+            return new GetReleaseDetailsResponse
             {
                 Id = release.Id,
                 ProjectId = release.ProjectId,
                 CommitSha = release.CommitSha,
                 CreatedAt = release.CreatedAt,
                 Variables = release.Variables.Variables
-                    .Select(values => new GetLastReleaseResponse.VariableDto
+                    .Select(values => new GetReleaseDetailsResponse.VariableDto
                     {
                         Name = values.Name,
                         DefaultValue = values.DefaultValue,
@@ -74,12 +77,12 @@ namespace SheepIt.Api.UseCases.Releases
             };
         }
     }
-    
-    public class GetLastReleaseModule : Module
+
+    public class GetReleaseDetailsModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            BuildRegistration.Type<GetLastReleaseHandler>()
+            BuildRegistration.Type<GetReleaseDetailsHandler>()
                 .AsAsyncHandler()
                 .RegisterIn(builder);
         }
