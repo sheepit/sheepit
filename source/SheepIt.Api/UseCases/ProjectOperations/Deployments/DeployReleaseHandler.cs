@@ -108,8 +108,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 
                     var processOutput = _deploymentProcessRunner.Run(
                         deploymentProcessFile: repository.OpenProcessDescriptionFile(),
-                        variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId),
-                        workingDir: deploymentWorkingDir
+                        variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId)
                     );
 
                     deployment.MarkFinished(processOutput);

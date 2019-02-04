@@ -9,7 +9,7 @@ using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.Releases
+namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 {
     public class ListReleasesRequest : IRequest<ListReleasesResponse>
     {
@@ -33,7 +33,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
     public class ListReleasesController : MediatorController
     {
         [HttpPost]
-        [Route("list-releases")]
+        [Route("projects/dashboard/list-releases")]
         public async Task<ListReleasesResponse> ListReleases(ListReleasesRequest request)
         {
             return await Handle(request);

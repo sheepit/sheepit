@@ -23,9 +23,9 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning
             };
         }
 
-        public ProcessOutput Run(DeploymentProcessFile deploymentProcessFile, VariableForEnvironment[] variablesForEnvironment, string workingDir)
+        public ProcessOutput Run(DeploymentProcessFile deploymentProcessFile, VariableForEnvironment[] variablesForEnvironment)
         {
-            var processStepResults = NewMethod(deploymentProcessFile, variablesForEnvironment, workingDir);
+            var processStepResults = RunCommands(deploymentProcessFile, variablesForEnvironment);
 
             return new ProcessOutput
             {
@@ -33,7 +33,7 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning
             };
         }
 
-        private IEnumerable<ProcessStepResult> NewMethod(DeploymentProcessFile deploymentProcessFile, VariableForEnvironment[] variablesForEnvironment, string workingDir)
+        private IEnumerable<ProcessStepResult> RunCommands(DeploymentProcessFile deploymentProcessFile, VariableForEnvironment[] variablesForEnvironment)
         {
             var commandRunner = _commandRunners[deploymentProcessFile.Shell];
 
