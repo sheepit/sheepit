@@ -8,6 +8,7 @@ using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Mongo;
+using SheepIt.Api.Infrastructure.Web;
 using SheepIt.Api.UseCases;
 using SheepIt.Api.UseCases.Deployments;
 using SheepIt.Api.UseCases.Environments;
@@ -19,44 +20,14 @@ namespace SheepIt.Api
     {
         protected override void Load(ContainerBuilder builder)
         {
-            // todo: divide into many modules
-            
-            builder.RegisterType<WebApp>().AsSelf();
-
-            builder.Register(context => context
-                .Resolve<IConfiguration>()
-                .GetSection("Mongo")
-                .Get<MongoSettings>()
-            );
-            
-            builder.RegisterType<SheepItDatabase>()
-                .AsSelf()
-                .SingleInstance();
-
-            builder.RegisterType<DeploymentProcessSettings>()
-                .AsSelf()
-                .SingleInstance();
-            
-            builder.RegisterType<DeploymentProcessGitRepositoryFactory>()
-                .AsSelf()
-                .SingleInstance();
-            
-            builder.RegisterType<DeploymentProcessRunner>()
-                .AsSelf()
-                .SingleInstance();
-
-            builder.RegisterType<ShellSettings>()
-                .AsSelf()
-                .SingleInstance();
+            builder.RegisterModule<WebModule>();
+            builder.RegisterModule<MongoDbModule>();
+            builder.RegisterModule<DeploymentProcessModule>();
 
             // this is mainly used to resolve handlers before decorating them
             builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
-            
-            builder.RegisterType<DeploymentsStorage>().AsSelf();
-            builder.RegisterType<EnvironmentsStorage>().AsSelf();
-            builder.RegisterType<ProjectsStorage>().AsSelf();
-            builder.RegisterType<ReleasesStorage>().AsSelf();
 
+            RegisterStorage(builder);
             RegisterHandlers(builder);
         }
 
@@ -86,6 +57,14 @@ namespace SheepIt.Api
             builder.RegisterModule<ListReleasesModule>();
             builder.RegisterModule<UpdateReleaseProcessModule>();
             builder.RegisterModule<UpdateReleaseVariablesModule>();
+        }
+
+        private void RegisterStorage(ContainerBuilder builder)
+        {
+            builder.RegisterType<DeploymentsStorage>().AsSelf();
+            builder.RegisterType<EnvironmentsStorage>().AsSelf();
+            builder.RegisterType<ProjectsStorage>().AsSelf();
+            builder.RegisterType<ReleasesStorage>().AsSelf();
         }
     }
 }

@@ -4,24 +4,21 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SheepIt.Api.Infrastructure.Api;
 using SheepIt.Api.Infrastructure.Logger;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace SheepIt.Api
+namespace SheepIt.Api.Infrastructure.Web
 {
     public class Startup
     {
-        private readonly IConfiguration _configuration;
         private readonly ILifetimeScope _rootScope;
         
         private ILifetimeScope _webScope;
         
-        public Startup(IConfiguration configuration, ILifetimeScope rootScope)
+        public Startup(ILifetimeScope rootScope)
         {
-            _configuration = configuration;
             _rootScope = rootScope;
         }
 

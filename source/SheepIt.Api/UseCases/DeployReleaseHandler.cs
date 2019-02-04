@@ -40,27 +40,27 @@ namespace SheepIt.Api.UseCases
 
     public class DeployReleaseHandler : ISyncHandler<DeployReleaseRequest, DeployReleaseResponse>
     {
-        private readonly Core.Deployments.DeploymentsStorage _deploymentsStorage;
+        private readonly DeploymentsStorage _deploymentsStorage;
         private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
         private readonly DeploymentProcessSettings _deploymentProcessSettings;
         private readonly DeploymentProcessGitRepositoryFactory _deploymentProcessGitRepositoryFactory;
-        private readonly ShellSettings _shellSettings;
+        private readonly DeploymentProcessRunner _deploymentProcessRunner;
 
         public DeployReleaseHandler(
-            Core.Deployments.DeploymentsStorage deploymentsStorage,
+            DeploymentsStorage deploymentsStorage,
             ProjectsStorage projectsStorage,
             ReleasesStorage releasesStorage,
             DeploymentProcessSettings deploymentProcessSettings,
             DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory,
-            ShellSettings shellSettings)
+            DeploymentProcessRunner deploymentProcessRunner)
         {
             _deploymentsStorage = deploymentsStorage;
             _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
             _deploymentProcessSettings = deploymentProcessSettings;
             _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
-            _shellSettings = shellSettings;
+            _deploymentProcessRunner = deploymentProcessRunner;
         }
 
         public DeployReleaseResponse Handle(DeployReleaseRequest request)
@@ -107,7 +107,7 @@ namespace SheepIt.Api.UseCases
                 {
                     repository.Checkout(release.CommitSha);
 
-                    var processOutput = new DeploymentProcessRunner(_deploymentProcessSettings, _shellSettings).Run(
+                    var processOutput = _deploymentProcessRunner.Run(
                         deploymentProcessFile: repository.OpenProcessDescriptionFile(),
                         variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId),
                         workingDir: deploymentWorkingDir

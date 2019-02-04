@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SheepIt.Api.Infrastructure.Api;
 
-namespace SheepIt.Api
+namespace SheepIt.Api.Infrastructure.Web
 {
     public class WebApp : IDisposable
     {
