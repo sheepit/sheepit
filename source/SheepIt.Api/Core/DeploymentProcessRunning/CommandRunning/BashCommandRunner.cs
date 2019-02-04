@@ -7,20 +7,18 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandRunning
 {
     public class BashCommandRunner : ICommandRunner
     {
-        private readonly DeploymentProcessSettings _deploymentProcessSettings;
-        private readonly ShellSettings _shellSettings;
+        private readonly DeploymentProcessSettings _settings;
         private readonly SystemProcessRunner _systemProcessRunner = new SystemProcessRunner();
 
-        public BashCommandRunner(DeploymentProcessSettings deploymentProcessSettings, ShellSettings shellSettings)
+        public BashCommandRunner(DeploymentProcessSettings settings)
         {
-            _deploymentProcessSettings = deploymentProcessSettings;
-            _shellSettings = shellSettings;
+            _settings = settings;
         }
         
         public ProcessStepResult Run(string command, IEnumerable<VariableForEnvironment> variables)
         {
-            var workingDir = _deploymentProcessSettings.WorkingDir.ToString();
-            var bashPath = _shellSettings.Bash.ToString();
+            var workingDir = _settings.WorkingDir.ToString();
+            var bashPath = _settings.Shell.Bash.ToString();
 
             var systemProcessResult = _systemProcessRunner.RunProcess(
                 workingDir: workingDir,

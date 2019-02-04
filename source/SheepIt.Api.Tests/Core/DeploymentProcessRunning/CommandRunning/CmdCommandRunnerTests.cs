@@ -11,6 +11,7 @@ using SheepIt.Api.Tests.TestInfrastructure;
 
 namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandRunning
 {
+    [Platform(Exclude = "Linux")]
     public class CmdCommandRunnerTests
     {
         [Test]
@@ -65,9 +66,8 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandRunning
             config["WorkingDirectory"] = TestContext.CurrentContext.TestDirectory;
 
             var processSettings = new DeploymentProcessSettings(config);
-            var shellSettings = new ShellSettings(config);
 
-            var commandRunner = new CmdCommandRunner(processSettings, shellSettings);
+            var commandRunner = new CmdCommandRunner(processSettings);
 
             return commandRunner.Run(command, variables);
         }

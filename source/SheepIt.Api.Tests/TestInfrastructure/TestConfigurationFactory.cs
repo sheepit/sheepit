@@ -1,4 +1,5 @@
 using System.IO;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.Configuration;
 
 namespace SheepIt.Api.Tests.TestInfrastructure
@@ -7,12 +8,16 @@ namespace SheepIt.Api.Tests.TestInfrastructure
     {
         public static IConfiguration Build()
         {
-            var configuration = new ConfigurationBuilder()
+            var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
-                .Build();
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
 
-            return configuration;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                configurationBuilder.AddJsonFile("appsettings.linux.json", optional: true);
+            }
+            
+            return configurationBuilder.Build();
         }
     }
 }

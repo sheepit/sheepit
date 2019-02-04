@@ -14,12 +14,12 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning
     {
         private readonly Dictionary<string, ICommandRunner> _commandRunners;
 
-        public DeploymentProcessRunner(DeploymentProcessSettings deploymentProcessSettings, ShellSettings shellSettings)
+        public DeploymentProcessRunner(DeploymentProcessSettings deploymentProcessSettings)
         {
             _commandRunners = new Dictionary<string, ICommandRunner>
             {
-                { "cmd", new CmdCommandRunner(deploymentProcessSettings, shellSettings) },
-                { "bash", new BashCommandRunner(deploymentProcessSettings, shellSettings) }
+                { "cmd", new CmdCommandRunner(deploymentProcessSettings) },
+                { "bash", new BashCommandRunner(deploymentProcessSettings) }
             };
         }
 

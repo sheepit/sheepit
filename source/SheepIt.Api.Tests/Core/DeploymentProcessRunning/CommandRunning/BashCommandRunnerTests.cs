@@ -38,7 +38,7 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandRunning
 
             result.Output[0].Trim().Should().Be(variableValue);
         }
-
+        
         [Test]
         public void can_check_if_command_succeeded()
         {
@@ -47,6 +47,8 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandRunning
             result.Successful.Should().BeTrue();
         }
 
+        
+        
         [Test]
         public void can_check_if_command_failed()
         {
@@ -67,9 +69,8 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandRunning
             config["WorkingDirectory"] = TestContext.CurrentContext.TestDirectory;
 
             var processSettings = new DeploymentProcessSettings(config);
-            var shellSettings = new ShellSettings(config);
             
-            var commandRunner = new BashCommandRunner(processSettings, shellSettings);
+            var commandRunner = new BashCommandRunner(processSettings);
 
             return commandRunner.Run(command, variables);
         }
