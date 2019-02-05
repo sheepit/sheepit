@@ -3,9 +3,12 @@
     <draggable v-model="environments" class="row" @end="onEnvironmentDragEnd">
         <div v-for="(environment, index) in environments" class="col-md-3">
             <div class="card">
-                <div class="card-header">
-                    <span v-show="focusedIndex !== index" @click="focusField(index)">{{ environment.displayName }}</span>
-                    <input v-show="focusedIndex === index" v-model="environment.displayName" @focus="focusField(index)" @blur="blurField()" type="text" />
+                <div class="card-header tile">
+                    <div class="content">
+                        <span v-show="focusedIndex !== index">{{ environment.displayName }}</span>
+                        <input v-show="focusedIndex === index" v-model="environment.displayName" @focus="focusField(index)" @blur="blurField()" type="text" />
+                    </div>
+                    <span v-if="focusedIndex !== index" class="icon-pencil" @click="focusField(index)"></span>
                 </div>
                 <ul class="list-group list-group-flush" v-if="environment.deployment">
                     <li class="list-group-item lead">
@@ -88,3 +91,21 @@
         postData('api/update-environments-rank', request);
     }
 </script>
+
+<style scoped>
+.tile {
+    display: flex;
+}
+
+.content {
+    flex: 1;
+}
+
+.icon {
+    display: none;
+}
+
+.icon:hover {
+    display: block;
+}
+</style>
