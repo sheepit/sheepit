@@ -7,8 +7,9 @@
                     <div class="content">
                         <span v-show="focusedIndex !== index">{{ environment.displayName }}</span>
                         <input v-show="focusedIndex === index" v-model="environment.displayName" @focus="focusField(index)" @blur="blurField()" type="text" />
+                        
                     </div>
-                    <span v-if="focusedIndex !== index" class="icon-pencil" @click="focusField(index)"></span>
+                    <span v-if="focusedIndex !== index" class="icon icon-pencil" @click="focusField(index)"></span>
                 </div>
                 <ul class="list-group list-group-flush" v-if="environment.deployment">
                     <li class="list-group-item lead">
@@ -102,10 +103,16 @@
 }
 
 .icon {
-    display: none;
+    visibility: hidden;
+    border-radius: 4px;
 }
 
+.tile:hover .icon {
+    visibility: visible;
+    color: #888888;
+}
+    
 .icon:hover {
-    display: block;
+    background-color: #d3d9df;
 }
 </style>
