@@ -1,14 +1,23 @@
 <template>
+
     <div class="tile">
         <div class="content">
-            <span v-if="!focused">{{ title }}</span>
-            <input v-if="focused" v-model="title" type="text" v-focus="" />
+            <span v-if="!focused">{{ localTitle }}</span>
+            <input v-if="focused"
+                   :value="localTitle" 
+                   @blur="onBlur"
+                   @keyup.enter="onBlur()"
+                   type="text"
+                   v-focus="" />
         </div>
-        <span v-if="!focused" class="icon icon-pencil" @click="focus()"></span>
+        <span v-if="!focused" class="icon icon-pencil" @click="onFocus()"></span>
     </div>
+
 </template>
 
+
 <script>
+
     module.exports = {
         name: 'editable-title',
 
@@ -19,13 +28,25 @@
         data() {
             return {
                 focused: false,
-                displayName: 'test'
+                localTitle: this.title
+            }
+        },
+
+        watch: {
+            title: function() {
+            this.localTitle = this.title;
             }
         },
 
         methods: {
-            focus() {
+            onFocus() {
                 this.focused = true;
+            },
+
+            onBlur($event) {
+                this.localTitle = $event.target.value;
+                this.focused = false;
+                this.$emit('blur', this.localTitle)
             }
         },
 
@@ -37,7 +58,9 @@
             }
         }
     };
+
 </script>
+
 
 <style scoped>
 .tile {

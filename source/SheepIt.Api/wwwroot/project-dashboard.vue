@@ -4,7 +4,7 @@
         <div v-for="(environment, index) in environments" class="col-md-3">
             <div class="card">
                 <div class="card-header">
-                    <editable-title />
+                    <editable-title v-bind:title="environment.displayName" @blur="renameEnvironment" />
                 </div>
                 <ul class="list-group list-group-flush" v-if="environment.deployment">
                     <li class="list-group-item lead">
@@ -64,6 +64,11 @@
             onEnvironmentDragEnd($event) {
                 const environmentIds = this.environments.map(f => (f.environmentId));
                 updateEnvironmentRank(this.project.id, environmentIds);
+            },
+
+            renameEnvironment(newTitle) {
+                console.log(newTitle);
+                // TODO: post env title change
             }
         },
 
