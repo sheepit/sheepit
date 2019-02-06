@@ -3,12 +3,8 @@
     <draggable v-model="environments" class="row" @end="onEnvironmentDragEnd">
         <div v-for="(environment, index) in environments" class="col-md-3">
             <div class="card">
-                <div class="card-header tile">
-                    <div class="content">
-                        <span v-if="focusedIndex !== index">{{ environment.displayName }}</span>
-                        <input v-if="focusedIndex === index" v-model="environment.displayName" type="text" v-focus="" />
-                    </div>
-                    <span v-if="focusedIndex !== index" class="icon icon-pencil" @click="focusField(index)"></span>
+                <div class="card-header">
+                    <editable-title />
                 </div>
                 <ul class="list-group list-group-flush" v-if="environment.deployment">
                     <li class="list-group-item lead">
@@ -37,14 +33,17 @@
     module.exports = {
         name: "project-dashboard",
         
+        components: {
+            'editable-title': httpVueLoader('editable-title.vue'),
+        },
+
         props: [
             'project'
         ],
 
         data() {
             return {
-                environments: [],
-                focusedIndex: null
+                environments: []
             }
         },
 
@@ -65,14 +64,6 @@
             onEnvironmentDragEnd($event) {
                 const environmentIds = this.environments.map(f => (f.environmentId));
                 updateEnvironmentRank(this.project.id, environmentIds);
-            },
-
-            focusField(index) {
-                this.focusedIndex = index;
-            },
-
-            blurField() {
-                this.focusedIndex = null;
             }
         },
 
@@ -99,28 +90,3 @@
         postData('api/update-environments-rank', request);
     }
 </script>
-
-<style scoped>
-.tile {
-    display: flex;
-}
-
-.content {
-    flex: 1;
-}
-
-.icon {
-    visibility: hidden;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.tile:hover .icon {
-    visibility: visible;
-    color: #888888;
-}
-    
-.icon:hover {
-    background-color: #d3d9df;
-}
-</style>
