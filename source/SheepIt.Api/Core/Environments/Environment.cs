@@ -28,5 +28,10 @@ namespace SheepIt.Api.Core.Environments
         {
             Rank = rank;
         }
+
+        public void UpdateDisplayName(string displayName)
+        {
+            DisplayName = displayName;
+        }
     }
 }

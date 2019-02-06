@@ -1,15 +1,12 @@
 using Autofac;
 using Autofac.Features.ResolveAnything;
-using Microsoft.Extensions.Configuration;
 using SheepIt.Api.Core.DeploymentProcessRunning;
-using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Web;
-using SheepIt.Api.UseCases;
 using SheepIt.Api.UseCases.ProjectManagement;
 using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
 using SheepIt.Api.UseCases.ProjectOperations.Deployments;
@@ -50,6 +47,7 @@ namespace SheepIt.Api
             
             // Environment
             builder.RegisterModule<ListEnvironmentsModule>();
+            builder.RegisterModule<UpdateEnvironmentDisplayNameModule>();
             builder.RegisterModule<UpdateEnvironmentsRankModule>();
             
             // Release

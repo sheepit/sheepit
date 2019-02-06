@@ -4,7 +4,7 @@
         <div v-for="(environment, index) in environments" class="col-md-3">
             <div class="card">
                 <div class="card-header">
-                    <editable-title v-bind:title="environment.displayName" @blur="renameEnvironment" />
+                    <editable-title v-bind:title="environment.displayName" @blur="(event) => { renameEnvironment(event, index) }" />
                 </div>
                 <ul class="list-group list-group-flush" v-if="environment.deployment">
                     <li class="list-group-item lead">
@@ -66,9 +66,9 @@
                 updateEnvironmentRank(this.project.id, environmentIds);
             },
 
-            renameEnvironment(newTitle) {
-                console.log(newTitle);
-                // TODO: post env title change
+            renameEnvironment(displayName, index) {
+                let environment = this.environments[index];
+                updateEnvironmentDisplayName(environment.environmentId, displayName);
             }
         },
 
@@ -93,5 +93,14 @@
         };
 
         postData('api/update-environments-rank', request);
+    }
+
+    function updateEnvironmentDisplayName(environmentId, displayName) {
+        const request = {
+            environmentId: environmentId,
+            displayName: displayName
+        };
+
+        postData('api/update-environment-display-name', request);
     }
 </script>
