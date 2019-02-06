@@ -5,9 +5,8 @@
             <div class="card">
                 <div class="card-header tile">
                     <div class="content">
-                        <span v-show="focusedIndex !== index">{{ environment.displayName }}</span>
-                        <input v-show="focusedIndex === index" v-model="environment.displayName" @focus="focusField(index)" @blur="blurField()" type="text" />
-                        
+                        <span v-if="focusedIndex !== index">{{ environment.displayName }}</span>
+                        <input v-if="focusedIndex === index" v-model="environment.displayName" type="text" v-focus="" />
                     </div>
                     <span v-if="focusedIndex !== index" class="icon icon-pencil" @click="focusField(index)"></span>
                 </div>
@@ -75,6 +74,14 @@
             blurField() {
                 this.focusedIndex = null;
             }
+        },
+
+        directives: {
+            focus: {
+                inserted(el) {
+                    el.focus();
+                }
+            }
         }
     };
 
@@ -105,6 +112,7 @@
 .icon {
     visibility: hidden;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .tile:hover .icon {
