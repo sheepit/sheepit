@@ -24,7 +24,7 @@
         </div>
         
         <h3 class="mt-5">Dashboard</h3>
-        <project-dashboard class="mt-4" v-bind:project="project"></project-dashboard>
+        <project-dashboard class="mt-4" v-bind:project="project" v-bind:environments="environments"></project-dashboard>
 
         <h3 class="mt-5">Releases</h3>
         <project-releases v-bind:project="project"></project-releases>
@@ -59,10 +59,14 @@
             'project': 'getDeploymentDetails'
         },
 
+        created() {
+            this.getDeploymentDetails();
+        },
+
         methods: {
             getDeploymentDetails() {
                 getDashboard(this.project.id)
-                    .then(response => this.environments = response.environments)
+                    .then(response => this.environments = response.environments);
             },
             updateProcess() {
                 updateProcess(this.project.id)

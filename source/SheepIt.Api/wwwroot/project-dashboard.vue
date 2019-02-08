@@ -38,29 +38,16 @@
         },
 
         props: [
-            'project'
+            'project',
+            'environments'
         ],
 
         data() {
             return {
-                environments: []
             }
         },
 
-        watch: {
-            'project': 'getDeploymentDetails'
-        },
-
-        created() {
-            this.getDeploymentDetails();
-        },
-
         methods: {
-            getDeploymentDetails() {
-                getDashboard(this.project.id)
-                    .then(response => this.environments = response.environments)
-            },
-
             onEnvironmentDragEnd($event) {
                 const environmentIds = this.environments.map(f => (f.environmentId));
                 updateEnvironmentRank(this.project.id, environmentIds);
@@ -80,11 +67,6 @@
             }
         }
     };
-
-    function getDashboard(projectId) {
-        return postData('api/project/dashboard/show-dashboard', { projectId })
-            .then(response => response.json())
-    }
 
     function updateEnvironmentRank(projectId, environmentIds) {
         const request = {
