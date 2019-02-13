@@ -16,7 +16,7 @@
     module.exports = {
         name: 'edit-project',
 
-        props: ['projectId'],
+        props: ['projectId', 'project'],
 
         data() {
             return {
@@ -24,13 +24,13 @@
             }
         },
 
-        created() {
-            this.getProjectDetails(this.projectId);
+        mounted() {
+            this.getProjectDetails();
         },
 
         methods: {
             getProjectDetails: function() {
-                getProjectDetails(this.projectId)
+                getProjectDetailss(this.project.id)
                     .then(response => console.log(response));
             },
 
@@ -46,10 +46,9 @@
         }
     }
 
-    function getProjectDetails(projectId) {
-        debugger;
-        return postData('api/get-project-details', { projectId })
-            .then(response => response.json())
+    function getProjectDetailss(projectId) {
+        return postData('api/get-project-details', { id: projectId })
+            .then(response => response.json());
     }
  
 

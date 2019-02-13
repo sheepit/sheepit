@@ -32,11 +32,11 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     [ApiController]
     public class GetProjectDetailsController : MediatorController
     {
-        [HttpGet]
+        [HttpPost]
         [Route("get-project-details")]
-        public async Task<GetProjectDetailsResponse> ListProjects()
+        public async Task<GetProjectDetailsResponse> GetProjectDetails(GetProjectDetailsRequest request)
         {
-            return await Handle(new GetProjectDetailsRequest());
+            return await Handle(request);
         }
     }
 
