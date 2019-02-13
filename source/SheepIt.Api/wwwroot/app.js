@@ -28,6 +28,11 @@ window.onload = function() {
                             component: httpVueLoader('project.vue')
                         },
                         {
+                            path: 'edit',
+                            name: 'edit-project',
+                            component: httpVueLoader('edit-project.vue')
+                        },
+                        {
                             path: 'create-release',
                             name: 'create-release',
                             component: httpVueLoader('create-release.vue')

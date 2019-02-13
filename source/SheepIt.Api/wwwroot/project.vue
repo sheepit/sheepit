@@ -11,6 +11,11 @@
             </div>
             <div class="col text-right">
                 <p>
+                    <router-link class="btn btn-primary" :to="{ name: 'edit-project', params: { projectId: project.id }}">
+                        Edit project
+                    </router-link>
+                </p>
+                <p>
                     <router-link class="btn btn-primary" :to="{ name: 'create-release', params: { projectId: project.id }}">
                         Edit variables
                     </router-link>
