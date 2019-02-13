@@ -11,7 +11,7 @@
             </div>
             <div class="col text-right">
                 <p>
-                    <router-link class="btn btn-primary" :to="{ name: 'edit-project', params: { 'projectId': project.id }}">
+                    <router-link class="btn btn-primary" :to="{ name: 'edit-project' }">
                         Edit project
                     </router-link>
                 </p>

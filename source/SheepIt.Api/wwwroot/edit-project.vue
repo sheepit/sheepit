@@ -4,7 +4,12 @@
         <div>
             <div class="form-group">
                 <label for="projectId">Project id</label>
-                <span></span>
+                <input type="text" v-model="project.id" class="form-control" id="projectId" disabled="disabled">
+            </div>
+
+            <div class="form-group">
+                <label for="repositoryUrl">Git repository URL</label>
+                <input type="text" v-model="project.repositoryUrl" class="form-control" id="repositoryUrl">
             </div>
 
             <button type="button" v-on:click="edit()" class="btn btn-primary">Save</button>
@@ -16,11 +21,15 @@
     module.exports = {
         name: 'edit-project',
 
-        props: ['projectId', 'project'],
-
         data() {
             return {
                 project: null
+            }
+        },
+
+        computed: {
+            projectId() {
+                return this.$route.params.projectId
             }
         },
 
@@ -30,8 +39,10 @@
 
         methods: {
             getProjectDetails: function() {
-                getProjectDetailss(this.project.id)
-                    .then(response => console.log(response));
+                getProjectDetailss(this.projectId)
+                    .then(response => {
+                        this.project = response;
+                    });
             },
 
             edit: function () {
