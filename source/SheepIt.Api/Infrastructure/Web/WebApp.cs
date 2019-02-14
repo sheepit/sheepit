@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using SheepIt.Api.Infrastructure.Api;
 
 namespace SheepIt.Api.Infrastructure.Web
 {
@@ -26,7 +25,7 @@ namespace SheepIt.Api.Infrastructure.Web
         {
             _webHost = WebHost
                 .CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
+                .UseStartup<AutofacStartup>()
                 .UseSerilog()
                 .ConfigureServices(ConfigureServices)
                 .Build();
@@ -38,6 +37,7 @@ namespace SheepIt.Api.Infrastructure.Web
         private void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddInstance(_rootScope);
+            serviceCollection.AddInstance(new Startup());
             serviceCollection.ReplaceWithInstance(_configuration);
         }
 

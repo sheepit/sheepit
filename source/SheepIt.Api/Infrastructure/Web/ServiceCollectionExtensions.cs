@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace SheepIt.Api.Infrastructure.Api
+namespace SheepIt.Api.Infrastructure.Web
 {
     public static class ServiceCollectionExtensions
     {
@@ -28,6 +28,17 @@ namespace SheepIt.Api.Infrastructure.Api
         private static ServiceDescriptor CreateInstanceServiceDescriptor<TService>(TService service)
         {
             return new ServiceDescriptor(typeof(TService), service);
+        }
+
+        public static void ReplaceTransient<TService>(this IServiceCollection services, Func<IServiceProvider, TService> factory)
+        {
+            services.Replace(
+                new ServiceDescriptor(
+                    serviceType: typeof(TService),
+                    factory: serviceProvider => factory(serviceProvider),
+                    lifetime: ServiceLifetime.Transient
+                )
+            );
         }
     }
 }
