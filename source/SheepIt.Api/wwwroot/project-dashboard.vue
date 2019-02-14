@@ -58,14 +58,6 @@
                 updateEnvironmentDisplayName(environment.environmentId, displayName);
             }
         },
-
-        directives: {
-            focus: {
-                inserted(el) {
-                    el.focus();
-                }
-            }
-        }
     };
 
     function updateEnvironmentRank(projectId, environmentIds) {
