@@ -18,7 +18,7 @@
         <h4>Environments</h4>
         <div>
             <draggable v-model="environments" class="row" @end="onEnvironmentDragEnd">
-                <div v-for="(environment, index) in project.environments" class="col-md-3">
+                <div v-for="(environment, index) in environments" class="col-md-3">
                     <div class="card">
                         <div class="card-header">
                             <editable-title v-bind:title="environment.displayName" @blur="(event) => { renameEnvironment(event, index) }" />
@@ -41,7 +41,8 @@
 
         data() {
             return {
-                project: null
+                project: null,
+                environments: null
             }
         },
 
@@ -60,6 +61,7 @@
                 getProjectDetailss(this.projectId)
                     .then(response => {
                         this.project = response;
+                        this.environments = this.project.environments;
                     });
             },
 
@@ -79,7 +81,7 @@
             },
 
             renameEnvironment(displayName, index) {
-                let environment = this.project.environments[index];
+                let environment = this.environments[index];
                 updateEnvironmentDisplayName(environment.environmentId, displayName);
             }
         }
