@@ -76,7 +76,7 @@
             },
 
             onEnvironmentDragEnd($event) {
-                const environmentIds = this.project.environments.map(f => (f.environmentId));
+                const environmentIds = this.environments.map(f => (f.environmentId));
                 updateEnvironmentRank(this.project.id, environmentIds);
             },
 
