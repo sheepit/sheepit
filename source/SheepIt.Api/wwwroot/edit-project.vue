@@ -12,7 +12,7 @@
                 <input type="text" v-model="project.repositoryUrl" class="form-control" id="repositoryUrl">
             </div>
 
-            <button type="button" v-on:click="edit()" class="btn btn-primary">Save</button>
+            <button type="button" v-on:click="save()" class="btn btn-primary">Save</button>
         </div>
 
         <h4>Environments</h4>
@@ -29,8 +29,6 @@
                     </div>
                 </div>
             </draggable>
-
-            
         </div>
     </div>
 </template>
@@ -65,10 +63,8 @@
                     });
             },
 
-            edit: function () {
-                editProject(this.projectId, this.repositoryUrl, this.environments)
-                    .then(() => window.app.updateProjects())
-                    .then(() => this.$router.push({ name: 'project', params: { projectId: this.projectId }}))
+            save: function () {
+                updateProject(this.projectId, this.project.repositoryUrl);
             },
 
             newEnvironment: function () {
@@ -94,11 +90,10 @@
     }
  
 
-    function editProject(projectId, repositoryUrl, environmentNames) {
-        return postData('api/edit-project', {
+    function updateProject(projectId, repositoryUrl) {
+        return postData('api/update-project', {
             projectId: projectId,
-            repositoryUrl: repositoryUrl,
-            environmentNames: environmentNames
+            repositoryUrl: repositoryUrl
         })
     }
    

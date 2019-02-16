@@ -9,7 +9,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 {
     public class UpdateProjectRequest : IRequest
     {
-        public string Id { get; set; }
+        public string ProjectId { get; set; }
         public string RepositoryUrl { get; set; }
     }
 
@@ -36,7 +36,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         
         public void Handle(UpdateProjectRequest request)
         {
-            var project = _projectsStorage.Get(request.Id);
+            var project = _projectsStorage.Get(request.ProjectId);
 
             project.UpdateRepositoryUrl(request.RepositoryUrl);
             
