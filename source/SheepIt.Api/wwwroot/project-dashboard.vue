@@ -1,10 +1,10 @@
 <template>
 
-    <draggable v-model="environments" class="row" @end="onEnvironmentDragEnd">
+    <div class="row">
         <div v-for="(environment, index) in environments" class="col-md-3">
             <div class="card">
                 <div class="card-header">
-                    <editable-title v-bind:title="environment.displayName" @blur="(event) => { renameEnvironment(event, index) }" />
+                    {{ environment.displayName }}
                 </div>
                 <ul class="list-group list-group-flush" v-if="environment.deployment">
                     <li class="list-group-item lead">
@@ -25,17 +25,13 @@
                 </ul>
             </div>
         </div>
-    </draggable>
+    </div>
 
 </template>
 
 <script>
     module.exports = {
         name: "project-dashboard",
-        
-        components: {
-            'editable-title': httpVueLoader('editable-title.vue'),
-        },
 
         props: [
             'project',
@@ -45,36 +41,6 @@
         data() {
             return {
             }
-        },
-
-        methods: {
-            onEnvironmentDragEnd($event) {
-                const environmentIds = this.environments.map(f => (f.environmentId));
-                updateEnvironmentRank(this.project.id, environmentIds);
-            },
-
-            renameEnvironment(displayName, index) {
-                let environment = this.environments[index];
-                updateEnvironmentDisplayName(environment.environmentId, displayName);
-            }
-        },
+        }
     };
-
-    function updateEnvironmentRank(projectId, environmentIds) {
-        const request = {
-            projectId: projectId,
-            environmentIds: environmentIds
-        };
-
-        postData('api/update-environments-rank', request);
-    }
-
-    function updateEnvironmentDisplayName(environmentId, displayName) {
-        const request = {
-            environmentId: environmentId,
-            displayName: displayName
-        };
-
-        postData('api/update-environment-display-name', request);
-    }
 </script>
