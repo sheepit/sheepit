@@ -22,5 +22,11 @@ namespace SheepIt.Api.Core.Projects
             return _database.Projects
                 .FindById(projectId);
         }
+        
+        public void Update(Project project)
+        {
+            _database.Projects
+                .ReplaceOneById(project);
+        }
     }
 }

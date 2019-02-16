@@ -11,5 +11,10 @@ namespace SheepIt.Api.Core.Projects
         
         public string Id { get; set; }
         public string RepositoryUrl { get; set; }
+
+        public void UpdateRepositoryUrl(string repositoryUrl)
+        {
+            RepositoryUrl = repositoryUrl;
+        }
     }
 }

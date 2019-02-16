@@ -40,6 +40,7 @@ namespace SheepIt.Api
             builder.RegisterModule<CreateProjectModule>();
             builder.RegisterModule<GetProjectDetailsModule>();
             builder.RegisterModule<ListProjectsModule>();
+            builder.RegisterModule<UpdateProjectModule>();
             
             // Deployment
             builder.RegisterModule<GetDeploymentDetailsModule>();
