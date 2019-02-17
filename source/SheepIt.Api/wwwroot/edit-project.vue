@@ -149,6 +149,6 @@
             displayName: displayName
         };
 
-        return postData('api/add-environment', request);
+        return postData('api/project/environment/add-environment', request);
     } 
 </script>

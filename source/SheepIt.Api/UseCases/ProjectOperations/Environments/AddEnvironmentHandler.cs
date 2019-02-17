@@ -18,7 +18,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
     public class AddEnvironmentController : MediatorController
     {
         [HttpPost]
-        [Route("add-environment")]
+        [Route("project/environment/add-environment")]
         public async Task AddEnvironment(AddEnvironmentRequest request)
         {
             await Handle(request);
