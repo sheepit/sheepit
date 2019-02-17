@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcessRunning;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
@@ -13,7 +14,7 @@ using SheepIt.Api.Infrastructure.Time;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 {
-    public class DeployReleaseRequest : IRequest<DeployReleaseResponse>
+    public class DeployReleaseRequest : IRequest<DeployReleaseResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
         public int ReleaseId { get; set; }
@@ -40,34 +41,30 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
     public class DeployReleaseHandler : ISyncHandler<DeployReleaseRequest, DeployReleaseResponse>
     {
         private readonly DeploymentsStorage _deploymentsStorage;
-        private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
         private readonly DeploymentProcessSettings _deploymentProcessSettings;
         private readonly DeploymentProcessGitRepositoryFactory _deploymentProcessGitRepositoryFactory;
         private readonly DeploymentProcessRunner _deploymentProcessRunner;
+        private readonly IProjectContext _projectContext;
 
         public DeployReleaseHandler(
             DeploymentsStorage deploymentsStorage,
-            ProjectsStorage projectsStorage,
             ReleasesStorage releasesStorage,
             DeploymentProcessSettings deploymentProcessSettings,
             DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory,
-            DeploymentProcessRunner deploymentProcessRunner)
+            DeploymentProcessRunner deploymentProcessRunner,
+            IProjectContext projectContext)
         {
             _deploymentsStorage = deploymentsStorage;
-            _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
             _deploymentProcessSettings = deploymentProcessSettings;
             _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
             _deploymentProcessRunner = deploymentProcessRunner;
+            _projectContext = projectContext;
         }
 
         public DeployReleaseResponse Handle(DeployReleaseRequest request)
         {
-            var project = _projectsStorage.Get(
-                projectId: request.ProjectId
-            );
-
             var release = _releasesStorage.Get(
                 projectId: request.ProjectId,
                 releaseId: request.ReleaseId
@@ -84,7 +81,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             
             var deploymentId = _deploymentsStorage.Add(deployment);
 
-            RunDeployment(project, release, deployment);
+            RunDeployment(_projectContext.Project, release, deployment);
 
             return new DeployReleaseResponse
             {
@@ -135,6 +132,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         {
             BuildRegistration.Type<DeployReleaseHandler>()
                 .AsAsyncHandler()
+                .InContextOfProject()
                 .RegisterIn(builder);
         }
     }
