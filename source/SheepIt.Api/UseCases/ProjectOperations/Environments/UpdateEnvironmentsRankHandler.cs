@@ -21,7 +21,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
     public class UpdateEnvironmentsRankController : MediatorController
     {
         [HttpPost]
-        [Route("update-environments-rank")]
+        [Route("project/environment/update-environments-rank")]
         public async Task UpdateEnvironmentsRank(UpdateEnvironmentsRankRequest request)
         {
             await Handle(request);

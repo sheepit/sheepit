@@ -59,11 +59,11 @@
                     newVariables: this.release.variables
                 };
                 
-                postData('api/edit-release-variables', request)
+                postData('api/project/release/edit-release-variables', request)
                     .then(() => this.$router.push({ name: 'project', params: { projectId: this.project.id }}))
             },
             getProjectEnvironments() {
-                postData('api/list-environments', { projectId: this.project.id })
+                postData('api/project/environment/list-environments', { projectId: this.project.id })
                     .then(response => response.json())
                     .then(response => this.environments = response.environments);
             }
@@ -71,7 +71,7 @@
     };
     
     function getLatestRelease(projectId) {
-        return postData('api/get-last-release', { projectId })
+        return postData('api/project/release/get-last-release', { projectId })
             .then(response => response.json())
     }
 </script>

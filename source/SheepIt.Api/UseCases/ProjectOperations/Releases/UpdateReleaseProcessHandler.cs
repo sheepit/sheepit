@@ -25,7 +25,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
     public class UpdateReleaseProcessController : MediatorController
     {
         [HttpPost]
-        [Route("update-release-process")]
+        [Route("project/release/update-release-process")]
         public async Task<UpdateReleaseProcessResponse> UpdateReleaseProcess(UpdateReleaseProcessRequest request)
         {
             return await Handle(request);

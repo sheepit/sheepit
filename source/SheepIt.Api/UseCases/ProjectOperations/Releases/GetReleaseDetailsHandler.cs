@@ -37,7 +37,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
     public class GetReleaseDetailsController : MediatorController
     {
         [HttpPost]
-        [Route("get-release-details")]
+        [Route("project/release/get-release-details")]
         public async Task<GetReleaseDetailsResponse> GetReleaseDetails(GetReleaseDetailsRequest request)
         {
             return await Handle(request);

@@ -131,7 +131,7 @@
             environmentIds: environmentIds
         };
 
-        postData('api/update-environments-rank', request);
+        postData('api/project/environment/update-environments-rank', request);
     }
 
     function updateEnvironmentDisplayName(environmentId, displayName) {
@@ -140,7 +140,7 @@
             displayName: displayName
         };
 
-        postData('api/update-environment-display-name', request);
+        postData('api/project/environment/update-environment-display-name', request);
     }
 
     function addNewEnvironment(projectId, displayName) {

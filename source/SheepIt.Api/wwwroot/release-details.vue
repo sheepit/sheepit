@@ -95,7 +95,7 @@
             },
             
             getProjectEnvironments() {
-                postData('api/list-environments', { projectId: this.project.id })
+                postData('api/project/environment/list-environments', { projectId: this.project.id })
                     .then(response => response.json())
                     .then(response => this.environments = response.environments);
             }
@@ -103,7 +103,7 @@
     };
 
     function getReleaseDetails(projectId, releaseId) {
-        return postData('api/get-release-details', { projectId, releaseId })
+        return postData('api/project/release/get-release-details', { projectId, releaseId })
             .then(response => response.json());
     }
 </script>

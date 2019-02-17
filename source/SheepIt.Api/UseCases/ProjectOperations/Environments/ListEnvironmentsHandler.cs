@@ -31,7 +31,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
     public class ListEnvironmentsController : MediatorController
     {
         [HttpPost]
-        [Route("list-environments")]
+        [Route("project/environment/list-environments")]
         public async Task<ListEnvironmentsResponse> ListEnvironments(ListEnvironmentsRequest request)
         {
             return await Handle(request);

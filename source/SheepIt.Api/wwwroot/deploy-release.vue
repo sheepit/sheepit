@@ -67,7 +67,7 @@
                 })
             },
             getEnvironments(projectId) {
-                postData('api/list-environments', { projectId })
+                postData('api/project/environment/list-environments', { projectId })
                     .then(response => response.json())
                     .then(response => this.environments = response.environments)
             }

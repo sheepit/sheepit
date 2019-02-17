@@ -18,7 +18,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
     public class UpdateEnvironmentDisplayNameController : MediatorController
     {
         [HttpPost]
-        [Route("update-environment-display-name")]
+        [Route("project/environment/update-environment-display-name")]
         public async Task UpdateEnvironmentDisplayName(UpdateEnvironmentDisplayNameRequest request)
         {
             await Handle(request);

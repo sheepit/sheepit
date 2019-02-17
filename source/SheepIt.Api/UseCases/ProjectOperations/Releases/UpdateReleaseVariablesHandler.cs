@@ -32,9 +32,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
     [ApiController]
     public class UpdateReleaseVariablesController : MediatorController
     {
-        // meant to be used programatically via public API, e. g. when you want to update single variable, like service version 
+        // meant to be used programatically via public API, e. g. when you want to update single variable, like service version
         [HttpPost]
-        [Route("update-release-variables")]
+        [Route("project/release/update-release-variables")]
         public async Task<UpdateReleaseVariablesResponse> UpdateReleaseVariables(UpdateReleaseVariablesRequest request)
         {
             return await Handle(request);

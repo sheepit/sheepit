@@ -32,7 +32,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
     public class GetDeploymentUsedVariablesController : MediatorController
     {
         [HttpPost]
-        [Route("get-deployment-used-variables")]
+        [Route("project/deployment/get-deployment-used-variables")]
         public async Task<GetDeploymentUsedVariablesResponse> ShowDashboard(GetDeploymentUsedVariablesRequest request)
         {
             return await Handle(request);

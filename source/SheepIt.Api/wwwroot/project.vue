@@ -86,7 +86,7 @@
     }
     
     function updateProcess(projectId) {
-        return postData('api/update-release-process', { projectId })
+        return postData('api/project/release/update-release-process', { projectId })
             .then(response => response.json())
     }
 </script>

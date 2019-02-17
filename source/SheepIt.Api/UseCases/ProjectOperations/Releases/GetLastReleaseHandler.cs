@@ -37,7 +37,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
     {
         // currently used for editing variables
         [HttpPost]
-        [Route("get-last-release")]
+        [Route("project/release/get-last-release")]
         public async Task<GetLastReleaseResponse> GetLastRelease(GetLastReleaseRequest request)
         {
             return await Handle(request);

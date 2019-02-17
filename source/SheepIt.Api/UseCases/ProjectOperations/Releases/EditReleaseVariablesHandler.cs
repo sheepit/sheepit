@@ -28,7 +28,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
     public class EditReleaseVariablesController : MediatorController
     {
         [HttpPost]
-        [Route("edit-release-variables")]
+        [Route("project/release/edit-release-variables")]
         public async Task EditReleaseVariables(EditReleaseVariablesRequest request)
         {
             await Handle(request);
