@@ -48,7 +48,7 @@
             </div>
         </div>
         
-        <deployment-used-variables v-bind:used-variables="usedVariables"></deployment-used-variables>
+        <deployment-used-variables v-bind:used-variables="deployment.variables"></deployment-used-variables>
 
     </div>
 </template>
@@ -68,15 +68,7 @@
         data() {
             return {
                 deployment: null,
-                usedVariables: null,
-                
-                // todo: this is duplicated
-                deploymentStatusStyles: {
-                    InProgress: 'info',
-                    Succeeded: 'success',
-                    ProcessFailed: 'danger',
-                    ExecutionFailed: 'danger'
-                }
+                usedVariables: null
             }
         },
 
@@ -101,23 +93,12 @@
             getDeploymentDetails() {
                 getDeploymentDetails(this.project.id, this.deploymentId)
                     .then(response => this.deployment = response)
-                    .then(() => getDeploymentUsedVariables(
-                        this.project.id,
-                        this.deploymentId,
-                        this.deployment.environmentId)
-                    )
-                    .then(response => this.usedVariables = response.values);
             }
         }
     };
 
     function getDeploymentDetails(projectId, deploymentId) {
         return postData('api/project/deployment/get-deployment-details', { projectId, deploymentId })
-            .then(response => response.json())
-    }
-
-    function getDeploymentUsedVariables(projectId, deploymentId, environmentId) {
-        return postData('api/project/deployment/get-deployment-used-variables', { projectId, deploymentId, environmentId })
             .then(response => response.json())
     }
 </script>

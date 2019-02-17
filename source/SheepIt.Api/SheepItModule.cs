@@ -9,6 +9,7 @@ using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Web;
 using SheepIt.Api.UseCases.ProjectManagement;
 using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
+using SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails;
 using SheepIt.Api.UseCases.ProjectOperations.Deployments;
 using SheepIt.Api.UseCases.ProjectOperations.Environments;
 using SheepIt.Api.UseCases.ProjectOperations.Releases;
@@ -44,7 +45,6 @@ namespace SheepIt.Api
             
             // Deployment
             builder.RegisterModule<GetDeploymentDetailsModule>();
-            builder.RegisterModule<GetDeploymentUsedVariablesModule>();
             builder.RegisterModule<ListReleaseDeploymentsModule>();
             
             // Environment

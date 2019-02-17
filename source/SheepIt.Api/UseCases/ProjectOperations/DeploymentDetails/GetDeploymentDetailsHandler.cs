@@ -9,7 +9,7 @@ using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
+namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
 {
     public class GetDeploymentDetailsRequest : IRequest<GetDeploymentDetailsResponse>
     {
@@ -26,12 +26,19 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         public string EnvironmentDisplayName { get; set; }
         public DateTime DeployedAt { get; set; }
         public CommandOutput[] StepResults { get; set; }
+        public VariablesForEnvironmentDto[] Variables { get; set; }
 
         public class CommandOutput
         {
             public string Command { get; set; }
             public bool Successful { get; set; }
             public string[] Output { get; set; }
+        }
+        
+        public class VariablesForEnvironmentDto
+        {
+            public string Name { get; set; }
+            public string Value { get; set; }
         }
     }
 
@@ -80,7 +87,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
                 projectId: request.ProjectId,
                 releaseId: deployment.ReleaseId
             );
-
+            
+            var variablesForEnvironment = release.GetVariablesForEnvironment(environment.Id);
+            
             return new GetDeploymentDetailsResponse
             {
                 Id = deployment.Id,
@@ -89,7 +98,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
                 EnvironmentId = environment.Id,
                 EnvironmentDisplayName = environment.DisplayName,
                 DeployedAt = deployment.DeployedAt,
-                StepResults = GetStepResults(deployment)
+                StepResults = GetStepResults(deployment),
+                Variables = variablesForEnvironment
+                    .Select(MapVariableForEnvironment)
+                    .ToArray()
             };
         }
 
@@ -99,17 +111,26 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             var steps = deployment.ProcessOutput?.Steps ?? Enumerable.Empty<ProcessStepResult>();
 
             return steps
-                .Select(MapCommandOutput)
+                .Select(MapStepResult)
                 .ToArray();
         }
 
-        private GetDeploymentDetailsResponse.CommandOutput MapCommandOutput(ProcessStepResult result)
+        private GetDeploymentDetailsResponse.CommandOutput MapStepResult(ProcessStepResult result)
         {
             return new GetDeploymentDetailsResponse.CommandOutput
             {
                 Command = result.Command,
                 Successful = result.Successful,
                 Output = result.Output.ToArray()
+            };
+        }
+
+        private static GetDeploymentDetailsResponse.VariablesForEnvironmentDto MapVariableForEnvironment(VariableForEnvironment variableForEnvironment)
+        {
+            return new GetDeploymentDetailsResponse.VariablesForEnvironmentDto
+            {
+                Name = variableForEnvironment.Name,
+                Value = variableForEnvironment.Value
             };
         }
     }
