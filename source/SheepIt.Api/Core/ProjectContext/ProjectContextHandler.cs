@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Autofac;
-using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -25,8 +24,9 @@ namespace SheepIt.Api.Core.ProjectContext
         {
             // todo: [rt] better diagnostics?
             var project = _database.Projects.FindById(request.ProjectId);
-
-            using (var projectScope = BeginProjectScope(project))
+            var projectContext = new ProjectContext(project);
+            
+            using (var projectScope = BeginProjectScope(projectContext))
             {
                 // todo: [rt] lock operations on a given project
 
@@ -36,11 +36,11 @@ namespace SheepIt.Api.Core.ProjectContext
             }
         }
 
-        private ILifetimeScope BeginProjectScope(Project project)
+        private ILifetimeScope BeginProjectScope(ProjectContext projectContext)
         {
             return _lifetimeScope.BeginLifetimeScope(builder =>
             {
-                builder.RegisterInstance<IProjectContext>(new ProjectContext(project));
+                builder.RegisterInstance<IProjectContext>(projectContext);
             });
         }
     }
@@ -69,7 +69,7 @@ namespace SheepIt.Api.Core.ProjectContext
 
     public static class ProjectContextHandler
     {
-        public static IResolver<IHandler<TRequest, TResponse>> InContextOfProject<TRequest, TResponse>(
+        public static IResolver<IHandler<TRequest, TResponse>> InProjectContext<TRequest, TResponse>(
             this IResolver<IHandler<TRequest, TResponse>> innerResolver)
             where TRequest : IProjectRequest
         {
