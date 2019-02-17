@@ -34,7 +34,7 @@
 
         watch: {
             title: function() {
-            this.localTitle = this.title;
+                this.localTitle = this.title;
             }
         },
 

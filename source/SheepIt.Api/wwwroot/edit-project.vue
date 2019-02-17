@@ -25,7 +25,18 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" v-on:click="addNewEnvironment()" class="btn btn-primary">Add new</button>
+                <button v-if="!addingNewEnvironment" type="button" v-on:click="onNewEnvironemnt()" class="btn btn-primary">Add new</button>
+                <div v-else class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <input 
+                                v-model="newEnvironmentDisplayName" 
+                                @blur="addNewEnvironment"
+                                @keyup.enter="addNewEnvironment($event)"
+                                type="text" />
+                        </div>
+                    </div>
+                </div>
             </draggable>
         </div>
     </div>
@@ -38,7 +49,9 @@
         data() {
             return {
                 project: null,
-                environments: null
+                environments: null,
+                addingNewEnvironment: false,
+                newEnvironmentDisplayName: ''
             }
         },
 
@@ -54,7 +67,7 @@
 
         methods: {
             getProjectDetails: function() {
-                getProjectDetailss(this.projectId)
+                getProjectDetails(this.projectId)
                     .then(response => {
                         this.project = response;
                         this.environments = this.project.environments;
@@ -79,14 +92,27 @@
                 updateEnvironmentDisplayName(environment.environmentId, displayName);
             },
 
-            addNewEnvironment() {
-                alert("Not implemented yet");
+            onNewEnvironemnt() {
+                this.addingNewEnvironment = true;
+            },
+
+            addNewEnvironment($event) {
+                addNewEnvironment(this.project.id, this.newEnvironmentDisplayName)
+                    .then(response => {
+                        getProjectDetails(this.project.id)
+                            .then(response => {
+                                this.addingNewEnvironment = false;
+                                this.newEnvironmentDisplayName = '';
+                                this.project = response;
+                                this.environments = this.project.environments;
+                            });
+                    });
             }
         }
     }
 
     // TODO: [ts] Move such methods to service with typed contracts
-    function getProjectDetailss(projectId) {
+    function getProjectDetails(projectId) {
         return postData('api/get-project-details', { id: projectId })
             .then(response => response.json());
     }
@@ -115,5 +141,14 @@
         };
 
         postData('api/update-environment-display-name', request);
+    }
+
+    function addNewEnvironment(projectId, displayName) {
+        const request = {
+            projectId: projectId,
+            displayName: displayName
+        };
+
+        return postData('api/add-environment', request);
     } 
 </script>
