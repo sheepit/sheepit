@@ -35,7 +35,6 @@ namespace SheepIt.Api
         {
             // Dashboard
             builder.RegisterModule<ShowDashboardModule>();
-            builder.RegisterModule<ListProjectDeploymentsModule>();
 
             // Project
             builder.RegisterModule<CreateProjectModule>();
@@ -58,7 +57,6 @@ namespace SheepIt.Api
             builder.RegisterModule<EditReleaseVariablesModule>();
             builder.RegisterModule<GetLastReleaseModule>();
             builder.RegisterModule<GetReleaseDetailsModule>();
-            builder.RegisterModule<ListReleasesModule>();
             builder.RegisterModule<UpdateReleaseProcessModule>();
             builder.RegisterModule<UpdateReleaseVariablesModule>();
         }

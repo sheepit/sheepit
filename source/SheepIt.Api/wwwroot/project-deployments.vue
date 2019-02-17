@@ -40,32 +40,8 @@
         name: "project-deployments",
 
         props: [
-            'project'
-        ],
-        
-        data() {
-            return {
-                deployments: []
-            }
-        },
-        
-        watch: {
-            project: {
-                immediate: true,
-                handler: 'updateDeployments'
-            }
-        },
-
-        methods: {
-            updateDeployments() {
-                getDeployments(this.project.id)
-                    .then(response => this.deployments = response.deployments.reverse())
-            }
-        }
+            'project',
+            'deployments'
+        ]
     };
-    
-    function getDeployments(projectId) {
-        return postData('api/project/dashboard/list-deployments', { projectId })
-            .then(response => response.json())
-    }
 </script>

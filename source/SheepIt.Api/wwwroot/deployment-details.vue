@@ -81,16 +81,16 @@
         watch: {
             'project': {
                 immediate: true,
-                handler: 'getDeploymentDetails'
+                handler: 'getDashboard'
             },
             'deploymentId': {
                 immediate: true,
-                handler: 'getDeploymentDetails'
+                handler: 'getDashboard'
             }            
         },
         
         methods: {
-            getDeploymentDetails() {
+            getDashboard() {
                 getDeploymentDetails(this.project.id, this.deploymentId)
                     .then(response => this.deployment = response)
             }

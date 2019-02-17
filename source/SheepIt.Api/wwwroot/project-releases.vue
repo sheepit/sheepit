@@ -40,35 +40,14 @@
         name: "project-releases",
 
         props: [
-            'project'
+            'project',
+            'releases'
         ],
         
-        data() {
-            return {
-                releases: []
-            }
-        },
-        
-        watch: {
-            project: {
-                immediate: true,
-                handler: 'updateReleases'
-            }
-        },
-
         methods: {
-            updateReleases() {
-                getReleases(this.project.id)
-                    .then(response => this.releases = response.releases.reverse())
-            },
             shortCommitSha(commitSha) {
                 return commitSha.substring(0, 7)
             }
         }
-    }
-    
-    function getReleases(projectId) {
-        return postData('api/project/dashboard/list-releases', { projectId })
-            .then(response => response.json())
     }
 </script>

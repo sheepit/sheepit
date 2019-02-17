@@ -29,13 +29,13 @@
         </div>
         
         <h3 class="mt-5">Dashboard</h3>
-        <project-dashboard class="mt-4" v-bind:project="project" v-bind:environments="environments"></project-dashboard>
+        <project-dashboard class="mt-4" :project="project" :environments="environments"></project-dashboard>
 
         <h3 class="mt-5">Releases</h3>
-        <project-releases v-bind:project="project"></project-releases>
+        <project-releases :project="project" :releases="releases"></project-releases>
 
         <h3 class="mt-5">Deployments</h3>
-        <project-deployments v-bind:project="project"></project-deployments>
+        <project-deployments :project="project" :deployments="deployments"></project-deployments>
 
     </div>
 </template>
@@ -61,17 +61,21 @@
         },
         
         watch: {
-            'project': 'getDeploymentDetails'
+            'project': 'getDashboard'
         },
 
         created() {
-            this.getDeploymentDetails();
+            this.getDashboard();
         },
 
         methods: {
-            getDeploymentDetails() {
+            getDashboard() {
                 getDashboard(this.project.id)
-                    .then(response => this.environments = response.environments);
+                    .then(response => {
+                        this.environments = response.environments
+                        this.deployments = response.deployments
+                        this.releases = response.releases
+                    })
             },
             updateProcess() {
                 updateProcess(this.project.id)
@@ -81,7 +85,7 @@
     };
     
     function getDashboard(projectId) {
-        return postData('api/project/dashboard/show-dashboard', { projectId })
+        return postData('api/project/dashboard/get-dashboard', { projectId })
             .then(response => response.json())
     }
     
