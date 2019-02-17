@@ -6,7 +6,7 @@
             <input v-if="focused"
                    :value="localTitle" 
                    @blur="onBlur"
-                   @keyup.enter="onBlur()"
+                   @keyup.enter="onBlur($event)"
                    type="text"
                    v-focus="" />
         </div>
