@@ -51,6 +51,7 @@ namespace SheepIt.Api
             builder.RegisterModule<ListEnvironmentsModule>();
             builder.RegisterModule<UpdateEnvironmentDisplayNameModule>();
             builder.RegisterModule<UpdateEnvironmentsRankModule>();
+            builder.RegisterModule<AddEnvironmentModule>();
             
             // Release
             builder.RegisterModule<DeployReleaseModule>();

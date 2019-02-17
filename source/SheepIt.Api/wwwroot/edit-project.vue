@@ -23,11 +23,9 @@
                         <div class="card-header">
                             <editable-title v-bind:title="environment.displayName" @blur="(event) => { renameEnvironment(event, index) }" />
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item lead"></li>
-                        </ul>
                     </div>
                 </div>
+                <button type="button" v-on:click="addNewEnvironment()" class="btn btn-primary">Add new</button>
             </draggable>
         </div>
     </div>
@@ -79,6 +77,10 @@
             renameEnvironment(displayName, index) {
                 let environment = this.environments[index];
                 updateEnvironmentDisplayName(environment.environmentId, displayName);
+            },
+
+            addNewEnvironment() {
+                alert("Not implemented yet");
             }
         }
     }
