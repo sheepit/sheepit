@@ -37,6 +37,8 @@ namespace SheepIt.Api.Tests.TestInfrastructure
             return await mediator.Handle(request);
         }
 
+        public TResolved Resolve<TResolved>() => _container.Resolve<TResolved>();
+
         public void TearDown()
         {
             _container?.Dispose();

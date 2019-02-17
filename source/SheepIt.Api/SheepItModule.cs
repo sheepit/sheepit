@@ -3,6 +3,7 @@ using Autofac.Features.ResolveAnything;
 using SheepIt.Api.Core.DeploymentProcessRunning;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Mongo;
@@ -23,6 +24,7 @@ namespace SheepIt.Api
             builder.RegisterModule<WebModule>();
             builder.RegisterModule<MongoDbModule>();
             builder.RegisterModule<DeploymentProcessModule>();
+            builder.RegisterModule<ProjectContextModule>();
 
             // this is mainly used to resolve handlers before decorating them
             builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());

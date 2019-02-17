@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Autofac;
+using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.Core.ProjectContext
@@ -10,37 +10,37 @@ namespace SheepIt.Api.Core.ProjectContext
         where TRequest : IProjectRequest
     {
         private readonly ILifetimeScope _lifetimeScope;
-        private readonly SheepItDatabase _database;
         private readonly IResolver<IHandler<TRequest, TResponse>> _innerResolver;
+        private readonly IProjectLock _projectLock;
+        private readonly IProjectContextFactory _projectContextFactory;
 
-        public ProjectContextHandler(ILifetimeScope lifetimeScope, SheepItDatabase database, IResolver<IHandler<TRequest, TResponse>> innerResolver)
+        public ProjectContextHandler(ILifetimeScope lifetimeScope, IResolver<IHandler<TRequest, TResponse>> innerResolver, IProjectLock projectLock, IProjectContextFactory projectContextFactory)
         {
             _lifetimeScope = lifetimeScope;
-            _database = database;
             _innerResolver = innerResolver;
+            _projectLock = projectLock;
+            _projectContextFactory = projectContextFactory;
         }
 
-        public Task<TResponse> Handle(TRequest request)
+        public async Task<TResponse> Handle(TRequest request)
         {
-            // todo: [rt] better diagnostics?
-            var project = _database.Projects.FindById(request.ProjectId);
-            var projectContext = new ProjectContext(project);
-            
-            using (var projectScope = BeginProjectScope(projectContext))
+            // todo: [rt] should we really synchronize all actions in project context? what about queries?
+            using (await _projectLock.LockAsync(request.ProjectId))
+            using (var projectScope = await BeginProjectScope(request.ProjectId))
             {
-                // todo: [rt] lock operations on a given project
-
-                return _innerResolver
+                return await _innerResolver
                     .Resolve(projectScope)
                     .Handle(request);
             }
         }
 
-        private ILifetimeScope BeginProjectScope(ProjectContext projectContext)
+        private async Task<ILifetimeScope> BeginProjectScope(string projectId)
         {
+            var projectContext = await _projectContextFactory.Create(projectId);
+
             return _lifetimeScope.BeginLifetimeScope(builder =>
             {
-                builder.RegisterInstance<IProjectContext>(projectContext);
+                builder.RegisterInstance(projectContext);
             });
         }
     }
@@ -62,7 +62,8 @@ namespace SheepIt.Api.Core.ProjectContext
             return new ProjectContextHandler<TRequest, TResponse>(
                 innerResolver: _innerResolver,
                 lifetimeScope: lifetimeScope,
-                database: context.Resolve<SheepItDatabase>()
+                projectLock: new ProjectLock(),
+                projectContextFactory: context.Resolve<IProjectContextFactory>()
             );
         }
     }
