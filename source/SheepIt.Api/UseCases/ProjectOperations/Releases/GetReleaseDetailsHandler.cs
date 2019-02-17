@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 {
-    public class GetReleaseDetailsRequest : IRequest<GetReleaseDetailsResponse>
+    public class GetReleaseDetailsRequest : IRequest<GetReleaseDetailsResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
         public int ReleaseId { get; set; }
@@ -84,6 +85,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         {
             BuildRegistration.Type<GetReleaseDetailsHandler>()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }

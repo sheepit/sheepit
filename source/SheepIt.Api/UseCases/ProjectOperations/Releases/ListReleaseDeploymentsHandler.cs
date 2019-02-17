@@ -6,6 +6,7 @@ using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -13,7 +14,7 @@ using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 {
-    public class ListReleaseDeploymentsRequest : IRequest<ListReleaseDeploymentsResponse>
+    public class ListReleaseDeploymentsRequest : IRequest<ListReleaseDeploymentsResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
         public int ReleaseId { get; set; }
@@ -97,6 +98,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         {
             BuildRegistration.Type<ListReleaseDeploymentsHandler>()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }

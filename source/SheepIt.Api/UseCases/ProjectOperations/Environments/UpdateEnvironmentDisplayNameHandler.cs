@@ -2,13 +2,15 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.Environments;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 {
-    public class UpdateEnvironmentDisplayNameRequest : IRequest
+    public class UpdateEnvironmentDisplayNameRequest : IRequest, IProjectRequest
     {
+        public string ProjectId { get; set; }
         public int EnvironmentId { get; set; }
         public string DisplayName { get; set; }
     }
@@ -36,6 +38,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         
         public void Handle(UpdateEnvironmentDisplayNameRequest request)
         {
+            // todo: [rt] check project id or use IProjectContext.Environments
             var environment = _environmentsStorage.Get(request.EnvironmentId);
 
             environment.UpdateDisplayName(request.DisplayName);
@@ -51,6 +54,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
             BuildRegistration.Type<UpdateEnvironmentDisplayNameHandler>()
                 .WithDefaultResponse()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }

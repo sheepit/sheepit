@@ -2,12 +2,13 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.Environments;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 {
-    public class AddEnvironmentRequest : IRequest
+    public class AddEnvironmentRequest : IRequest, IProjectRequest
     {
         public string ProjectId { get; set; }
         public string DisplayName { get; set; }
@@ -49,6 +50,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
             BuildRegistration.Type<AddEnvironmentHandler>()
                 .WithDefaultResponse()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }

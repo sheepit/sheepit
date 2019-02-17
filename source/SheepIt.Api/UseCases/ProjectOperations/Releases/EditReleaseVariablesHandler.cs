@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
@@ -10,7 +11,7 @@ using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 {
-    public class EditReleaseVariablesRequest : IRequest
+    public class EditReleaseVariablesRequest : IRequest, IProjectRequest
     {
         public string ProjectId { get; set; }
         public VariableDto[] NewVariables { get; set; }
@@ -37,19 +38,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
     public class EditReleaseVariablesHandler : ISyncHandler<EditReleaseVariablesRequest>
     {
-        private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
 
-        public EditReleaseVariablesHandler(ProjectsStorage projectsStorage, ReleasesStorage releasesStorage)
+        public EditReleaseVariablesHandler(ReleasesStorage releasesStorage)
         {
-            _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
         }
 
         public void Handle(EditReleaseVariablesRequest request)
         {
-            var project = _projectsStorage.Get(request.ProjectId);
-
             var release = _releasesStorage.GetNewest(request.ProjectId);
             
             var variableValues = request.NewVariables
@@ -74,6 +71,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
             BuildRegistration.Type<EditReleaseVariablesHandler>()
                 .WithDefaultResponse()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }

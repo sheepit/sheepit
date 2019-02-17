@@ -3,14 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
-using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 {
-    public class UpdateReleaseVariablesRequest : IRequest<UpdateReleaseVariablesResponse>
+    public class UpdateReleaseVariablesRequest : IRequest<UpdateReleaseVariablesResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
         public UpdateVariable[] Updates { get; set; }
@@ -43,19 +43,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
     public class UpdateReleaseVariablesHandler : ISyncHandler<UpdateReleaseVariablesRequest, UpdateReleaseVariablesResponse>
     {
-        private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
 
-        public UpdateReleaseVariablesHandler(ProjectsStorage projectsStorage, ReleasesStorage releasesStorage)
+        public UpdateReleaseVariablesHandler(ReleasesStorage releasesStorage)
         {
-            _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
         }
 
         public UpdateReleaseVariablesResponse Handle(UpdateReleaseVariablesRequest request)
         {
-            var project = _projectsStorage.Get(request.ProjectId);
-
             var release = _releasesStorage.GetNewest(request.ProjectId);
 
             var variableValues = request.Updates
@@ -84,6 +80,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         {
             BuildRegistration.Type<UpdateReleaseVariablesHandler>()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }

@@ -4,13 +4,14 @@ using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Environments;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 {
-    public class ListEnvironmentsRequest : IRequest<ListEnvironmentsResponse>
+    public class ListEnvironmentsRequest : IRequest<ListEnvironmentsResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
     }
@@ -40,16 +41,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
     public class ListEnvironmentsHandler : ISyncHandler<ListEnvironmentsRequest, ListEnvironmentsResponse>
     {
-        private readonly SheepItDatabase sheepItDatabase;
+        private readonly SheepItDatabase _database;
 
-        public ListEnvironmentsHandler(SheepItDatabase sheepItDatabase)
+        public ListEnvironmentsHandler(SheepItDatabase database)
         {
-            this.sheepItDatabase = sheepItDatabase;
+            _database = database;
         }
 
         public ListEnvironmentsResponse Handle(ListEnvironmentsRequest request)
         {
-            var environments = sheepItDatabase.Environments
+            var environments = _database.Environments
                 .Find(filter => filter.FromProject(request.ProjectId))
                 .SortBy(environment => environment.Rank)
                 .ToEnumerable()
@@ -78,6 +79,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         {
             BuildRegistration.Type<ListEnvironmentsHandler>()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }

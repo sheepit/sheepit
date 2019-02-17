@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
@@ -11,7 +12,7 @@ using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
 {
-    public class GetDeploymentDetailsRequest : IRequest<GetDeploymentDetailsResponse>
+    public class GetDeploymentDetailsRequest : IRequest<GetDeploymentDetailsResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
         public int DeploymentId { get; set; }
@@ -71,10 +72,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
 
         public GetDeploymentDetailsResponse Handle(GetDeploymentDetailsRequest request)
         {
-            var project = _projectsStorage.Get(
-                projectId: request.ProjectId
-            );
-
             var deployment = _deploymentsStorage.Get(
                 projectId: request.ProjectId,
                 deploymentId: request.DeploymentId
@@ -141,6 +138,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
         {
             BuildRegistration.Type<GetDeploymentDetailsHandler>()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }

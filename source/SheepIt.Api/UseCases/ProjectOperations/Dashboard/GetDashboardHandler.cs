@@ -6,6 +6,7 @@ using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
@@ -14,7 +15,7 @@ using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 {
-    public class GetDashboardRequest : IRequest<GetDashboardResponse>
+    public class GetDashboardRequest : IRequest<GetDashboardResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
     }
@@ -72,18 +73,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
     public class GetDashboardHandler : ISyncHandler<GetDashboardRequest, GetDashboardResponse>
     {
         private readonly SheepItDatabase _database;
+        private readonly IProjectContext _projectContext;
 
-        public GetDashboardHandler(SheepItDatabase database)
+        public GetDashboardHandler(SheepItDatabase database, IProjectContext projectContext)
         {
             _database = database;
+            _projectContext = projectContext;
         }
 
         public GetDashboardResponse Handle(GetDashboardRequest options)
         {
-            var environments = _database.Environments
-                .Find(filter => filter.FromProject(options.ProjectId))
-                .ToArray();
-            
             var deployments = _database.Deployments
                 .Find(filter => filter.FromProject(options.ProjectId))
                 .ToArray();
@@ -94,8 +93,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 
             return new GetDashboardResponse
             {
-                Environments = EnvironmentList.GetEnvironments(environments, deployments),
-                Deployments = DeploymentList.GetDeployments(deployments, environments),
+                Environments = EnvironmentList.GetEnvironments(_projectContext.Environments, deployments),
+                Deployments = DeploymentList.GetDeployments(deployments, _projectContext.Environments),
                 Releases = ReleaseList.GetReleases(releases)
             };
         }
@@ -107,6 +106,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         {
             BuildRegistration.Type<GetDashboardHandler>()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }

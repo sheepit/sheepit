@@ -1,13 +1,14 @@
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectManagement
 {
-    public class UpdateProjectRequest : IRequest
+    public class UpdateProjectRequest : IRequest, IProjectRequest
     {
         public string ProjectId { get; set; }
         public string RepositoryUrl { get; set; }
@@ -28,19 +29,19 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     public class UpdateProjectHandler : ISyncHandler<UpdateProjectRequest>
     {
         private readonly ProjectsStorage _projectsStorage;
+        private readonly IProjectContext _projectContext;
 
-        public UpdateProjectHandler(ProjectsStorage projectsStorage)
+        public UpdateProjectHandler(ProjectsStorage projectsStorage, IProjectContext projectContext)
         {
             _projectsStorage = projectsStorage;
+            _projectContext = projectContext;
         }
         
         public void Handle(UpdateProjectRequest request)
         {
-            var project = _projectsStorage.Get(request.ProjectId);
-
-            project.UpdateRepositoryUrl(request.RepositoryUrl);
+            _projectContext.Project.UpdateRepositoryUrl(request.RepositoryUrl);
             
-            _projectsStorage.Update(project);
+            _projectsStorage.Update(_projectContext.Project);
         }
     }
     
@@ -51,6 +52,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             BuildRegistration.Type<UpdateProjectHandler>()
                 .WithDefaultResponse()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }

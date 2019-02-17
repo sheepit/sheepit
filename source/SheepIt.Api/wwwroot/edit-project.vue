@@ -89,7 +89,7 @@
 
             renameEnvironment(displayName, index) {
                 let environment = this.environments[index];
-                updateEnvironmentDisplayName(environment.environmentId, displayName);
+                updateEnvironmentDisplayName(environment.environmentId, displayName, this.projectId);
             },
 
             onNewEnvironemnt() {
@@ -134,8 +134,9 @@
         postData('api/project/environment/update-environments-rank', request);
     }
 
-    function updateEnvironmentDisplayName(environmentId, displayName) {
+    function updateEnvironmentDisplayName(environmentId, displayName, projectId) {
         const request = {
+            projectId: projectId,
             environmentId: environmentId,
             displayName: displayName
         };

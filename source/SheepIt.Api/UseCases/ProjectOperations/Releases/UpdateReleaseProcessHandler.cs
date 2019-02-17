@@ -2,6 +2,7 @@
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
@@ -9,7 +10,7 @@ using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 {
-    public class UpdateReleaseProcessRequest : IRequest<UpdateReleaseProcessResponse>
+    public class UpdateReleaseProcessRequest : IRequest<UpdateReleaseProcessResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
     }
@@ -71,6 +72,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         {
             BuildRegistration.Type<UpdateReleaseProcessHandler>()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }

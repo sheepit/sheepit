@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 {
-    public class GetLastReleaseRequest : IRequest<GetLastReleaseResponse>
+    public class GetLastReleaseRequest : IRequest<GetLastReleaseResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
     }
@@ -81,6 +82,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         {
             BuildRegistration.Type<GetLastReleaseHandler>()
                 .AsAsyncHandler()
+                .InProjectContext()
                 .RegisterIn(builder);
         }
     }
