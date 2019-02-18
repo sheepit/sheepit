@@ -1,15 +1,15 @@
 <template>
-    <div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <input 
-                        :value="newEnvironmentDisplayName"
-                        @blur="onBlur"
-                        @keyup.enter="onBlur($event)"
-                        type="text"
-                        v-focus=""/>
-                </div>
+
+    <button v-if="!addingNewEnvironment" type="button" v-on:click="onNewEnvironemnt()" class="btn btn-primary">Add new</button>
+    <div v-else class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <input 
+                    :value="newEnvironmentDisplayName"
+                    @blur="onBlur"
+                    @keyup.enter="onBlur($event)"
+                    type="text"
+                    v-focus=""/>
             </div>
         </div>
     </div>
@@ -24,14 +24,20 @@ module.exports = {
 
         data() {
             return {
-                newEnvironmentDisplayName: ''
+                newEnvironmentDisplayName: '',
+                addingNewEnvironment: false
             }
         },
 
         methods: {
+            onNewEnvironemnt() {
+                this.addingNewEnvironment = true;
+            },
+
             onBlur($event) {
                 this.newEnvironmentDisplayName = $event.target.value;
-                this.$emit('blur', this.newEnvironmentDisplayName)
+                this.$emit('blur', this.newEnvironmentDisplayName);
+                this.addingNewEnvironment = false;
             },
         },
 

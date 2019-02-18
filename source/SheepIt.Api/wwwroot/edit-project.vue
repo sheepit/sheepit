@@ -25,8 +25,7 @@
                         </div>
                     </div>
                 </div>
-                <button v-if="!addingNewEnvironment" type="button" v-on:click="onNewEnvironemnt()" class="btn btn-primary">Add new</button>
-                <new-environment-card v-else @blur="addNewEnvironment($event)"></new-environment-card>
+                <new-environment-card @blur="addNewEnvironment($event)"></new-environment-card>
             </draggable>
         </div>
     </div>
@@ -39,8 +38,7 @@
         data() {
             return {
                 project: null,
-                environments: null,
-                addingNewEnvironment: false,
+                environments: null
             }
         },
 
@@ -76,18 +74,12 @@
                 let environment = this.environments[index];
                 updateEnvironmentDisplayName(environment.environmentId, displayName, this.projectId);
             },
-         
-            onNewEnvironemnt() {
-                this.addingNewEnvironment = true;
-            },
 
             addNewEnvironment(newEnvironmentDisplayName) {
-                debugger;
                 addNewEnvironment(this.project.id, newEnvironmentDisplayName)
                     .then(response => {
                         getProjectDetails(this.project.id)
                             .then(response => {
-                                this.addingNewEnvironment = false;
                                 this.project = response;
                                 this.environments = this.project.environments;
                             });
