@@ -1,6 +1,7 @@
 window.onload = function() {
 
     httpVueLoader.register(Vue, 'editable-title.vue');
+    httpVueLoader.register(Vue, 'new-environment-card.vue');
     httpVueLoader.register(Vue, 'expanding-list.vue');
     httpVueLoader.register(Vue, 'humanized-date.vue');
     httpVueLoader.register(Vue, 'tooltip.vue');

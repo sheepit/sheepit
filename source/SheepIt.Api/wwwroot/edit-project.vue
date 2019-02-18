@@ -26,17 +26,7 @@
                     </div>
                 </div>
                 <button v-if="!addingNewEnvironment" type="button" v-on:click="onNewEnvironemnt()" class="btn btn-primary">Add new</button>
-                <div v-else class="col-md-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <input 
-                                v-model="newEnvironmentDisplayName" 
-                                @blur="addNewEnvironment"
-                                @keyup.enter="addNewEnvironment($event)"
-                                type="text" />
-                        </div>
-                    </div>
-                </div>
+                <new-environment-card v-else @blur="addNewEnvironment($event)"></new-environment-card>
             </draggable>
         </div>
     </div>
@@ -51,7 +41,6 @@
                 project: null,
                 environments: null,
                 addingNewEnvironment: false,
-                newEnvironmentDisplayName: ''
             }
         },
 
@@ -78,10 +67,6 @@
                 updateProject(this.projectId, this.project.repositoryUrl);
             },
 
-            newEnvironment: function () {
-                this.environments.push('');
-            },
-
             onEnvironmentDragEnd($event) {
                 const environmentIds = this.environments.map(f => (f.environmentId));
                 updateEnvironmentRank(this.project.id, environmentIds);
@@ -91,18 +76,18 @@
                 let environment = this.environments[index];
                 updateEnvironmentDisplayName(environment.environmentId, displayName, this.projectId);
             },
-
+         
             onNewEnvironemnt() {
                 this.addingNewEnvironment = true;
             },
 
-            addNewEnvironment($event) {
-                addNewEnvironment(this.project.id, this.newEnvironmentDisplayName)
+            addNewEnvironment(newEnvironmentDisplayName) {
+                debugger;
+                addNewEnvironment(this.project.id, newEnvironmentDisplayName)
                     .then(response => {
                         getProjectDetails(this.project.id)
                             .then(response => {
                                 this.addingNewEnvironment = false;
-                                this.newEnvironmentDisplayName = '';
                                 this.project = response;
                                 this.environments = this.project.environments;
                             });
