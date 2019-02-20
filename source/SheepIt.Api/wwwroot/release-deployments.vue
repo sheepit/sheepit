@@ -56,7 +56,7 @@
             },
             release: {
                 immediate: true,
-                handler: 'updateDeployments'``
+                handler: 'updateDeployments'
             }
         },
 
