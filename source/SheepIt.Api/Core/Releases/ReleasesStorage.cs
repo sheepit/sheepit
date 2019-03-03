@@ -31,12 +31,6 @@ namespace SheepIt.Api.Core.Releases
             return nextId;
         }
 
-        public Release Get(string projectId, int releaseId)
-        {
-            return _database.Releases
-                .FindByProjectAndIdSync(projectId, releaseId);
-        }
-
         [Obsolete("use async version")]
         public Release GetNewestSync(string projectId)
         {

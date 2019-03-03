@@ -47,7 +47,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         }
     }
 
-    public class ListReleaseDeploymentsHandler : ISyncHandler<ListReleaseDeploymentsRequest, ListReleaseDeploymentsResponse>
+    public class ListReleaseDeploymentsHandler : IHandler<ListReleaseDeploymentsRequest, ListReleaseDeploymentsResponse>
     {
         private readonly SheepItDatabase sheepItDatabase;
 
@@ -56,19 +56,19 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
             this.sheepItDatabase = sheepItDatabase;
         }
 
-        public ListReleaseDeploymentsResponse Handle(ListReleaseDeploymentsRequest options)
+        public async Task<ListReleaseDeploymentsResponse> Handle(ListReleaseDeploymentsRequest options)
         {
-            var deployments = sheepItDatabase.Deployments
+            var deployments = await sheepItDatabase.Deployments
                 .Find(filter => filter.And(
                     filter.FromProject(options.ProjectId),
                     filter.OfRelease(options.ReleaseId)
                 ))
                 .SortBy(deployment => deployment.DeployedAt)
-                .ToArraySync();
+                .ToArray();
             
-            var environments = sheepItDatabase.Environments
+            var environments = await sheepItDatabase.Environments
                 .Find(filter => filter.FromProject(options.ProjectId))
-                .ToArraySync();
+                .ToArray();
             
             var deploymentDtos = deployments.Join(
                 inner: environments,
@@ -97,7 +97,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<ListReleaseDeploymentsHandler>()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
