@@ -3,7 +3,6 @@ using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -33,30 +32,30 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         }
     }
 
-    public class UpdateReleaseProcessHandler : ISyncHandler<UpdateReleaseProcessRequest, UpdateReleaseProcessResponse>
+    public class UpdateReleaseProcessHandler : IHandler<UpdateReleaseProcessRequest, UpdateReleaseProcessResponse>
     {
-        private readonly ProjectsStorage _projectsStorage;
         private readonly ReleasesStorage _releasesStorage;
         private readonly DeploymentProcessGitRepositoryFactory _deploymentProcessGitRepositoryFactory;
+        private readonly IProjectContext _projectContext;
 
-        public UpdateReleaseProcessHandler(ProjectsStorage projectsStorage, ReleasesStorage releasesStorage, DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory)
+        public UpdateReleaseProcessHandler(ReleasesStorage releasesStorage, DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory, IProjectContext projectContext)
         {
-            _projectsStorage = projectsStorage;
             _releasesStorage = releasesStorage;
             _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
+            _projectContext = projectContext;
         }
 
-        public UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest request)
+        public async Task<UpdateReleaseProcessResponse> Handle(UpdateReleaseProcessRequest request)
         {
-            var project = _projectsStorage.GetSync(request.ProjectId);
+            var project = _projectContext.Project;
 
             var currentCommitSha = _deploymentProcessGitRepositoryFactory.GetCurrentCommitSha(project);
 
-            var release = _releasesStorage.GetNewestSync(request.ProjectId);
+            var release = await _releasesStorage.GetNewest(request.ProjectId);
 
             var newRelease = release.WithUpdatedCommitSha(currentCommitSha);
 
-            var releaseId = _releasesStorage.AddSync(newRelease);
+            var releaseId = await _releasesStorage.Add(newRelease);
 
             return new UpdateReleaseProcessResponse
             {
@@ -71,7 +70,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<UpdateReleaseProcessHandler>()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
