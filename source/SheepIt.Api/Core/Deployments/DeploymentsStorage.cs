@@ -1,4 +1,5 @@
-﻿using SheepIt.Api.Infrastructure.Mongo;
+﻿using System.Threading.Tasks;
+using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Core.Deployments
 {
@@ -11,14 +12,14 @@ namespace SheepIt.Api.Core.Deployments
             _database = database;
         }
 
-        public int Add(Deployment deployment)
+        public async Task<int> Add(Deployment deployment)
         {
-            var nextId = _database.Deployments.GetNextIdSync();
+            var nextId = await _database.Deployments.GetNextId();
             
             deployment.Id = nextId;
 
-            _database.Deployments
-                .InsertOne(deployment);
+            await _database.Deployments
+                .InsertOneAsync(deployment);
 
             return nextId;
         }

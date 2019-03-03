@@ -9,6 +9,7 @@ using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Time;
 
@@ -38,37 +39,35 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         }
     }
 
-    public class DeployReleaseHandler : ISyncHandler<DeployReleaseRequest, DeployReleaseResponse>
+    public class DeployReleaseHandler : IHandler<DeployReleaseRequest, DeployReleaseResponse>
     {
         private readonly DeploymentsStorage _deploymentsStorage;
-        private readonly ReleasesStorage _releasesStorage;
         private readonly DeploymentProcessSettings _deploymentProcessSettings;
         private readonly DeploymentProcessGitRepositoryFactory _deploymentProcessGitRepositoryFactory;
         private readonly DeploymentProcessRunner _deploymentProcessRunner;
         private readonly IProjectContext _projectContext;
+        private readonly SheepItDatabase _database;
 
         public DeployReleaseHandler(
             DeploymentsStorage deploymentsStorage,
-            ReleasesStorage releasesStorage,
             DeploymentProcessSettings deploymentProcessSettings,
             DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory,
             DeploymentProcessRunner deploymentProcessRunner,
-            IProjectContext projectContext)
+            IProjectContext projectContext,
+            SheepItDatabase database)
         {
             _deploymentsStorage = deploymentsStorage;
-            _releasesStorage = releasesStorage;
             _deploymentProcessSettings = deploymentProcessSettings;
             _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
             _deploymentProcessRunner = deploymentProcessRunner;
             _projectContext = projectContext;
+            _database = database;
         }
 
-        public DeployReleaseResponse Handle(DeployReleaseRequest request)
+        public async Task<DeployReleaseResponse> Handle(DeployReleaseRequest request)
         {
-            var release = _releasesStorage.Get(
-                projectId: request.ProjectId,
-                releaseId: request.ReleaseId
-            );
+            var release = await _database.Releases
+                .FindByProjectAndId(request.ProjectId, request.ReleaseId);
 
             var deployment = new Deployment
             {
@@ -79,7 +78,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
                 Status = DeploymentStatus.InProgress
             };
             
-            var deploymentId = _deploymentsStorage.Add(deployment);
+            var deploymentId = await _deploymentsStorage.Add(deployment);
 
             RunDeployment(_projectContext.Project, release, deployment);
 
@@ -89,6 +88,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             };
         }
 
+        // todo: extract to another class
+        // todo: make asynchronous
         private void RunDeployment(Project project, Release release, Deployment deployment)
         {
             try
@@ -131,7 +132,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<DeployReleaseHandler>()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
