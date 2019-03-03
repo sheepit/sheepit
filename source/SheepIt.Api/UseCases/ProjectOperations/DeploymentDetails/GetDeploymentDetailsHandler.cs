@@ -71,10 +71,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
                 .FindByProjectAndId(request.ProjectId, request.DeploymentId);
 
             var environment = await _database.Environments
-                .FindByProjectAndId(request.ProjectId, request.DeploymentId);
+                .FindByProjectAndId(request.ProjectId, deployment.EnvironmentId);
 
             var release = await _database.Releases
-                .FindByProjectAndId(request.ProjectId, request.DeploymentId);
+                .FindByProjectAndId(request.ProjectId, deployment.ReleaseId);
 
             var variablesForEnvironment = release.GetVariablesForEnvironment(environment.Id);
             
