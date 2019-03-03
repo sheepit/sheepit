@@ -23,11 +23,5 @@ namespace SheepIt.Api.Core.Deployments
 
             return nextId;
         }
-
-        public void Update(Deployment deployment)
-        {
-            _database.Deployments
-                .ReplaceOneByIdSync(deployment);
-        }
     }
 }

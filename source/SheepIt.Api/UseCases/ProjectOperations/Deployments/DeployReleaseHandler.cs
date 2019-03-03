@@ -80,7 +80,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             
             var deploymentId = await _deploymentsStorage.Add(deployment);
 
-            RunDeployment(_projectContext.Project, release, deployment);
+            await RunDeployment(_projectContext.Project, release, deployment);
 
             return new DeployReleaseResponse
             {
@@ -88,19 +88,21 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             };
         }
 
-        // todo: extract to another class
-        // todo: make asynchronous
-        private void RunDeployment(Project project, Release release, Deployment deployment)
+        private async Task RunDeployment(Project project, Release release, Deployment deployment)
         {
             try
             {
+                // todo: extract part of it to another class
                 var deploymentWorkingDir = _deploymentProcessSettings.WorkingDir
                     .AddSegment(project.Id)
                     .AddSegment("deploying-releases")
-                    .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_release-{release.Id}")
+                    .AddSegment(
+                        $"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_release-{release.Id}")
                     .ToString();
 
-                using (var repository = _deploymentProcessGitRepositoryFactory.Clone(project.RepositoryUrl, deploymentWorkingDir))
+                // todo: make asynchronous
+                using (var repository =
+                    _deploymentProcessGitRepositoryFactory.Clone(project.RepositoryUrl, deploymentWorkingDir))
                 {
                     repository.Checkout(release.CommitSha);
 
@@ -111,7 +113,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 
                     deployment.MarkFinished(processOutput);
 
-                    _deploymentsStorage.Update(deployment);
+                    await _database.Deployments
+                        .ReplaceOneById(deployment);
                 }
             }
             catch (Exception)
@@ -120,7 +123,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 
                 deployment.MarkExecutionFailed();
 
-                _deploymentsStorage.Update(deployment);
+                await _database.Deployments
+                    .ReplaceOneById(deployment);
 
                 throw;
             }
