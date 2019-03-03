@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Core.Projects
@@ -17,18 +16,6 @@ namespace SheepIt.Api.Core.Projects
         {
             await _database.Projects
                 .InsertOneAsync(project);
-        }
-
-        [Obsolete("use async version")]
-        public Project GetSync(string projectId)
-        {
-            return Get(projectId).Result;
-        }
-
-        public async Task<Project> Get(string projectId)
-        {
-            return await _database.Projects
-                .FindById(projectId);
         }
     }
 }
