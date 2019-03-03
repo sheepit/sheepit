@@ -39,7 +39,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         }
     }
 
-    public class ListEnvironmentsHandler : ISyncHandler<ListEnvironmentsRequest, ListEnvironmentsResponse>
+    public class ListEnvironmentsHandler : IHandler<ListEnvironmentsRequest, ListEnvironmentsResponse>
     {
         private readonly SheepItDatabase _database;
 
@@ -48,18 +48,18 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
             _database = database;
         }
 
-        public ListEnvironmentsResponse Handle(ListEnvironmentsRequest request)
+        public async Task<ListEnvironmentsResponse> Handle(ListEnvironmentsRequest request)
         {
-            var environments = _database.Environments
+            var environments = await _database.Environments
                 .Find(filter => filter.FromProject(request.ProjectId))
                 .SortBy(environment => environment.Rank)
-                .ToEnumerable()
-                .Select(Map)
                 .ToArray();
-            
+
             return new ListEnvironmentsResponse
             {
                 Environments = environments
+                    .Select(Map)
+                    .ToArray()
             };
         }
 
@@ -78,7 +78,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<ListEnvironmentsHandler>()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
