@@ -3,11 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
@@ -55,36 +56,26 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
         }
     }
 
-    public class GetDeploymentDetailsHandler : ISyncHandler<GetDeploymentDetailsRequest, GetDeploymentDetailsResponse>
+    public class GetDeploymentDetailsHandler : IHandler<GetDeploymentDetailsRequest, GetDeploymentDetailsResponse>
     {
-        private readonly Core.Deployments.DeploymentsStorage _deploymentsStorage;
-        private readonly Core.Environments.EnvironmentsStorage _environmentsStorage;
-        private readonly ProjectsStorage _projectsStorage;
-        private readonly ReleasesStorage _releasesStorage;
+        private readonly SheepItDatabase _database;
 
-        public GetDeploymentDetailsHandler(Core.Deployments.DeploymentsStorage deploymentsStorage, Core.Environments.EnvironmentsStorage environmentsStorage, ProjectsStorage projectsStorage, ReleasesStorage releasesStorage)
+        public GetDeploymentDetailsHandler(SheepItDatabase database)
         {
-            _deploymentsStorage = deploymentsStorage;
-            _environmentsStorage = environmentsStorage;
-            _projectsStorage = projectsStorage;
-            _releasesStorage = releasesStorage;
+            _database = database;
         }
 
-        public GetDeploymentDetailsResponse Handle(GetDeploymentDetailsRequest request)
+        public async Task<GetDeploymentDetailsResponse> Handle(GetDeploymentDetailsRequest request)
         {
-            var deployment = _deploymentsStorage.Get(
-                projectId: request.ProjectId,
-                deploymentId: request.DeploymentId
-            );
+            var deployment = await _database.Deployments
+                .FindByProjectAndId(request.ProjectId, request.DeploymentId);
 
-            var environment = _environmentsStorage.Get(
-                environmentId: deployment.EnvironmentId);
+            var environment = await _database.Environments
+                .FindByProjectAndId(request.ProjectId, request.DeploymentId);
 
-            var release = _releasesStorage.Get(
-                projectId: request.ProjectId,
-                releaseId: deployment.ReleaseId
-            );
-            
+            var release = await _database.Releases
+                .FindByProjectAndId(request.ProjectId, request.DeploymentId);
+
             var variablesForEnvironment = release.GetVariablesForEnvironment(environment.Id);
             
             return new GetDeploymentDetailsResponse
@@ -137,7 +128,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<GetDeploymentDetailsHandler>()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }

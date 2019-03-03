@@ -84,19 +84,27 @@ namespace SheepIt.Api.Infrastructure.Mongo
 
             return foundDocumentOrNull;
         }
-
-        public static TDocument FindByProjectAndId<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, string projectId, TId id)
+        
+        [Obsolete("use async version")]
+        public static TDocument FindByProjectAndIdSync<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, string projectId, TId id)
             where TDocument : IDocumentWithId<TId>, IDocumentInProject
         {
-            var foundDocumentOrNull = mongoCollection
+            return FindByProjectAndId(mongoCollection, projectId, id).Result;
+        }
+
+        public static async Task<TDocument> FindByProjectAndId<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, string projectId, TId id)
+            where TDocument : IDocumentWithId<TId>, IDocumentInProject
+        {
+            var foundDocumentOrNull = await mongoCollection
                 .Find(filter => filter.FromProject(projectId) & filter.WithId(id))
-                .SingleOrDefault();
-            
+                .SingleOrDefaultAsync();
+
             if (foundDocumentOrNull == null)
             {
-                throw new InvalidOperationException($"Document of type {typeof(TDocument).Name} with id {id} in project {projectId} could not be found.");
+                throw new InvalidOperationException(
+                    $"Document of type {typeof(TDocument).Name} with id {id} in project {projectId} could not be found.");
             }
-            
+
             return foundDocumentOrNull;
         }
 

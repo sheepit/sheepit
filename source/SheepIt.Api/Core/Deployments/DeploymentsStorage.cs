@@ -28,18 +28,5 @@ namespace SheepIt.Api.Core.Deployments
             _database.Deployments
                 .ReplaceOneByIdSync(deployment);
         }
-
-        public Deployment Get(string projectId, int deploymentId)
-        {
-            return _database.Deployments
-                .FindByProjectAndId(projectId, deploymentId);
-        }
-
-        public Deployment[] GetAll(string projectId)
-        {
-            return _database.Deployments
-                .Find(filter => filter.FromProject(projectId))
-                .ToArraySync();
-        }
     }
 }

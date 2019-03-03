@@ -34,7 +34,7 @@ namespace SheepIt.Api.Core.Releases
         public Release Get(string projectId, int releaseId)
         {
             return _database.Releases
-                .FindByProjectAndId(projectId, releaseId);
+                .FindByProjectAndIdSync(projectId, releaseId);
         }
 
         public Release GetNewest(string projectId)
