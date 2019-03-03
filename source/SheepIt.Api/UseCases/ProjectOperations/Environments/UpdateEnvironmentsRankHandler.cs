@@ -32,12 +32,12 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
     public class UpdateEnvironmentsRankHandler : IHandler<UpdateEnvironmentsRankRequest>
     {
         private readonly SheepItDatabase _sheepItDatabase;
-        private readonly Core.Environments.EnvironmentsStorage _environmentsStorage;
+        private readonly Core.Environments.AddEnvironment _addEnvironment;
 
-        public UpdateEnvironmentsRankHandler(SheepItDatabase sheepItDatabase, Core.Environments.EnvironmentsStorage environmentsStorage)
+        public UpdateEnvironmentsRankHandler(SheepItDatabase sheepItDatabase, Core.Environments.AddEnvironment addEnvironment)
         {
             _sheepItDatabase = sheepItDatabase;
-            _environmentsStorage = environmentsStorage;
+            _addEnvironment = addEnvironment;
         }
 
         public async Task Handle(UpdateEnvironmentsRankRequest request)

@@ -14,16 +14,6 @@ namespace SheepIt.Api.Core.Environments
         public string DisplayName { get; set; }
         public int Rank { get; set; }
 
-        public Environment()
-        {
-        }
-        
-        public Environment(string projectId, string displayName)
-        {
-            ProjectId = projectId;
-            DisplayName = displayName;
-        }
-
         public void SetRank(int rank)
         {
             Rank = rank;

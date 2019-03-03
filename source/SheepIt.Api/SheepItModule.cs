@@ -66,7 +66,7 @@ namespace SheepIt.Api
         private void RegisterEntitiesStorage(ContainerBuilder builder)
         {
             builder.RegisterType<DeploymentsStorage>().AsSelf();
-            builder.RegisterType<EnvironmentsStorage>().AsSelf();
+            builder.RegisterType<AddEnvironment>().AsSelf();
             builder.RegisterType<ProjectsStorage>().AsSelf();
             builder.RegisterType<ReleasesStorage>().AsSelf();
         }

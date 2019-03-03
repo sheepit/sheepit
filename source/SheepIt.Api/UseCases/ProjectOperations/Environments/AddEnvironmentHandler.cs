@@ -28,18 +28,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
     public class AddEnvironmentHandler : IHandler<AddEnvironmentRequest>
     {
-        private readonly EnvironmentsStorage _environmentsStorage;
+        private readonly AddEnvironment _addEnvironment;
 
-        public AddEnvironmentHandler(EnvironmentsStorage environmentsStorage)
+        public AddEnvironmentHandler(AddEnvironment addEnvironment)
         {
-            _environmentsStorage = environmentsStorage;
+            _addEnvironment = addEnvironment;
         }
         
         public async Task Handle(AddEnvironmentRequest request)
         {
-            var environment = new Environment(request.ProjectId, request.DisplayName);
-            
-            await _environmentsStorage.Add(environment);
+            await _addEnvironment.Add(request.ProjectId, request.DisplayName);
         }
     }
     

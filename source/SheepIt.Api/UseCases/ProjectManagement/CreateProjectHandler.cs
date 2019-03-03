@@ -33,14 +33,14 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     public class CreateProjectHandler : IHandler<CreateProjectRequest>
     {
         private readonly ProjectsStorage _projectsStorage;
-        private readonly Core.Environments.EnvironmentsStorage _environmentsStorage;
+        private readonly Core.Environments.AddEnvironment _addEnvironment;
         private readonly ReleasesStorage _releasesStorage;
         private readonly DeploymentProcessGitRepositoryFactory _deploymentProcessGitRepositoryFactory;
 
-        public CreateProjectHandler(ProjectsStorage projectsStorage, Core.Environments.EnvironmentsStorage environmentsStorage, ReleasesStorage releasesStorage, DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory)
+        public CreateProjectHandler(ProjectsStorage projectsStorage, Core.Environments.AddEnvironment addEnvironment, ReleasesStorage releasesStorage, DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory)
         {
             _projectsStorage = projectsStorage;
-            _environmentsStorage = environmentsStorage;
+            _addEnvironment = addEnvironment;
             _releasesStorage = releasesStorage;
             _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
         }
@@ -65,9 +65,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         {
             foreach (var environmentName in request.EnvironmentNames)
             {
-                var environment = new Environment(request.ProjectId, environmentName);
-                
-                await _environmentsStorage.Add(environment);
+                await _addEnvironment.Add(request.ProjectId, environmentName);
             }
         }
         
