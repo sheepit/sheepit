@@ -29,7 +29,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         }
     }
 
-    public class UpdateEnvironmentsRankHandler : ISyncHandler<UpdateEnvironmentsRankRequest>
+    public class UpdateEnvironmentsRankHandler : IHandler<UpdateEnvironmentsRankRequest>
     {
         private readonly SheepItDatabase _sheepItDatabase;
         private readonly Core.Environments.EnvironmentsStorage _environmentsStorage;
@@ -40,21 +40,26 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
             _environmentsStorage = environmentsStorage;
         }
 
-        public void Handle(UpdateEnvironmentsRankRequest request)
+        public async Task Handle(UpdateEnvironmentsRankRequest request)
         {
-            var environmentsById = _sheepItDatabase.Environments
+            // todo: use project context
+            var environments = await _sheepItDatabase.Environments
                 .Find(filter => filter.FromProject(request.ProjectId))
-                .ToEnumerable()
+                .ToArray();
+            
+            var environmentsById = environments
                 .IndexBy(environment => environment.Id);
 
             var orderedEnvironments = request.EnvironmentIds
                 .Select(environmentId => environmentsById[environmentId])
                 .ToArray();
 
-            orderedEnvironments.ForEach((environment, index) =>
+            await orderedEnvironments.ForEachAsync(async (environment, index) =>
             {
                 environment.SetRank(index + 1);
-                _environmentsStorage.Update(environment);
+                
+                await _sheepItDatabase.Environments
+                    .ReplaceOneById(environment);
             });
         }
     }
@@ -65,7 +70,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         {
             BuildRegistration.Type<UpdateEnvironmentsRankHandler>()
                 .WithDefaultResponse()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }

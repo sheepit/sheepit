@@ -31,11 +31,5 @@ namespace SheepIt.Api.Core.Environments
 
             return (int) environmentsCount + 1;
         }
-
-        public void Update(Environment environment)
-        {
-            _database.Environments
-                .ReplaceOneByIdSync(environment);
-        }
     }
 }
