@@ -45,7 +45,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         }
     }
 
-    public class GetLastReleaseHandler : ISyncHandler<GetLastReleaseRequest, GetLastReleaseResponse>
+    public class GetLastReleaseHandler : IHandler<GetLastReleaseRequest, GetLastReleaseResponse>
     {
         private readonly ReleasesStorage _releasesStorage;
 
@@ -54,9 +54,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
             _releasesStorage = releasesStorage;
         }
 
-        public GetLastReleaseResponse Handle(GetLastReleaseRequest request)
+        public async Task<GetLastReleaseResponse> Handle(GetLastReleaseRequest request)
         {
-            var release = _releasesStorage.GetNewestSync(request.ProjectId);
+            var release = await _releasesStorage.GetNewest(request.ProjectId);
 
             return new GetLastReleaseResponse
             {
@@ -81,7 +81,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<GetLastReleaseHandler>()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
