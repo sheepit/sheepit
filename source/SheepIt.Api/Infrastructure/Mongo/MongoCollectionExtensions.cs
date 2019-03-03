@@ -21,15 +21,6 @@ namespace SheepIt.Api.Infrastructure.Mongo
 
             return mongoCollection.Find(filterDefinition);
         }
-        
-        [Obsolete("use async version")]
-        public static void ReplaceOneByIdSync<TDocument>(
-            this IMongoCollection<TDocument> mongoCollection,
-            TDocument replacement)
-            where TDocument : IDocument
-        {
-            ReplaceOneById(mongoCollection, replacement);
-        }
 
         public static async Task ReplaceOneById<TDocument>(this IMongoCollection<TDocument> mongoCollection, TDocument replacement)
             where TDocument : IDocument
@@ -52,13 +43,6 @@ namespace SheepIt.Api.Infrastructure.Mongo
             await mongoCollection.ReplaceOneAsync(filterDefinition, replacement);
         }
 
-        [Obsolete("use async version")]
-        public static TDocument FindByIdSync<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, TId id)
-            where TDocument : IDocumentWithId<TId>
-        {
-            return FindById(mongoCollection, id).Result;
-        }
-
         public static async Task<TDocument> FindById<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, TId id)
             where TDocument : IDocumentWithId<TId>
         {
@@ -73,13 +57,6 @@ namespace SheepIt.Api.Infrastructure.Mongo
             }
 
             return foundDocumentOrNull;
-        }
-        
-        [Obsolete("use async version")]
-        public static TDocument FindByProjectAndIdSync<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, string projectId, TId id)
-            where TDocument : IDocumentWithId<TId>, IDocumentInProject
-        {
-            return FindByProjectAndId(mongoCollection, projectId, id).Result;
         }
 
         public static async Task<TDocument> FindByProjectAndId<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, string projectId, TId id)
@@ -98,13 +75,6 @@ namespace SheepIt.Api.Infrastructure.Mongo
             return foundDocumentOrNull;
         }
 
-        [Obsolete("use async version")]
-        public static int GetNextIdSync<TDocument>(this IMongoCollection<TDocument> databaseEnvironments)
-            where TDocument : IDocumentWithId<int>
-        {
-            return GetNextId(databaseEnvironments).Result;
-        }
-        
         public static async Task<int> GetNextId<TDocument>(this IMongoCollection<TDocument> databaseEnvironments)
             where TDocument : IDocumentWithId<int>
         {

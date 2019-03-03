@@ -19,11 +19,11 @@ namespace SheepIt.Api.Core.ProjectContext
 
         public async Task<IProjectContext> Create(string projectId)
         {
-            var project = _database.Projects.FindByIdSync(projectId);
+            var project = await _database.Projects.FindById(projectId);
 
-            var environments = _database.Environments
+            var environments = await _database.Environments
                 .Find(filter => filter.FromProject(projectId))
-                .ToArraySync();
+                .ToArray();
 
             return new ProjectContext(project, environments);
         }

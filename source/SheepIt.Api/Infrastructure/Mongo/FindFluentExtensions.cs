@@ -17,12 +17,6 @@ namespace SheepIt.Api.Infrastructure.Mongo
             return findFluent.Sort(sortDefinition);
         }
 
-        [Obsolete("use async version")]
-        public static TDocument[] ToArraySync<TDocument>(this IFindFluent<TDocument, TDocument> findFluent)
-        {
-            return ToArray(findFluent).Result;
-        }
-
         public static async Task<TDocument[]> ToArray<TDocument>(this IFindFluent<TDocument, TDocument> findFluent)
         {
             var list = await findFluent.ToListAsync();

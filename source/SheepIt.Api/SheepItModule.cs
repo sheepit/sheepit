@@ -21,19 +21,31 @@ namespace SheepIt.Api
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterModule<WebModule>();
-            builder.RegisterModule<MongoDbModule>();
-            builder.RegisterModule<DeploymentProcessModule>();
-            builder.RegisterModule<ProjectContextModule>();
-
             // this is mainly used to resolve handlers before decorating them
             builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
-
-            RegisterEntitiesStorage(builder);
-            RegisterHandlers(builder);
+            
+            RegisterInfrastructure(builder);
+            RegisterCore(builder);
+            RegisterUseCases(builder);
         }
 
-        private void RegisterHandlers(ContainerBuilder builder)
+        private static void RegisterInfrastructure(ContainerBuilder builder)
+        {
+            builder.RegisterModule<WebModule>();
+            builder.RegisterModule<MongoDbModule>();
+        }
+
+        private void RegisterCore(ContainerBuilder builder)
+        {
+            builder.RegisterModule<EnvironmentsModule>();
+            builder.RegisterModule<ProjectContextModule>();
+            
+            builder.RegisterType<DeploymentsStorage>().AsSelf();
+            builder.RegisterType<ReleasesStorage>().AsSelf();
+            builder.RegisterModule<DeploymentProcessModule>();
+        }
+
+        private void RegisterUseCases(ContainerBuilder builder)
         {
             // Dashboard
             builder.RegisterModule<ShowDashboardModule>();
@@ -61,14 +73,6 @@ namespace SheepIt.Api
             builder.RegisterModule<GetReleaseDetailsModule>();
             builder.RegisterModule<UpdateReleaseProcessModule>();
             builder.RegisterModule<UpdateReleaseVariablesModule>();
-        }
-
-        private void RegisterEntitiesStorage(ContainerBuilder builder)
-        {
-            builder.RegisterType<DeploymentsStorage>().AsSelf();
-            builder.RegisterType<AddEnvironment>().AsSelf();
-            builder.RegisterType<ProjectsStorage>().AsSelf();
-            builder.RegisterType<ReleasesStorage>().AsSelf();
         }
     }
 }
