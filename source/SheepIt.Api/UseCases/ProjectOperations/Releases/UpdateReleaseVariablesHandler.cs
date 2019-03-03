@@ -52,7 +52,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
         public UpdateReleaseVariablesResponse Handle(UpdateReleaseVariablesRequest request)
         {
-            var release = _releasesStorage.GetNewest(request.ProjectId);
+            var release = _releasesStorage.GetNewestSync(request.ProjectId);
 
             var variableValues = request.Updates
                 .Select(update => new VariableValues

@@ -37,12 +37,18 @@ namespace SheepIt.Api.Core.Releases
                 .FindByProjectAndIdSync(projectId, releaseId);
         }
 
-        public Release GetNewest(string projectId)
+        [Obsolete("use async version")]
+        public Release GetNewestSync(string projectId)
         {
-            return _database.Releases
+            return GetNewest(projectId).Result;
+        }
+
+        public async Task<Release> GetNewest(string projectId)
+        {
+            return await _database.Releases
                 .Find(filter => filter.FromProject(projectId))
                 .Sort(sort => sort.Descending(release => release.Id))
-                .First();
+                .FirstAsync();
         }
     }
 }

@@ -56,7 +56,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
         public GetLastReleaseResponse Handle(GetLastReleaseRequest request)
         {
-            var release = _releasesStorage.GetNewest(request.ProjectId);
+            var release = _releasesStorage.GetNewestSync(request.ProjectId);
 
             return new GetLastReleaseResponse
             {

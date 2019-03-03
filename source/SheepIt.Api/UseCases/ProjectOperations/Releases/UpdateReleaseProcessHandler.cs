@@ -52,7 +52,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
             var currentCommitSha = _deploymentProcessGitRepositoryFactory.GetCurrentCommitSha(project);
 
-            var release = _releasesStorage.GetNewest(request.ProjectId);
+            var release = _releasesStorage.GetNewestSync(request.ProjectId);
 
             var newRelease = release.WithUpdatedCommitSha(currentCommitSha);
 
