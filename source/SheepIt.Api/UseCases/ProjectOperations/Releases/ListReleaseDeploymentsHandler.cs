@@ -64,11 +64,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
                     filter.OfRelease(options.ReleaseId)
                 ))
                 .SortBy(deployment => deployment.DeployedAt)
-                .ToArray();
+                .ToArraySync();
             
             var environments = sheepItDatabase.Environments
                 .Find(filter => filter.FromProject(options.ProjectId))
-                .ToArray();
+                .ToArraySync();
             
             var deploymentDtos = deployments.Join(
                 inner: environments,

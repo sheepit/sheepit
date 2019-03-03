@@ -45,21 +45,29 @@ namespace SheepIt.Api.Infrastructure.Mongo
             mongoCollection.ReplaceOne(filterDefinition, replacement);
         }
 
-        public static TDocument FindById<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, TId id)
+        [Obsolete("use async version")]
+        public static TDocument FindByIdSync<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, TId id)
             where TDocument : IDocumentWithId<TId>
         {
-            var foundDocumentOrNull = mongoCollection
+            return FindById(mongoCollection, id).Result;
+        }
+
+        public static async Task<TDocument> FindById<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, TId id)
+            where TDocument : IDocumentWithId<TId>
+        {
+            var foundDocumentOrNull = await mongoCollection
                 .Find(filter => filter.WithId(id))
-                .SingleOrDefault();
+                .SingleOrDefaultAsync();
 
             if (foundDocumentOrNull == null)
             {
-                throw new InvalidOperationException($"Document of type {typeof(TDocument).Name} with id {id} could not be found.");
+                throw new InvalidOperationException(
+                    $"Document of type {typeof(TDocument).Name} with id {id} could not be found.");
             }
-            
+
             return foundDocumentOrNull;
         }
-        
+
         public static TDocument FindByProjectAndId<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, string projectId, TId id)
             where TDocument : IDocumentWithId<TId>, IDocumentInProject
         {

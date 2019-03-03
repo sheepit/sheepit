@@ -39,7 +39,7 @@ namespace SheepIt.Api.Core.Deployments
         {
             return _database.Deployments
                 .Find(filter => filter.FromProject(projectId))
-                .ToArray();
+                .ToArraySync();
         }
     }
 }

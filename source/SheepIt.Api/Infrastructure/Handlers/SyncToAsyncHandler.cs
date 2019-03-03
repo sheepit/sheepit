@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using SheepIt.Api.Infrastructure.Resolvers;
 
@@ -24,6 +25,7 @@ namespace SheepIt.Api.Infrastructure.Handlers
 
     public static class SyncToAsyncHandlerExtensions
     {
+        [Obsolete("all handlers should be asynchronous")]
         public static IResolver<IHandler<TRequest, TResponse>> AsAsyncHandler<TRequest, TResponse>(
             this IResolver<ISyncHandler<TRequest, TResponse>> innerResolver)
         {

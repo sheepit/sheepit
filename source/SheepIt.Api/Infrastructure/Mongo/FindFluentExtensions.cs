@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using MongoDB.Driver;
 
 namespace SheepIt.Api.Infrastructure.Mongo
@@ -16,11 +17,18 @@ namespace SheepIt.Api.Infrastructure.Mongo
             return findFluent.Sort(sortDefinition);
         }
 
-        public static TDocument[] ToArray<TDocument>(this IFindFluent<TDocument, TDocument> findFluent)
+        [Obsolete("use async version")]
+        public static TDocument[] ToArraySync<TDocument>(this IFindFluent<TDocument, TDocument> findFluent)
         {
-            return findFluent
-                .ToEnumerable()
-                .ToArray();
+            return ToArray(findFluent).Result;
+        }
+
+        public static async Task<TDocument[]> ToArray<TDocument>(this IFindFluent<TDocument, TDocument> findFluent)
+        {
+            var list = await findFluent.ToListAsync();
+
+            // todo: doesn't seem very efficient
+            return list.ToArray();
         }
     }
 }

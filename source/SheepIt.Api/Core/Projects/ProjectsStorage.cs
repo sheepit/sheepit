@@ -19,12 +19,18 @@ namespace SheepIt.Api.Core.Projects
                 .InsertOneAsync(project);
         }
 
-        public Project Get(string projectId)
+        [Obsolete("use async version")]
+        public Project GetSync(string projectId)
         {
-            return _database.Projects
+            return Get(projectId).Result;
+        }
+
+        public async Task<Project> Get(string projectId)
+        {
+            return await _database.Projects
                 .FindById(projectId);
         }
-        
+
         public void Update(Project project)
         {
             _database.Projects

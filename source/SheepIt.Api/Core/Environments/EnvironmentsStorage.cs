@@ -42,7 +42,7 @@ namespace SheepIt.Api.Core.Environments
         {
             // todo: we need to also check project id, as environment ids will duplicate in the future!
             return _database.Environments
-                .FindById(environmentId);
+                .FindByIdSync(environmentId);
         }
 
         public Environment[] GetAll(string projectId)
@@ -50,7 +50,7 @@ namespace SheepIt.Api.Core.Environments
             return _database.Environments
                 .Find(filter => filter.FromProject(projectId))
                 .Sort(sort => sort.Ascending(environment => environment.Rank))
-                .ToArray();
+                .ToArraySync();
         }
         
         public void Update(Environment environment)

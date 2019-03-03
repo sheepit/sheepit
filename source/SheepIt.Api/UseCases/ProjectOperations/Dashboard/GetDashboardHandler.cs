@@ -85,11 +85,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         {
             var deployments = _database.Deployments
                 .Find(filter => filter.FromProject(options.ProjectId))
-                .ToArray();
+                .ToArraySync();
 
             var releases = _database.Releases
                 .Find(filter => filter.FromProject(options.ProjectId))
-                .ToArray();
+                .ToArraySync();
 
             return new GetDashboardResponse
             {

@@ -48,7 +48,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
         public UpdateReleaseProcessResponse Handle(UpdateReleaseProcessRequest request)
         {
-            var project = _projectsStorage.Get(request.ProjectId);
+            var project = _projectsStorage.GetSync(request.ProjectId);
 
             var currentCommitSha = _deploymentProcessGitRepositoryFactory.GetCurrentCommitSha(project);
 

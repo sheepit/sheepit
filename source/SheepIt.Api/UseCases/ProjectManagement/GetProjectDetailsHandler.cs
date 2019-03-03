@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectManagement
@@ -40,35 +41,41 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         }
     }
 
-    public class GetProjectDetailsHandler : ISyncHandler<GetProjectDetailsRequest, GetProjectDetailsResponse>
+    public class GetProjectDetailsHandler : IHandler<GetProjectDetailsRequest, GetProjectDetailsResponse>
     {
-        private readonly ProjectsStorage _projectsStorage;
-        private readonly EnvironmentsStorage _environmentsStorage;
+        private readonly SheepItDatabase _database;
 
-        public GetProjectDetailsHandler(
-            ProjectsStorage projectsStorage,
-            EnvironmentsStorage environmentsStorage)
+        public GetProjectDetailsHandler(SheepItDatabase database)
         {
-            _projectsStorage = projectsStorage;
-            _environmentsStorage = environmentsStorage;
+            _database = database;
         }
 
-        public GetProjectDetailsResponse Handle(GetProjectDetailsRequest options)
+        public async Task<GetProjectDetailsResponse> Handle(GetProjectDetailsRequest request)
         {
-            var project = _projectsStorage.Get(options.Id);
-
-            var environments = _environmentsStorage.GetAll(options.Id);
+            var project = await _database.Projects
+                .FindById(request.Id);
+            
+            var environments = await _database.Environments
+                .Find(filter => filter.FromProject(request.Id))
+                .Sort(sort => sort.Ascending(environment => environment.Rank)) // todo: create ByRank extension
+                .ToArray();
             
             return new GetProjectDetailsResponse
             {
                 Id = project.Id,
                 RepositoryUrl = project.RepositoryUrl,
                 Environments = environments
-                    .Select(environment => new GetProjectDetailsResponse.EnvironmentDto
-                    {
-                        DisplayName = environment.DisplayName,
-                        EnvironmentId = environment.Id
-                    }).ToArray()
+                    .Select(MapEnvironment)
+                    .ToArray()
+            };
+        }
+
+        private static GetProjectDetailsResponse.EnvironmentDto MapEnvironment(Environment environment)
+        {
+            return new GetProjectDetailsResponse.EnvironmentDto
+            {
+                DisplayName = environment.DisplayName,
+                EnvironmentId = environment.Id
             };
         }
     }
@@ -78,7 +85,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<GetProjectDetailsHandler>()
-                .AsAsyncHandler()
                 .RegisterIn(builder);
         }
     }
