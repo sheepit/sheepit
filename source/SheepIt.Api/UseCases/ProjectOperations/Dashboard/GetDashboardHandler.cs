@@ -70,7 +70,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         }
     }
 
-    public class GetDashboardHandler : ISyncHandler<GetDashboardRequest, GetDashboardResponse>
+    public class GetDashboardHandler : IHandler<GetDashboardRequest, GetDashboardResponse>
     {
         private readonly SheepItDatabase _database;
         private readonly IProjectContext _projectContext;
@@ -81,15 +81,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             _projectContext = projectContext;
         }
 
-        public GetDashboardResponse Handle(GetDashboardRequest options)
+        public async Task<GetDashboardResponse> Handle(GetDashboardRequest options)
         {
-            var deployments = _database.Deployments
+            var deployments = await _database.Deployments
                 .Find(filter => filter.FromProject(options.ProjectId))
-                .ToArraySync();
+                .ToArray();
 
-            var releases = _database.Releases
+            var releases = await _database.Releases
                 .Find(filter => filter.FromProject(options.ProjectId))
-                .ToArraySync();
+                .ToArray();
 
             return new GetDashboardResponse
             {
@@ -105,7 +105,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<GetDashboardHandler>()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }

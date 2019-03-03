@@ -3,7 +3,7 @@ using SheepIt.Api.Core.Releases;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 {
-    public class ReleaseList
+    public static class ReleaseList
     {
         public static GetDashboardResponse.ReleaseDto[] GetReleases(Release[] releases)
         {
