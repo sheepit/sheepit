@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectManagement
@@ -26,22 +27,25 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         }
     }
 
-    public class UpdateProjectHandler : ISyncHandler<UpdateProjectRequest>
+    public class UpdateProjectHandler : IHandler<UpdateProjectRequest>
     {
-        private readonly ProjectsStorage _projectsStorage;
         private readonly IProjectContext _projectContext;
+        private readonly SheepItDatabase _database;
 
-        public UpdateProjectHandler(ProjectsStorage projectsStorage, IProjectContext projectContext)
+        public UpdateProjectHandler(
+            IProjectContext projectContext,
+            SheepItDatabase database)
         {
-            _projectsStorage = projectsStorage;
             _projectContext = projectContext;
+            _database = database;
         }
         
-        public void Handle(UpdateProjectRequest request)
+        public async Task Handle(UpdateProjectRequest request)
         {
             _projectContext.Project.UpdateRepositoryUrl(request.RepositoryUrl);
             
-            _projectsStorage.Update(_projectContext.Project);
+            await _database.Projects
+                .ReplaceOneById(_projectContext.Project);
         }
     }
     
@@ -51,7 +55,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         {
             BuildRegistration.Type<UpdateProjectHandler>()
                 .WithDefaultResponse()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterIn(builder);
         }

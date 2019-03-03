@@ -30,11 +30,5 @@ namespace SheepIt.Api.Core.Projects
             return await _database.Projects
                 .FindById(projectId);
         }
-
-        public void Update(Project project)
-        {
-            _database.Projects
-                .ReplaceOneById(project);
-        }
     }
 }

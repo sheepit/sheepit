@@ -26,7 +26,7 @@ namespace SheepIt.Api.Core.Deployments
         public void Update(Deployment deployment)
         {
             _database.Deployments
-                .ReplaceOneById(deployment);
+                .ReplaceOneByIdSync(deployment);
         }
 
         public Deployment Get(string projectId, int deploymentId)

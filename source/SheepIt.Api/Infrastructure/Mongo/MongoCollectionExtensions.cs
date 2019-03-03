@@ -22,27 +22,44 @@ namespace SheepIt.Api.Infrastructure.Mongo
             return mongoCollection.Find(filterDefinition);
         }
         
-        public static void ReplaceOneById<TDocument>(
+        [Obsolete("use async version")]
+        public static void ReplaceOneByIdSync<TDocument>(
             this IMongoCollection<TDocument> mongoCollection,
             TDocument replacement)
             where TDocument : IDocument
         {
-            mongoCollection.ReplaceOne(
+            ReplaceOneById(mongoCollection, replacement);
+        }
+
+        public static async Task ReplaceOneById<TDocument>(this IMongoCollection<TDocument> mongoCollection, TDocument replacement)
+            where TDocument : IDocument
+        {
+            await mongoCollection.ReplaceOne(
                 filter => filter.WithObjectId(replacement.ObjectId),
                 replacement
             );
         }
-        
-        public static void ReplaceOne<TDocument>(
+
+        [Obsolete("use async version")]
+        public static void ReplaceOneSync<TDocument>(
             this IMongoCollection<TDocument> mongoCollection,
             Func<FilterDefinitionBuilder<TDocument>, FilterDefinition<TDocument>> buildFilter,
             TDocument replacement)
             where TDocument : IDocument
         {
+            ReplaceOne(mongoCollection, buildFilter, replacement).Wait();
+        }
+
+        public static async Task ReplaceOne<TDocument>(
+            this IMongoCollection<TDocument> mongoCollection, Func<FilterDefinitionBuilder<TDocument>,
+            FilterDefinition<TDocument>> buildFilter,
+            TDocument replacement)
+            where TDocument : IDocument
+        {
             var filterDefinitionBuilder = Builders<TDocument>.Filter;
             var filterDefinition = buildFilter(filterDefinitionBuilder);
-            
-            mongoCollection.ReplaceOne(filterDefinition, replacement);
+
+            await mongoCollection.ReplaceOneAsync(filterDefinition, replacement);
         }
 
         [Obsolete("use async version")]

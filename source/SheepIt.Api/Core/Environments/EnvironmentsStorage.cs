@@ -56,7 +56,7 @@ namespace SheepIt.Api.Core.Environments
         public void Update(Environment environment)
         {
             _database.Environments
-                .ReplaceOneById(environment);
+                .ReplaceOneByIdSync(environment);
         }
     }
 }
