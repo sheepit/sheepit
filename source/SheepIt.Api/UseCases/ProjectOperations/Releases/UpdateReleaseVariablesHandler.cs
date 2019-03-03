@@ -41,7 +41,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         }
     }
 
-    public class UpdateReleaseVariablesHandler : ISyncHandler<UpdateReleaseVariablesRequest, UpdateReleaseVariablesResponse>
+    public class UpdateReleaseVariablesHandler : IHandler<UpdateReleaseVariablesRequest, UpdateReleaseVariablesResponse>
     {
         private readonly ReleasesStorage _releasesStorage;
 
@@ -50,9 +50,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
             _releasesStorage = releasesStorage;
         }
 
-        public UpdateReleaseVariablesResponse Handle(UpdateReleaseVariablesRequest request)
+        public async Task<UpdateReleaseVariablesResponse> Handle(UpdateReleaseVariablesRequest request)
         {
-            var release = _releasesStorage.GetNewestSync(request.ProjectId);
+            var release = await _releasesStorage.GetNewest(request.ProjectId);
 
             var variableValues = request.Updates
                 .Select(update => new VariableValues
@@ -65,7 +65,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
             var newRelease = release.WithUpdatedVariables(variableValues);
 
-            var newReleaseId = _releasesStorage.AddSync(newRelease);
+            var newReleaseId = await _releasesStorage.Add(newRelease);
 
             return new UpdateReleaseVariablesResponse
             {
@@ -79,7 +79,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<UpdateReleaseVariablesHandler>()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
