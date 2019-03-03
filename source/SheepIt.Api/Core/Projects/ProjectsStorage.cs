@@ -1,4 +1,6 @@
-﻿using SheepIt.Api.Infrastructure.Mongo;
+﻿using System;
+using System.Threading.Tasks;
+using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Core.Projects
 {
@@ -11,10 +13,10 @@ namespace SheepIt.Api.Core.Projects
             _database = database;
         }
 
-        public void Add(Project project)
+        public async Task Add(Project project)
         {
-            _database.Projects
-                .InsertOne(project);
+            await _database.Projects
+                .InsertOneAsync(project);
         }
 
         public Project Get(string projectId)

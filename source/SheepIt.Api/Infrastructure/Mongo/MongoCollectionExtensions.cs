@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using MongoDB.Driver;
 
 namespace SheepIt.Api.Infrastructure.Mongo
@@ -74,13 +75,20 @@ namespace SheepIt.Api.Infrastructure.Mongo
             return foundDocumentOrNull;
         }
 
-        public static int GetNextId<TDocument>(this IMongoCollection<TDocument> databaseEnvironments)
+        [Obsolete("use async version")]
+        public static int GetNextIdSync<TDocument>(this IMongoCollection<TDocument> databaseEnvironments)
             where TDocument : IDocumentWithId<int>
         {
-            var lastDocumentOrNull = databaseEnvironments
+            return GetNextId(databaseEnvironments).Result;
+        }
+        
+        public static async Task<int> GetNextId<TDocument>(this IMongoCollection<TDocument> databaseEnvironments)
+            where TDocument : IDocumentWithId<int>
+        {
+            var lastDocumentOrNull = await databaseEnvironments
                 .FindAll()
                 .Sort(sort => sort.Descending(document => document.Id))
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             var currentId = lastDocumentOrNull?.Id ?? 0;
 

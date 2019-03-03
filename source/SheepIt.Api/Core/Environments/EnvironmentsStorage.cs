@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Core.Environments
@@ -11,14 +13,20 @@ namespace SheepIt.Api.Core.Environments
             _database = database;
         }
 
-        public void Add(Environment environment)
+        [Obsolete("use async version")]
+        public void AddSync(Environment environment)
+        {
+            Add(environment).Wait();
+        }
+        
+        public async Task Add(Environment environment)
         {
             // todo: we should set rank and id when creating document, not when saving it, IMO
             environment.SetRank(GetNextRank(environment));
-            environment.Id = _database.Environments.GetNextId();
+            environment.Id = _database.Environments.GetNextIdSync();
             
-            _database.Environments
-                .InsertOne(environment);
+            await _database.Environments
+                .InsertOneAsync(environment);
         }
 
         private int GetNextRank(Environment environment)

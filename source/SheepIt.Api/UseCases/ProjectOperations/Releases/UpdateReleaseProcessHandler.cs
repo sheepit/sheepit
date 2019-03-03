@@ -56,7 +56,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
             var newRelease = release.WithUpdatedCommitSha(currentCommitSha);
 
-            var releaseId = _releasesStorage.Add(newRelease);
+            var releaseId = _releasesStorage.AddSync(newRelease);
 
             return new UpdateReleaseProcessResponse
             {

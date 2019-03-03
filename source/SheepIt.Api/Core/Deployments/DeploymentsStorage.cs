@@ -13,7 +13,7 @@ namespace SheepIt.Api.Core.Deployments
 
         public int Add(Deployment deployment)
         {
-            var nextId = _database.Deployments.GetNextId();
+            var nextId = _database.Deployments.GetNextIdSync();
             
             deployment.Id = nextId;
 

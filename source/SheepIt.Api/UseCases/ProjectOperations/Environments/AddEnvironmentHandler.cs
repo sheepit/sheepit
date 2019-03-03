@@ -39,7 +39,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         {
             var environment = new Environment(request.ProjectId, request.DisplayName);
             
-            _environmentsStorage.Add(environment);
+            _environmentsStorage.AddSync(environment);
         }
     }
     

@@ -60,7 +60,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
             
             var newRelease = release.WithNewVariables(variableValues);
 
-            _releasesStorage.Add(newRelease);
+            _releasesStorage.AddSync(newRelease);
         }
     }
     

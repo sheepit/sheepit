@@ -14,6 +14,7 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
             _deploymentProcessSettings = deploymentProcessSettings;
         }
 
+        // todo: make async
         public string GetCurrentCommitSha(Project project)
         {
             var repositoryWorkingDir = _deploymentProcessSettings.WorkingDir

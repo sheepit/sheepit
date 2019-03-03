@@ -1,4 +1,6 @@
-﻿using MongoDB.Driver;
+﻿using System;
+using System.Threading.Tasks;
+using MongoDB.Driver;
 using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Core.Releases
@@ -12,13 +14,19 @@ namespace SheepIt.Api.Core.Releases
             _database = database;
         }
 
-        public int Add(Release release)
+        [Obsolete("use async version")]
+        public int AddSync(Release release)
         {
-            var nextId = _database.Releases.GetNextId();
+            return Add(release).Result;
+        }
+        
+        public async Task<int> Add(Release release)
+        {
+            var nextId = await _database.Releases.GetNextId();
             
             release.Id = nextId;
 
-            _database.Releases.InsertOne(release);
+            await _database.Releases.InsertOneAsync(release);
 
             return nextId;
         }

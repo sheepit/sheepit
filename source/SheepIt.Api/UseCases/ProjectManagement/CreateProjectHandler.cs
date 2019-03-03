@@ -30,7 +30,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         }
     }
 
-    public class CreateProjectHandler : ISyncHandler<CreateProjectRequest>
+    public class CreateProjectHandler : IHandler<CreateProjectRequest>
     {
         private readonly ProjectsStorage _projectsStorage;
         private readonly Core.Environments.EnvironmentsStorage _environmentsStorage;
@@ -45,7 +45,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
         }
 
-        public void Handle(CreateProjectRequest request)
+        public async Task Handle(CreateProjectRequest request)
         {
             var project = new Project
             {
@@ -53,29 +53,29 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 RepositoryUrl = request.RepositoryUrl
             };
 
-            _projectsStorage.Add(project);
+            await _projectsStorage.Add(project);
 
-            CreateEnvironments(request);
+            await CreateEnvironments(request);
 
             // first release is created so other operations can copy it
-            CreateFirstRelease(project);
+            await CreateFirstRelease(project);
         }
 
-        private void CreateEnvironments(CreateProjectRequest request)
+        private async Task CreateEnvironments(CreateProjectRequest request)
         {
             foreach (var environmentName in request.EnvironmentNames)
             {
                 var environment = new Environment(request.ProjectId, environmentName);
                 
-                _environmentsStorage.Add(environment);
+                await _environmentsStorage.Add(environment);
             }
         }
         
-        private void CreateFirstRelease(Project project)
+        private async Task CreateFirstRelease(Project project)
         {
             var currentCommitSha = _deploymentProcessGitRepositoryFactory.GetCurrentCommitSha(project);
 
-            _releasesStorage.Add(new Release
+            await _releasesStorage.Add(new Release
             {
                 Variables = new VariableCollection(),
                 CommitSha = currentCommitSha,
@@ -91,7 +91,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         {
             BuildRegistration.Type<CreateProjectHandler>()
                 .WithDefaultResponse()
-                .AsAsyncHandler()
                 .RegisterIn(builder);
         }
     }

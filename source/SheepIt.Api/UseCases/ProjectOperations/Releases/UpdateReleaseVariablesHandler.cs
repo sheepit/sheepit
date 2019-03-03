@@ -65,7 +65,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
             var newRelease = release.WithUpdatedVariables(variableValues);
 
-            var newReleaseId = _releasesStorage.Add(newRelease);
+            var newReleaseId = _releasesStorage.AddSync(newRelease);
 
             return new UpdateReleaseVariablesResponse
             {
