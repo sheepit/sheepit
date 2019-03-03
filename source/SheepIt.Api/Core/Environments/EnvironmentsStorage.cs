@@ -32,21 +32,6 @@ namespace SheepIt.Api.Core.Environments
             return (int) environmentsCount + 1;
         }
 
-        public Environment Get(int environmentId)
-        {
-            // todo: we need to also check project id, as environment ids will duplicate in the future!
-            return _database.Environments
-                .FindByIdSync(environmentId);
-        }
-
-        public Environment[] GetAll(string projectId)
-        {
-            return _database.Environments
-                .Find(filter => filter.FromProject(projectId))
-                .Sort(sort => sort.Ascending(environment => environment.Rank))
-                .ToArraySync();
-        }
-        
         public void Update(Environment environment)
         {
             _database.Environments

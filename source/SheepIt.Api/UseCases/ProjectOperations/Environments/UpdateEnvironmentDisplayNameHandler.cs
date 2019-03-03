@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Environments
@@ -27,23 +28,25 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         }
     }
 
-    public class UpdateEnvironmentDisplayNameHandler : ISyncHandler<UpdateEnvironmentDisplayNameRequest>
+    public class UpdateEnvironmentDisplayNameHandler : IHandler<UpdateEnvironmentDisplayNameRequest>
     {
-        private readonly EnvironmentsStorage _environmentsStorage;
+        private readonly SheepItDatabase _database;
 
-        public UpdateEnvironmentDisplayNameHandler(EnvironmentsStorage environmentsStorage)
+        public UpdateEnvironmentDisplayNameHandler(SheepItDatabase database)
         {
-            _environmentsStorage = environmentsStorage;
+            _database = database;
         }
         
-        public void Handle(UpdateEnvironmentDisplayNameRequest request)
+        public async Task Handle(UpdateEnvironmentDisplayNameRequest request)
         {
-            // todo: [rt] check project id or use IProjectContext.Environments
-            var environment = _environmentsStorage.Get(request.EnvironmentId);
+            // todo: [rt] use IProjectContext.Environments, add method GetEnvironmentById or sth
+            var environment = await _database.Environments
+                .FindByProjectAndId(request.ProjectId, request.EnvironmentId);
 
             environment.UpdateDisplayName(request.DisplayName);
             
-            _environmentsStorage.Update(environment);
+            await _database.Environments
+                .ReplaceOneById(environment);
         }
     }
     
@@ -53,7 +56,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         {
             BuildRegistration.Type<UpdateEnvironmentDisplayNameHandler>()
                 .WithDefaultResponse()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }

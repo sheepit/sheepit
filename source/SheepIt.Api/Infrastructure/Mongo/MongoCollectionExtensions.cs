@@ -40,16 +40,6 @@ namespace SheepIt.Api.Infrastructure.Mongo
             );
         }
 
-        [Obsolete("use async version")]
-        public static void ReplaceOneSync<TDocument>(
-            this IMongoCollection<TDocument> mongoCollection,
-            Func<FilterDefinitionBuilder<TDocument>, FilterDefinition<TDocument>> buildFilter,
-            TDocument replacement)
-            where TDocument : IDocument
-        {
-            ReplaceOne(mongoCollection, buildFilter, replacement).Wait();
-        }
-
         public static async Task ReplaceOne<TDocument>(
             this IMongoCollection<TDocument> mongoCollection, Func<FilterDefinitionBuilder<TDocument>,
             FilterDefinition<TDocument>> buildFilter,
