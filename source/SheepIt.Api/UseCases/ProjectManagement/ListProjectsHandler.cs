@@ -37,31 +37,31 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         }
     }
 
-    public class ListProjectsHandler : ISyncHandler<ListProjectsRequest, ListProjectsResponse>
+    public class ListProjectsHandler : IHandler<ListProjectsRequest, ListProjectsResponse>
     {
-        private readonly SheepItDatabase sheepItDatabase;
+        private readonly SheepItDatabase _database;
 
-        public ListProjectsHandler(SheepItDatabase sheepItDatabase)
+        public ListProjectsHandler(SheepItDatabase database)
         {
-            this.sheepItDatabase = sheepItDatabase;
+            _database = database;
         }
 
-        public ListProjectsResponse Handle(ListProjectsRequest options)
+        public async Task<ListProjectsResponse> Handle(ListProjectsRequest request)
         {
-            var projects = sheepItDatabase.Projects
+            var projects = await _database.Projects
                 .FindAll()
                 .SortBy(deployment => deployment.Id)
-                .ToEnumerable()
-                .Select(Map)
                 .ToArray();
 
             return new ListProjectsResponse
             {
                 Projects = projects
+                    .Select(MapProject)
+                    .ToArray()
             };
         }
 
-        private ListProjectsResponse.ProjectDto Map(Project project)
+        private ListProjectsResponse.ProjectDto MapProject(Project project)
         {
             return new ListProjectsResponse.ProjectDto
             {
@@ -76,7 +76,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<ListProjectsHandler>()
-                .AsAsyncHandler()
                 .RegisterIn(builder);
         }
     }
