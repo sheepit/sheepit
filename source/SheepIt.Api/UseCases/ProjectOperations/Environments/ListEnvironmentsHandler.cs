@@ -80,7 +80,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
             BuildRegistration.Type<ListEnvironmentsHandler>()
                 .AsAsyncHandler()
                 .InProjectContext()
-                .RegisterIn(builder);
+                .RegisterAsHandlerIn(builder);
         }
     }
 }

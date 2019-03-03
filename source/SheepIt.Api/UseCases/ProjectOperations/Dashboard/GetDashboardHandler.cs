@@ -107,7 +107,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             BuildRegistration.Type<GetDashboardHandler>()
                 .AsAsyncHandler()
                 .InProjectContext()
-                .RegisterIn(builder);
+                .RegisterAsHandlerIn(builder);
         }
     }
 }

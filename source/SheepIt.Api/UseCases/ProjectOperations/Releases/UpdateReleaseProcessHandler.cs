@@ -73,7 +73,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
             BuildRegistration.Type<UpdateReleaseProcessHandler>()
                 .AsAsyncHandler()
                 .InProjectContext()
-                .RegisterIn(builder);
+                .RegisterAsHandlerIn(builder);
         }
     }
 }

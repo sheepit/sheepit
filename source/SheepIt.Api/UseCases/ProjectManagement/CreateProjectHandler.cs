@@ -91,7 +91,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         {
             BuildRegistration.Type<CreateProjectHandler>()
                 .WithDefaultResponse()
-                .RegisterIn(builder);
+                .RegisterAsHandlerIn(builder);
         }
     }
 }

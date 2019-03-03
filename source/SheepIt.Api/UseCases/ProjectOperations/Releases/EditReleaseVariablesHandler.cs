@@ -72,7 +72,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
                 .WithDefaultResponse()
                 .AsAsyncHandler()
                 .InProjectContext()
-                .RegisterIn(builder);
+                .RegisterAsHandlerIn(builder);
         }
     }
 }

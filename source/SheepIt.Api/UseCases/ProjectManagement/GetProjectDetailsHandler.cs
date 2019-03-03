@@ -85,7 +85,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<GetProjectDetailsHandler>()
-                .RegisterIn(builder);
+                .RegisterAsHandlerIn(builder);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             BuildRegistration.Type<UpdateProjectHandler>()
                 .WithDefaultResponse()
                 .InProjectContext()
-                .RegisterIn(builder);
+                .RegisterAsHandlerIn(builder);
         }
     }
 }
