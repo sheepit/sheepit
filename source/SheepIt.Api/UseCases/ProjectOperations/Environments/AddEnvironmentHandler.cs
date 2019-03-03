@@ -26,7 +26,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         }
     }
 
-    public class AddEnvironmentHandler : ISyncHandler<AddEnvironmentRequest>
+    public class AddEnvironmentHandler : IHandler<AddEnvironmentRequest>
     {
         private readonly EnvironmentsStorage _environmentsStorage;
 
@@ -35,11 +35,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
             _environmentsStorage = environmentsStorage;
         }
         
-        public void Handle(AddEnvironmentRequest request)
+        public async Task Handle(AddEnvironmentRequest request)
         {
             var environment = new Environment(request.ProjectId, request.DisplayName);
             
-            _environmentsStorage.AddSync(environment);
+            await _environmentsStorage.Add(environment);
         }
     }
     
@@ -49,7 +49,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         {
             BuildRegistration.Type<AddEnvironmentHandler>()
                 .WithDefaultResponse()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }

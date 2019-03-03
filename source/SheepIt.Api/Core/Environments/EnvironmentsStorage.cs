@@ -13,17 +13,11 @@ namespace SheepIt.Api.Core.Environments
             _database = database;
         }
 
-        [Obsolete("use async version")]
-        public void AddSync(Environment environment)
-        {
-            Add(environment).Wait();
-        }
-        
         public async Task Add(Environment environment)
         {
             // todo: we should set rank and id when creating document, not when saving it, IMO
             environment.SetRank(GetNextRank(environment));
-            environment.Id = _database.Environments.GetNextIdSync();
+            environment.Id = await _database.Environments.GetNextId();
             
             await _database.Environments
                 .InsertOneAsync(environment);
