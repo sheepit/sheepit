@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Releases
@@ -45,21 +45,19 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         }
     }
 
-    public class GetReleaseDetailsHandler : ISyncHandler<GetReleaseDetailsRequest, GetReleaseDetailsResponse>
+    public class GetReleaseDetailsHandler : IHandler<GetReleaseDetailsRequest, GetReleaseDetailsResponse>
     {
-        private readonly ReleasesStorage _releasesStorage;
+        private readonly SheepItDatabase _database;
 
-        public GetReleaseDetailsHandler(ReleasesStorage releasesStorage)
+        public GetReleaseDetailsHandler(SheepItDatabase database)
         {
-            _releasesStorage = releasesStorage;
+            _database = database;
         }
 
-        public GetReleaseDetailsResponse Handle(GetReleaseDetailsRequest request)
+        public async Task<GetReleaseDetailsResponse> Handle(GetReleaseDetailsRequest request)
         {
-            var release = _releasesStorage.Get(
-                projectId: request.ProjectId,
-                releaseId: request.ReleaseId
-            );
+            var release = await _database.Releases
+                .FindByProjectAndId(request.ProjectId, request.ReleaseId);
 
             return new GetReleaseDetailsResponse
             {
@@ -84,7 +82,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<GetReleaseDetailsHandler>()
-                .AsAsyncHandler()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
