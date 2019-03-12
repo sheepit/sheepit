@@ -5,9 +5,13 @@
 </template>
 
 <script>
+import VueRouter from 'vue-router';
+
+import Default from './pages/default.vue'
 import Navigation from './components/layout/navigation.vue'
 import ProjectLayout from './pages/project/project-layout.vue'
 import Project from './pages/project/project.vue'
+import CreateProject from './pages/project/create-project.vue'
 
 const router = new VueRouter({
     routes: [
@@ -50,12 +54,12 @@ const router = new VueRouter({
         {
             path: '/',
             name: 'default',
-            component: httpVueLoader('default.vue')
+            component: Default
         },
         {
             path: '/create-project',
             name: 'create-project',
-            component: httpVueLoader('create-project.vue')
+            component: CreateProject
         }
     ]
 });
@@ -85,6 +89,14 @@ export default {
                 .then(response => this.projects = response.projects)
         }
     }
+}
+
+function loadProjects() {
+    return fetch('https://localhost:44380/api/list-projects')
+        .then(response => {
+            debugger;
+            response.json()
+            })
 }
 </script>
 
