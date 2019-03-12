@@ -85,9 +85,8 @@ export default {
 
     methods: {
         updateProjects() {
-            return null;
-            // return loadProjects()
-            //     .then(response => this.projects = response.projects)
+            return loadProjects()
+                .then(response => this.projects = response.projects)
         }
     }
 }
