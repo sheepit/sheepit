@@ -41,13 +41,17 @@
 </template>
 
 <script>
-    module.exports = {
+    import ProjectDashboard from "./project-dashboard.vue";
+    // import ProjectReleases from "./project-releases.vue";
+    // import ProjectDeployments from "./project-deployments.vue";
+
+    export default {
         name: 'project',
         
         components: {
-            'project-dashboard': httpVueLoader('project-dashboard.vue'),
-            'project-releases': httpVueLoader('project-releases.vue'),
-            'project-deployments': httpVueLoader('project-deployments.vue')
+            'project-dashboard': ProjectDashboard,
+            // 'project-releases': ProjectReleases,
+            // 'project-deployments': ProjectDeployments
         },
         
         props: [

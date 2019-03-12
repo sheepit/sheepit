@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    module.exports = {
+    export default {
         name: 'proj',
         
         props: ['projects'],
@@ -13,8 +13,7 @@
         computed: {
             project() {
                 return this.projects
-                    .filter(project => project.id === this.$route.params.projectId)
-                    [0]
+                    .filter(project => project.id === this.$route.params.projectId)[0]
             }
         },
     }

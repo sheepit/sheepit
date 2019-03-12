@@ -6,62 +6,68 @@
 
 <script>
 import Navigation from './components/layout/navigation.vue'
+import ProjectLayout from './pages/project/project-layout.vue'
+import Project from './pages/project/project.vue'
+
+const router = new VueRouter({
+    routes: [
+        {
+            path: '/project/:projectId',
+            component: ProjectLayout,
+            children: [
+                {
+                    path: '',
+                    name: 'project',
+                    component: Project
+                },
+                // {
+                //     path: 'edit',
+                //     name: 'edit-project',
+                //     component: httpVueLoader('edit-project.vue')
+                // },
+                // {
+                //     path: 'create-release',
+                //     name: 'create-release',
+                //     component: httpVueLoader('create-release.vue')
+                // },
+                // {
+                //     path: 'deployment-details/:deploymentId',
+                //     name: 'deployment-details',
+                //     component: httpVueLoader('deployment-details.vue')
+                // },
+                // {
+                //     path: 'deploy-release/:releaseId',
+                //     name: 'deploy-release',
+                //     component: httpVueLoader('deploy-release.vue')
+                // },
+                // {
+                //     path: 'release-details/:releaseId',
+                //     name: 'release-details',
+                //     component: httpVueLoader('release-details.vue')
+                // }
+            ]
+        },
+        {
+            path: '/',
+            name: 'default',
+            component: httpVueLoader('default.vue')
+        },
+        {
+            path: '/create-project',
+            name: 'create-project',
+            component: httpVueLoader('create-project.vue')
+        }
+    ]
+});
 
 export default {
     name: 'app',
+
     components: {
         Navigation
     },
-    router: new VueRouter({
-        routes: [
-            {
-                path: '/project/:projectId',
-                component: httpVueLoader('project-layout.vue'),
-                children: [
-                    {
-                        path: '',
-                        name: 'project',
-                        component: httpVueLoader('project.vue')
-                    },
-                    {
-                        path: 'edit',
-                        name: 'edit-project',
-                        component: httpVueLoader('edit-project.vue')
-                    },
-                    {
-                        path: 'create-release',
-                        name: 'create-release',
-                        component: httpVueLoader('create-release.vue')
-                    },
-                    {
-                        path: 'deployment-details/:deploymentId',
-                        name: 'deployment-details',
-                        component: httpVueLoader('deployment-details.vue')
-                    },
-                    {
-                        path: 'deploy-release/:releaseId',
-                        name: 'deploy-release',
-                        component: httpVueLoader('deploy-release.vue')
-                    },
-                    {
-                        path: 'release-details/:releaseId',
-                        name: 'release-details',
-                        component: httpVueLoader('release-details.vue')
-                    }
-                ]
-            },
-            {
-                path: '/',
-                name: 'default',
-                component: httpVueLoader('default.vue')
-            },
-            {
-                path: '/create-project',
-                name: 'create-project',
-                component: httpVueLoader('create-project.vue')
-            }
-        ]
-    }),
+
+    router,
 
     data() {
         return {

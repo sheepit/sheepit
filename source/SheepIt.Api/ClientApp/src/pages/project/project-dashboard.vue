@@ -1,7 +1,7 @@
 <template>
 
     <div class="row">
-        <div v-for="(environment, index) in environments" class="col-md-3">
+        <div v-for="environment in environments" class="col-md-3">
             <div class="card">
                 <div class="card-header">
                     {{ environment.displayName }}
@@ -31,17 +31,17 @@
 </template>
 
 <script>
-    module.exports = {
-        name: "project-dashboard",
+export default {
+    name: "project-dashboard",
 
-        props: [
-            'project',
-            'environments'
-        ],
+    props: [
+        'project',
+        'environments'
+    ],
 
-        data() {
-            return {
-            }
+    data() {
+        return {
         }
-    };
+    }
+};
 </script>
