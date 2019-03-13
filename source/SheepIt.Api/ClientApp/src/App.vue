@@ -1,6 +1,14 @@
 <template>
     <div id="app">
-        <Navigation/>
+        <div class="container">
+
+            <navigation v-bind:projects="projects"></navigation>
+            
+            <main class="mt-5">
+                <router-view v-bind:projects="projects"></router-view>
+            </main>
+
+        </div>
     </div>
 </template>
 
@@ -87,15 +95,9 @@ export default {
 
     methods: {
         updateProjects() {
-            debugger;
-            
             return HttpService
                 .getData('https://localhost:44380/api/list-projects', null)
-                .then(response => {
-                    debugger;
-                    let a = response.json()
-                    return a;
-                })
+                .then(response => response.json())
                 .then(response => this.projects = response.projects)
         }
     }
