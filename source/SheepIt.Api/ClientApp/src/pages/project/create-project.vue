@@ -26,34 +26,33 @@
 </template>
 
 <script>
-    export default {
-        name: "create-project",
-        data() {
-            return {
-                projectId: "",
-                repositoryUrl: "",
-                environments: ['']
-            }
+export default {
+    name: "create-project",
+    data() {
+        return {
+            projectId: "",
+            repositoryUrl: "",
+            environments: ['']
+        }
+    },
+    methods: {
+        create: function () {
+            createProject(this.projectId, this.repositoryUrl, this.environments)
+                .then(() => window.app.updateProjects())
+                .then(() => this.$router.push({ name: 'project', params: { projectId: this.projectId }}))
         },
-        methods: {
-            create: function () {
-                createProject(this.projectId, this.repositoryUrl, this.environments)
-                    .then(() => window.app.updateProjects())
-                    .then(() => this.$router.push({ name: 'project', params: { projectId: this.projectId }}))
-            },
 
-            newEnvironment: function () {
-                this.environments.push('');
-            }
+        newEnvironment: function () {
+            this.environments.push('');
         }
     }
+}
 
-    function createProject(projectId, repositoryUrl, environmentNames) {
-        return postData('api/create-project', {
-            projectId: projectId,
-            repositoryUrl: repositoryUrl,
-            environmentNames: environmentNames
-        })
-    }
-    
+function createProject(projectId, repositoryUrl, environmentNames) {
+    return postData('api/create-project', {
+        projectId: projectId,
+        repositoryUrl: repositoryUrl,
+        environmentNames: environmentNames
+    })
+}    
 </script>

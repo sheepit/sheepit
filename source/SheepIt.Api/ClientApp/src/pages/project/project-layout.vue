@@ -5,16 +5,16 @@
 </template>
 
 <script>
-    export default {
-        name: 'proj',
-        
-        props: ['projects'],
+export default {
+    name: 'proj',
+    
+    props: ['projects'],
 
-        computed: {
-            project() {
-                return this.projects
-                    .filter(project => project.id === this.$route.params.projectId)[0]
-            }
-        },
-    }
+    computed: {
+        project() {
+            return this.projects
+                .filter(project => project.id === this.$route.params.projectId)[0]
+        }
+    },
+}
 </script>

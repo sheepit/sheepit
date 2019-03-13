@@ -41,71 +41,71 @@
 </template>
 
 <script>
-    import HttpService from "./http-service.js";
+import HttpService from "./http-service.js";
 
-    import ProjectDashboard from "./project-dashboard.vue";
-    // import ProjectReleases from "./project-releases.vue";
-    // import ProjectDeployments from "./project-deployments.vue";
+import ProjectDashboard from "./project-dashboard.vue";
+import ProjectReleases from "./project-releases.vue";
+import ProjectDeployments from "./project-deployments.vue";
 
-    export default {
-        name: 'project',
-        
-        components: {
-            'project-dashboard': ProjectDashboard,
-            // 'project-releases': ProjectReleases,
-            // 'project-deployments': ProjectDeployments
-        },
-        
-        props: [
-            'project'
-        ],
-        
-        data() {
-            return {
-                environments: []
-            }
-        },
-        
-        watch: {
-            'project': 'getDashboard'
-        },
-
-        created() {
-            this.getDashboard();
-        },
-
-        methods: {
-            getDashboard() {
-                ProjectService
-                    .getDashboard(this.project.id)
-                    .then(response => {
-                        this.environments = response.environments
-                        this.deployments = response.deployments
-                        this.releases = response.releases
-                    });
-            },
-
-            updateProcess() {
-                ProjectService
-                    .updateProcess(this.project.id)
-                    .then(() => window.app.updateProjects())
-            }
-        }
-    };
+export default {
+    name: 'project',
     
-    class ProjectService {
-        httpService = new HttpService();
-
-        getDashboard(projectId) {
-            return this.httpService
-                .postData('api/project/dashboard/get-dashboard', { projectId })
-                .then(response => response.json())
+    components: {
+        'project-dashboard': ProjectDashboard,
+        'project-releases': ProjectReleases,
+        'project-deployments': ProjectDeployments
+    },
+    
+    props: [
+        'project'
+    ],
+    
+    data() {
+        return {
+            environments: []
         }
+    },
+    
+    watch: {
+        'project': 'getDashboard'
+    },
 
-        updateProcess(projectId) {
-            return this.httpService
-                .postData('api/project/release/update-release-process', { projectId })
-                .then(response => response.json())
+    created() {
+        this.getDashboard();
+    },
+
+    methods: {
+        getDashboard() {
+            ProjectService
+                .getDashboard(this.project.id)
+                .then(response => {
+                    this.environments = response.environments
+                    this.deployments = response.deployments
+                    this.releases = response.releases
+                });
+        },
+
+        updateProcess() {
+            ProjectService
+                .updateProcess(this.project.id)
+                .then(() => window.app.updateProjects())
         }
     }
+};
+
+class ProjectService {
+    httpService = new HttpService();
+
+    getDashboard(projectId) {
+        return this.httpService
+            .postData('api/project/dashboard/get-dashboard', { projectId })
+            .then(response => response.json())
+    }
+
+    updateProcess(projectId) {
+        return this.httpService
+            .postData('api/project/release/update-release-process', { projectId })
+            .then(response => response.json())
+    }
+}
 </script>

@@ -13,8 +13,8 @@
 </template>
 
 <script>
-    module.exports = {
-        name: 'project-breadcrumbs',
-        props: ['projectId']
-    }
+export default {
+    name: 'project-breadcrumbs',
+    props: ['projectId']
+}
 </script>

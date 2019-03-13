@@ -36,12 +36,12 @@
 </template>
 
 <script>
-    module.exports = {
-        name: "project-deployments",
+export default {
+    name: "project-deployments",
 
-        props: [
-            'project',
-            'deployments'
-        ]
-    };
+    props: [
+        'project',
+        'deployments'
+    ]
+};
 </script>

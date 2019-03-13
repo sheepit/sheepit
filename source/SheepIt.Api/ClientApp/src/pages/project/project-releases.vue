@@ -36,18 +36,18 @@
 </template>
 
 <script>
-    module.exports = {
-        name: "project-releases",
+export default {
+    name: "project-releases",
 
-        props: [
-            'project',
-            'releases'
-        ],
-        
-        methods: {
-            shortCommitSha(commitSha) {
-                return commitSha.substring(0, 7)
-            }
+    props: [
+        'project',
+        'releases'
+    ],
+    
+    methods: {
+        shortCommitSha(commitSha) {
+            return commitSha.substring(0, 7)
         }
     }
+}
 </script>
