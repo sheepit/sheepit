@@ -90,9 +90,11 @@ export default {
             debugger;
             
             return HttpService
-                .postData('https://localhost:44380/api/list-projects', null)
+                .getData('https://localhost:44380/api/list-projects', null)
                 .then(response => {
-                    response.json()
+                    debugger;
+                    let a = response.json()
+                    return a;
                 })
                 .then(response => this.projects = response.projects)
         }
