@@ -1,5 +1,5 @@
 export default {
-    getData(url) {
+    get(url) {
         const fetchSettings = {
             method: "GET",
             mode: "cors",
@@ -14,7 +14,7 @@ export default {
         return fetch(url, fetchSettings)
     },
 
-    postData(url, request) {
+    post(url, request) {
         const fetchSettings = {
             method: "POST",
             mode: "cors",

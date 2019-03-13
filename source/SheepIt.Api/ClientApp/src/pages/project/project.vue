@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import HttpService from "./http-service.js";
+import httpService from "./../../common/http/http-service.js";
 
 import ProjectDashboard from "./project-dashboard.vue";
 import ProjectReleases from "./project-releases.vue";
@@ -94,17 +94,15 @@ export default {
 };
 
 class ProjectService {
-    httpService = new HttpService();
-
     getDashboard(projectId) {
-        return this.httpService
-            .postData('api/project/dashboard/get-dashboard', { projectId })
+        return httpService
+            .post('api/project/dashboard/get-dashboard', { projectId })
             .then(response => response.json())
     }
 
     updateProcess(projectId) {
-        return this.httpService
-            .postData('api/project/release/update-release-process', { projectId })
+        return httpService
+            .post('api/project/release/update-release-process', { projectId })
             .then(response => response.json())
     }
 }

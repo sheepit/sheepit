@@ -15,7 +15,7 @@
 <script>
 import VueRouter from 'vue-router';
 
-import HttpService from "./pages/project/http-service.js";
+import httpService from "./common/http/http-service.js";
 
 import Default from './pages/default.vue'
 import Navigation from './components/layout/navigation.vue'
@@ -95,8 +95,8 @@ export default {
 
     methods: {
         updateProjects() {
-            return HttpService
-                .getData('https://localhost:44380/api/list-projects', null)
+            return httpService
+                .get('https://localhost:44380/api/list-projects', null)
                 .then(response => response.json())
                 .then(response => this.projects = response.projects)
         }
