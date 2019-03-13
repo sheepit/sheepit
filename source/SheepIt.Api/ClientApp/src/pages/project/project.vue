@@ -41,6 +41,8 @@
 </template>
 
 <script>
+    import HttpService from "./http-service.js";
+
     import ProjectDashboard from "./project-dashboard.vue";
     // import ProjectReleases from "./project-releases.vue";
     // import ProjectDeployments from "./project-deployments.vue";
@@ -74,27 +76,36 @@
 
         methods: {
             getDashboard() {
-                getDashboard(this.project.id)
+                ProjectService
+                    .getDashboard(this.project.id)
                     .then(response => {
                         this.environments = response.environments
                         this.deployments = response.deployments
                         this.releases = response.releases
-                    })
+                    });
             },
+
             updateProcess() {
-                updateProcess(this.project.id)
+                ProjectService
+                    .updateProcess(this.project.id)
                     .then(() => window.app.updateProjects())
             }
         }
     };
     
-    function getDashboard(projectId) {
-        return postData('api/project/dashboard/get-dashboard', { projectId })
-            .then(response => response.json())
-    }
-    
-    function updateProcess(projectId) {
-        return postData('api/project/release/update-release-process', { projectId })
-            .then(response => response.json())
+    class ProjectService {
+        httpService = new HttpService();
+
+        getDashboard(projectId) {
+            return this.httpService
+                .postData('api/project/dashboard/get-dashboard', { projectId })
+                .then(response => response.json())
+        }
+
+        updateProcess(projectId) {
+            return this.httpService
+                .postData('api/project/release/update-release-process', { projectId })
+                .then(response => response.json())
+        }
     }
 </script>
