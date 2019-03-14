@@ -9,7 +9,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(variable, variableIndex) in variables">
+                <tr v-for="(variable, variableIndex) in variables" v-bind:key="variableIndex">
                     <td>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">

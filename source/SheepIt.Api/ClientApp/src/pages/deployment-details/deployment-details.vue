@@ -17,7 +17,7 @@
                     <th>status</th>
                     <th>release id</th>
                     <th>environment</th>
-                    <th>deployed at</th>                    
+                    <th>deployed at</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,7 +56,7 @@
 <script>
 import httpService from "./../common/http/http-service.js"
 
-import DeploymentUsedVariables from "./deployment-used-variables"
+import DeploymentUsedVariables from "./_components/deployment-used-variables"
 
 export default {
     name: 'deployment-details',
@@ -90,9 +90,9 @@ export default {
         'deploymentId': {
             immediate: true,
             handler: 'getDashboard'
-        }            
+        }
     },
-    
+
     methods: {
         getDashboard() {
             getDeploymentDetails(this.project.id, this.deploymentId)

@@ -18,7 +18,7 @@
         <h4>Environments</h4>
         <div>
             <draggable v-model="environments" class="row" @end="onEnvironmentDragEnd">
-                <div v-for="(environment, index) in environments" class="col-md-3">
+                <div v-for="(environment, index) in environments" class="col-md-3" v-bind:key="index">
                     <div class="card">
                         <div class="card-header">
                             <editable-title v-bind:title="environment.displayName" @blur="(event) => { renameEnvironment(event, index) }" />
@@ -33,9 +33,14 @@
 
 <script>
 import httpService from "./../common/http/http-service.js";
+import draggable from 'vuedraggable'
 
 export default {
     name: 'edit-project',
+
+    components: {
+        draggable
+    },
 
     data() {
         return {

@@ -24,7 +24,7 @@
 <script>
 import httpService from "./../common/http/http-service.js";
 
-import VariableEditor from "./../components/variable-editor.vue";
+import VariableEditor from "./_components/variable-editor.vue";
 
 export default {
     name: 'create-release',

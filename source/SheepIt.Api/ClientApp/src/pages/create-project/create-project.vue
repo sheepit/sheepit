@@ -14,8 +14,11 @@
             <div class="form-group">
                 <label>Environments (names):</label>
                 
-                <input type="text" v-model="environments[environmentIndex]" class="form-control"
-                       v-for="(environment, environmentIndex) in environments">
+                <input type="text"
+                       v-model="environments[environmentIndex]"
+                       class="form-control"
+                       v-for="(environment, environmentIndex) in environments"
+                       v-bind:key="environmentIndex">
                 
                 <button class="btn btn-secondary" v-on:click="newEnvironment()">Add new</button>
             </div>
@@ -26,6 +29,8 @@
 </template>
 
 <script>
+import createProjectService from "./_services/create-project-service.js";
+
 export default {
     name: "create-project",
     data() {
@@ -37,7 +42,7 @@ export default {
     },
     methods: {
         create: function () {
-            createProject(this.projectId, this.repositoryUrl, this.environments)
+            createProjectService(this.projectId, this.repositoryUrl, this.environments)
                 .then(() => window.app.updateProjects())
                 .then(() => this.$router.push({ name: 'project', params: { projectId: this.projectId }}))
         },
@@ -47,12 +52,4 @@ export default {
         }
     }
 }
-
-function createProject(projectId, repositoryUrl, environmentNames) {
-    return postData('api/create-project', {
-        projectId: projectId,
-        repositoryUrl: repositoryUrl,
-        environmentNames: environmentNames
-    })
-}    
 </script>

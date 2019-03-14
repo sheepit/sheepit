@@ -1,8 +1,7 @@
 <template>
     <div v-if="project">
         
-        <project-breadcrumbs v-bind:project-id="project.id">
-        </project-breadcrumbs>
+        <project-breadcrumbs v-bind:project-id="project.id"></project-breadcrumbs>
         
         <div class="row">
             <div class="col">
