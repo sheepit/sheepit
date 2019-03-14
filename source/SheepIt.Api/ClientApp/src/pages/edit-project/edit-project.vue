@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import httpService from "./../common/http/http-service.js";
+import httpService from "./../../common/http/http-service.js";
 import draggable from 'vuedraggable'
 
 export default {

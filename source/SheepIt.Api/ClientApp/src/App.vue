@@ -17,16 +17,17 @@ import VueRouter from 'vue-router';
 
 import httpService from "./common/http/http-service.js";
 
-import Default from './pages/default.vue'
 import Navigation from './components/layout/navigation.vue'
-import ProjectLayout from './pages/project/project-layout.vue'
+
+import CreateProject from './pages/create-project/create-project.vue'
+import CreateRelease from './pages/create-release/create-release.vue'
+import Default from './pages/default/default.vue'
+import DeployRelease from './pages/deploy-release/deploy-release.vue'
+import DeploymentDetails from './pages/deployment-details/deployment-details.vue'
+import EditProject from './pages/edit-project/edit-project.vue'
 import Project from './pages/project/project.vue'
-import CreateProject from './pages/project/create-project.vue'
-import CreateRelease from './pages/create-release.vue'
-import DeployRelease from './pages/deploy-release.vue'
-import EditProject from './pages/edit-project.vue'
-import DeploymentDetails from './pages/deployment-details.vue'
-import ReleaseDetails from './pages/release-details.vue'
+import ProjectLayout from './pages/project-layout/project-layout.vue'
+import ReleaseDetails from './pages/release-details/release-details.vue'
 
 const router = new VueRouter({
     routes: [

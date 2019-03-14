@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import httpService from "./../common/http/http-service.js";
+import httpService from "./../../../common/http/http-service.js";
 
 export default {
     name: "release-deployments",

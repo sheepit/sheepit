@@ -46,10 +46,10 @@
 </template>
 
 <script>
-import httpService from "./../common/http/http-service.js";
+import httpService from "./../../common/http/http-service.js";
 
-import VariableDetails from "./variable-details.vue";
-import ReleaseDeployments from "./release-deployments.vue";
+import VariableDetails from "./_components/variable-details.vue";
+import ReleaseDeployments from "./_components/release-deployments.vue";
 
 export default {
     name: 'release-details',

@@ -42,7 +42,7 @@ export default {
     },
     methods: {
         create: function () {
-            createProjectService(this.projectId, this.repositoryUrl, this.environments)
+            createProjectService.createProject(this.projectId, this.repositoryUrl, this.environments)
                 .then(() => window.app.updateProjects())
                 .then(() => this.$router.push({ name: 'project', params: { projectId: this.projectId }}))
         },

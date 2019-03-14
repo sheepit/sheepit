@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import httpService from "./../common/http/http-service.js";
+import httpService from "./../../common/http/http-service.js";
 
 import VariableEditor from "./_components/variable-editor.vue";
 

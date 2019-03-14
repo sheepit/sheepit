@@ -42,9 +42,9 @@
 <script>
 import httpService from "./../../common/http/http-service.js";
 
-import ProjectDashboard from "./project-dashboard.vue";
-import ProjectReleases from "./project-releases.vue";
-import ProjectDeployments from "./project-deployments.vue";
+import ProjectDashboard from "./_components/project-dashboard.vue";
+import ProjectReleases from "./_components/project-releases.vue";
+import ProjectDeployments from "./_components/project-deployments.vue";
 
 export default {
     name: 'project',
