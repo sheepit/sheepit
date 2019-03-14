@@ -46,64 +46,68 @@
 </template>
 
 <script>
-    module.exports = {
-        name: 'release-details',
+import httpService from "./../common/http/http-service.js";
 
-        components: {
-            'variable-details': httpVueLoader('variable-details.vue'),
-            'release-deployments': httpVueLoader('release-deployments.vue')
+import VariableDetails from "./variable-details.vue";
+import ReleaseDeployments from "./release-deployments.vue";
+
+export default {
+    name: 'release-details',
+
+    components: {
+        'variable-details': VariableDetails,
+        'release-deployments': ReleaseDeployments
+    },
+
+    props: [
+        'project'
+    ],
+    
+    data() {
+        return {
+            release: null,
+            environments: null
+        }
+    },
+
+    created() {
+        this.getProjectEnvironments();
+    },
+
+    computed: {
+        releaseId() {
+            return this.$route.params.releaseId
+        }
+    },
+
+    watch: {
+        'project': {
+            immediate: true,
+            handler: 'getReleaseDetails'
         },
+        'releaseId': {
+            immediate: true,
+            handler: 'getReleaseDetails'
+        }            
+    },
+    
+    methods: {
+        getReleaseDetails() {
+            getReleaseDetails(this.project.id, this.releaseId)
+                .then(response => this.release = response);
 
-        props: [
-            'project'
-        ],
-        
-        data() {
-            return {
-                release: null,
-                environments: null
-            }
-        },
-
-        created() {
             this.getProjectEnvironments();
         },
-
-        computed: {
-            releaseId() {
-                return this.$route.params.releaseId
-            }
-        },
-
-        watch: {
-            'project': {
-                immediate: true,
-                handler: 'getReleaseDetails'
-            },
-            'releaseId': {
-                immediate: true,
-                handler: 'getReleaseDetails'
-            }            
-        },
         
-        methods: {
-            getReleaseDetails() {
-                getReleaseDetails(this.project.id, this.releaseId)
-                    .then(response => this.release = response);
-
-                this.getProjectEnvironments();
-            },
-            
-            getProjectEnvironments() {
-                postData('api/project/environment/list-environments', { projectId: this.project.id })
-                    .then(response => response.json())
-                    .then(response => this.environments = response.environments);
-            }
+        getProjectEnvironments() {
+            httpService.post('api/project/environment/list-environments', { projectId: this.project.id })
+                .then(response => this.environments = response.environments);
         }
-    };
-
-    function getReleaseDetails(projectId, releaseId) {
-        return postData('api/project/release/get-release-details', { projectId, releaseId })
-            .then(response => response.json());
     }
+};
+
+function getReleaseDetails(projectId, releaseId) {
+    return httpService
+        .post('api/project/release/get-release-details', { projectId, releaseId });
+}
 </script>

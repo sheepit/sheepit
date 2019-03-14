@@ -5,8 +5,8 @@
 </template>
 
 <script>
-    module.exports = {
-        name: 'deployment-badge',
-        props: ['projectId', 'deploymentId']
-    }
+export default {
+    name: 'deployment-badge',
+    props: ['projectId', 'deploymentId']
+}
 </script>

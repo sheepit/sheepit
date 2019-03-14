@@ -35,41 +35,42 @@
 </template>
 
 <script>
-    module.exports = {
-        name: "release-deployments",
+import httpService from "./../common/http/http-service.js";
 
-        props: [
-            'project',
-            'release'
-        ],
+export default {
+    name: "release-deployments",
 
-        data() {
-            return {
-                deployments: []
-            }
-        },
+    props: [
+        'project',
+        'release'
+    ],
 
-        watch: {
-            project: {
-                immediate: true,
-                handler: 'updateDeployments'
-            },
-            release: {
-                immediate: true,
-                handler: 'updateDeployments'
-            }
-        },
-
-        methods: {
-            updateDeployments() {
-                getDeployments(this.project.id, this.release.id)
-                    .then(response => this.deployments = response.deployments.reverse())
-            }
+    data() {
+        return {
+            deployments: []
         }
-    };
+    },
 
-    function getDeployments(projectId, releaseId) {
-        return postData('api/project/release/list-deployments', { projectId, releaseId })
-            .then(response => response.json())
+    watch: {
+        project: {
+            immediate: true,
+            handler: 'updateDeployments'
+        },
+        release: {
+            immediate: true,
+            handler: 'updateDeployments'
+        }
+    },
+
+    methods: {
+        updateDeployments() {
+            getDeployments(this.project.id, this.release.id)
+                .then(response => this.deployments = response.deployments.reverse())
+        }
     }
+};
+
+function getDeployments(projectId, releaseId) {
+    return httpService.post('api/project/release/list-deployments', { projectId, releaseId });
+}
 </script>

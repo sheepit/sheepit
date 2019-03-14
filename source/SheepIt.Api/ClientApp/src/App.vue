@@ -23,6 +23,10 @@ import ProjectLayout from './pages/project/project-layout.vue'
 import Project from './pages/project/project.vue'
 import CreateProject from './pages/project/create-project.vue'
 import CreateRelease from './pages/create-release.vue'
+import DeployRelease from './pages/deploy-release.vue'
+import EditProject from './pages/edit-project.vue'
+import DeploymentDetails from './pages/deployment-details.vue'
+import ReleaseDetails from './pages/release-details.vue'
 
 const router = new VueRouter({
     routes: [
@@ -35,31 +39,31 @@ const router = new VueRouter({
                     name: 'project',
                     component: Project
                 },
-                // {
-                //     path: 'edit',
-                //     name: 'edit-project',
-                //     component: httpVueLoader('edit-project.vue')
-                // },
+                {
+                    path: 'edit',
+                    name: 'edit-project',
+                    component: EditProject
+                },
                 {
                     path: 'create-release',
                     name: 'create-release',
                     component: CreateRelease
                 },
-                // {
-                //     path: 'deployment-details/:deploymentId',
-                //     name: 'deployment-details',
-                //     component: httpVueLoader('deployment-details.vue')
-                // },
-                // {
-                //     path: 'deploy-release/:releaseId',
-                //     name: 'deploy-release',
-                //     component: httpVueLoader('deploy-release.vue')
-                // },
-                // {
-                //     path: 'release-details/:releaseId',
-                //     name: 'release-details',
-                //     component: httpVueLoader('release-details.vue')
-                // }
+                {
+                    path: 'deployment-details/:deploymentId',
+                    name: 'deployment-details',
+                    component: DeploymentDetails
+                },
+                {
+                    path: 'deploy-release/:releaseId',
+                    name: 'deploy-release',
+                    component: DeployRelease
+                },
+                {
+                    path: 'release-details/:releaseId',
+                    name: 'release-details',
+                    component: ReleaseDetails
+                }
             ]
         },
         {
@@ -98,7 +102,6 @@ export default {
         updateProjects() {
             return httpService
                 .get('api/list-projects', null)
-                .then(response => response.json())
                 .then(response => this.projects = response.projects)
         }
     }

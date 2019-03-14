@@ -24,9 +24,9 @@
 </template>
 
 <script>
-    module.exports = {
-        name: 'deployment-used-variables',
-        
-        props: ['usedVariables']
-    }
+export default {
+    name: 'deployment-used-variables',
+    
+    props: ['usedVariables']
+}
 </script>

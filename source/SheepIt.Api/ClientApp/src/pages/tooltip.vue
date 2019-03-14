@@ -5,19 +5,19 @@
 </template>
 
 <script>
-    module.exports = {
-        name: 'tooltip',
-        
-        props: {
-            'text': String,
-            'dataPlacement': {
-                type: String,
-                default: 'top'
-            }
-        },
+export default {
+    name: 'tooltip',
+    
+    props: {
+        'text': String,
+        'dataPlacement': {
+            type: String,
+            default: 'top'
+        }
+    },
 
-        mounted() {
-            $(this.$refs.spanRef).tooltip()
-        },
-    }
+    mounted() {
+        $(this.$refs.spanRef).tooltip()
+    },
+}
 </script>

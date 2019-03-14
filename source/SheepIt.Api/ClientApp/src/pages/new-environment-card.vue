@@ -18,36 +18,34 @@
 
 
 <script>
+export default {
+    name: 'new-environment-card',
 
-module.exports = {
-        name: 'new-environment-card',
+    data() {
+        return {
+            newEnvironmentDisplayName: '',
+            addingNewEnvironment: false
+        }
+    },
 
-        data() {
-            return {
-                newEnvironmentDisplayName: '',
-                addingNewEnvironment: false
-            }
+    methods: {
+        onNewEnvironemnt() {
+            this.addingNewEnvironment = true;
         },
 
-        methods: {
-            onNewEnvironemnt() {
-                this.addingNewEnvironment = true;
-            },
-
-            onBlur($event) {
-                this.newEnvironmentDisplayName = $event.target.value;
-                this.$emit('blur', this.newEnvironmentDisplayName);
-                this.addingNewEnvironment = false;
-            },
+        onBlur($event) {
+            this.newEnvironmentDisplayName = $event.target.value;
+            this.$emit('blur', this.newEnvironmentDisplayName);
+            this.addingNewEnvironment = false;
         },
+    },
 
-        directives: {
-            focus: {
-                inserted(el) {
-                    el.focus();
-                }
+    directives: {
+        focus: {
+            inserted(el) {
+                el.focus();
             }
         }
-    };
-
+    }
+};
 </script>

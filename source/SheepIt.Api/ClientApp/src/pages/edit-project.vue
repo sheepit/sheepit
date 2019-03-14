@@ -32,101 +32,97 @@
 </template>
 
 <script>
-    module.exports = {
-        name: 'edit-project',
+import httpService from "./../common/http/http-service.js";
 
-        data() {
-            return {
-                project: null,
-                environments: null
-            }
-        },
+export default {
+    name: 'edit-project',
 
-        computed: {
-            projectId() {
-                return this.$route.params.projectId
-            }
-        },
+    data() {
+        return {
+            project: null,
+            environments: null
+        }
+    },
 
-        mounted() {
+    computed: {
+        projectId() {
+            return this.$route.params.projectId
+        }
+    },
+
+    mounted() {
+        this.getProjectDetails();
+    },
+
+    methods: {
+        getProjectDetails: function() {
             this.getProjectDetails();
         },
 
-        methods: {
-            getProjectDetails: function() {
-                getProjectDetails(this.projectId)
-                    .then(response => {
-                        this.project = response;
-                        this.environments = this.project.environments;
-                    });
-            },
+        save: function () {
+            updateProject(this.projectId, this.project.repositoryUrl);
+        },
 
-            save: function () {
-                updateProject(this.projectId, this.project.repositoryUrl);
-            },
+        onEnvironmentDragEnd($event) {
+            const environmentIds = this.environments.map(f => (f.environmentId));
+            updateEnvironmentRank(this.project.id, environmentIds);
+        },
 
-            onEnvironmentDragEnd($event) {
-                const environmentIds = this.environments.map(f => (f.environmentId));
-                updateEnvironmentRank(this.project.id, environmentIds);
-            },
+        renameEnvironment(displayName, index) {
+            let environment = this.environments[index];
+            updateEnvironmentDisplayName(environment.environmentId, displayName, this.projectId);
+        },
 
-            renameEnvironment(displayName, index) {
-                let environment = this.environments[index];
-                updateEnvironmentDisplayName(environment.environmentId, displayName, this.projectId);
-            },
+        addNewEnvironment(newEnvironmentDisplayName) {
+            addNewEnvironment(this.project.id, newEnvironmentDisplayName)
+                .then(response => {
+                    this.getProjectDetails();
+                });
+        },
 
-            addNewEnvironment(newEnvironmentDisplayName) {
-                addNewEnvironment(this.project.id, newEnvironmentDisplayName)
-                    .then(response => {
-                        getProjectDetails(this.project.id)
-                            .then(response => {
-                                this.project = response;
-                                this.environments = this.project.environments;
-                            });
-                    });
-            }
+        getProjectDetails() {
+            httpService
+                .post('api/get-project-details', { id: this.projectId })
+                .then(response => {
+                    this.project = response;
+                    this.environments = this.project.environments;
+                });
         }
     }
+}
 
-    // TODO: [ts] Move such methods to service with typed contracts
-    function getProjectDetails(projectId) {
-        return postData('api/get-project-details', { id: projectId })
-            .then(response => response.json());
-    }
- 
+function updateProject(projectId, repositoryUrl) {
+    return httpService.post('api/update-project', {
+        projectId: projectId,
+        repositoryUrl: repositoryUrl
+    })
+}
 
-    function updateProject(projectId, repositoryUrl) {
-        return postData('api/update-project', {
-            projectId: projectId,
-            repositoryUrl: repositoryUrl
-        })
-    }
-   
-    function updateEnvironmentRank(projectId, environmentIds) {
-        const request = {
-            projectId: projectId,
-            environmentIds: environmentIds
-        };
+function updateEnvironmentRank(projectId, environmentIds) {
+    const request = {
+        projectId: projectId,
+        environmentIds: environmentIds
+    };
 
-        postData('api/project/environment/update-environments-rank', request);
-    }
+    httpService.post('api/project/environment/update-environments-rank', request);
+}
 
-    function updateEnvironmentDisplayName(environmentId, displayName, projectId) {
-        const request = {
-            projectId: projectId,
-            environmentId: environmentId,
-            displayName: displayName
-        };
+function updateEnvironmentDisplayName(environmentId, displayName, projectId) {
+    const request = {
+        projectId: projectId,
+        environmentId: environmentId,
+        displayName: displayName
+    };
 
-        postData('api/project/environment/update-environment-display-name', request);
-    }
+    httpService.post('api/project/environment/update-environment-display-name', request);
+}
 
-    function addNewEnvironment(projectId, displayName) {
-        const request = {
-            projectId: projectId,
-            displayName: displayName
-        };
+function addNewEnvironment(projectId, displayName) {
+    const request = {
+        projectId: projectId,
+        displayName: displayName
+    };
 
-        return postData('api/project/environment/add-environment', request);
-    } 
+    return httpService.post('api/project/environment/add-environment', request);
+} 
 </script>

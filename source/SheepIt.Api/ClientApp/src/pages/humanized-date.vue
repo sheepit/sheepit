@@ -5,18 +5,18 @@
 </template>
 
 <script>
-    module.exports = {
-        name: "humanized-date",
+export default {
+    name: "humanized-date",
 
-        props: ['date'],
+    props: ['date'],
 
-        computed: {
-            humanizedDate() {
-                return moment.duration(moment(this.date).diff(moment())).humanize(true);
-            },
-            formattedDate() {
-                return moment(this.date).format('YYYY-MM-DD hh:mm')
-            }
+    computed: {
+        humanizedDate() {
+            return moment.duration(moment(this.date).diff(moment())).humanize(true);
+        },
+        formattedDate() {
+            return moment(this.date).format('YYYY-MM-DD hh:mm')
         }
     }
+}
 </script>

@@ -28,9 +28,9 @@
 </template>
 
 <script>
-    module.exports = {
-        name: 'variable-details',
-        
-        props: ['variables', 'environments'],
-    }
+export default {
+    name: 'variable-details',
+    
+    props: ['variables', 'environments'],
+}
 </script>

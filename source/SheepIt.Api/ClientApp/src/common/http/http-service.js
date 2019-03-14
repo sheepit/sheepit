@@ -16,6 +16,7 @@ export default {
         }
     
         return fetch(requestUrl, fetchSettings)
+            .then(response => response.json());
     },
 
     post(url, request) {
@@ -34,5 +35,6 @@ export default {
         }
     
         return fetch(requestUrl, fetchSettings)
+            .then(response => response.json());
     }
 };

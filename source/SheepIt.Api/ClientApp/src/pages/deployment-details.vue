@@ -54,51 +54,54 @@
 </template>
 
 <script>
-    module.exports = {
-        name: 'deployment-details',
+import httpService from "./../common/http/http-service.js"
 
-        components: {
-            'deployment-used-variables': httpVueLoader('deployment-used-variables.vue')
-        },
-        
-        props: [
-            'project'
-        ],
-        
-        data() {
-            return {
-                deployment: null,
-                usedVariables: null
-            }
-        },
+import DeploymentUsedVariables from "./deployment-used-variables"
 
-        computed: {
-            deploymentId() {
-                return this.$route.params.deploymentId
-            }
-        },
+export default {
+    name: 'deployment-details',
 
-        watch: {
-            'project': {
-                immediate: true,
-                handler: 'getDashboard'
-            },
-            'deploymentId': {
-                immediate: true,
-                handler: 'getDashboard'
-            }            
-        },
-        
-        methods: {
-            getDashboard() {
-                getDeploymentDetails(this.project.id, this.deploymentId)
-                    .then(response => this.deployment = response)
-            }
+    components: {
+        'deployment-used-variables': DeploymentUsedVariables
+    },
+    
+    props: [
+        'project'
+    ],
+    
+    data() {
+        return {
+            deployment: null,
+            usedVariables: null
         }
-    };
+    },
 
-    function getDeploymentDetails(projectId, deploymentId) {
-        return postData('api/project/deployment/get-deployment-details', { projectId, deploymentId })
-            .then(response => response.json())
+    computed: {
+        deploymentId() {
+            return this.$route.params.deploymentId
+        }
+    },
+
+    watch: {
+        'project': {
+            immediate: true,
+            handler: 'getDashboard'
+        },
+        'deploymentId': {
+            immediate: true,
+            handler: 'getDashboard'
+        }            
+    },
+    
+    methods: {
+        getDashboard() {
+            getDeploymentDetails(this.project.id, this.deploymentId)
+                .then(response => this.deployment = response)
+        }
     }
+};
+
+function getDeploymentDetails(projectId, deploymentId) {
+    return httpService.post('api/project/deployment/get-deployment-details', { projectId, deploymentId });
+}
 </script>

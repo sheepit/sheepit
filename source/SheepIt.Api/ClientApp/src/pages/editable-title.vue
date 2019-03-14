@@ -17,48 +17,46 @@
 
 
 <script>
+export default {
+    name: 'editable-title',
 
-    module.exports = {
-        name: 'editable-title',
+    props: [
+        'title'
+    ],
 
-        props: [
-            'title'
-        ],
+    data() {
+        return {
+            focused: false,
+            localTitle: this.title
+        }
+    },
 
-        data() {
-            return {
-                focused: false,
-                localTitle: this.title
-            }
+    watch: {
+        title: function() {
+            this.localTitle = this.title;
+        }
+    },
+
+    methods: {
+        onFocus() {
+            this.focused = true;
         },
 
-        watch: {
-            title: function() {
-                this.localTitle = this.title;
-            }
-        },
+        onBlur($event) {
+            this.localTitle = $event.target.value;
+            this.focused = false;
+            this.$emit('blur', this.localTitle)
+        }
+    },
 
-        methods: {
-            onFocus() {
-                this.focused = true;
-            },
-
-            onBlur($event) {
-                this.localTitle = $event.target.value;
-                this.focused = false;
-                this.$emit('blur', this.localTitle)
-            }
-        },
-
-        directives: {
-            focus: {
-                inserted(el) {
-                    el.focus();
-                }
+    directives: {
+        focus: {
+            inserted(el) {
+                el.focus();
             }
         }
-    };
-
+    }
+};
 </script>
 
 

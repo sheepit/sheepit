@@ -51,9 +51,10 @@ export default {
 
     methods: {
         getRelease() {
-            getLatestRelease(this.project.id)
+            httpService
+                .post('api/project/release/get-last-release', { projectId: this.project.id })
                 .then(response => this.release = response);
-            
+
             this.getProjectEnvironments();
         },
         createRelease() {
@@ -63,19 +64,15 @@ export default {
                 newVariables: this.release.variables
             };
             
-            postData('api/project/release/edit-release-variables', request)
+            httpService
+                .post('api/project/release/edit-release-variables', request)
                 .then(() => this.$router.push({ name: 'project', params: { projectId: this.project.id }}))
         },
         getProjectEnvironments() {
-            postData('api/project/environment/list-environments', { projectId: this.project.id })
-                .then(response => response.json())
+            httpService
+                .post('api/project/environment/list-environments', { projectId: this.project.id })
                 .then(response => this.environments = response.environments);
         }
     }
 };
-
-function getLatestRelease(projectId) {
-    return httpService.post('api/project/release/get-last-release', { projectId })
-        .then(response => response.json())
-}
 </script>

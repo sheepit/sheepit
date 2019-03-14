@@ -29,8 +29,8 @@
 </template>
 
 <script>
-    module.exports = {
-        name: "navigation",
-        props: ['projects'],
-    }
+export default {
+    name: "navigation",
+    props: ['projects'],
+}
 </script>

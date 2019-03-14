@@ -24,53 +24,55 @@
 </template>
 
 <script>
-    module.exports = {
-        name: 'deploy-release',
-        
-        props: ['project'],
-        
-        data() {
-            return {
-                environments: null
-            }
-        },
-        
-        computed: {
-            releaseId() {
-                return this.$route.params.releaseId
-            }
-        },
+import httpService from "./../common/http/http-service.js";
 
-        created() {
-            this.getEnvironments(this.project.id);
-        },
+export default {
+    name: 'deploy-release',
+    
+    props: ['project'],
+    
+    data() {
+        return {
+            environments: null
+        }
+    },
+    
+    computed: {
+        releaseId() {
+            return this.$route.params.releaseId
+        }
+    },
 
-        methods: {
-            deploy(environmentId) {
-                const request = {
+    created() {
+        this.getEnvironments(this.project.id);
+    },
+
+    methods: {
+        deploy(environmentId) {
+            const request = {
+                projectId: this.project.id,
+                releaseId: this.releaseId,
+                environmentId: environmentId
+            };
+            
+            httpService
+                .post('api/project/deployment/deploy-release', request)
+                .then(response => this.redirectToDeployment(response.createdDeploymentId))
+        },
+        redirectToDeployment(deploymentId) {
+            this.$router.push({
+                name: 'deployment-details',
+                params: {
                     projectId: this.project.id,
-                    releaseId: this.releaseId,
-                    environmentId: environmentId
-                };
-                
-                postData('api/project/deployment/deploy-release', request)
-                    .then(response => response.json())
-                    .then(response => this.redirectToDeployment(response.createdDeploymentId))
-            },
-            redirectToDeployment(deploymentId) {
-                this.$router.push({
-                    name: 'deployment-details',
-                    params: {
-                        projectId: this.project.id,
-                        deploymentId: deploymentId
-                    }
-                })
-            },
-            getEnvironments(projectId) {
-                postData('api/project/environment/list-environments', { projectId })
-                    .then(response => response.json())
-                    .then(response => this.environments = response.environments)
-            }
+                    deploymentId: deploymentId
+                }
+            })
+        },
+        getEnvironments(projectId) {
+            httpService
+                .post('api/project/environment/list-environments', { projectId })
+                .then(response => this.environments = response.environments)
         }
     }
+}
 </script>
