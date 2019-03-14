@@ -22,6 +22,7 @@ import Navigation from './components/layout/navigation.vue'
 import ProjectLayout from './pages/project/project-layout.vue'
 import Project from './pages/project/project.vue'
 import CreateProject from './pages/project/create-project.vue'
+import CreateRelease from './pages/create-release.vue'
 
 const router = new VueRouter({
     routes: [
@@ -39,11 +40,11 @@ const router = new VueRouter({
                 //     name: 'edit-project',
                 //     component: httpVueLoader('edit-project.vue')
                 // },
-                // {
-                //     path: 'create-release',
-                //     name: 'create-release',
-                //     component: httpVueLoader('create-release.vue')
-                // },
+                {
+                    path: 'create-release',
+                    name: 'create-release',
+                    component: CreateRelease
+                },
                 // {
                 //     path: 'deployment-details/:deploymentId',
                 //     name: 'deployment-details',
@@ -96,7 +97,7 @@ export default {
     methods: {
         updateProjects() {
             return httpService
-                .get('https://localhost:44380/api/list-projects', null)
+                .get('api/list-projects', null)
                 .then(response => response.json())
                 .then(response => this.projects = response.projects)
         }
