@@ -11,7 +11,10 @@
                         Projects
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <router-link v-for="project in projects" :key="project.id" class="dropdown-item" :to="{ name: 'project', params: { projectId: project.id }}">
+                        <router-link v-for="(project, index) in projects"
+                                     :key="index"
+                                     class="dropdown-item"
+                                     :to="{ name: 'project', params: { projectId: project.id }}">
                             {{ project.id }}
                         </router-link>
                         <div class="dropdown-divider"></div>

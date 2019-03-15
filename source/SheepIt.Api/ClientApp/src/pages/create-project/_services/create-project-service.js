@@ -7,6 +7,6 @@ export default {
                 projectId: projectId,
                 repositoryUrl: repositoryUrl,
                 environmentNames: environmentNames
-            });
+            }, false);
     }
 }

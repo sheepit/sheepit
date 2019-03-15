@@ -43,7 +43,8 @@ export default {
     methods: {
         create: function () {
             createProjectService.createProject(this.projectId, this.repositoryUrl, this.environments)
-                .then(() => window.app.updateProjects())
+                // TODO: Update main app component, so it knows that new project was added
+                // .then(() => window.app.updateProjects()) <===== todo
                 .then(() => this.$router.push({ name: 'project', params: { projectId: this.projectId }}))
         },
 
