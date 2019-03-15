@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="project">
         <h4>Edit project</h4>
         <div>
             <div class="form-group">
@@ -70,7 +70,8 @@ export default {
         },
 
         save: function () {
-            updateProject(this.projectId, this.project.repositoryUrl);
+            updateProject(this.projectId, this.project.repositoryUrl)
+                .then(() => { });
         },
 
         onEnvironmentDragEnd() {
@@ -94,6 +95,7 @@ export default {
             httpService
                 .post('api/get-project-details', { id: this.projectId })
                 .then(response => {
+                    console.dir(response);
                     this.project = response;
                     this.environments = this.project.environments;
                 });
@@ -105,7 +107,7 @@ function updateProject(projectId, repositoryUrl) {
     return httpService.post('api/update-project', {
         projectId: projectId,
         repositoryUrl: repositoryUrl
-    })
+    }, false);
 }
 
 function updateEnvironmentRank(projectId, environmentIds) {

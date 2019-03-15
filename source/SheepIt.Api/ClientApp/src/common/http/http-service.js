@@ -16,10 +16,14 @@ export default {
         }
     
         return fetch(requestUrl, fetchSettings)
-            .then(response => response.json());
+            .then(response => {
+                console.dir(response);
+                const res = response.json();
+                return res;
+            });
     },
 
-    post(url, request) {
+    post(url, request, jsonResponse = true) {
         const requestUrl = this.baseUrl + url;
 
         const fetchSettings = {
@@ -34,7 +38,12 @@ export default {
             body: JSON.stringify(request),
         }
     
-        return fetch(requestUrl, fetchSettings)
-            .then(response => response.json());
+        const responsePromise = fetch(requestUrl, fetchSettings);
+
+        if(jsonResponse) {
+            return responsePromise.then(response => response.json());
+        }
+
+        return responsePromise;
     }
 };
