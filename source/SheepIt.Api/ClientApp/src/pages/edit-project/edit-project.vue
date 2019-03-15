@@ -33,13 +33,18 @@
 
 <script>
 import httpService from "./../../common/http/http-service.js";
-import draggable from 'vuedraggable'
+import draggable from 'vuedraggable';
+
+import EditableTitle from "./_components/editable-title.vue";
+import NewEnvironmentCard from "./_components/new-environment-card.vue";
 
 export default {
     name: 'edit-project',
 
     components: {
-        draggable
+        draggable,
+        EditableTitle,
+        NewEnvironmentCard
     },
 
     data() {
@@ -68,7 +73,7 @@ export default {
             updateProject(this.projectId, this.project.repositoryUrl);
         },
 
-        onEnvironmentDragEnd($event) {
+        onEnvironmentDragEnd() {
             const environmentIds = this.environments.map(f => (f.environmentId));
             updateEnvironmentRank(this.project.id, environmentIds);
         },
@@ -80,7 +85,7 @@ export default {
 
         addNewEnvironment(newEnvironmentDisplayName) {
             addNewEnvironment(this.project.id, newEnvironmentDisplayName)
-                .then(response => {
+                .then((response) => {
                     this.getProjectDetails();
                 });
         },

@@ -17,13 +17,13 @@ import ProjectBreadcrumbs from "./components/project-breadcrumbs.vue";
 import ReleaseBadge from "./components/release-badge.vue";
 import Tooltip from "./components/tooltip.vue";
 
-Vue.component(DeploymentBadge);
-Vue.component(DeploymentStatusBadge);
-Vue.component(ExpandingList);
-Vue.component(HumanizedDate);
-Vue.component(ProjectBreadcrumbs);
-Vue.component(ReleaseBadge);
-Vue.component(Tooltip);
+Vue.component('deployment-badge', DeploymentBadge);
+Vue.component('deployment-status-badge', DeploymentStatusBadge);
+Vue.component('expanding-list', ExpandingList);
+Vue.component('humanized-date', HumanizedDate);
+Vue.component('project-breadcrumbs', ProjectBreadcrumbs);
+Vue.component('release-badge', ReleaseBadge);
+Vue.component('tooltip', Tooltip);
 
 new Vue({
   render: h => h(App)

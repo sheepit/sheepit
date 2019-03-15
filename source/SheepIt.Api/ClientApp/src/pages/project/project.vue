@@ -40,7 +40,8 @@
 </template>
 
 <script>
-import httpService from "./../../common/http/http-service.js";
+import getDashboardService from "./_services/get-dashboard-service.js";
+import updateProcessService from "./_services/update-process-service.js";
 
 import ProjectDashboard from "./_components/project-dashboard.vue";
 import ProjectReleases from "./_components/project-releases.vue";
@@ -61,7 +62,9 @@ export default {
     
     data() {
         return {
-            environments: []
+            deployments: [],
+            environments: [],
+            releases: []
         }
     },
     
@@ -75,7 +78,7 @@ export default {
 
     methods: {
         getDashboard() {
-            ProjectService
+            getDashboardService
                 .getDashboard(this.project.id)
                 .then(response => {
                     this.environments = response.environments
@@ -85,24 +88,10 @@ export default {
         },
 
         updateProcess() {
-            ProjectService
+            updateProcessService
                 .updateProcess(this.project.id)
                 .then(() => window.app.updateProjects())
         }
     }
 };
-
-class ProjectService {
-    getDashboard(projectId) {
-        return httpService
-            .post('api/project/dashboard/get-dashboard', { projectId })
-            .then(response => response.json())
-    }
-
-    updateProcess(projectId) {
-        return httpService
-            .post('api/project/release/update-release-process', { projectId })
-            .then(response => response.json())
-    }
-}
 </script>
