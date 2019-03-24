@@ -16,11 +16,7 @@ export default {
         }
     
         return fetch(requestUrl, fetchSettings)
-            .then(response => {
-                console.dir(response);
-                const res = response.json();
-                return res;
-            });
+            .then(response => response.json());
     },
 
     post(url, request, jsonResponse = true) {

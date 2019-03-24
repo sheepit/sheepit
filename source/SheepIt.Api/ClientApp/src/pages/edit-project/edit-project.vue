@@ -95,7 +95,6 @@ export default {
             httpService
                 .post('api/get-project-details', { id: this.projectId })
                 .then(response => {
-                    console.dir(response);
                     this.project = response;
                     this.environments = this.project.environments;
                 });
