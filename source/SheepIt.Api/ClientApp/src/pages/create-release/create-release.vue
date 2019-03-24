@@ -22,11 +22,11 @@
 </template>
 
 <script>
-import httpService from "./../../common/http/http-service.js";
+    import httpService from "./../../common/http/http-service.js";
 
-import VariableEditor from "./_components/variable-editor.vue";
+    import VariableEditor from "./_components/variable-editor.vue";
 
-export default {
+    export default {
     name: 'create-release',
     
     components: {
@@ -65,7 +65,7 @@ export default {
             };
             
             httpService
-                .post('api/project/release/edit-release-variables', request)
+                .post('api/project/release/edit-release-variables', request, false)
                 .then(() => this.$router.push({ name: 'project', params: { projectId: this.project.id }}))
         },
         getProjectEnvironments() {
