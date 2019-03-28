@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SheepIt.Api.Infrastructure.ErrorHandling;
+using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.Logger;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -10,11 +13,26 @@ namespace SheepIt.Api.Infrastructure.Web
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+            
+            services.AddSheepItAuthentication(_configuration);
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(mvcOptions =>
+                {
+                    mvcOptions.Filters.Add(
+                        new AuthorizeFilter()
+                    );
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             
             services.AddSwaggerGen(c =>
             {
@@ -28,6 +46,7 @@ namespace SheepIt.Api.Infrastructure.Web
         {
             if (env.IsDevelopment())
             {
+                // todo: do we really need this? we have SPA anyway
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -42,9 +61,12 @@ namespace SheepIt.Api.Infrastructure.Web
             {
                 ServeUnknownFileTypes = true
             });
-
+            
             app.UseMiddleware<SerilogMiddleware>();
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+
+            // todo: authorize all routes by default
+            app.UseAuthentication();
 
             app.UseCors(builder => builder
                 .AllowAnyOrigin()

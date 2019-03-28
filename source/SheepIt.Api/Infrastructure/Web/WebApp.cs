@@ -37,7 +37,7 @@ namespace SheepIt.Api.Infrastructure.Web
         private void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddInstance(_rootScope);
-            serviceCollection.AddInstance(new Startup());
+            serviceCollection.AddInstance(new Startup(_configuration));
             serviceCollection.ReplaceWithInstance(_configuration);
         }
 

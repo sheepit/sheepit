@@ -17,6 +17,7 @@ import httpService from "./common/http/http-service.js";
 
 import Navigation from './components/layout/navigation.vue'
 
+import Authenticate from './pages/authenticate/authenticate.vue'
 import CreateProject from './pages/create-project/create-project.vue'
 import CreateRelease from './pages/create-release/create-release.vue'
 import Default from './pages/default/default.vue'
@@ -29,6 +30,11 @@ import ReleaseDetails from './pages/release-details/release-details.vue'
 
 const router = new VueRouter({
     routes: [
+        {
+            // todo: use different layout for this one, so it doesn't load all the projects and go into unauthorized loop
+            path: '/authenticate',
+            component: Authenticate
+        },
         {
             path: '/project/:projectId',
             component: ProjectLayout,

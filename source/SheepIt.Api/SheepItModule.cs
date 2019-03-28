@@ -5,6 +5,7 @@ using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Web;
@@ -34,6 +35,7 @@ namespace SheepIt.Api
             builder.RegisterModule<ErrorHandlingModule>();
             builder.RegisterModule<WebModule>();
             builder.RegisterModule<MongoDbModule>();
+            builder.RegisterModule<SheepItAuthenticationModule>();
         }
 
         private void RegisterCore(ContainerBuilder builder)

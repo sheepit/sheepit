@@ -13,6 +13,7 @@ export default {
             credentials: "same-origin",
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
+                "Authorization": `Bearer ${window.localStorage.getItem("jwtToken")}` // todo: remove duplication, create jwt-token-storage
             },
             referrer: "no-referrer"
         }
@@ -27,7 +28,7 @@ export default {
 
     post(url, request, jsonResponse = true) {
         const requestUrl = this.baseUrl + url;
-
+        
         const fetchSettings = {
             method: "POST",
             mode: "cors",
@@ -35,6 +36,7 @@ export default {
             credentials: "same-origin",
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
+                "Authorization": `Bearer ${window.localStorage.getItem("jwtToken")}` // todo: remove duplication, create jwt-token-storage
             },
             referrer: "no-referrer",
             body: JSON.stringify(request),
@@ -42,7 +44,7 @@ export default {
     
         const responsePromise = fetch(requestUrl, fetchSettings);
 
-        if(jsonResponse) {
+        if (jsonResponse) {
             return responsePromise
                 .then(this.handleErrors)
                 .then(response => response.json())
