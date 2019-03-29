@@ -25,6 +25,8 @@ namespace SheepIt.Api.Core.ProjectContext
         public async Task<TResponse> Handle(TRequest request)
         {
             // todo: [rt] should we really synchronize all actions in project context? what about queries?
+            // todo: [ts] I'm not sure if it the best option here - it might influence the overall performance
+            // on the other hand the system rather will no be used simultaneously by many users
             using (await _projectLock.LockAsync(request.ProjectId))
             using (var projectScope = await BeginProjectScope(request.ProjectId))
             {

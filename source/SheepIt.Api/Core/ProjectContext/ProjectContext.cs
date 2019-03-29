@@ -5,7 +5,10 @@ namespace SheepIt.Api.Core.ProjectContext
 {
     public interface IProjectContext
     {
+        // todo: [ts] Basically we are using a domain object here, I'm not sure if it is a good idea
+        // imho we should introduce some dto for this purpose
         Project Project { get; }
+        // todo: [ts] Same doubts here - propably we shouldn't be using the domain object here
         Environment[] Environments { get; }
     }
     
