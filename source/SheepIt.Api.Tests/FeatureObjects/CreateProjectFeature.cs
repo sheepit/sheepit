@@ -24,6 +24,7 @@ namespace SheepIt.Api.Tests.FeatureObjects
                 _request = new CreateProjectRequest
                 {
                     ProjectId = projectId,
+                    // todo: [ts] hardcoded paths will not work on other systems
                     RepositoryUrl = "c:\\sheep-it\\sample-process",
                     EnvironmentNames = new[] {"dev", "test", "prod"}
                 };
