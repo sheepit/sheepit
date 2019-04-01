@@ -3,31 +3,25 @@
         
         <project-breadcrumbs v-bind:project-id="project.id"></project-breadcrumbs>
         
-        <div class="row">
+        <div class="row project-title">
             <div class="col">
                 <h2 class="display-4">{{ project.id }}</h2>
                 <p><code>{{ project.repositoryUrl }}</code></p>
             </div>
             <div class="col text-right">
-                <p>
-                    <router-link class="btn btn-primary" :to="{ name: 'edit-project' }">
-                        Edit project
-                    </router-link>
-                </p>
-                <p>
-                    <router-link class="btn btn-primary" :to="{ name: 'create-release', params: { projectId: project.id }}">
-                        Edit variables
-                    </router-link>
-                </p>
-                <p>
-                    <button class="btn btn-primary" v-on:click="updateProcess()">
-                        Update process
-                    </button>
-                </p>
+                <router-link class="btn btn-primary link-button" :to="{ name: 'edit-project' }">
+                    Edit project
+                </router-link>
+                <router-link class="btn btn-primary link-button" :to="{ name: 'create-release', params: { projectId: project.id }}">
+                    Edit variables
+                </router-link>
+                <button class="btn btn-primary" v-on:click="updateProcess()">
+                    Update process
+                </button>
             </div>
         </div>
         
-        <h3 class="mt-5">Dashboard</h3>
+        <h3 class="mt-5">Environments</h3>
         <project-dashboard class="mt-4" :project="project" :environments="environments"></project-dashboard>
 
         <h3 class="mt-5">Releases</h3>
@@ -67,7 +61,7 @@ export default {
             releases: []
         }
     },
-    
+     
     watch: {
         'project': 'getDashboard'
     },
@@ -95,3 +89,13 @@ export default {
     }
 };
 </script>
+
+<style>
+.project-title {
+    text-align: left;
+}
+
+.link-button {
+    margin-right: 0.5rem;
+}
+</style>

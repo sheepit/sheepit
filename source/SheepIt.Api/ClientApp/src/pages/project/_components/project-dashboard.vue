@@ -1,8 +1,8 @@
 <template>
 
     <div class="row">
-        <div v-for="environment in environments" class="col-md-3">
-            <div class="card">
+        <div v-for="environment in environments" class="col-md-3" v-if="environments && environments.length > 0">
+            <div class="card margin-bottom">
                 <div class="card-header">
                     {{ environment.displayName }}
                 </div>
@@ -25,7 +25,7 @@
                 </ul>
             </div>
         </div>
-
+        <div v-else>No environments found for this project</div>
     </div>
 
 </template>
@@ -45,3 +45,9 @@ export default {
     }
 };
 </script>
+
+<style>
+.card {
+    margin-bottom: 1rem;
+}
+</style>

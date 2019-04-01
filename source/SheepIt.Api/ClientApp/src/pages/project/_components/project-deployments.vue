@@ -1,5 +1,5 @@
 <template>
-    <expanding-list class="mt-4" v-bind:all-items="deployments" initial-length="5">
+    <expanding-list class="mt-4" v-bind:all-items="deployments" initial-length="5" v-if="deployments && deployments.length > 0">
         <template slot-scope="{ items }">
             <table class="table table-bordered">
                 <thead>
@@ -33,6 +33,7 @@
             </table>
         </template>
     </expanding-list>
+    <div v-else>No deployments found for this project</div>
 </template>
 
 <script>
