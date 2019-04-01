@@ -93,10 +93,6 @@ export default {
     },
 
     methods: {
-        getProjectDetails: function() {
-            this.getProjectDetails();
-        },
-
         save: function () {
             updateProject(this.projectId, this.project.repositoryUrl)
                 .then(() => { });

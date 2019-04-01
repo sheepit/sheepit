@@ -24,7 +24,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="release in items">
+                    <tr
+                        v-for="release in items"
+                        :key="release.id"
+                    >
                         <th scope="row">
                             <release-badge
                                 :project-id="project.id"

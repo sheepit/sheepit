@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="{ name: 'deployment-details', params: { projectId: this.projectId, deploymentId: this.deploymentId } }">
+    <router-link :to="{ name: 'deployment-details', params: { projectId: projectId, deploymentId: deploymentId } }">
         <span class="badge badge-success">deployment {{ deploymentId }}</span>
     </router-link>
 </template>

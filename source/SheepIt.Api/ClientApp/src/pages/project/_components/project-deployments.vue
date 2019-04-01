@@ -27,7 +27,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="deployment in items">
+                    <tr
+                        v-for="deployment in items"
+                        :key="deployment.id"
+                    >
                         <th scope="row">
                             <deployment-badge
                                 :project-id="project.id"

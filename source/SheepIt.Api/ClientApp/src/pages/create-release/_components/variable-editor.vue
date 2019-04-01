@@ -5,7 +5,7 @@
                 <tr>
                     <th>name</th>
                     <th>default value</th>
-                    <th v-for="environment in environments">
+                    <th v-for="environment in environments" :key="environment.id">
                         {{ environment.displayName }}
                     </th>
                 </tr>

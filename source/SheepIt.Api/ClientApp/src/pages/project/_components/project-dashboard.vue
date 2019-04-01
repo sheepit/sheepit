@@ -3,6 +3,7 @@
         <div
             v-for="environment in environments"
             v-if="environments && environments.length > 0"
+            :key="environment.environmentId"
             class="col-md-3"
         >
             <div class="card margin-bottom">

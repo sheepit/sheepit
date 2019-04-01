@@ -8,20 +8,26 @@
                 <tr>
                     <th>name</th>
                     <th>default value</th>
-                    <th v-for="environment in environments">
+                    <th
+                        v-for="environment in environments"
+                        :key="environment.id"
+                    >
                         {{ environment.displayName }}
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(variable, variableIndex) in variables">
+                <tr v-for="(variable) in variables">
                     <td>
                         <span>{{ variable.name }}</span>
                     </td>
                     <td>
                         <span>{{ variable.defaultValue }}</span>
                     </td>
-                    <td v-for="environment in environments">
+                    <td
+                        v-for="environment in environments"
+                        :key="environment.id"
+                    >
                         <span>{{ variable.environmentValues[environment.id] }}</span>
                     </td>
                 </tr>

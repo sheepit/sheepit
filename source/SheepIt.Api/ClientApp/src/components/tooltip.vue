@@ -14,7 +14,10 @@ export default {
     name: 'Tooltip',
     
     props: {
-        'text': String,
+        'text': {
+            type: String,
+            required: true
+        },
         'dataPlacement': {
             type: String,
             default: 'top'
