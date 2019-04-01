@@ -1,12 +1,12 @@
 <template>
-    <router-link v-bind:to="{ name: 'deployment-details', params: { projectId: this.projectId, deploymentId: this.deploymentId } }">
+    <router-link :to="{ name: 'deployment-details', params: { projectId: this.projectId, deploymentId: this.deploymentId } }">
         <span class="badge badge-success">deployment {{ deploymentId }}</span>
     </router-link>
 </template>
 
 <script>
 export default {
-    name: 'deployment-badge',
+    name: 'DeploymentBadge',
     props: ['projectId', 'deploymentId']
 }
 </script>

@@ -1,44 +1,66 @@
 <template>
-    <expanding-list class="mt-4" v-bind:all-items="releases" initial-length="5" v-if="releases && releases.length > 0">
+    <expanding-list
+        v-if="releases && releases.length > 0"
+        class="mt-4"
+        :all-items="releases"
+        initial-length="5"
+    >
         <template slot-scope="{ items }">
             <table class="table table-bordered">
                 <thead>
-                <tr>
-                    <th scope="col">id</th>
-                    <th scope="col">created</th>
-                    <th scope="col">commit sha</th>
-                    <th scope="col">operations</th>
-                </tr>
+                    <tr>
+                        <th scope="col">
+                            id
+                        </th>
+                        <th scope="col">
+                            created
+                        </th>
+                        <th scope="col">
+                            commit sha
+                        </th>
+                        <th scope="col">
+                            operations
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr v-for="release in items">
-                    <th scope="row">
-                        <release-badge v-bind:project-id="project.id" v-bind:release-id="release.id"></release-badge>
-                    </th>
-                    <td>
-                        <humanized-date v-bind:date="release.createdAt"></humanized-date>
-                    </td>
-                    <td>
-                        <tooltip v-bind:text="release.commitSha">
-                            <code>{{ shortCommitSha(release.commitSha) }}</code>
-                        </tooltip>
-                    </td>
-                    <td>
-                        <router-link tag="button" v-bind:to="{ name: 'deploy-release', params: { projectId: project.id, releaseId: release.id } }" class="btn btn-success">
-                            Deploy!
-                        </router-link>
-                    </td>
-                </tr>
+                    <tr v-for="release in items">
+                        <th scope="row">
+                            <release-badge
+                                :project-id="project.id"
+                                :release-id="release.id"
+                            />
+                        </th>
+                        <td>
+                            <humanized-date :date="release.createdAt" />
+                        </td>
+                        <td>
+                            <tooltip :text="release.commitSha">
+                                <code>{{ shortCommitSha(release.commitSha) }}</code>
+                            </tooltip>
+                        </td>
+                        <td>
+                            <router-link
+                                tag="button"
+                                :to="{ name: 'deploy-release', params: { projectId: project.id, releaseId: release.id } }"
+                                class="btn btn-success"
+                            >
+                                Deploy!
+                            </router-link>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </template>
     </expanding-list>
-    <div v-else>No releases found for this project</div>
+    <div v-else>
+        No releases found for this project
+    </div>
 </template>
 
 <script>
 export default {
-    name: "project-releases",
+    name: "ProjectReleases",
 
     props: [
         'project',

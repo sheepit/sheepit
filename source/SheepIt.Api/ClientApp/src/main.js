@@ -30,5 +30,5 @@ Vue.component('release-badge', ReleaseBadge);
 Vue.component('tooltip', Tooltip);
 
 new Vue({
-  render: h => h(App)
+    render: h => h(App)
 }).$mount('#app');

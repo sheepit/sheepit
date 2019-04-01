@@ -1,12 +1,15 @@
 <template>
-    <span class="badge" v-bind:class="'badge-' + statuses[status].style">
+    <span
+        class="badge"
+        :class="'badge-' + statuses[status].style"
+    >
         {{ statuses[status].label }}
     </span>
 </template>
 
 <script>
 export default {
-    name: 'deployment-status-badge',
+    name: 'DeploymentStatusBadge',
     
     props: ['status'],
     

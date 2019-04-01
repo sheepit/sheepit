@@ -1,6 +1,6 @@
 <template>
     <div>
-        <project-breadcrumbs v-bind:project-id="project.id">
+        <project-breadcrumbs :project-id="project.id">
             <li class="breadcrumb-item">
                 releases
             </li>
@@ -13,10 +13,18 @@
         </project-breadcrumbs>
         
         <h4 class="mt-4">
-            Deploy <release-badge v-bind:project-id="project.id" v-bind:release-id="releaseId"></release-badge> to:
+            Deploy <release-badge
+                :project-id="project.id"
+                :release-id="releaseId"
+            /> to:
         </h4>
         <p>
-            <button v-for="environment in environments" v-on:click="deploy(environment.id)" type="button" class="btn btn-outline-success mr-1">
+            <button
+                v-for="environment in environments"
+                type="button"
+                class="btn btn-outline-success mr-1"
+                @click="deploy(environment.id)"
+            >
                 {{ environment.displayName }}
             </button>
         </p>
@@ -27,7 +35,7 @@
 import httpService from "./../../common/http/http-service.js";
 
 export default {
-    name: 'deploy-release',
+    name: 'DeployRelease',
     
     props: ['project'],
     

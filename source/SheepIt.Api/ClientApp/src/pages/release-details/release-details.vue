@@ -2,7 +2,7 @@
     <div v-if="release">
         <h1>Release details</h1>
 
-        <project-breadcrumbs v-bind:project-id="project.id">
+        <project-breadcrumbs :project-id="project.id">
             <li class="breadcrumb-item">
                 releases
             </li>
@@ -35,13 +35,19 @@
         <div class="form-group row">
             <label class="col-2 col-form-label">Created At</label>
             <div class="col-10">
-                <humanized-date v-bind:date="release.createdAt"></humanized-date>
+                <humanized-date :date="release.createdAt" />
             </div>
         </div>
         
-        <variable-details v-bind:variables="release.variables" v-bind:environments="environments"></variable-details>
+        <variable-details
+            :variables="release.variables"
+            :environments="environments"
+        />
 
-        <release-deployments v-bind:project="project" v-bind:release="release"></release-deployments>
+        <release-deployments
+            :project="project"
+            :release="release"
+        />
     </div>
 </template>
 
@@ -52,7 +58,7 @@ import VariableDetails from "./_components/variable-details.vue";
 import ReleaseDeployments from "./_components/release-deployments.vue";
 
 export default {
-    name: 'release-details',
+    name: 'ReleaseDetails',
 
     components: {
         'variable-details': VariableDetails,
@@ -70,10 +76,6 @@ export default {
         }
     },
 
-    created() {
-        this.getProjectEnvironments();
-    },
-
     computed: {
         releaseId() {
             return this.$route.params.releaseId
@@ -89,6 +91,10 @@ export default {
             immediate: true,
             handler: 'getReleaseDetails'
         }            
+    },
+
+    created() {
+        this.getProjectEnvironments();
     },
     
     methods: {

@@ -1,32 +1,49 @@
 <template>
     <div>
-        <h3 class="mt-5">Deployments</h3>
-        <expanding-list class="mt-4" v-bind:all-items="deployments" initial-length="5">
+        <h3 class="mt-5">
+            Deployments
+        </h3>
+        <expanding-list
+            class="mt-4"
+            :all-items="deployments"
+            initial-length="5"
+        >
             <template slot-scope="{ items }">
                 <table class="table table-bordered">
                     <thead>
-                    <tr>
-                        <th scope="col">id</th>
-                        <th scope="col">status</th>
-                        <th scope="col">environment</th>
-                        <th scope="col">deployed</th>
-                    </tr>
+                        <tr>
+                            <th scope="col">
+                                id
+                            </th>
+                            <th scope="col">
+                                status
+                            </th>
+                            <th scope="col">
+                                environment
+                            </th>
+                            <th scope="col">
+                                deployed
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="deployment in items">
-                        <th scope="row">
-                            <deployment-badge v-bind:project-id="project.id" v-bind:deployment-id="deployment.id"></deployment-badge>
-                        </th>
-                        <td>
-                            <deployment-status-badge v-bind:status="deployment.status"></deployment-status-badge>
-                        </td>
-                        <td>
-                            <span class="badge badge-warning">{{ deployment.environmentDisplayName }}</span>
-                        </td>
-                        <td>
-                            <humanized-date v-bind:date="deployment.deployedAt"></humanized-date>
-                        </td>
-                    </tr>
+                        <tr v-for="deployment in items">
+                            <th scope="row">
+                                <deployment-badge
+                                    :project-id="project.id"
+                                    :deployment-id="deployment.id"
+                                />
+                            </th>
+                            <td>
+                                <deployment-status-badge :status="deployment.status" />
+                            </td>
+                            <td>
+                                <span class="badge badge-warning">{{ deployment.environmentDisplayName }}</span>
+                            </td>
+                            <td>
+                                <humanized-date :date="deployment.deployedAt" />
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </template>
@@ -38,7 +55,7 @@
 import httpService from "./../../../common/http/http-service.js";
 
 export default {
-    name: "release-deployments",
+    name: "ReleaseDeployments",
 
     props: [
         'project',

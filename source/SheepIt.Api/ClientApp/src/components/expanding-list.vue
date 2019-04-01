@@ -1,11 +1,19 @@
 <template>
     <div>
-        <slot v-bind:items="items"></slot>
+        <slot :items="items" />
         <p>
-            <button class="btn btn-outline-primary" v-if="canExpand" v-on:click="showAll = true">
+            <button
+                v-if="canExpand"
+                class="btn btn-outline-primary"
+                @click="showAll = true"
+            >
                 Show more ({{ allItems.length }})
             </button>
-            <button class="btn btn-outline-primary" v-if="canCompress" v-on:click="showAll = false">
+            <button
+                v-if="canCompress"
+                class="btn btn-outline-primary"
+                @click="showAll = false"
+            >
                 Show less ({{ initialLength }})
             </button>
         </p>
@@ -14,7 +22,7 @@
 
 <script>
 export default {
-    name: 'expanding-list',
+    name: 'ExpandingList',
     
     props: ['allItems', 'initialLength'],
 

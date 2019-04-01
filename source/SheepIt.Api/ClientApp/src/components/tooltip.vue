@@ -1,12 +1,17 @@
 <template>
-    <span ref="spanRef" data-toggle="tooltip" v-bind:data-placement="dataPlacement" v-bind:title="text">
-        <slot></slot>
+    <span
+        ref="spanRef"
+        data-toggle="tooltip"
+        :data-placement="dataPlacement"
+        :title="text"
+    >
+        <slot />
     </span>
 </template>
 
 <script>
 export default {
-    name: 'tooltip',
+    name: 'Tooltip',
     
     props: {
         'text': String,

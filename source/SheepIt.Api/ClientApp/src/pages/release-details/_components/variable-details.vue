@@ -1,12 +1,16 @@
 <template>
     <div>
-        <h3 class="mt-5">Variables</h3>
+        <h3 class="mt-5">
+            Variables
+        </h3>
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>name</th>
                     <th>default value</th>
-                    <th v-for="environment in environments">{{ environment.displayName }}</th>
+                    <th v-for="environment in environments">
+                        {{ environment.displayName }}
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -23,13 +27,12 @@
                 </tr>
             </tbody>
         </table>
-        
     </div>
 </template>
 
 <script>
 export default {
-    name: 'variable-details',
+    name: 'VariableDetails',
     
     props: ['variables', 'environments'],
 }

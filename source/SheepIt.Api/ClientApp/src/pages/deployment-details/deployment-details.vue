@@ -1,7 +1,6 @@
 <template>
     <div v-if="deployment">
-
-        <project-breadcrumbs v-bind:project-id="project.id">
+        <project-breadcrumbs :project-id="project.id">
             <li class="breadcrumb-item">
                 deployments
             </li>
@@ -23,33 +22,44 @@
             <tbody>
                 <tr>
                     <td>
-                        <deployment-badge v-bind:project-id="project.id" v-bind:deployment-id="deployment.id"></deployment-badge>
+                        <deployment-badge
+                            :project-id="project.id"
+                            :deployment-id="deployment.id"
+                        />
                     </td>
                     <td>
-                        <deployment-status-badge v-bind:status="deployment.status"></deployment-status-badge>
+                        <deployment-status-badge :status="deployment.status" />
                     </td>
                     <td>
-                        <release-badge v-bind:project-id="project.id" v-bind:release-id="deployment.releaseId"></release-badge>
+                        <release-badge
+                            :project-id="project.id"
+                            :release-id="deployment.releaseId"
+                        />
                     </td>
                     <td>
                         <span class="badge badge-warning">{{ deployment.environmentDisplayName }}</span>
                     </td>
                     <td>
-                        <humanized-date v-bind:date="deployment.deployedAt"></humanized-date>
+                        <humanized-date :date="deployment.deployedAt" />
                     </td>
                 </tr>
             </tbody>
         </table>
         
         <div>
-            <div class="mt-4" v-for="stepResult in deployment.stepResults">
-                <pre class="mb-0" v-bind:class="stepResult.successful ? '' : 'text-danger'"><b><code>{{ stepResult.command }}</code></b></pre>
-                <pre v-bind:class="stepResult.successful ? '' : 'text-danger'"><code>{{ stepResult.output.join("\n") }}</code></pre>
+            <div
+                v-for="stepResult in deployment.stepResults"
+                class="mt-4"
+            >
+                <pre
+                    class="mb-0"
+                    :class="stepResult.successful ? '' : 'text-danger'"
+                ><b><code>{{ stepResult.command }}</code></b></pre>
+                <pre :class="stepResult.successful ? '' : 'text-danger'"><code>{{ stepResult.output.join("\n") }}</code></pre>
             </div>
         </div>
         
-        <deployment-used-variables v-bind:used-variables="deployment.variables"></deployment-used-variables>
-
+        <deployment-used-variables :used-variables="deployment.variables" />
     </div>
 </template>
 
@@ -59,7 +69,7 @@ import httpService from "./../../common/http/http-service.js"
 import DeploymentUsedVariables from "./_components/deployment-used-variables"
 
 export default {
-    name: 'deployment-details',
+    name: 'DeploymentDetails',
 
     components: {
         'deployment-used-variables': DeploymentUsedVariables

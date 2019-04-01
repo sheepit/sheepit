@@ -5,16 +5,18 @@
                 projects
             </li>
             <li class="breadcrumb-item">
-                <router-link v-bind:to="{ name: 'project', params: { projectId: projectId }}">{{ projectId }}</router-link>
+                <router-link :to="{ name: 'project', params: { projectId: projectId }}">
+                    {{ projectId }}
+                </router-link>
             </li>
-            <slot></slot>
+            <slot />
         </ol>
     </nav>
 </template>
 
 <script>
 export default {
-    name: 'project-breadcrumbs',
+    name: 'ProjectBreadcrumbs',
     props: ['projectId']
 }
 </script>

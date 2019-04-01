@@ -5,34 +5,59 @@
                 <tr>
                     <th>name</th>
                     <th>default value</th>
-                    <th v-for="environment in environments">{{ environment.displayName }}</th>
+                    <th v-for="environment in environments">
+                        {{ environment.displayName }}
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(variable, variableIndex) in variables" v-bind:key="variableIndex">
+                <tr
+                    v-for="(variable, variableIndex) in variables"
+                    :key="variableIndex"
+                >
                     <td>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <button class="btn btn-sm btn-danger" v-on:click="removeVariable(variableIndex)">X</button>
+                                <button
+                                    class="btn btn-sm btn-danger"
+                                    @click="removeVariable(variableIndex)"
+                                >
+                                    X
+                                </button>
                             </div>
-                            <input type="text" class="form-control" v-model="variable.name">
+                            <input
+                                v-model="variable.name"
+                                type="text"
+                                class="form-control"
+                            >
                         </div>
                     </td>
                     <td>
-                        <input type="text" class="form-control" v-model="variable.defaultValue">
+                        <input
+                            v-model="variable.defaultValue"
+                            type="text"
+                            class="form-control"
+                        >
                     </td>
                     <td v-for="environment in environments">
-                        <input type="text" class="form-control" v-model="variable.environmentValues[environment.id]">
+                        <input
+                            v-model="variable.environmentValues[environment.id]"
+                            type="text"
+                            class="form-control"
+                        >
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <button class="btn btn-sm btn-primary" v-on:click="addVariable()">Add variable</button>
+                        <button
+                            class="btn btn-sm btn-primary"
+                            @click="addVariable()"
+                        >
+                            Add variable
+                        </button>
                     </td>
-                    <td>
-                    </td>
-                    <td v-for="environment in environments">
-                    </td>
+                    <td />
+                    <td v-for="environment in environments" />
                 </tr>
             </tbody>
         </table>     
@@ -41,7 +66,7 @@
 
 <script>
 export default {
-    name: 'variable-editor',
+    name: 'VariableEditor',
     
     props: ['variables', 'environments'],
     

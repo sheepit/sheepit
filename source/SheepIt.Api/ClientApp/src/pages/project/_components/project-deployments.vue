@@ -1,44 +1,67 @@
 <template>
-    <expanding-list class="mt-4" v-bind:all-items="deployments" initial-length="5" v-if="deployments && deployments.length > 0">
+    <expanding-list
+        v-if="deployments && deployments.length > 0"
+        class="mt-4"
+        :all-items="deployments"
+        initial-length="5"
+    >
         <template slot-scope="{ items }">
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">id</th>
-                        <th scope="col">status</th>
-                        <th scope="col">release id</th>
-                        <th scope="col">environment</th>
-                        <th scope="col">deployed</th>
+                        <th scope="col">
+                            id
+                        </th>
+                        <th scope="col">
+                            status
+                        </th>
+                        <th scope="col">
+                            release id
+                        </th>
+                        <th scope="col">
+                            environment
+                        </th>
+                        <th scope="col">
+                            deployed
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="deployment in items">
                         <th scope="row">
-                            <deployment-badge v-bind:project-id="project.id" v-bind:deployment-id="deployment.id"></deployment-badge>
+                            <deployment-badge
+                                :project-id="project.id"
+                                :deployment-id="deployment.id"
+                            />
                         </th>
                         <td>
-                            <deployment-status-badge v-bind:status="deployment.status"></deployment-status-badge>
+                            <deployment-status-badge :status="deployment.status" />
                         </td>
                         <td>
-                            <release-badge v-bind:project-id="project.id" v-bind:release-id="deployment.releaseId"></release-badge>
+                            <release-badge
+                                :project-id="project.id"
+                                :release-id="deployment.releaseId"
+                            />
                         </td>
                         <td>
                             <span class="badge badge-warning">{{ deployment.environmentDisplayName }}</span>
                         </td>
                         <td>
-                            <humanized-date v-bind:date="deployment.deployedAt"></humanized-date>                            
+                            <humanized-date :date="deployment.deployedAt" />                            
                         </td>
                     </tr>
                 </tbody>
             </table>
         </template>
     </expanding-list>
-    <div v-else>No deployments found for this project</div>
+    <div v-else>
+        No deployments found for this project
+    </div>
 </template>
 
 <script>
 export default {
-    name: "project-deployments",
+    name: "ProjectDeployments",
 
     props: [
         'project',

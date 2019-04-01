@@ -1,12 +1,12 @@
 <template>
     <div v-if="project">
-        <router-view v-bind:project="project"></router-view>
+        <router-view :project="project" />
     </div>
 </template>
 
 <script>
 export default {
-    name: 'proj',
+    name: 'Proj',
     
     props: ['projects'],
 

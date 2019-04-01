@@ -1,25 +1,42 @@
 <template>
-
-    <button v-if="!addingNewEnvironment" type="button" v-on:click="onNewEnvironemnt()" class="btn btn-primary">Add new</button>
-    <div v-else class="col-md-3">
+    <button
+        v-if="!addingNewEnvironment"
+        type="button"
+        class="btn btn-primary"
+        @click="onNewEnvironemnt()"
+    >
+        Add new
+    </button>
+    <div
+        v-else
+        class="col-md-3"
+    >
         <div class="card">
             <div class="card-header">
                 <input 
+                    v-focus=""
                     :value="newEnvironmentDisplayName"
+                    type="text"
                     @blur="onBlur"
                     @keyup.enter="onBlur($event)"
-                    type="text"
-                    v-focus=""/>
+                >
             </div>
         </div>
     </div>
-
 </template>
 
 
 <script>
 export default {
-    name: 'new-environment-card',
+    name: 'NewEnvironmentCard',
+
+    directives: {
+        focus: {
+            inserted(el) {
+                el.focus();
+            }
+        }
+    },
 
     data() {
         return {
@@ -38,14 +55,6 @@ export default {
             this.$emit('blur', this.newEnvironmentDisplayName);
             this.addingNewEnvironment = false;
         },
-    },
-
-    directives: {
-        focus: {
-            inserted(el) {
-                el.focus();
-            }
-        }
     }
 };
 </script>

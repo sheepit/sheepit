@@ -4,26 +4,49 @@
         <div>
             <div class="form-group">
                 <label for="projectId">Project id</label>
-                <input type="text" v-model="projectId" class="form-control" id="projectId">
+                <input
+                    id="projectId"
+                    v-model="projectId"
+                    type="text"
+                    class="form-control"
+                >
             </div>
             <div class="form-group">
                 <label for="sourceUrl">Git repository URL</label>
-                <input type="text" v-model="repositoryUrl" class="form-control" id="sourceUrl">
+                <input
+                    id="sourceUrl"
+                    v-model="repositoryUrl"
+                    type="text"
+                    class="form-control"
+                >
             </div>
 
             <div class="form-group">
                 <label>Environments (names):</label>
                 
-                <input type="text"
-                       v-model="environments[environmentIndex]"
-                       class="form-control"
-                       v-for="(environment, environmentIndex) in environments"
-                       v-bind:key="environmentIndex">
+                <input
+                    v-for="(environment, environmentIndex) in environments"
+                    :key="environmentIndex"
+                    v-model="environments[environmentIndex]"
+                    type="text"
+                    class="form-control"
+                >
                 
-                <button class="btn btn-secondary" v-on:click="newEnvironment()">Add new</button>
+                <button
+                    class="btn btn-secondary"
+                    @click="newEnvironment()"
+                >
+                    Add new
+                </button>
             </div>
 
-            <button type="button" v-on:click="create()" class="btn btn-primary">Create</button>
+            <button
+                type="button"
+                class="btn btn-primary"
+                @click="create()"
+            >
+                Create
+            </button>
         </div>
     </div>
 </template>
@@ -32,7 +55,7 @@
 import createProjectService from "./_services/create-project-service.js";
 
 export default {
-    name: "create-project",
+    name: "CreateProject",
     data() {
         return {
             projectId: "",

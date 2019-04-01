@@ -1,13 +1,11 @@
 <template>
     <div id="app">
         <div class="container">
-
-            <navigation v-bind:projects="projects"></navigation>
+            <navigation :projects="projects" />
             
             <main class="mt-5">
-                <router-view v-bind:projects="projects"></router-view>
+                <router-view :projects="projects" />
             </main>
-
         </div>
     </div>
 </template>
@@ -81,7 +79,7 @@ const router = new VueRouter({
 });
 
 export default {
-    name: 'app',
+    name: 'App',
 
     components: {
         Navigation

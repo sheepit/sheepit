@@ -4,28 +4,56 @@
         <div>
             <div class="form-group">
                 <label for="projectId">Project id</label>
-                <input type="text" v-model="project.id" class="form-control" id="projectId" disabled="disabled">
+                <input
+                    id="projectId"
+                    v-model="project.id"
+                    type="text"
+                    class="form-control"
+                    disabled="disabled"
+                >
             </div>
 
             <div class="form-group">
                 <label for="repositoryUrl">Git repository URL</label>
-                <input type="text" v-model="project.repositoryUrl" class="form-control" id="repositoryUrl">
+                <input
+                    id="repositoryUrl"
+                    v-model="project.repositoryUrl"
+                    type="text"
+                    class="form-control"
+                >
             </div>
 
-            <button type="button" v-on:click="save()" class="btn btn-primary">Save</button>
+            <button
+                type="button"
+                class="btn btn-primary"
+                @click="save()"
+            >
+                Save
+            </button>
         </div>
 
         <h4>Environments</h4>
         <div>
-            <draggable v-model="environments" class="row" @end="onEnvironmentDragEnd">
-                <div v-for="(environment, index) in environments" class="col-md-3" v-bind:key="index">
+            <draggable
+                v-model="environments"
+                class="row"
+                @end="onEnvironmentDragEnd"
+            >
+                <div
+                    v-for="(environment, index) in environments"
+                    :key="index"
+                    class="col-md-3"
+                >
                     <div class="card">
                         <div class="card-header">
-                            <editable-title v-bind:title="environment.displayName" @blur="(event) => { renameEnvironment(event, index) }" />
+                            <editable-title
+                                :title="environment.displayName"
+                                @blur="(event) => { renameEnvironment(event, index) }"
+                            />
                         </div>
                     </div>
                 </div>
-                <new-environment-card @blur="addNewEnvironment($event)"></new-environment-card>
+                <new-environment-card @blur="addNewEnvironment($event)" />
             </draggable>
         </div>
     </div>
@@ -39,7 +67,7 @@ import EditableTitle from "./_components/editable-title.vue";
 import NewEnvironmentCard from "./_components/new-environment-card.vue";
 
 export default {
-    name: 'edit-project',
+    name: 'EditProject',
 
     components: {
         draggable,

@@ -1,5 +1,8 @@
 <template>
-    <tooltip data-placement="top" v-bind:text="formattedDate">
+    <tooltip
+        data-placement="top"
+        :text="formattedDate"
+    >
         <mark>{{ humanizedDate }}</mark>
     </tooltip>
 </template>
@@ -8,7 +11,7 @@
 import moment from 'moment';
 
 export default {
-    name: "humanized-date",
+    name: "HumanizedDate",
 
     props: ['date'],
 

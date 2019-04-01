@@ -1,7 +1,6 @@
 <template>
     <div>
-
-        <project-breadcrumbs v-bind:project-id="project.id">
+        <project-breadcrumbs :project-id="project.id">
             <li class="breadcrumb-item">
                 edit variables
             </li>
@@ -10,24 +9,34 @@
         <div v-if="release">
             <h4 class="mt-5">
                 Editing variables based on
-                <release-badge v-bind:project-id="project.id" v-bind:release-id="release.id"></release-badge>
+                <release-badge
+                    :project-id="project.id"
+                    :release-id="release.id"
+                />
             </h4>
             
-            <variable-editor v-bind:variables="release.variables" v-bind:environments="environments">
-            </variable-editor>
+            <variable-editor
+                :variables="release.variables"
+                :environments="environments"
+            />
         </div>
         
-        <button class="btn btn-success mt-4" v-on:click="createRelease()">Create release</button>
+        <button
+            class="btn btn-success mt-4"
+            @click="createRelease()"
+        >
+            Create release
+        </button>
     </div>
 </template>
 
 <script>
-    import httpService from "./../../common/http/http-service.js";
+import httpService from "./../../common/http/http-service.js";
 
-    import VariableEditor from "./_components/variable-editor.vue";
+import VariableEditor from "./_components/variable-editor.vue";
 
-    export default {
-    name: 'create-release',
+export default {
+    name: 'CreateRelease',
     
     components: {
         'variable-editor': VariableEditor

@@ -1,35 +1,60 @@
 <template>
     <div v-if="project">
-        
-        <project-breadcrumbs v-bind:project-id="project.id"></project-breadcrumbs>
+        <project-breadcrumbs :project-id="project.id" />
         
         <div class="row project-title">
             <div class="col">
-                <h2 class="display-4">{{ project.id }}</h2>
+                <h2 class="display-4">
+                    {{ project.id }}
+                </h2>
                 <p><code>{{ project.repositoryUrl }}</code></p>
             </div>
             <div class="col text-right">
-                <router-link class="btn btn-primary link-button" :to="{ name: 'edit-project' }">
+                <router-link
+                    class="btn btn-primary link-button"
+                    :to="{ name: 'edit-project' }"
+                >
                     Edit project
                 </router-link>
-                <router-link class="btn btn-primary link-button" :to="{ name: 'create-release', params: { projectId: project.id }}">
+                <router-link
+                    class="btn btn-primary link-button"
+                    :to="{ name: 'create-release', params: { projectId: project.id }}"
+                >
                     Edit variables
                 </router-link>
-                <button class="btn btn-primary" v-on:click="updateProcess()">
+                <button
+                    class="btn btn-primary"
+                    @click="updateProcess()"
+                >
                     Update process
                 </button>
             </div>
         </div>
         
-        <h3 class="mt-5">Environments</h3>
-        <project-dashboard class="mt-4" :project="project" :environments="environments"></project-dashboard>
+        <h3 class="mt-5">
+            Environments
+        </h3>
+        <project-dashboard
+            class="mt-4"
+            :project="project"
+            :environments="environments"
+        />
 
-        <h3 class="mt-5">Releases</h3>
-        <project-releases :project="project" :releases="releases"></project-releases>
+        <h3 class="mt-5">
+            Releases
+        </h3>
+        <project-releases
+            :project="project"
+            :releases="releases"
+        />
 
-        <h3 class="mt-5">Deployments</h3>
-        <project-deployments :project="project" :deployments="deployments"></project-deployments>
-
+        <h3 class="mt-5">
+            Deployments
+        </h3>
+        <project-deployments
+            :project="project"
+            :deployments="deployments"
+        />
     </div>
 </template>
 
@@ -42,7 +67,7 @@ import ProjectReleases from "./_components/project-releases.vue";
 import ProjectDeployments from "./_components/project-deployments.vue";
 
 export default {
-    name: 'project',
+    name: 'Project',
     
     components: {
         'project-dashboard': ProjectDashboard,

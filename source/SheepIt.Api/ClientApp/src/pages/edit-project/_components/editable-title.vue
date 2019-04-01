@@ -1,24 +1,36 @@
 <template>
-
     <div class="tile">
         <div class="content">
             <span v-if="!focused">{{ localTitle }}</span>
-            <input v-if="focused"
-                   :value="localTitle" 
-                   @blur="onBlur"
-                   @keyup.enter="onBlur($event)"
-                   type="text"
-                   v-focus="" />
+            <input
+                v-if="focused"
+                v-focus="" 
+                :value="localTitle"
+                type="text"
+                @blur="onBlur"
+                @keyup.enter="onBlur($event)"
+            >
         </div>
-        <span v-if="!focused" class="icon icon-pencil" @click="onFocus()"></span>
+        <span
+            v-if="!focused"
+            class="icon icon-pencil"
+            @click="onFocus()"
+        />
     </div>
-
 </template>
 
 
 <script>
 export default {
-    name: 'editable-title',
+    name: 'EditableTitle',
+
+    directives: {
+        focus: {
+            inserted(el) {
+                el.focus();
+            }
+        }
+    },
 
     props: [
         'title'
@@ -46,14 +58,6 @@ export default {
             this.localTitle = $event.target.value;
             this.focused = false;
             this.$emit('blur', this.localTitle)
-        }
-    },
-
-    directives: {
-        focus: {
-            inserted(el) {
-                el.focus();
-            }
         }
     }
 };
