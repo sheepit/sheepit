@@ -11,6 +11,8 @@ namespace SheepIt.Api.Infrastructure.Web
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             
             services.AddSwaggerGen(c =>
@@ -42,6 +44,13 @@ namespace SheepIt.Api.Infrastructure.Web
 
             app.UseMiddleware<SerilogMiddleware>();
 
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+            );
+            
             app.UseMvc();
             
             app.UseSwagger();
