@@ -115,7 +115,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .project-title {
     text-align: left;
 }

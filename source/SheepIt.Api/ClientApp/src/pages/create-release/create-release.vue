@@ -70,7 +70,7 @@ export default {
             
             const request = {
                 projectId: this.project.id,
-                newVariables: this.release.variables
+                newVariables: this.release ? this.release.variables : []
             };
             
             httpService
