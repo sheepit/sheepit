@@ -54,6 +54,7 @@
         <project-deployments
             :project="project"
             :deployments="deployments"
+            class="deployments-section"
         />
     </div>
 </template>
@@ -122,5 +123,9 @@ export default {
 
 .link-button {
     margin-right: 0.5rem;
+}
+
+.deployments-section {
+    margin-bottom: 1rem;
 }
 </style>
