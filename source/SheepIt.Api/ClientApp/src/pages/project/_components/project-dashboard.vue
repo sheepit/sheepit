@@ -7,7 +7,7 @@
             class="col-md-3"
         >
             <div class="card margin-bottom">
-                <div class="card-header">
+                <div class="card-header environment-card-header">
                     {{ environment.displayName }}
                 </div>
                 <ul
@@ -37,7 +37,9 @@
                     v-else
                     class="list-group list-group-flush"
                 >
-                    <li class="list-group-item lead" />
+                    <li class="list-group-item">
+                        Nothing deployed yet
+                    </li>
                 </ul>
             </div>
         </div>
@@ -63,8 +65,14 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .card {
     margin-bottom: 1rem;
+}
+
+.environment-card-header {
+    min-height: 49px;
+    height: 100%;
+    width: 100%;
 }
 </style>
