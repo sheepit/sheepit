@@ -1,6 +1,16 @@
 <template>
     <div v-if="project">
-        <h4>Edit project</h4>
+        <div class="row project-title">
+            <div class="col">
+                <h2 class="display-4">
+                    {{ project.id }}
+                </h2>
+            </div>
+        </div>
+
+        <h3 class="mt-5">
+            Edit project
+        </h3>
         <div>
             <div class="form-group">
                 <label for="projectId">Project id</label>
@@ -23,16 +33,20 @@
                 >
             </div>
 
-            <button
-                type="button"
-                class="btn btn-primary"
-                @click="save()"
-            >
-                Save
-            </button>
+            <div class="save-button-container">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="save()"
+                >
+                    Save
+                </button>
+            </div>
         </div>
 
-        <h4>Environments</h4>
+        <h3 class="mt-5">
+            Environments
+        </h3>
         <div>
             <draggable
                 v-model="environments"
@@ -45,7 +59,7 @@
                     class="col-md-3"
                 >
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header environment-card-header">
                             <editable-title
                                 :title="environment.displayName"
                                 @blur="(event) => { renameEnvironment(event, index) }"
@@ -53,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                <new-environment-card @blur="addNewEnvironment($event)" />
+                <new-environment-card @blur="addNewEnvironment($event)" class="add-environment-button" />
             </draggable>
         </div>
     </div>
@@ -161,3 +175,21 @@ function addNewEnvironment(projectId, displayName) {
     return httpService.post('api/project/environment/add-environment', request);
 } 
 </script>
+
+<style lang="scss" scoped>
+.save-button-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.add-environment-button {
+    height: 51px;
+    width: 255px;
+}
+
+.environment-card-header {
+    min-height: 49px;
+    height: 100%;
+    width: 100%;
+}
+</style>

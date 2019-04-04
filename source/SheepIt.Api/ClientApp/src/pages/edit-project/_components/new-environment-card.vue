@@ -1,12 +1,13 @@
 <template>
-    <button
-        v-if="!addingNewEnvironment"
-        type="button"
-        class="btn btn-primary"
-        @click="onNewEnvironemnt()"
-    >
-        Add new
-    </button>
+    <div v-if="!addingNewEnvironment" class="col-md-3">
+        <button
+            type="button"
+            class="btn btn-primary full-sized"
+            @click="onNewEnvironemnt()"
+        >
+            Add new
+        </button>
+    </div>
     <div
         v-else
         class="col-md-3"
@@ -58,3 +59,10 @@ export default {
     }
 };
 </script>
+
+<style lang="scss" scoped>
+.full-sized {
+    height: 100%;
+    width: 100%;
+}
+</style>
