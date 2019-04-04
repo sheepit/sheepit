@@ -177,6 +177,10 @@ function addNewEnvironment(projectId, displayName) {
 </script>
 
 <style lang="scss" scoped>
+.card {
+    margin-bottom: 1rem;
+}
+
 .save-button-container {
     display: flex;
     justify-content: flex-end;
