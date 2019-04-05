@@ -67,7 +67,10 @@
                         </div>
                     </div>
                 </div>
-                <new-environment-card @blur="addNewEnvironment($event)" class="add-environment-button" />
+                <new-environment-card
+                    class="add-environment-button"
+                    @blur="addNewEnvironment($event)"
+                />
             </draggable>
         </div>
     </div>
@@ -153,7 +156,7 @@ function updateEnvironmentRank(projectId, environmentIds) {
         environmentIds: environmentIds
     };
 
-    httpService.post('api/project/environment/update-environments-rank', request);
+    httpService.post('api/project/environment/update-environments-rank', request, false);
 }
 
 function updateEnvironmentDisplayName(environmentId, displayName, projectId) {
@@ -163,7 +166,7 @@ function updateEnvironmentDisplayName(environmentId, displayName, projectId) {
         displayName: displayName
     };
 
-    httpService.post('api/project/environment/update-environment-display-name', request);
+    httpService.post('api/project/environment/update-environment-display-name', request, false);
 }
 
 function addNewEnvironment(projectId, displayName) {
@@ -172,7 +175,7 @@ function addNewEnvironment(projectId, displayName) {
         displayName: displayName
     };
 
-    return httpService.post('api/project/environment/add-environment', request);
+    return httpService.post('api/project/environment/add-environment', request, false);
 } 
 </script>
 

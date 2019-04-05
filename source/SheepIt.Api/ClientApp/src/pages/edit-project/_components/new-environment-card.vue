@@ -1,5 +1,8 @@
 <template>
-    <div v-if="!addingNewEnvironment" class="col-md-3">
+    <div
+        v-if="!addingNewEnvironment"
+        class="col-md-3"
+    >
         <button
             type="button"
             class="btn btn-primary full-sized"
