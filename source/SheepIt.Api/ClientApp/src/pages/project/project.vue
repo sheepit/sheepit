@@ -110,7 +110,9 @@ export default {
         updateProcess() {
             updateProcessService
                 .updateProcess(this.project.id)
-                .then(() => window.app.updateProjects())
+                .then(() => {});
+                // TODO: Update main app component, so it knows that new project was added
+                // .then(() => window.app.updateProjects())
         }
     }
 };
