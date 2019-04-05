@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Logger;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -43,6 +44,7 @@ namespace SheepIt.Api.Infrastructure.Web
             });
 
             app.UseMiddleware<SerilogMiddleware>();
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
