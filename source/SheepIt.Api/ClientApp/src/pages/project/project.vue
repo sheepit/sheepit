@@ -94,6 +94,7 @@ export default {
 
     created() {
         this.getDashboard();
+        this.$toasted.show('hello billo');
     },
 
     methods: {
