@@ -1,3 +1,5 @@
+import messageService from "./../message/message-service";
+
 export default {
     baseUrl: 'https://localhost:44380/',
 
@@ -16,7 +18,11 @@ export default {
         }
     
         return fetch(requestUrl, fetchSettings)
-            .then(response => response.json());
+            .then(this.handleErrors)
+            .then(response => response.json())
+            .catch(error => {
+                messageService.error(error);
+            });
     },
 
     post(url, request, jsonResponse = true) {
@@ -37,9 +43,25 @@ export default {
         const responsePromise = fetch(requestUrl, fetchSettings);
 
         if(jsonResponse) {
-            return responsePromise.then(response => response.json());
+            return responsePromise
+                .then(this.handleErrors)
+                .then(response => response.json())
+                .catch(error => {
+                    messageService.error(error);
+                })
         }
 
-        return responsePromise;
+        return responsePromise
+            .then(this.handleErrors)
+            .catch(error => {
+                messageService.error(error);
+            });
+    },
+
+    handleErrors(response) {
+        if (!response.ok) {
+            throw Error(response.statusText);
+        }
+        return response;
     }
 };

@@ -67,8 +67,6 @@ import ProjectDashboard from "./_components/project-dashboard.vue";
 import ProjectReleases from "./_components/project-releases.vue";
 import ProjectDeployments from "./_components/project-deployments.vue";
 
-import messageService from "./../../common/message/message-service.js";
-
 export default {
     name: 'Project',
     
@@ -96,7 +94,6 @@ export default {
 
     created() {
         this.getDashboard();
-        messageService.warning('testing');
     },
 
     methods: {
