@@ -60,6 +60,8 @@ export default {
 
     handleErrors(response) {
         if (!response.ok) {
+            response.json()
+                .then(error => console.log(error));
             throw Error(response.statusText);
         }
         return response;

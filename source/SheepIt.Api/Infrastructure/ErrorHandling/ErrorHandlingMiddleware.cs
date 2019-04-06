@@ -20,17 +20,24 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
             {
                 await next(context);
             }
+            catch (CustomException ex)
+            {
+                await HandleExceptionAsync(context, new ErrorResponse(ex));
+            }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                await HandleExceptionAsync(context, new ErrorResponse(ex));
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private static Task HandleExceptionAsync(HttpContext context, ErrorResponse errorResponse)
         {
             var code = HttpStatusCode.InternalServerError;
 
-            var result = JsonConvert.SerializeObject(new { error = ex.Message });
+            var result = JsonConvert.SerializeObject(
+                errorResponse,
+                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
+            );
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
 
