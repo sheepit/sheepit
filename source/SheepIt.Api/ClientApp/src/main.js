@@ -6,15 +6,12 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import jQuery from 'jquery'
 
-import Toasted from 'vue-toasted';
-
 window.jQuery = jQuery
 window.$ = jQuery
 
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
-Vue.use(Toasted);
 
 import DeploymentBadge from "./components/deployment-badge.vue";
 import DeploymentStatusBadge from "./components/deployment-status-badge.vue";
