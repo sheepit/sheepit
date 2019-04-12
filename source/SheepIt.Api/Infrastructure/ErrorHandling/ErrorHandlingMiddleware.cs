@@ -9,12 +9,13 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
+
         public ErrorHandlingMiddleware(RequestDelegate next)
         {
             this.next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, ErrorHandlingSettings settings)
         {
             try
             {
@@ -22,15 +23,15 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
             }
             catch (CustomException ex)
             {
-                await HandleExceptionAsync(context, new ErrorResponse(ex));
+                await HandleExceptionAsync(context, new ErrorResponse(ex, settings));
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, new ErrorResponse(ex));
+                await HandleExceptionAsync(context, new ErrorResponse(ex, settings));
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, ErrorResponse errorResponse)
+        private Task HandleExceptionAsync(HttpContext context, ErrorResponse errorResponse)
         {
             var code = HttpStatusCode.InternalServerError;
 

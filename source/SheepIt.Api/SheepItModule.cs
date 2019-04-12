@@ -4,8 +4,8 @@ using SheepIt.Api.Core.DeploymentProcessRunning;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Web;
 using SheepIt.Api.UseCases.ProjectManagement;
@@ -31,6 +31,7 @@ namespace SheepIt.Api
 
         private static void RegisterInfrastructure(ContainerBuilder builder)
         {
+            builder.RegisterModule<ErrorHandlingModule>();
             builder.RegisterModule<WebModule>();
             builder.RegisterModule<MongoDbModule>();
         }

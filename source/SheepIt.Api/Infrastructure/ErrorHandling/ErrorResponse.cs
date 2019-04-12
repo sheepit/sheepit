@@ -10,20 +10,24 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
         public string HumanReadableMessage { get; }
         public DeveloperDetails DeveloperDetails { get; }
 
-        public ErrorResponse(Exception e)
+        public ErrorResponse(Exception e, ErrorHandlingSettings settings)
         {
             ErrorCode = -1;
             Type = e.GetType().Name;
             HumanReadableMessage = "Server error occured";
-            DeveloperDetails = new DeveloperDetails(e); // TODO: config setting to enable it
+
+            if(settings.DeveloperDetails)
+                DeveloperDetails = new DeveloperDetails(e);
         }
 
-        public ErrorResponse(CustomException e)
+        public ErrorResponse(CustomException e, ErrorHandlingSettings settings)
         {
             ErrorCode = e.ErrorCode;
             Type = e.GetType().Name;
             HumanReadableMessage = e.HumanReadableMessage;
-            DeveloperDetails = new DeveloperDetails(e); // TODO: config setting to enable it
+
+            if(settings.DeveloperDetails)
+                DeveloperDetails = new DeveloperDetails(e);
         }
     }
 
