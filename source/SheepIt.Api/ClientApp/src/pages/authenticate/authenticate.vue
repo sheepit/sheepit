@@ -22,6 +22,7 @@
 
 <script>
     import httpService from "../../common/http/http-service.js";
+    import jwtTokenStorage from "../../common/authentication/jwt-token-storage.js";
     import messageService from "./../../common/message/message-service";
     
     export default {
@@ -41,7 +42,7 @@
                     })
                     .then(response => {
                         if (response.authenticated) {
-                            window.localStorage.setItem("jwtToken", response.jwtToken)
+                            jwtTokenStorage.set(response.jwtToken)
                             this.$router.push({ name: "default" })
                         } else {
                             this.password = "";

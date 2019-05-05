@@ -60,15 +60,31 @@
                 <button
                     class="btn btn-outline-light my-2 my-sm-0"
                     type="submit"
-                >Log Out</button>
+                    @click="signOut()"
+                >
+                    Log Out
+                </button>
             </span>
         </div>
     </nav>
 </template>
 
 <script>
-export default {
-    name: 'Navigation',
-    props: ['projects'],
-}
+
+    import jwtTokenStorage from "../../common/authentication/jwt-token-storage.js";
+
+
+    export default {
+        name: 'Navigation',
+        
+        props: ['projects'],
+    
+        methods: {
+            signOut() {
+                jwtTokenStorage.remove()
+                this.$router.push({ name: 'sign-in' })
+            }
+        }
+    }
+    
 </script>

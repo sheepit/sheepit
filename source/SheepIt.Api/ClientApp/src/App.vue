@@ -24,6 +24,7 @@ const router = new VueRouter({
     routes: [
         {
             path: '/sign-in',
+            name: 'sign-in',
             component: Authenticate
         },
         {
