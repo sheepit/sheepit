@@ -1,25 +1,22 @@
 <template>
-    <div>
-        <h4>Authenticate</h4>
-        <div>
-            <div class="form-group">
-                <label for="singleUserPassword">Password</label>
-                <input
-                        id="singleUserPassword"
-                        v-model="password"
-                        type="password"
-                        class="form-control"
-                >
-            </div>
+    <div class="component-signin d-flex align-items-center text-center">
 
-            <button
-                    type="button"
-                    class="btn btn-primary"
-                    @click="authenticate()"
-            >
-                Log in
+        <form class="form-signin" @submit.prevent="authenticate()">
+            <h1 class="h3 mb-3 font-weight-normal">
+                SheepIt
+            </h1>
+            <p>
+                Please enter a single user password:
+            </p>
+            <label for="inputPassword" class="sr-only">
+                Password
+            </label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="password" v-model="password" autofocus />
+            <button class="btn btn-lg btn-primary btn-block mt-3" type="submit" :disabled="!password">
+                Sign in
             </button>
-        </div>
+        </form>
+        
     </div>
 </template>
 
@@ -59,4 +56,15 @@
 
 <style scoped>
 
+    .component-signin {
+        height: 100vh;
+    }
+
+    .form-signin {
+        width: 100%;
+        max-width: 330px;
+        padding: 15px;
+        margin: auto;
+    }
+    
 </style>
