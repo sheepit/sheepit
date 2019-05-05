@@ -1,4 +1,5 @@
 import messageService from "./../message/message-service";
+import events from './../events/events.js';
 
 export default {
     baseUrl: 'https://localhost:44380/',
@@ -62,6 +63,11 @@ export default {
 
     handleErrors(response) {
         if (!response.ok) {
+            
+            if (response.status === 401) {
+                events.emit('unauthorized')
+            }
+            
             response.json()
                 .then(error => console.log(error));
             throw Error(response.statusText);

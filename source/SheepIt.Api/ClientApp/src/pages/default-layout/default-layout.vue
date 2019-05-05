@@ -1,10 +1,12 @@
 <template>
-    <div class="container">
+    <div class="container" data-event-handler @unauthorized="handleUnauthorized()">
+        
         <navigation :projects="projects" />
 
         <main class="mt-5">
             <router-view :projects="projects" />
         </main>
+        
     </div>
 </template>
 
@@ -35,6 +37,9 @@
                 return httpService
                     .get('api/list-projects', null)
                     .then(response => this.projects = response.projects)
+            },
+            handleUnauthorized() {
+                this.$router.push({ name: 'sign-in' })
             }
         }
     }
