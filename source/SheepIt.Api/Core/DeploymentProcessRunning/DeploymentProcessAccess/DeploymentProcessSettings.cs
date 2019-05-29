@@ -18,6 +18,7 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
 
         public class ShellSettings
         {
+            // todo: should be called BashPath/Command?
             public LocalPath Bash { get; }
             public LocalPath Cmd { get; }
 
