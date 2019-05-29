@@ -19,13 +19,29 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning
         [Test]
         public void can_run_a_command()
         {
-            // it's important to check if quotes work properly
-            // todo: we should find some more safe directory to ls
             var result = RunCommand(@"echo command output");
 
             var stepResult = result.ShouldHaveSingleStepResult();
 
-            stepResult.Output.Should().NotBeEmpty();
+            stepResult.Output.Should().Equal(
+                @"echo command output",
+                "command output",
+                ""
+            );
+        }
+
+        [Test]
+        public void can_run_and_print_a_command_with_quotes_and_special_characters()
+        {
+            var result = RunCommand(@"echo ""\\   $? `echo 1` 2""");
+
+            var stepResult = result.ShouldHaveSingleStepResult();
+
+            stepResult.Output.Should().Equal(
+                @"echo ""\\   $? `echo 1` 2""",
+                @"\   0 1 2",
+                ""
+            );
         }
 
         [Test]

@@ -27,9 +27,9 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning
             var decoratedCommands = commands
                 .SelectMany(command => new[]
                 {
-                    $"echo {command}",
+                    EchoCommand(command), 
                     command,
-                    "echo"
+                    EchoNewLine()
                 })
                 .ToArray();
 
@@ -66,6 +66,28 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning
                 variables: variables,
                 standardInputOrNull: command
             );
+        }
+        
+        private readonly string[] BashSpecialCharacters = { "\\", "\"", "$", "`" };
+
+        private string EchoCommand(string command)
+        {
+            var escapedCommand = command;
+            
+            foreach (var specialCharacter in BashSpecialCharacters)
+            {
+                escapedCommand = escapedCommand.Replace(
+                    specialCharacter,
+                    $"\\{specialCharacter}"
+                );
+            }
+
+            return $"echo \"{escapedCommand}\"";
+        }
+
+        private string EchoNewLine()
+        {
+            return "echo";
         }
     }
 }
