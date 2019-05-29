@@ -31,7 +31,7 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
             return DeploymentProcessFile.Open(processDescriptionFilePath);
         }
 
-        private LocalPath RepositoryPath => new LocalPath(_repository.Info.WorkingDirectory);
+        public LocalPath RepositoryPath => new LocalPath(_repository.Info.WorkingDirectory);
 
         public void Dispose()
         {

@@ -20,7 +20,7 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning
             _bashPath = bashPath;
         }
 
-        public ProcessOutput Run(
+        public CommandsOutput Run(
             IReadOnlyList<string> commands,
             IReadOnlyList<VariableForEnvironment> variables)
         {
@@ -42,17 +42,7 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning
 
             var processResult = RunBashProcess(variables, joinedCommands);
 
-            var processStepResult = new ProcessStepResult
-            {
-                Command = "all commands",
-                Output = processResult.Output,
-                Successful = processResult.Successful
-            };
-
-            return new ProcessOutput
-            {
-                Steps = new[] { processStepResult }
-            };
+            return new CommandsOutput(processResult.Output, processResult.Successful);
         }
 
         private SystemProcessRunner.SystemProcessResult RunBashProcess(

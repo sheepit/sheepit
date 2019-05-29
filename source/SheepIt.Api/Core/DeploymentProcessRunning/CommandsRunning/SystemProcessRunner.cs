@@ -44,6 +44,7 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning
             }
         }
 
+        // todo: replace with commands result
         public class SystemProcessResult
         {
             public string[] Output { get; set; }

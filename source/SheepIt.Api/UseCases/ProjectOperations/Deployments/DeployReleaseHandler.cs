@@ -101,12 +101,12 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
                     .ToString();
 
                 // todo: make asynchronous
-                using (var repository =
-                    _deploymentProcessGitRepositoryFactory.Clone(project.RepositoryUrl, deploymentWorkingDir))
+                using (var repository = _deploymentProcessGitRepositoryFactory.Clone(project.RepositoryUrl, deploymentWorkingDir))
                 {
                     repository.Checkout(release.CommitSha);
 
                     var processOutput = _deploymentProcessRunner.Run(
+                        repository.RepositoryPath.ToString(),
                         deploymentProcessFile: repository.OpenProcessDescriptionFile(),
                         variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId)
                     );

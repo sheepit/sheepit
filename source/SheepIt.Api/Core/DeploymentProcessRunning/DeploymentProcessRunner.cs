@@ -11,20 +11,35 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning
 
     public class DeploymentProcessRunner
     {
-        private readonly ICommandsRunner _commandsRunner;
+        private readonly DeploymentProcessSettings _deploymentProcessSettings;
 
         public DeploymentProcessRunner(DeploymentProcessSettings deploymentProcessSettings)
         {
-            // todo: inject
-            _commandsRunner = new BashCommandsRunner(
-                deploymentProcessSettings.WorkingDir.ToString(),
-                deploymentProcessSettings.Shell.Bash.ToString()
-            );
+            _deploymentProcessSettings = deploymentProcessSettings;
         }
 
-        public ProcessOutput Run(DeploymentProcessFile deploymentProcessFile, VariableForEnvironment[] variablesForEnvironment)
+        public ProcessOutput Run(string workingDir, DeploymentProcessFile deploymentProcessFile,
+            VariableForEnvironment[] variablesForEnvironment)
         {
-            return _commandsRunner.Run(deploymentProcessFile.Commands, variablesForEnvironment);
+            var _commandsRunner = new BashCommandsRunner(
+                workingDir,
+                _deploymentProcessSettings.Shell.Bash.ToString()
+            );
+            
+            var commandsOutput = _commandsRunner.Run(deploymentProcessFile.Commands, variablesForEnvironment);
+            
+            return new ProcessOutput
+            {
+                Steps = new []
+                {
+                    new ProcessStepResult
+                    {
+                        Command = "all commands",
+                        Output = commandsOutput.Output.ToArray(),
+                        Successful = commandsOutput.Successful
+                    }
+                }
+            };
         }
     }
 }

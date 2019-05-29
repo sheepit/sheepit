@@ -12,8 +12,6 @@ using SheepIt.Api.Tests.TestInfrastructure;
 
 namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning
 {
-    // todo: there is a lot of duplication between cmd and bash tests
-
     public class BashCommandsRunnerTests
     {
         [Test]
@@ -21,9 +19,7 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning
         {
             var result = RunCommand(@"echo command output");
 
-            var stepResult = result.ShouldHaveSingleStepResult();
-
-            stepResult.Output.Should().Equal(
+            result.Output.Should().Equal(
                 @"echo command output",
                 "command output",
                 ""
@@ -35,9 +31,7 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning
         {
             var result = RunCommand(@"echo ""\\   $? `echo 1` 2""");
 
-            var stepResult = result.ShouldHaveSingleStepResult();
-
-            stepResult.Output.Should().Equal(
+            result.Output.Should().Equal(
                 @"echo ""\\   $? `echo 1` 2""",
                 @"\   0 1 2",
                 ""
@@ -60,9 +54,7 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning
                 }
             );
 
-            result.ShouldHaveSingleStepResult()
-                .Output
-                .Should().Contain(variableValue);
+            result.Output.Should().Contain(variableValue);
         }
 
         [Test]
@@ -70,10 +62,8 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning
         {
             var result = RunCommand("echo test");
 
-            var stepResult = result.ShouldHaveSingleStepResult();
-            
-            stepResult.Successful.Should().BeTrue();
-            stepResult.Output.Should().NotBeEmpty();
+            result.Successful.Should().BeTrue();
+            result.Output.Should().NotBeEmpty();
         }
 
         [Test]
@@ -81,23 +71,19 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning
         {
             var result = RunCommand("some_unknown_command");
 
-            var stepResult = result.ShouldHaveSingleStepResult();
-            
-            stepResult.Successful.Should().BeFalse();
-            stepResult.Output.Should().NotBeEmpty();
+            result.Successful.Should().BeFalse();
+            result.Output.Should().NotBeEmpty();
         }
 
         [Test]
         public void can_run_multiple_commands()
         {
-            var processOutput = RunCommand(
+            var result = RunCommand(
                 "echo first command",
                 "echo second command",
                 "echo third command");
 
-            var stepResult = processOutput.ShouldHaveSingleStepResult();
-            
-            stepResult.Output.Should().Equal(
+            result.Output.Should().Equal(
                 "echo first command",
                 "first command",
                 "",
@@ -113,15 +99,13 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning
         [Test]
         public void will_stop_after_first_command_failed()
         {
-            var processOutput = RunCommand(
+            var result = RunCommand(
                 "echo before failure",
                 "unknown_command",
                 "echo after failure"
             );
 
-            var stepResult = processOutput.ShouldHaveSingleStepResult();
-
-            stepResult.Output.Should().StartWith(new[]
+            result.Output.Should().StartWith(new[]
             {
                 "echo before failure",
                 "before failure",
@@ -129,16 +113,36 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning
                 "unknown_command"
             });
 
-            stepResult.Output.Should().NotContain("echo after failure");
-            stepResult.Output.Should().NotContain("after failure");
+            result.Output.Should().NotContain("echo after failure");
+            result.Output.Should().NotContain("after failure");
         }
 
-        private static ProcessOutput RunCommand(params string[] commands)
+        [Test]
+        public void commands_retain_directory_context()
+        {
+            var result = RunCommand(
+                "mkdir foo",
+                "cd foo",
+                "basename `pwd`"
+            );
+
+            result.Output.Should().Equal(
+                "mkdir foo",
+                "",
+                "cd foo",
+                "",
+                "basename `pwd`",
+                "foo",
+                ""
+            );
+        }
+
+        private static CommandsOutput RunCommand(params string[] commands)
         {
             return RunCommand(commands, new VariableForEnvironment[0]);
         }
 
-        private static ProcessOutput RunCommand(string[] commands, VariableForEnvironment[] variables)
+        private static CommandsOutput RunCommand(string[] commands, VariableForEnvironment[] variables)
         {
             var config = TestConfigurationFactory.Build();
 
@@ -156,31 +160,15 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning
             return processOutput;
         }
 
-        private static void PrintResults(ProcessOutput result)
+        private static void PrintResults(CommandsOutput result)
         {
-            foreach (var processStepResult in result.Steps)
+            foreach (var line in result.Output)
             {
-                var commandResultString = processStepResult.Successful ? "SUCCESS" : "FAILED";
-
-                Console.WriteLine($"{processStepResult.Command} ({commandResultString})");
-
-                foreach (var line in processStepResult.Output)
-                {
-                    Console.WriteLine($"    {line}");
-                }
-
-                Console.WriteLine();
+                Console.WriteLine($"{line}");
             }
-        }
-    }
 
-    public static class ProcessOutputAssertions
-    {
-        public static ProcessStepResult ShouldHaveSingleStepResult(this ProcessOutput processOutput)
-        {
-            processOutput.Steps.Should().HaveCount(1);
-
-            return processOutput.Steps.Single();
+            Console.WriteLine();
+            Console.WriteLine(result.Successful ? "SUCCESS" : "FAILED");
         }
     }
 }
