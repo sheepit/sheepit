@@ -11,8 +11,8 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
         public DeploymentProcessSettings(IConfiguration configuration)
         {
             var workingDirString = configuration.GetValue<string>("DeploymentProcess:WorkingDir");
+            
             WorkingDir = new LocalPath(workingDirString);
-
             Shell = new ShellSettings(configuration);
         }
 
@@ -20,14 +20,12 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
         {
             // todo: should be called BashPath/Command?
             public LocalPath Bash { get; }
-            public LocalPath Cmd { get; }
 
             public ShellSettings(IConfiguration configuration)
             {
                 var shell = configuration.GetSection("DeploymentProcess:Shell");
 
                 Bash = new LocalPath(shell["Bash"]);
-                Cmd = new LocalPath(shell["Cmd"]);
             }
         }
     }

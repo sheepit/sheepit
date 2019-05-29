@@ -8,7 +8,6 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
 {
     public class DeploymentProcessFile
     {
-        public string Shell { get; set; }
         public string[] Commands { get; set; }
 
         public static DeploymentProcessFile Open(string processDescriptionFilePath)
