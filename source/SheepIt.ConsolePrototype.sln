@@ -19,6 +19,11 @@ ProjectSection(SolutionItems) = preProject
 	..\env\docker-compose.yml = ..\env\docker-compose.yml
 EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{0E1F41CD-7899-44FC-AFAE-FE37EA16DE38}"
+ProjectSection(SolutionItems) = preProject
+	Dockerfile = Dockerfile
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
