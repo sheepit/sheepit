@@ -4,7 +4,7 @@ services:
 
   # sheepit:
   #   image: sheepit/sheepit:latest
-  #   build: ../.
+  #   build: ../source/
   #   restart: always
   #   ports:
   #     - 8088:80
