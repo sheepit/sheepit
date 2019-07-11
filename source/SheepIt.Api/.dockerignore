@@ -1,2 +1,1 @@
-ClientApp/**/*
-ClientApp
+ClientApp/node_modules/**/*
