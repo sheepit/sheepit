@@ -11,6 +11,8 @@ namespace SheepIt.Api.Infrastructure
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.ToLower();
 
+            Console.WriteLine($"Preparing configuration for {environment}");
+            
             var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
@@ -18,6 +20,7 @@ namespace SheepIt.Api.Infrastructure
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
+                Console.WriteLine($"Preparing configuration for Linux OS");
                 configurationBuilder.AddJsonFile($"appsettings.{environment}.linux.json", optional: true);
             }
 
