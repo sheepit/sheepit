@@ -2,16 +2,18 @@ version: '3.1'
 
 services:
 
-  # sheepit:
-  #   image: sheepit/sheepit:latest
-  #   build: ../source/
-  #   restart: always
-  #   ports:
-  #     - 8088:80
-  #   environment:
-  #     ASPNETCORE_ENVIRONMENT: production
-  #     BASE_URL: http://localhost:8088/
-  #     Mongo:ConnectionString: mongodb://root:example@mongo:27017
+#  sheepit:
+#    image: sheepit/sheepit:latest
+#    build: ../source/
+#    restart: always
+#    ports:
+#      - 8088:80
+#    environment:
+#      ASPNETCORE_ENVIRONMENT: development
+#      BASE_URL: http://localhost:8088/
+#      Mongo:ConnectionString: mongodb://root:example@mongo:27017
+#      DeploymentProcess:WorkingDir: "/tmp"
+#      DeploymentProcess:Shell:Bash: "/bin/bash" 
 
   mongo:
     image: mongo

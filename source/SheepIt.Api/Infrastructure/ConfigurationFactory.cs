@@ -18,12 +18,6 @@ namespace SheepIt.Api.Infrastructure
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
                 .AddJsonFile($"appsettings.{environment}.json", optional: true);
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                Console.WriteLine($"Preparing configuration for Linux OS");
-                configurationBuilder.AddJsonFile($"appsettings.{environment}.linux.json", optional: true);
-            }
-
             return configurationBuilder
                 .AddCommandLine(args)
                 .AddEnvironmentVariables()
