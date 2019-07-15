@@ -24,6 +24,8 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 COPY --from=build-stage-frontend /wwwroot ./wwwroot
 
+RUN mkdir -p /data
+
 EXPOSE 80
 
 COPY ./run-script.sh .
