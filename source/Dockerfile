@@ -1,13 +1,9 @@
 # Build backend
 FROM microsoft/dotnet:2.1-sdk AS build-env
 WORKDIR /app
-# Copy csproj and restore as distinct layers
-COPY *.sln */*.csproj ./
-RUN for file in $(ls *.csproj); do mkdir -p ./${file%.*}/ && mv $file ./${file%.*}/; done
+COPY SheepIt.Api/. .
 RUN dotnet restore
-# Copy everything else and build
-COPY . ./
-RUN rm -rf ClientApp
+RUN dotnet build
 RUN dotnet publish -c Release -o /app/out
 
 # build frontend
