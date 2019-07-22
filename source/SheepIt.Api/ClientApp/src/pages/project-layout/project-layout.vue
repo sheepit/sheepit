@@ -1,14 +1,26 @@
 <template>
-    <div v-if="project">
-        <router-view :project="project" />
+    <div>
+        <div v-if="project">
+            <router-view :project="project" />
+        </div>
     </div>
 </template>
 
 <script>
+import httpService from "../../common/http/http-service.js"
+
 export default {
     name: 'Proj',
-    
-    props: ['projects'],
+
+    data() {
+        return {
+            projects: []
+        }
+    },
+
+    created() {
+        this.updateProjects()
+    },
 
     computed: {
         project() {
@@ -16,5 +28,13 @@ export default {
                 .filter(project => project.id === this.$route.params.projectId)[0]
         }
     },
+
+    methods: {
+        updateProjects() {
+            return httpService
+                .get('api/list-projects', null)
+                .then(response => this.projects = response.projects)
+        }
+    }
 }
 </script>
