@@ -5,11 +5,6 @@
             :to="{ name: 'default' }">
             Sheep It
         </router-link>
-        <router-link
-            class="navbar-brand"
-            :to="{ name: 'project-list' }">
-            Projects
-        </router-link>
         <button
             class="navbar-toggler"
             type="button"
@@ -26,38 +21,12 @@
             class="collapse navbar-collapse"
         >
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a
-                        id="navbarDropdown"
-                        class="nav-link dropdown-toggle"
-                        href="#"
-                        role="button"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                    >
+                <li class="nav-item">
+                    <router-link
+                        class="nav-link"
+                        :to="{ name: 'project-list' }">
                         Projects
-                    </a>
-                    <div
-                        class="dropdown-menu"
-                        aria-labelledby="navbarDropdown"
-                    >
-                        <router-link
-                            v-for="(project, index) in projects"
-                            :key="index"
-                            class="dropdown-item"
-                            :to="{ name: 'project', params: { projectId: project.id }}"
-                        >
-                            {{ project.id }}
-                        </router-link>
-                        <div class="dropdown-divider" />
-                        <router-link
-                            class="dropdown-item"
-                            :to="{ name: 'create-project' }"
-                        >
-                            Create new project
-                        </router-link>
-                    </div>
+                    </router-link>
                 </li>
             </ul>
             <span class="my-2 my-lg-0">
@@ -81,8 +50,6 @@
     export default {
         name: 'Navigation',
         
-        props: ['projects'],
-    
         methods: {
             signOut() {
                 jwtTokenStorage.remove()
