@@ -2,9 +2,13 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-4">
         <router-link
             class="navbar-brand"
-            :to="{ name: 'default' }"
-        >
+            :to="{ name: 'default' }">
             Sheep It
+        </router-link>
+        <router-link
+            class="navbar-brand"
+            :to="{ name: 'project-list' }">
+            Projects
         </router-link>
         <button
             class="navbar-toggler"

@@ -17,6 +17,7 @@ import DeploymentDetails from './pages/deployment-details/deployment-details.vue
 import EditProject from './pages/edit-project/edit-project.vue'
 import Project from './pages/project/project.vue'
 import ProjectLayout from './pages/project-layout/project-layout.vue'
+import ProjectList from './pages/project-list/project-list.vue'
 import ReleaseDetails from './pages/release-details/release-details.vue'
 
 
@@ -40,6 +41,11 @@ const router = new VueRouter({
                     path: '/create-project',
                     name: 'create-project',
                     component: CreateProject
+                },
+                {
+                    path: '/project-list',
+                    name: 'project-list',
+                    component: ProjectList
                 },
                 {
                     path: '/project/:projectId',

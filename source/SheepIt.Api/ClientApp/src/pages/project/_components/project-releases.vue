@@ -28,12 +28,12 @@
                         v-for="release in items"
                         :key="release.id"
                     >
-                        <th scope="row">
+                        <td scope="row">
                             <release-badge
                                 :project-id="project.id"
                                 :release-id="release.id"
                             />
-                        </th>
+                        </td>
                         <td>
                             <humanized-date :date="release.createdAt" />
                         </td>
