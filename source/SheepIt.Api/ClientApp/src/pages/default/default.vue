@@ -13,26 +13,22 @@
                     <thead>
                         <tr>
                             <th scope="col">
-                                deployment ID
+                                Deployment ID
                             </th>
                             <th scope="col">
-                                Repository url
+                                Project
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            v-for="item in items"
+                        <tr v-for="item in items"
                             :key="item.id">
                             
-                            <th scope="row">
-                                <router-link
-                                    :to="{ name: 'deployment', params: { deploymentId: item.id }}">
-                                    {{ item.id }}
-                                </router-link>
-                            </th>
                             <td>
-                                {{ item.repositoryUrl }}
+                                {{ item.deploymentId }}
+                            </td>
+                            <td>
+                                {{ item.projectId }}
                             </td>
                         </tr>
                     </tbody>
