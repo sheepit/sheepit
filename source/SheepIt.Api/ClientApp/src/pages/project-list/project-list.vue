@@ -35,8 +35,11 @@
             </table>
         </template>
     </expanding-list>
-    <div v-else>
+    <div v-else-if="projects && projects.length > 0">
         There are no projects yet
+    </div>
+    <div v-else>
+        Loading...
     </div>
 </template>
 
