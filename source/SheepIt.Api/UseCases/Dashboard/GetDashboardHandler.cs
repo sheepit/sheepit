@@ -48,12 +48,10 @@ namespace SheepIt.Api.UseCases.Dashboard
     public class GetDashboardHandler : IHandler<GetDashboardRequest, GetDashboardResponse>
     {
         private readonly SheepItDatabase _database;
-        private readonly IProjectContext _projectContext;
 
-        public GetDashboardHandler(SheepItDatabase database, IProjectContext projectContext)
+        public GetDashboardHandler(SheepItDatabase database)
         {
             _database = database;
-            _projectContext = projectContext;
         }
 
         public async Task<GetDashboardResponse> Handle(GetDashboardRequest options)

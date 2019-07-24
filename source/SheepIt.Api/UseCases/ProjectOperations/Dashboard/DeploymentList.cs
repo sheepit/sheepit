@@ -6,7 +6,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 {
     public static class DeploymentList
     {
-        public static GetDashboardResponse.DeploymentDto[] GetDeployments(Deployment[] deployments, Environment[] environments)
+        public static GetProjectDashboardResponse.DeploymentDto[] GetDeployments(Deployment[] deployments, Environment[] environments)
         {
             return deployments
                 .OrderByDescending(deployment => deployment.DeployedAt)
@@ -19,9 +19,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 .ToArray();
         }
 
-        private static GetDashboardResponse.DeploymentDto MapDeployment(Deployment deployment, Environment environment)
+        private static GetProjectDashboardResponse.DeploymentDto MapDeployment(Deployment deployment, Environment environment)
         {
-            return new GetDashboardResponse.DeploymentDto
+            return new GetProjectDashboardResponse.DeploymentDto
             {
                 Id = deployment.Id,
                 EnvironmentId = environment.Id,

@@ -5,7 +5,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 {
     public static class ReleaseList
     {
-        public static GetDashboardResponse.ReleaseDto[] GetReleases(Release[] releases)
+        public static GetProjectDashboardResponse.ReleaseDto[] GetReleases(Release[] releases)
         {
             return releases
                 .OrderByDescending(release => release.CreatedAt)
@@ -13,9 +13,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 .ToArray();
         }
 
-        private static GetDashboardResponse.ReleaseDto MapRelease(Release release)
+        private static GetProjectDashboardResponse.ReleaseDto MapRelease(Release release)
         {
-            return new GetDashboardResponse.ReleaseDto
+            return new GetProjectDashboardResponse.ReleaseDto
             {
                 Id = release.Id,
                 CommitSha = release.CommitSha,

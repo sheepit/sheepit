@@ -9,6 +9,7 @@ using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Web;
+using SheepIt.Api.UseCases.Dashboard;
 using SheepIt.Api.UseCases.ProjectManagement;
 using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
 using SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails;
@@ -51,10 +52,11 @@ namespace SheepIt.Api
         private void RegisterUseCases(ContainerBuilder builder)
         {
             // Dashboard
-            builder.RegisterModule<ShowDashboardModule>();
+            builder.RegisterModule<GetDashboardModule>();
 
             // Project
             builder.RegisterModule<CreateProjectModule>();
+            builder.RegisterModule<GetProjectDashboardModule>();
             builder.RegisterModule<GetProjectDetailsModule>();
             builder.RegisterModule<ListProjectsModule>();
             builder.RegisterModule<UpdateProjectModule>();
