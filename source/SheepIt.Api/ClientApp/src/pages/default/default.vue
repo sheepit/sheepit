@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>Dashboard</h2>
-
+        <br />
         <h3>Last deployments</h3>
         <expanding-list
             v-if="deployments && deployments.length > 0"
@@ -13,10 +13,19 @@
                     <thead>
                         <tr>
                             <th scope="col">
-                                Deployment ID
+                                id
                             </th>
                             <th scope="col">
-                                Project
+                                project
+                            </th>
+                            <th scope="col">
+                                environment
+                            </th>
+                            <th scope="col">
+                                deployed
+                            </th>
+                            <th scope="col">
+                                status
                             </th>
                         </tr>
                     </thead>
@@ -25,10 +34,24 @@
                             :key="item.id">
                             
                             <td>
-                                {{ item.deploymentId }}
+                                <deployment-badge
+                                    :project-id="item.projectId"
+                                    :deployment-id="item.deploymentId"/>
                             </td>
                             <td>
-                                {{ item.projectId }}
+                                <router-link
+                                    :to="{ name: 'project', params: { projectId: item.projectId }}">
+                                    {{ item.projectId }}
+                                </router-link>
+                            </td>
+                            <td>
+                                <span class="badge badge-warning">{{ item.environmentDisplayName }}</span>
+                            </td>
+                            <td>
+                                <humanized-date :date="item.deployedAt" />
+                            </td>
+                            <td>
+                                <deployment-status-badge :status="item.status" />
                             </td>
                         </tr>
                     </tbody>

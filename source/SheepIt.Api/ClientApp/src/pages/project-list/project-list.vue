@@ -21,12 +21,12 @@
                         v-for="item in items"
                         :key="item.id">
                         
-                        <th scope="row">
+                        <td scope="row">
                             <router-link
                                 :to="{ name: 'project', params: { projectId: item.id }}">
                                 {{ item.id }}
                             </router-link>
-                        </th>
+                        </td>
                         <td>
                             {{ item.repositoryUrl }}
                         </td>
