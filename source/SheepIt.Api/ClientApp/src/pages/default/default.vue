@@ -61,9 +61,7 @@
         <div v-else-if="deployments && deployments.length > 0">
             There are no deployments yet
         </div>
-        <div v-else>
-            Loading...
-        </div>
+        <preloader v-else />
     </div>
 </template>
 
