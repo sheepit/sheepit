@@ -1,9 +1,7 @@
 <template>
     <div class="preloader-container">
-        LOADINGGGGGG
         <img src="./../assets/preloader.gif" />
     </div>
-    
 </template>
 
 <script>
