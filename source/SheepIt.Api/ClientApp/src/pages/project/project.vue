@@ -1,7 +1,7 @@
 <template>
     <div v-if="project">
         <project-breadcrumbs :project-id="project.id" />
-        
+
         <div class="row project-title">
             <div class="col">
                 <h2 class="display-4">
@@ -82,9 +82,9 @@ export default {
     
     data() {
         return {
-            deployments: [],
-            environments: [],
-            releases: []
+            deployments: null,
+            environments: null,
+            releases: null
         }
     },
      
@@ -111,8 +111,6 @@ export default {
             updateProcessService
                 .updateProcess(this.project.id)
                 .then(() => {});
-                // TODO: Update main app component, so it knows that new project was added
-                // .then(() => window.app.updateProjects())
         }
     }
 };

@@ -56,9 +56,10 @@
             </table>
         </template>
     </expanding-list>
-    <div v-else>
+    <div v-else-if="releases && releases.length === 0">
         No releases found for this project
     </div>
+    <preloader v-else />
 </template>
 
 <script>

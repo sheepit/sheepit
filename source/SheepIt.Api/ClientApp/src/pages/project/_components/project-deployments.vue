@@ -57,9 +57,10 @@
             </table>
         </template>
     </expanding-list>
-    <div v-else>
+    <div v-else-if="deployments && deployments.length === 0">
         No deployments found for this project
     </div>
+    <preloader v-else />
 </template>
 
 <script>
