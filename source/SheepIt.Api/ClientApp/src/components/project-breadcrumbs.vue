@@ -2,7 +2,10 @@
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                projects
+                <router-link :to="{ name: 'project-list' }">
+                    projects
+                </router-link>
+                
             </li>
             <li class="breadcrumb-item">
                 <router-link :to="{ name: 'project', params: { projectId: projectId }}">
