@@ -1,54 +1,66 @@
 <template>
     <div>
-        <h4>Create new project</h4>
-        <div>
-            <div class="form-group">
-                <label for="projectId">Project id</label>
-                <input
-                    id="projectId"
-                    v-model="projectId"
-                    type="text"
-                    class="form-control"
-                >
-            </div>
-            <div class="form-group">
-                <label for="sourceUrl">Git repository URL</label>
-                <input
-                    id="sourceUrl"
-                    v-model="repositoryUrl"
-                    type="text"
-                    class="form-control"
-                >
+        <h1>Add new project</h1>
+
+        <div class="form">
+
+            <div class="form-section">
+                <div class="form-title">Details</div>
+                <div class="form-group">
+                    <label for="projectId" class="form-label">Project id</label>
+                    <input
+                        id="projectId"
+                        v-model="projectId"
+                        type="text"
+                        class="form-control"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="sourceUrl">Git repository URL</label>
+                    <input
+                        id="sourceUrl"
+                        v-model="repositoryUrl"
+                        type="text"
+                        class="form-control"
+                    >
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Environments (names):</label>
-                
-                <input
-                    v-for="(environment, environmentIndex) in environments"
-                    :key="environmentIndex"
-                    v-model="environments[environmentIndex]"
-                    type="text"
-                    class="form-control"
-                >
-                
+            <div class="form-section">
+                <h2>Environments</h2>
+                <div class="form-group">
+                    <label>Environments (names):</label>
+                    
+                    <input
+                        v-for="(environment, environmentIndex) in environments"
+                        :key="environmentIndex"
+                        v-model="environments[environmentIndex]"
+                        type="text"
+                        class="form-control"
+                    >
+                    
+                    <button
+                        class="btn btn-secondary"
+                        @click="newEnvironment()"
+                    >
+                        Add new
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-right">
                 <button
-                    class="btn btn-secondary"
-                    @click="newEnvironment()"
+                    type="button"
+                    class="btn btn-primary"
+                    @click="create()"
                 >
-                    Add new
+                    Save
                 </button>
             </div>
-
-            <button
-                type="button"
-                class="btn btn-primary"
-                @click="create()"
-            >
-                Create
-            </button>
         </div>
+
     </div>
+
 </template>
 
 <script>
@@ -77,3 +89,26 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.form {
+    &-section {
+        padding: 15px;
+        overflow: hidden;
+        background: $white;
+        border: 1px solid $light-gray;
+        margin: 20px 0;
+        border-radius: 0.25rem;
+    }
+
+    &-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    label {
+        margin: 0;
+        font-weight: 500;
+    }
+}
+</style>
