@@ -3,13 +3,13 @@ services: docker
 
 branches:
   only:
-    - feature/travis-build
+    - master
 
 script:
   - cd source
-  - docker build . -t "sheepit/sheepit:travis" -t "sheepit/sheepit:travis-build-$TRAVIS_BUILD_NUMBER"
+  - docker build . -t "sheepit/sheepit:latest" -t "sheepit/sheepit:travis-build-$TRAVIS_BUILD_NUMBER"
   - echo "$dockerhubpassword" | docker login --username "$dockerhublogin" --password-stdin
-  - docker push "sheepit/sheepit:travis"
+  - docker push "sheepit/sheepit:latest"
   - docker push "sheepit/sheepit:travis-build-$TRAVIS_BUILD_NUMBER"
 
 after_script:
