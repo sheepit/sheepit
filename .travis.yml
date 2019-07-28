@@ -1,0 +1,16 @@
+language: bash
+services: docker
+
+branches:
+  only:
+    - master
+
+script:
+  - cd source
+  - docker build . -t "sheepit/sheepit:latest" -t "sheepit/sheepit:travis-build-$TRAVIS_BUILD_NUMBER"
+  - echo "$dockerhubpassword" | docker login --username "$dockerhublogin" --password-stdin
+  - docker push "sheepit/sheepit:latest"
+  - docker push "sheepit/sheepit:travis-build-$TRAVIS_BUILD_NUMBER"
+
+after_script:
+  - docker images
