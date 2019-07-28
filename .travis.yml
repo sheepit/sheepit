@@ -8,6 +8,7 @@ branches:
 script:
   - cd source
   - docker build . -t sheepit/sheepit:travis
+  - echo "$dockerhubpassword" | docker login --username "$dockerhublogin" --password-stdin
 
 after_script:
   - docker images
