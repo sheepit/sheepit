@@ -7,7 +7,7 @@ branches:
 
 script:
   - cd source
-  - docker build . -t sheepit/sheepit:travis
+  - docker build . -t "sheepit/sheepit:travis" -t "sheepit/sheepit:travis-build-$TRAVIS_BUILD_NUMBER"
   - echo "$dockerhubpassword" | docker login --username "$dockerhublogin" --password-stdin
   - docker push sheepit/sheepit:travis
 
