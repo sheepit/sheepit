@@ -3,7 +3,7 @@ services: docker
 
 branches:
   only:
-    - master
+    - feature/travis-build
 
 script:
   - cd source
