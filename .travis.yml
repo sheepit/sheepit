@@ -1,0 +1,13 @@
+language: bash
+services: docker
+
+branches:
+  only:
+    - master
+
+script:
+  - cd source
+  - docker build . -t sheepit/sheepit:travis
+
+after_script:
+  - docker images
