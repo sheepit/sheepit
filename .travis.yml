@@ -9,6 +9,7 @@ script:
   - cd source
   - docker build . -t sheepit/sheepit:travis
   - echo "$dockerhubpassword" | docker login --username "$dockerhublogin" --password-stdin
+  - docker push sheepit/sheepit:travis
 
 after_script:
   - docker images
