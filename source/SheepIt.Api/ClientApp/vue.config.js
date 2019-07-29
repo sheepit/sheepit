@@ -7,5 +7,12 @@ module.exports = {
         watchOptions: {
             poll: true
         }
+    },
+    css: {
+        loaderOptions: {
+            sass: {
+                data: `@import "@/scss/styles.scss";`
+            }
+        }
     }
 };

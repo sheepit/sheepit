@@ -15,7 +15,8 @@
     "toastr": "^2.1.4",
     "vue": "^2.6.6",
     "vue-router": "^3.0.2",
-    "vuedraggable": "^2.19.1"
+    "vuedraggable": "^2.19.1",
+    "vuelidate": "^0.7.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",

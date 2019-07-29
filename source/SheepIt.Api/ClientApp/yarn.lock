@@ -8291,6 +8291,11 @@ vuedraggable@^2.19.1:
   dependencies:
     sortablejs "^1.8.3"
 
+vuelidate@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/vuelidate/-/vuelidate-0.7.4.tgz#5a0e54be09ac0192f1aa3387d74b92e0945bf8aa"
+  integrity sha512-QHZWYOL325Zo+2K7VBNEJTZ496Kd8Z31p85aQJFldKudUUGBmgw4zu4ghl4CyqPwjRCmqZ9lDdx4FSdMnu4fGg==
+
 watchpack@^1.5.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.6.0.tgz#4bc12c2ebe8aa277a71f1d3f14d685c7b446cd00"
