@@ -29,16 +29,28 @@
             <div class="form-section">
                 <h2>Environments</h2>
                 <div class="form-group">
-                    <label>Environments (names):</label>
+                    <label>List of environments</label>
                     
-                    <input
-                        v-for="(environment, environmentIndex) in environments"
+                    <div v-for="(environment, environmentIndex) in environments"
                         :key="environmentIndex"
-                        v-model="environments[environmentIndex]"
-                        type="text"
-                        class="form-control"
-                    >
-                    
+                        class="input-group mb-3">
+                        <input
+                            v-model="environments[environmentIndex]"
+                            type="text"
+                            class="form-control"
+                        >
+                        <div class="input-group-append">
+                            <button 
+                                class="btn btn-outline-secondary"
+                                type="button"
+                                @click="removeEnvironment(environmentIndex)"
+                            >
+                                <span class="icon icon-trash" />        
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-container">
                     <button
                         class="btn btn-secondary"
                         @click="newEnvironment()"
@@ -48,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="text-right">
+            <div class="submit-button-container">
                 <button
                     type="button"
                     class="btn btn-primary"
@@ -85,6 +97,13 @@ export default {
 
         newEnvironment: function () {
             this.environments.push('');
+        },
+
+        removeEnvironment: function(index) {
+            if(this.environments.length === 1)
+                return;
+
+            this.environments.splice(index, 1);
         }
     }
 }
@@ -109,6 +128,16 @@ export default {
     label {
         margin: 0;
         font-weight: 500;
+    }
+
+    .button-container {
+        text-align: right !important;
+        margin-top: 16px;
+    }
+
+    .submit-button-container {
+        text-align: right !important;
+        margin: 16px 0;
     }
 }
 </style>
