@@ -13,7 +13,11 @@
                         v-model="projectId"
                         type="text"
                         class="form-control"
+                        :class="{ 'is-invalid': submitted && $v.projectId.$error }"
                     >
+                    <div v-if="submitted && $v.projectId.$error" class="invalid-feedback">
+                        <span v-if="!$v.projectId.required">Field is required</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="sourceUrl">Git repository URL</label>
@@ -22,8 +26,13 @@
                         v-model="repositoryUrl"
                         type="text"
                         class="form-control"
+                        :class="{ 'is-invalid': submitted && $v.repositoryUrl.$error }"
                     >
+                    <div v-if="submitted && $v.repositoryUrl.$error" class="invalid-feedback">
+                        <span v-if="!$v.repositoryUrl.required">Field is required</span>
+                    </div>
                 </div>
+                        
             </div>
 
             <div class="form-section">
@@ -87,11 +96,14 @@ export default {
         return {
             projectId: "",
             repositoryUrl: "",
-            environments: ['']
+            environments: [''],
+
+            submitted: false
         }
     },
     methods: {
         create: function () {
+            this.submitted = true;
 
             this.$v.$touch();
             if (this.$v.$invalid) {
@@ -119,6 +131,9 @@ export default {
         projectId: {
             required,
             minLength: minLength(3)
+        },
+        repositoryUrl: {
+            required
         }
     }
 }
