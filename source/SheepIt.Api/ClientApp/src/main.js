@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Vuelidate from 'vuelidate'
+
 import App from './App.vue'
 
 import 'bootstrap';
@@ -12,6 +14,7 @@ window.$ = jQuery
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
+Vue.use(Vuelidate);
 
 import DeploymentBadge from "./components/deployment-badge.vue";
 import DeploymentStatusBadge from "./components/deployment-status-badge.vue";

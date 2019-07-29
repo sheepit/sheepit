@@ -77,6 +77,8 @@
 </template>
 
 <script>
+import { required, minLength } from 'vuelidate/lib/validators'
+
 import createProjectService from "./_services/create-project-service.js";
 
 export default {
@@ -90,6 +92,12 @@ export default {
     },
     methods: {
         create: function () {
+
+            this.$v.$touch();
+            if (this.$v.$invalid) {
+                return;
+            }
+
             createProjectService.createProject(this.projectId, this.repositoryUrl, this.environments)
                 // TODO: Update main app component, so it knows that new project was added
                 // .then(() => window.app.updateProjects()) <===== todo
@@ -105,6 +113,12 @@ export default {
                 return;
 
             this.environments.splice(index, 1);
+        }
+    },
+    validations: {
+        projectId: {
+            required,
+            minLength: minLength(3)
         }
     }
 }
