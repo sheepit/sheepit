@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <router-link
             class="navbar-brand"
             :to="{ name: 'default' }">

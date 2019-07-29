@@ -1,13 +1,14 @@
 <template>
-    <div class="container" 
-        data-event-handler 
+    <div data-event-handler 
         @unauthorized="handleUnauthorized()">
         
         <navigation />
 
-        <main class="mt-5">
-            <router-view />
-        </main>
+        <div class="container">
+            <main class="mt-5">
+                <router-view />
+            </main>
+        </div>
         
     </div>
 </template>

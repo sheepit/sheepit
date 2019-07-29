@@ -43,6 +43,7 @@
                             <button 
                                 class="btn btn-outline-secondary"
                                 type="button"
+                                :disabled="environments.length < 2"
                                 @click="removeEnvironment(environmentIndex)"
                             >
                                 <span class="icon icon-trash" />        
@@ -100,7 +101,7 @@ export default {
         },
 
         removeEnvironment: function(index) {
-            if(this.environments.length === 1)
+            if(this.environments.length < 2)
                 return;
 
             this.environments.splice(index, 1);
