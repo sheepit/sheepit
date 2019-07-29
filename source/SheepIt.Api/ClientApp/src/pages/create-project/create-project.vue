@@ -17,6 +17,7 @@
                     >
                     <div v-if="submitted && $v.projectId.$error" class="invalid-feedback">
                         <span v-if="!$v.projectId.required">Field is required</span>
+                        <span v-if="!$v.projectId.minLength">Field should have at least 3 characters</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -30,9 +31,10 @@
                     >
                     <div v-if="submitted && $v.repositoryUrl.$error" class="invalid-feedback">
                         <span v-if="!$v.repositoryUrl.required">Field is required</span>
+                        <span v-if="!$v.repositoryUrl.url">URL invalid</span>
                     </div>
                 </div>
-                        
+
             </div>
 
             <div class="form-section">
@@ -47,6 +49,7 @@
                             v-model="environments[environmentIndex]"
                             type="text"
                             class="form-control"
+                            :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].$error }"
                         >
                         <div class="input-group-append">
                             <button 
@@ -55,11 +58,17 @@
                                 :disabled="environments.length < 2"
                                 @click="removeEnvironment(environmentIndex)"
                             >
-                                <span class="icon icon-trash" />        
+                                <span class="icon icon-trash" />
                             </button>
                         </div>
+                        <div v-if="submitted && $v.environments.$each[environmentIndex].$error" class="invalid-feedback">
+                            <span v-if="!$v.environments.$each[environmentIndex].required">Field is required</span>
+                            <span v-if="!$v.environments.$each[environmentIndex].minLength">Field should have at least 3 characters</span>
+                        </div>
+
                     </div>
                 </div>
+
                 <div class="button-container">
                     <button
                         class="btn btn-secondary"
@@ -86,7 +95,7 @@
 </template>
 
 <script>
-import { required, minLength } from 'vuelidate/lib/validators'
+import { required, minLength, url } from 'vuelidate/lib/validators'
 
 import createProjectService from "./_services/create-project-service.js";
 
@@ -117,7 +126,7 @@ export default {
         },
 
         newEnvironment: function () {
-            this.environments.push('');
+            this.environments.push(null);
         },
 
         removeEnvironment: function(index) {
@@ -133,7 +142,16 @@ export default {
             minLength: minLength(3)
         },
         repositoryUrl: {
-            required
+            required,
+            url
+        },
+        environments: {
+            required,
+            minLength: minLength(3),
+            $each: {
+                required,
+                minLength: minLength(3)
+            }
         }
     }
 }
