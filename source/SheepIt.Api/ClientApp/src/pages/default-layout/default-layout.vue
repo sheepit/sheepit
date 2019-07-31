@@ -5,7 +5,7 @@
         <navigation />
 
         <div class="container">
-            <main class="mt-5">
+            <main class="mt-4">
                 <router-view />
             </main>
         </div>
