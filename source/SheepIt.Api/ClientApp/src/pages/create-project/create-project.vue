@@ -1,6 +1,21 @@
 <template>
     <div>
-        <h1>Add new project</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <router-link :to="{ name: 'project-list' }">
+                        projects
+                    </router-link>
+                    
+                </li>
+                <li class="breadcrumb-item">
+                    create project
+                </li>
+                <slot />
+            </ol>
+        </nav>
+        
+        <div class="view-title">Add new project</div>
 
         <div class="form">
 
@@ -158,6 +173,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.view-title {
+    margin-top: 2.5rem;
+    font-size: 2.5rem;
+}
+
 .form {
     &-section {
         padding: 15px;
