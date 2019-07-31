@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,8 @@ namespace SheepIt.Api.Infrastructure.Web
                         new AuthorizeFilter()
                     );
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<SheepItModule>());
             
             services.AddSwaggerGen(c =>
             {

@@ -38,7 +38,7 @@
             </div>
 
             <div class="form-section">
-                <h2>Environments</h2>
+                <div class="form-title">Environments</div>
                 <div class="form-group">
                     <label>List of environments</label>
                     
@@ -147,7 +147,7 @@ export default {
         },
         environments: {
             required,
-            minLength: minLength(3),
+            minLength: minLength(1),
             $each: {
                 required,
                 minLength: minLength(3)

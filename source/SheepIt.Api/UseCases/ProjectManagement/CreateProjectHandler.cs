@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Autofac;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Projects;
@@ -8,7 +9,6 @@ using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
-using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.UseCases.ProjectManagement
 {
@@ -19,6 +19,26 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         public string[] EnvironmentNames { get; set; }
     }
 
+    public class CreateProjectRequestValidator : AbstractValidator<CreateProjectRequest>
+    {
+        public CreateProjectRequestValidator()
+        {
+            RuleFor(x => x.ProjectId)
+                .NotNull()
+                .MinimumLength(3);
+
+            RuleFor(x => x.RepositoryUrl)
+                .NotNull();
+
+            RuleFor(x => x.EnvironmentNames)
+                .NotNull();
+
+            RuleForEach(x => x.EnvironmentNames)
+                .NotNull()
+                .MinimumLength(3);
+        }
+    }
+    
     [Route("api")]
     [ApiController]
     public class CreateProjectController : MediatorController
