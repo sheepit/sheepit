@@ -55,8 +55,7 @@ const router = new VueRouter({
                                 link: 'project-list'
                             },
                             {
-                                name: 'create project',
-                                link: 'create-project'
+                                name: 'create project'
                             }
                         ]
                     }
@@ -68,8 +67,7 @@ const router = new VueRouter({
                     meta: {
                         breadcrumbs: [
                             {
-                                name: 'projects',
-                                link: 'project-list'
+                                name: 'projects'
                             }
                         ]
                     }
@@ -89,8 +87,7 @@ const router = new VueRouter({
                                         link: 'project-list'
                                     },
                                     {
-                                        name: ':projectId',
-                                        link: 'project'
+                                        name: ':projectId'
                                     }
                                 ]
                             }
@@ -110,8 +107,7 @@ const router = new VueRouter({
                                         link: 'project'
                                     },
                                     {
-                                        name: 'edit',
-                                        link: 'edit-project'
+                                        name: 'edit'
                                     }
                                 ]
                             }
@@ -154,8 +150,7 @@ const router = new VueRouter({
                                         name: 'deployments'
                                     },
                                     {
-                                        name: ':deploymentId',
-                                        link: 'deployment-details'
+                                        name: ':deploymentId'
                                     }
                                 ]
                             }

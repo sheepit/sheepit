@@ -1,6 +1,5 @@
 <template>
     <div v-if="project">
-        <project-breadcrumbs :project-id="project.id" />
 
         <div class="row project-title">
             <div class="col">

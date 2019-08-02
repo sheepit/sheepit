@@ -2,15 +2,6 @@
     <div v-if="release">
         <h1>Release details</h1>
 
-        <project-breadcrumbs :project-id="project.id">
-            <li class="breadcrumb-item">
-                releases
-            </li>
-            <li class="breadcrumb-item active">
-                {{ release.id }}
-            </li>
-        </project-breadcrumbs>
-
         <div class="form-group row">
             <label class="col-2 col-form-label">Id</label>
             <div class="col-10">

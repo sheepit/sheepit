@@ -1,14 +1,6 @@
 <template>
     <div v-if="deployment">
-        <project-breadcrumbs :project-id="project.id">
-            <li class="breadcrumb-item">
-                deployments
-            </li>
-            <li class="breadcrumb-item active">
-                {{ deployment.id }}
-            </li>
-        </project-breadcrumbs>
-        
+
         <table class="table table-bordered">
             <thead>
                 <tr>

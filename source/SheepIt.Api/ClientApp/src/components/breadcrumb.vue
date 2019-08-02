@@ -4,7 +4,6 @@
             <ol class="breadcrumb">
                 <li v-for="(breadcrumb, index) in breadcrumbs"
                     :key="index"
-                    @click="routeTo(index)"
                     class="breadcrumb-item"
                 >
                     <router-link
@@ -31,20 +30,15 @@ export default {
         }
     },
     mounted() {
-        this.updateList()
+        this.updateBreadcrumbsBasedOnRouting()
     },
     watch: { 
         '$route' () { 
-            this.updateList() 
+            this.updateBreadcrumbsBasedOnRouting() 
         } 
     },
     methods: {
-        routeTo(index) {
-            if(this.breadcrumbs[index] && this.breadcrumbs[index].link) {
-                this.$router.push(this.breadcrumbs[index].link);
-            }
-        },
-        updateList() {
+        updateBreadcrumbsBasedOnRouting() {
             if(!this.$route.meta || !this.$route.meta.breadcrumbs) {
                 this.breadcrumbs = null;
                 return;

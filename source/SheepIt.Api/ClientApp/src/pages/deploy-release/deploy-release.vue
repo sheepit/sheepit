@@ -1,17 +1,6 @@
 <template>
     <div>
-        <project-breadcrumbs :project-id="project.id">
-            <li class="breadcrumb-item">
-                releases
-            </li>
-            <li class="breadcrumb-item">
-                {{ releaseId }}
-            </li>
-            <li class="breadcrumb-item">
-                deploy
-            </li>
-        </project-breadcrumbs>
-        
+     
         <h4 class="mt-4">
             Deploy <release-badge
                 :project-id="project.id"

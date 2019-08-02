@@ -1,11 +1,6 @@
 <template>
     <div>
-        <project-breadcrumbs :project-id="project.id">
-            <li class="breadcrumb-item">
-                edit variables
-            </li>
-        </project-breadcrumbs>
-        
+  
         <div v-if="release">
             <h4 class="mt-5">
                 Editing variables based on
