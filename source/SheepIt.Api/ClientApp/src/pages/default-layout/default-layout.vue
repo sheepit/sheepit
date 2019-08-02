@@ -4,6 +4,8 @@
         
         <navigation />
 
+        <breadcrumb />
+
         <div class="container">
             <main class="mt-4">
                 <router-view />
@@ -15,12 +17,14 @@
 
 <script>
 import Navigation from '../../components/layout/navigation.vue'
+import Breadcrumb from "../../components/breadcrumb.vue";
 
 export default {
     name: "DefaultLayout",
 
     components: {
-        Navigation
+        Navigation,
+        Breadcrumb
     },
 
     methods: {

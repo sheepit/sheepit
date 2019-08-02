@@ -35,17 +35,44 @@ const router = new VueRouter({
                 {
                     path: '',
                     name: 'default',
-                    component: Default
+                    component: Default,
+                    meta: {
+                        breadcrumbs: [
+                            {
+                                name: 'dahsboard'
+                            }
+                        ]
+                    }
                 },
                 {
                     path: '/create-project',
                     name: 'create-project',
-                    component: CreateProject
+                    component: CreateProject,
+                    meta: {
+                        breadcrumbs: [
+                            {
+                                name: 'projects',
+                                link: 'project-list'
+                            },
+                            {
+                                name: 'create project',
+                                link: 'create-project'
+                            }
+                        ]
+                    }
                 },
                 {
                     path: '/project-list',
                     name: 'project-list',
-                    component: ProjectList
+                    component: ProjectList,
+                    meta: {
+                        breadcrumbs: [
+                            {
+                                name: 'projects',
+                                link: 'project-list'
+                            }
+                        ]
+                    }
                 },
                 {
                     path: '/project/:projectId',
@@ -54,32 +81,133 @@ const router = new VueRouter({
                         {
                             path: '',
                             name: 'project',
-                            component: Project
+                            component: Project,
+                            meta: {
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'project-list'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    }
+                                ]
+                            }
                         },
                         {
                             path: 'edit',
                             name: 'edit-project',
-                            component: EditProject
+                            component: EditProject,
+                            meta: {
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'project-list'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'edit',
+                                        link: 'edit-project'
+                                    }
+                                ]
+                            }
                         },
                         {
                             path: 'create-release',
                             name: 'create-release',
-                            component: CreateRelease
+                            component: CreateRelease,
+                            meta: {
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'project-list'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'edit variables'
+                                    }
+                                ]
+                            }
                         },
                         {
                             path: 'deployment-details/:deploymentId',
                             name: 'deployment-details',
-                            component: DeploymentDetails
+                            component: DeploymentDetails,
+                            meta: {
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'project-list'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'deployments'
+                                    },
+                                    {
+                                        name: ':deploymentId',
+                                        link: 'deployment-details'
+                                    }
+                                ]
+                            }
                         },
                         {
                             path: 'deploy-release/:releaseId',
                             name: 'deploy-release',
-                            component: DeployRelease
+                            component: DeployRelease,
+                            meta: {
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'project-list'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'releases'
+                                    },
+                                    {
+                                        name: ':releaseId'
+                                    },
+                                    {
+                                        name: 'deploy'
+                                    }
+                                ]
+                            }
                         },
                         {
                             path: 'release-details/:releaseId',
                             name: 'release-details',
-                            component: ReleaseDetails
+                            component: ReleaseDetails,
+                            meta: {
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'project-list'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'releases'
+                                    },
+                                    {
+                                        name: ':releaseId'
+                                    }
+                                ]
+                            }
                         }
                     ]
                 }
