@@ -2,7 +2,7 @@ import messageService from "./../message/message-service";
 import events from './../events/events.js';
 
 export default {
-    baseUrl: (typeof BASE_URL === 'undefined' ? 'https://localhost:44380/' : BASE_URL),
+    baseUrl: (typeof BASE_URL === 'undefined' ? 'http://localhost:8088/' : BASE_URL),
 
     get(url) {
         const requestUrl = this.baseUrl + url;

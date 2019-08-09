@@ -5,12 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Authorization;
+using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Logger;
+using SheepIt.Api.Infrastructure.Web;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace SheepIt.Api.Infrastructure.Web
+namespace SheepIt.Api
 {
     public class Startup
     {

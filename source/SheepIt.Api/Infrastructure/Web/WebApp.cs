@@ -23,8 +23,13 @@ namespace SheepIt.Api.Infrastructure.Web
 
         public void StartAndWait(string[] args)
         {
+            var port = _configuration["Port"];
+            if (port == null)
+                port = "8088";
+            
             _webHost = WebHost
                 .CreateDefaultBuilder(args)
+                .UseUrls($"http://0.0.0.0:{port}")
                 .UseStartup<AutofacStartup>()
                 .UseSerilog()
                 .ConfigureServices(ConfigureServices)
