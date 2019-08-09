@@ -7,6 +7,7 @@
 
             <div class="form-section">
                 <div class="form-title">Details</div>
+
                 <div class="form-group">
                     <label for="projectId" class="form-label">Project id</label>
                     <input
@@ -21,6 +22,7 @@
                         <span v-if="!$v.projectId.minLength">Field should have at least 3 characters</span>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label for="sourceUrl">Git repository URL</label>
                     <input
@@ -157,41 +159,3 @@ export default {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-.view-title {
-    margin-top: 2.5rem;
-    font-size: 2.5rem;
-}
-
-.form {
-    &-section {
-        padding: 15px;
-        overflow: hidden;
-        background: $white;
-        border: 1px solid $light-gray;
-        margin: 20px 0;
-        border-radius: 0.25rem;
-    }
-
-    &-title {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-    }
-
-    label {
-        margin: 0;
-        font-weight: 500;
-    }
-
-    .button-container {
-        text-align: right !important;
-        margin-top: 16px;
-    }
-
-    .submit-button-container {
-        text-align: right !important;
-        margin: 16px 0;
-    }
-}
-</style>

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Serilog;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Logger;
+using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Web;
 
 namespace SheepIt.Api
@@ -34,6 +35,9 @@ namespace SheepIt.Api
                 {
                     var webApp = container.Resolve<WebApp>();
 
+                    var db = container.Resolve<SheepItDatabase>();
+                    db.InitializeCounters().GetAwaiter().GetResult();
+                    
                     webApp.StartAndWait(args);
                 }
             }

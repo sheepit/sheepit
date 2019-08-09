@@ -1,39 +1,145 @@
 <template>
     <div v-if="project">
-        <div class="row project-title">
-            <div class="col">
-                <h2 class="display-4">
-                    {{ project.id }}
-                </h2>
-            </div>
-        </div>
 
-        <h3 class="mt-5">
-            Edit project
-        </h3>
-        <div>
-            <div class="form-group">
-                <label for="projectId">Project id</label>
-                <input
-                    id="projectId"
-                    v-model="project.id"
-                    type="text"
-                    class="form-control"
-                    disabled="disabled"
-                >
+        <div class="view-title">Edit project</div>
+
+        <div class="form">
+        
+            <div class="form-section">
+                <div class="form-title">Details</div>
+
+                <div class="form-group">
+                    <label for="projectId">Project id</label>
+                    <input
+                        id="projectId"
+                        v-model="project.id"
+                        type="text"
+                        class="form-control"
+                        :class="{ 'is-invalid': submitted && $v.project.id.$error }"
+                        disabled="disabled"
+                    >
+                    <div v-if="submitted && $v.project.id.$error" class="invalid-feedback">
+                        <span v-if="!$v.project.id.required">Field is required</span>
+                        <span v-if="!$v.project.id.minLength">Field should have at least 3 characters</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="repositoryUrl">Git repository URL</label>
+                    <input
+                        id="repositoryUrl"
+                        v-model="project.repositoryUrl"
+                        type="text"
+                        class="form-control"
+                        :class="{ 'is-invalid': submitted && $v.project.repositoryUrl.$error }"
+                    >
+                    <div v-if="submitted && $v.project.repositoryUrl.$error" class="invalid-feedback">
+                        <span v-if="!$v.project.repositoryUrl.required">Field is required</span>
+                        <span v-if="!$v.project.repositoryUrl.url">URL invalid</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="repositoryUrl">Git repository URL</label>
-                <input
-                    id="repositoryUrl"
-                    v-model="project.repositoryUrl"
-                    type="text"
-                    class="form-control"
-                >
+            <div class="form-section">
+                <div class="form-title">Environments</div>
+
+                <div class="form-group">
+
+                    <label>List of environments</label>
+
+                    <draggable v-model="environments" draggable=".dragMe">
+
+                        <div v-for="(environment, environmentIndex) in environments"
+                            :key="environmentIndex"
+                            :class="{'dragMe': !environments[environmentIndex].edition}"
+                            >
+
+                            <div v-if="environments[environmentIndex].edition"
+                                class="input-group mb-3">
+                                <input
+                                    v-model="environments[environmentIndex].displayName"
+                                    type="text"
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].displayName.$error }"
+                                >
+                                <div class="input-group-append">
+                                    <button 
+                                        class="btn btn-outline-secondary"
+                                        type="button"
+                                        @click="disableEnvironmentEdition(environmentIndex)"
+                                    >
+                                        <span class="icon icon-ok" />
+                                    </button>
+                                </div>
+                                <div class="input-group-append">
+                                    <button
+                                        class="btn btn-outline-secondary"
+                                        type="button"
+                                        :disabled="environment.persisted || environments.length < 2"
+                                        @click="removeEnvironment(environmentIndex)"
+                                    >
+                                        <span class="icon icon-trash" />
+                                    </button>
+                                </div>
+
+                                <div v-if="submitted && $v.environments.$each[environmentIndex].displayName.$error" class="invalid-feedback">
+                                    <span v-if="!$v.environments.$each[environmentIndex].displayName.required">Field is required</span>
+                                    <span v-if="!$v.environments.$each[environmentIndex].displayName.minLength">Field should have at least 3 characters</span>
+                                </div>
+                            </div>
+
+                            <div v-else
+                                class="input-group mb-3 form-draggable">
+                                <input
+                                    v-model="environments[environmentIndex].displayName"
+                                    type="text"
+                                    class="form-control form-draggable"
+                                    :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].displayName.$error }"
+                                    disabled="disabled"
+                                >
+                                <div class="input-group-append">
+                                    <button 
+                                        class="btn btn-outline-secondary"
+                                        type="button"
+                                        @click="enableEnvironmentEdition(environmentIndex)"
+                                    >
+                                        <span class="icon icon-pencil" />
+                                    </button>
+                                </div>
+                                <div class="input-group-append">
+                                    <button 
+                                        class="btn btn-outline-secondary"
+                                        type="button"
+                                        :disabled="environments.length < 2 || environment.persisted"
+                                        @click="removeEnvironment(environmentIndex)"
+                                    >
+                                        <span class="icon icon-trash" />
+                                    </button>
+                                </div>
+
+                                <div v-if="submitted && $v.environments.$each[environmentIndex].displayName.$error" class="invalid-feedback">
+                                    <span v-if="!$v.environments.$each[environmentIndex].displayName.required">Field is required</span>
+                                    <span v-if="!$v.environments.$each[environmentIndex].displayName.minLength">Field should have at least 3 characters</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </draggable>
+
+                </div>
+
+                <div class="button-container">
+                    <button
+                        class="btn btn-secondary"
+                        @click="addNewEnvironment()"
+                    >
+                        Add new
+                    </button>
+                </div>
             </div>
 
-            <div class="save-button-container">
+            <div class="submit-button-container">
                 <button
                     type="button"
                     class="btn btn-primary"
@@ -44,58 +150,28 @@
             </div>
         </div>
 
-        <h3 class="mt-5">
-            Environments
-        </h3>
-        <div>
-            <draggable
-                v-model="environments"
-                class="row"
-                @end="onEnvironmentDragEnd"
-            >
-                <div
-                    v-for="(environment, index) in environments"
-                    :key="index"
-                    class="col-md-3"
-                >
-                    <div class="card">
-                        <div class="card-header environment-card-header">
-                            <editable-title
-                                :title="environment.displayName"
-                                @blur="(event) => { renameEnvironment(event, index) }"
-                            />
-                        </div>
-                    </div>
-                </div>
-                <new-environment-card
-                    class="add-environment-button"
-                    @blur="addNewEnvironment($event)"
-                />
-            </draggable>
-        </div>
     </div>
 </template>
 
 <script>
+import { required, minLength, url } from 'vuelidate/lib/validators'
+
 import httpService from "./../../common/http/http-service.js";
 import draggable from 'vuedraggable';
-
-import EditableTitle from "./_components/editable-title.vue";
-import NewEnvironmentCard from "./_components/new-environment-card.vue";
 
 export default {
     name: 'EditProject',
 
     components: {
-        draggable,
-        EditableTitle,
-        NewEnvironmentCard
+        draggable
     },
 
     data() {
         return {
             project: null,
-            environments: null
+            environments: null,
+
+            submitted: false
         }
     },
 
@@ -111,25 +187,55 @@ export default {
 
     methods: {
         save: function () {
-            updateProject(this.projectId, this.project.repositoryUrl)
+            this.submitted = true;
+
+            this.$v.$touch();
+            if (this.$v.$invalid) {
+                return;
+            }
+
+            let environments = this.environments.map((item, index) => {
+                return {
+                    id: item.environmentId,
+                    displayName: item.displayName,
+                    rank: index
+                };
+            });
+
+            updateProject(this.projectId, this.project.repositoryUrl, environments)
                 .then(() => { });
         },
 
-        onEnvironmentDragEnd() {
-            const environmentIds = this.environments.map(f => (f.environmentId));
-            updateEnvironmentRank(this.project.id, environmentIds);
+        addNewEnvironment() {
+            this.environments.push({
+                persisted: false,
+                edition: true
+            });
+
+            this.enableEnvironmentEdition(this.environments.length - 1);
         },
 
-        renameEnvironment(displayName, index) {
-            let environment = this.environments[index];
-            updateEnvironmentDisplayName(environment.environmentId, displayName, this.projectId);
+        enableEnvironmentEdition(index) {
+            let environments = this.environments.map(item => item.edition = false);
+
+            if(this.environments[index]) {
+                this.$set(this.environments[index], 'edition', true);
+            }
+            this.$forceUpdate();
         },
 
-        addNewEnvironment(newEnvironmentDisplayName) {
-            addNewEnvironment(this.project.id, newEnvironmentDisplayName)
-                .then((response) => {
-                    this.getProjectDetails();
-                });
+        disableEnvironmentEdition(index) {
+            if(this.environments[index]) {
+                this.$set(this.environments[index], 'edition', false);
+            }
+            this.$forceUpdate();
+        },
+
+        removeEnvironment: function(index) {
+            if(this.environments.length < 2)
+                return;
+
+            this.environments.splice(index, 1);
         },
 
         getProjectDetails() {
@@ -137,46 +243,48 @@ export default {
                 .post('api/get-project-details', { id: this.projectId })
                 .then(response => {
                     this.project = response;
-                    this.environments = this.project.environments;
+                    this.environments = response.environments.map(env => {
+                        env.persisted = true;
+                        env.edition = false;
+
+                        return env;
+                    });
                 });
+        }
+    },
+    validations: {
+        project: {
+            id: {
+                required,
+                minLength: minLength(3)
+            },
+            repositoryUrl: {
+                required,
+                url
+            },
+        },
+        
+        environments: {
+            required,
+            minLength: minLength(1),
+            $each: {
+                displayName: {
+                    required,
+                    minLength: minLength(3)
+                }
+            }
         }
     }
 }
 
-function updateProject(projectId, repositoryUrl) {
+function updateProject(projectId, repositoryUrl, environments) {
     return httpService.post('api/update-project', {
         projectId: projectId,
-        repositoryUrl: repositoryUrl
+        repositoryUrl: repositoryUrl,
+        environments: environments
     }, false);
 }
 
-function updateEnvironmentRank(projectId, environmentIds) {
-    const request = {
-        projectId: projectId,
-        environmentIds: environmentIds
-    };
-
-    httpService.post('api/project/environment/update-environments-rank', request, false);
-}
-
-function updateEnvironmentDisplayName(environmentId, displayName, projectId) {
-    const request = {
-        projectId: projectId,
-        environmentId: environmentId,
-        displayName: displayName
-    };
-
-    httpService.post('api/project/environment/update-environment-display-name', request, false);
-}
-
-function addNewEnvironment(projectId, displayName) {
-    const request = {
-        projectId: projectId,
-        displayName: displayName
-    };
-
-    return httpService.post('api/project/environment/add-environment', request, false);
-} 
 </script>
 
 <style lang="scss" scoped>
@@ -198,5 +306,9 @@ function addNewEnvironment(projectId, displayName) {
     min-height: 49px;
     height: 100%;
     width: 100%;
+}
+
+.disabled {
+    background-color: $disabled-gray;
 }
 </style>
