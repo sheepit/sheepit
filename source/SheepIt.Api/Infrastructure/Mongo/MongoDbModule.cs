@@ -16,6 +16,9 @@ namespace SheepIt.Api.Infrastructure.Mongo
             builder.RegisterType<SheepItDatabase>()
                 .AsSelf()
                 .SingleInstance();
+
+            builder.RegisterType<IdentityProvider>()
+                .InstancePerLifetimeScope();
         }
     }
 }

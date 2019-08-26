@@ -60,13 +60,16 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     {
         private readonly IProjectContext _projectContext;
         private readonly SheepItDatabase _database;
+        private readonly IdentityProvider _identityProvider;
 
         public UpdateProjectHandler(
             IProjectContext projectContext,
-            SheepItDatabase database)
+            SheepItDatabase database,
+            IdentityProvider identityProvider)
         {
             _projectContext = projectContext;
             _database = database;
+            _identityProvider = identityProvider;
         }
         
         public async Task Handle(UpdateProjectRequest request)
@@ -95,7 +98,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
                 if (environmentDto.Id == 0)
                 {
-                    env.Id = await _database.GetNextSequence("EnvironmentId");
+                    env.Id = await _identityProvider.GetNextId("Environment");
                     toAdd.Add(env);
                 }
                 else if(persistedEnvironments.Any(x => x.Id == environmentDto.Id))

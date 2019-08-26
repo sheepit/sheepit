@@ -203,7 +203,22 @@ export default {
             });
 
             updateProject(this.projectId, this.project.repositoryUrl, environments)
-                .then(() => { });
+                .then(() => {
+                    this.markEnvironmentsAsPersisted();            
+                });
+        },
+
+        markEnvironmentsAsPersisted() {
+            if(this.environments)
+            {
+                this.environments = this.environments.map((item, index) => {
+                    item.persisted = true;
+
+                    return item;
+                });
+
+                this.$forceUpdate();
+            }
         },
 
         addNewEnvironment() {

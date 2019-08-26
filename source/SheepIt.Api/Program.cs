@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using Autofac;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SheepIt.Api.Infrastructure;
@@ -35,8 +34,14 @@ namespace SheepIt.Api
                 {
                     var webApp = container.Resolve<WebApp>();
 
-                    var db = container.Resolve<SheepItDatabase>();
-                    db.InitializeCounters().GetAwaiter().GetResult();
+                    var idProvider = container.Resolve<IdentityProvider>();
+                    idProvider
+                        .InitializeIdentities(new List<string>
+                        {
+                            "Environment"
+                        })
+                        .GetAwaiter()
+                        .GetResult();
                     
                     webApp.StartAndWait(args);
                 }
