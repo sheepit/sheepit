@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Features.ResolveAnything;
+using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.DeploymentProcessRunning;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments;
@@ -46,6 +47,7 @@ namespace SheepIt.Api
             
             builder.RegisterType<DeploymentsStorage>().AsSelf();
             builder.RegisterType<ReleasesStorage>().AsSelf();
+            builder.RegisterType<DeploymentProcess>().AsSelf();
             builder.RegisterModule<DeploymentProcessModule>();
         }
 

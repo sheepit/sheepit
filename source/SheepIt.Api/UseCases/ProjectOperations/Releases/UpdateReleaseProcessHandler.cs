@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Releases;
@@ -37,30 +38,36 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         private readonly ReleasesStorage _releasesStorage;
         private readonly DeploymentProcessGitRepositoryFactory _deploymentProcessGitRepositoryFactory;
         private readonly IProjectContext _projectContext;
+        private readonly DeploymentProcessStorage _deploymentProcessStorage;
 
-        public UpdateReleaseProcessHandler(ReleasesStorage releasesStorage, DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory, IProjectContext projectContext)
+        public UpdateReleaseProcessHandler(ReleasesStorage releasesStorage, DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory, IProjectContext projectContext, DeploymentProcessStorage deploymentProcessStorage)
         {
             _releasesStorage = releasesStorage;
             _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
             _projectContext = projectContext;
+            _deploymentProcessStorage = deploymentProcessStorage;
         }
 
         public async Task<UpdateReleaseProcessResponse> Handle(UpdateReleaseProcessRequest request)
         {
             var project = _projectContext.Project;
 
-            var currentCommitSha = _deploymentProcessGitRepositoryFactory.GetCurrentCommitSha(project);
+            var getCurrentCommitZipResult = _deploymentProcessGitRepositoryFactory.GetCurrentCommitZip(project);
+
+            var deploymentProcessId = await _deploymentProcessStorage.Add(getCurrentCommitZipResult.ZipFile);
 
             var release = await _releasesStorage.GetNewest(request.ProjectId);
 
-            var newRelease = release.WithUpdatedCommitSha(currentCommitSha);
-
+            var newRelease = release
+                .WithUpdatedCommitSha(getCurrentCommitZipResult.CreatedFromCommitSha)
+                .WithUpdatedDeploymentProcess(deploymentProcessId);
+            
             var releaseId = await _releasesStorage.Add(newRelease);
 
             return new UpdateReleaseProcessResponse
             {
                 CreatedReleaseId = releaseId,
-                CreatedFromCommitSha = currentCommitSha
+                CreatedFromCommitSha = getCurrentCommitZipResult.CreatedFromCommitSha
             };
         }
     }
