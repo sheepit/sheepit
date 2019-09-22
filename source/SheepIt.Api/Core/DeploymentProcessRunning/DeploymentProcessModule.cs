@@ -14,6 +14,10 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning
             builder.RegisterType<DeploymentProcessGitRepositoryFactory>()
                 .AsSelf()
                 .SingleInstance();
+
+            builder.RegisterType<DeploymentProcessDirectoryFactory>()
+                .AsSelf()
+                .SingleInstance();
             
             builder.RegisterType<DeploymentProcessRunner>()
                 .AsSelf()

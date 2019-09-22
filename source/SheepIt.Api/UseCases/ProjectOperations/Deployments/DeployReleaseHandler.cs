@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
+using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.DeploymentProcessRunning;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Deployments;
@@ -47,6 +49,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         private readonly DeploymentProcessRunner _deploymentProcessRunner;
         private readonly IProjectContext _projectContext;
         private readonly SheepItDatabase _database;
+        private readonly DeploymentProcessDirectoryFactory _deploymentProcessDirectoryFactory;
+        private readonly DeploymentProcessStorage _deploymentProcessStorage;
 
         public DeployReleaseHandler(
             DeploymentsStorage deploymentsStorage,
@@ -54,7 +58,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory,
             DeploymentProcessRunner deploymentProcessRunner,
             IProjectContext projectContext,
-            SheepItDatabase database)
+            SheepItDatabase database,
+            DeploymentProcessDirectoryFactory deploymentProcessDirectoryFactory,
+            DeploymentProcessStorage deploymentProcessStorage)
         {
             _deploymentsStorage = deploymentsStorage;
             _deploymentProcessSettings = deploymentProcessSettings;
@@ -62,6 +68,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             _deploymentProcessRunner = deploymentProcessRunner;
             _projectContext = projectContext;
             _database = database;
+            _deploymentProcessDirectoryFactory = deploymentProcessDirectoryFactory;
+            _deploymentProcessStorage = deploymentProcessStorage;
         }
 
         public async Task<DeployReleaseResponse> Handle(DeployReleaseRequest request)
@@ -80,7 +88,13 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             
             var deploymentId = await _deploymentsStorage.Add(deployment);
 
-            await RunDeployment(_projectContext.Project, release, deployment);
+            var deploymentProcess = await _database.DeploymentProcesses
+                .Find(builder => builder
+                    .Eq(process => process.ObjectId, release.DeploymentProcessId)
+                )
+                .SingleAsync();
+
+            await RunDeployment(_projectContext.Project, release, deployment, deploymentProcess);
 
             return new DeployReleaseResponse
             {
@@ -88,7 +102,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             };
         }
 
-        private async Task RunDeployment(Project project, Release release, Deployment deployment)
+        private async Task RunDeployment(Project project, Release release, Deployment deployment,
+            DeploymentProcess deploymentProcess)
         {
             try
             {
@@ -96,26 +111,24 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
                 var deploymentWorkingDir = _deploymentProcessSettings.WorkingDir
                     .AddSegment(project.Id)
                     .AddSegment("deploying-releases")
-                    .AddSegment(
-                        $"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_release-{release.Id}")
-                    .ToString();
+                    .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_release-{release.Id}");
 
                 // todo: make asynchronous
-                using (var repository = _deploymentProcessGitRepositoryFactory.Clone(project.RepositoryUrl, deploymentWorkingDir))
-                {
-                    repository.Checkout(release.CommitSha);
+                var processDirectory = _deploymentProcessDirectoryFactory.CreateFromZip(
+                    deploymentProcessZip: deploymentProcess.File,
+                    toDirectory: deploymentWorkingDir
+                );
+                
+                var processOutput = _deploymentProcessRunner.Run(
+                    processDirectory.Path.ToString(),
+                    deploymentProcessFile: processDirectory.OpenProcessDescriptionFile(),
+                    variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId)
+                );
 
-                    var processOutput = _deploymentProcessRunner.Run(
-                        repository.RepositoryPath.ToString(),
-                        deploymentProcessFile: repository.OpenProcessDescriptionFile(),
-                        variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId)
-                    );
+                deployment.MarkFinished(processOutput);
 
-                    deployment.MarkFinished(processOutput);
-
-                    await _database.Deployments
-                        .ReplaceOneById(deployment);
-                }
+                await _database.Deployments
+                    .ReplaceOneById(deployment);
             }
             catch (Exception)
             {
