@@ -54,7 +54,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
             var getCurrentCommitZipResult = _deploymentProcessGitRepositoryFactory.GetCurrentCommitZip(project);
 
-            var deploymentProcessId = await _deploymentProcessStorage.Add(getCurrentCommitZipResult.ZipFile);
+            var deploymentProcessId = await _deploymentProcessStorage
+                .Add(
+                    project.Id,
+                    getCurrentCommitZipResult.ZipFile
+                );
 
             var release = await _releasesStorage.GetNewest(request.ProjectId);
 

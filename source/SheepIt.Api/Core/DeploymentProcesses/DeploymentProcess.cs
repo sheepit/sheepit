@@ -8,7 +8,7 @@ namespace SheepIt.Api.Core.DeploymentProcesses
         [BsonId]
         public ObjectId ObjectId { get; set; }
         public int Id { get; set; }
-        
+        public string ProjectId { get; set; }
         public byte[] File { get; set; }
     }
 }

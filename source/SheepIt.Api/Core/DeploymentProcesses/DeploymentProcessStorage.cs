@@ -17,7 +17,7 @@ namespace SheepIt.Api.Core.DeploymentProcesses
             _identityProvider = identityProvider;
         }
 
-        public async Task<int> Add(byte[] zipFile)
+        public async Task<int> Add(string projectId, byte[] zipFile)
         {
             var objectId = ObjectId.GenerateNewId();
             var id = await _identityProvider.GetNextId("DeploymentProcess");
@@ -26,6 +26,7 @@ namespace SheepIt.Api.Core.DeploymentProcesses
             {
                 ObjectId = objectId,
                 Id = id,
+                ProjectId = projectId,
                 File = zipFile
             });
 
