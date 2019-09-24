@@ -7,19 +7,25 @@ namespace SheepIt.Api.Core.DeploymentProcesses
     public class DeploymentProcessStorage
     {
         private readonly SheepItDatabase _database;
+        private readonly IdentityProvider _identityProvider;
 
-        public DeploymentProcessStorage(SheepItDatabase database)
+        public DeploymentProcessStorage(
+            SheepItDatabase database,
+            IdentityProvider identityProvider)
         {
             _database = database;
+            _identityProvider = identityProvider;
         }
 
-        public async Task<ObjectId> Add(byte[] zipFile)
+        public async Task<int> Add(byte[] zipFile)
         {
-            var id = ObjectId.GenerateNewId();
+            var objectId = ObjectId.GenerateNewId();
+            var id = await _identityProvider.GetNextId("DeploymentProcess");
             
             await _database.DeploymentProcesses.InsertOneAsync(new DeploymentProcess
             {
-                ObjectId = id,
+                ObjectId = objectId,
+                Id = id,
                 File = zipFile
             });
 

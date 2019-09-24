@@ -90,7 +90,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 
             var deploymentProcess = await _database.DeploymentProcesses
                 .Find(builder => builder
-                    .Eq(process => process.ObjectId, release.DeploymentProcessId)
+                    .Eq(process => process.Id, release.Id)
                 )
                 .SingleAsync();
 

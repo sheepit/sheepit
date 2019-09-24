@@ -38,7 +38,8 @@ namespace SheepIt.Api
                     idProvider
                         .InitializeIdentities(new List<string>
                         {
-                            "Environment"
+                            "Environment",
+                            "DeploymentProcess"
                         })
                         .GetAwaiter()
                         .GetResult();

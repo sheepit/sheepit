@@ -15,7 +15,7 @@ namespace SheepIt.Api.Core.Releases
         public int Id { get; set; }
         public string ProjectId { get; set; }
         public string CommitSha { get; set; } // todo: remove
-        public ObjectId DeploymentProcessId { get; set; }
+        public int DeploymentProcessId { get; set; }
         public DateTime CreatedAt { get; set; }
         public VariableCollection Variables { get; set; } = new VariableCollection();
 
@@ -24,14 +24,14 @@ namespace SheepIt.Api.Core.Releases
             return Variables.GetForEnvironment(environmentId);
         }
         
-        public Release WithUpdatedDeploymentProcess(ObjectId newDeploymentProcess)
+        public Release WithUpdatedDeploymentProcess(int newDeploymentProcessId)
         {
             return new Release
             {
                 Id = 0,
                 ProjectId = ProjectId,
                 CommitSha = CommitSha,
-                DeploymentProcessId = newDeploymentProcess,
+                DeploymentProcessId = newDeploymentProcessId,
                 CreatedAt = DateTime.UtcNow,
                 Variables = Variables.Clone()
             };
