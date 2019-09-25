@@ -20,7 +20,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
     {
         public int Id { get; set; }
         public string ProjectId { get; set; }
-        public string CommitSha { get; set; }
         public DateTime CreatedAt { get; set; }
         public VariableDto[] Variables { get; set; }
 
@@ -62,7 +61,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
             {
                 Id = release.Id,
                 ProjectId = release.ProjectId,
-                CommitSha = release.CommitSha,
                 CreatedAt = release.CreatedAt,
                 Variables = release.Variables.Variables
                     .Select(values => new GetLastReleaseResponse.VariableDto

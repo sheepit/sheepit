@@ -16,16 +16,6 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
             _repository = repository;
         }
 
-        public string GetCurrentCommitSha()
-        {
-            return _repository.Head.Tip.Sha;
-        }
-
-        public void Checkout(string commitSha)
-        {
-            Commands.Checkout(_repository, commitSha);
-        }
-
         public byte[] Zip()
         {
             var zipPath = RepositoryPath

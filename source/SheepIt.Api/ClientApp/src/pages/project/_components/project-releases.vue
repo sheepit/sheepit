@@ -16,9 +16,6 @@
                             created
                         </th>
                         <th scope="col">
-                            commit sha
-                        </th>
-                        <th scope="col">
                             operations
                         </th>
                     </tr>
@@ -36,11 +33,6 @@
                         </td>
                         <td>
                             <humanized-date :date="release.createdAt" />
-                        </td>
-                        <td>
-                            <tooltip :text="release.commitSha">
-                                <code>{{ shortCommitSha(release.commitSha) }}</code>
-                            </tooltip>
                         </td>
                         <td>
                             <router-link
@@ -72,9 +64,6 @@ export default {
     ],
     
     methods: {
-        shortCommitSha(commitSha) {
-            return commitSha.substring(0, 7)
-        }
     }
 }
 </script>

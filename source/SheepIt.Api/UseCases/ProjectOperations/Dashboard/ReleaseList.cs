@@ -18,7 +18,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             return new GetProjectDashboardResponse.ReleaseDto
             {
                 Id = release.Id,
-                CommitSha = release.CommitSha,
                 CreatedAt = release.CreatedAt
             };
         }

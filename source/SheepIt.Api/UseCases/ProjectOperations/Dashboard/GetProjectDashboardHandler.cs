@@ -47,7 +47,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         public class ReleaseDto
         {
             public int Id { get; set; }
-            public string CommitSha { get; set; }
             public DateTime CreatedAt { get; set; }
         }
     }

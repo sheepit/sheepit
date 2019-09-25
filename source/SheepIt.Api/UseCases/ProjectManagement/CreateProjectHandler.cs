@@ -55,14 +55,12 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     {
         private readonly Core.Environments.AddEnvironment _addEnvironment;
         private readonly ReleasesStorage _releasesStorage;
-        private readonly DeploymentProcessGitRepositoryFactory _deploymentProcessGitRepositoryFactory;
         private readonly SheepItDatabase _database;
 
         public CreateProjectHandler(Core.Environments.AddEnvironment addEnvironment, ReleasesStorage releasesStorage, DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory, SheepItDatabase database)
         {
             _addEnvironment = addEnvironment;
             _releasesStorage = releasesStorage;
-            _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
             _database = database;
         }
 
@@ -93,12 +91,9 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         
         private async Task CreateFirstRelease(Project project)
         {
-            var currentCommitSha = _deploymentProcessGitRepositoryFactory.GetCurrentCommitSha(project);
-
             await _releasesStorage.Add(new Release
             {
                 Variables = new VariableCollection(),
-                CommitSha = currentCommitSha,
                 CreatedAt = DateTime.UtcNow,
                 ProjectId = project.Id
             });

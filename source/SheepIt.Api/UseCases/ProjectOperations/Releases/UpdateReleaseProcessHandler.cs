@@ -18,7 +18,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
     public class UpdateReleaseProcessResponse
     {
         public int CreatedReleaseId { get; set; }
-        public string CreatedFromCommitSha { get; set; }
     }
 
     [Route("api")]
@@ -63,15 +62,13 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
             var release = await _releasesStorage.GetNewest(request.ProjectId);
 
             var newRelease = release
-                .WithUpdatedCommitSha(getCurrentCommitZipResult.CreatedFromCommitSha)
                 .WithUpdatedDeploymentProcess(deploymentProcessId);
             
             var releaseId = await _releasesStorage.Add(newRelease);
 
             return new UpdateReleaseProcessResponse
             {
-                CreatedReleaseId = releaseId,
-                CreatedFromCommitSha = getCurrentCommitZipResult.CreatedFromCommitSha
+                CreatedReleaseId = releaseId
             };
         }
     }

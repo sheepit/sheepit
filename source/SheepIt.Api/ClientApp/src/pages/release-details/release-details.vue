@@ -15,13 +15,6 @@
                 <span>{{ release.projectId }}</span>
             </div>
         </div>
-        
-        <div class="form-group row">
-            <label class="col-2 col-form-label">Commit SHA</label>
-            <div class="col-10">
-                <span>{{ release.commitSha }}</span>
-            </div>
-        </div>
 
         <div class="form-group row">
             <label class="col-2 col-form-label">Created At</label>
