@@ -7,6 +7,7 @@ using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Core.Releases
 {
+    [BsonIgnoreExtraElements]
     public class Release : IDocumentWithId<int>, IDocumentInProject
     {
         [BsonId]
