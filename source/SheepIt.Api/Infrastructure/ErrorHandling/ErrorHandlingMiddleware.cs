@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace SheepIt.Api.Infrastructure.ErrorHandling
 {
@@ -35,10 +36,14 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
         {
             var code = HttpStatusCode.InternalServerError;
 
+            
             var result = JsonConvert.SerializeObject(
                 errorResponse,
                 new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
             );
+            
+            Log.Error(result);
+
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
 

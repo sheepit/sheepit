@@ -38,6 +38,15 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="sourceUrl">Process file</label>
+                    <input
+                        id="zipFile"
+                        type="file"
+                        class="form-control"
+                        ref="zipFile"
+                    >
+                </div>
             </div>
 
             <div class="form-section">
@@ -86,7 +95,7 @@
                 <button
                     type="button"
                     class="btn btn-primary"
-                    @click="create()"
+                    @click="onSubmit()"
                 >
                     Save
                 </button>
@@ -114,7 +123,7 @@ export default {
         }
     },
     methods: {
-        create: function () {
+        onSubmit: function () {
             this.submitted = true;
 
             this.$v.$touch();
@@ -122,10 +131,15 @@ export default {
                 return;
             }
 
-            createProjectService.createProject(this.projectId, this.repositoryUrl, this.environments)
-                // TODO: Update main app component, so it knows that new project was added
-                // .then(() => window.app.updateProjects()) <===== todo
-                .then(() => this.$router.push({ name: 'project', params: { projectId: this.projectId }}))
+            let zipFile = this.$refs.zipFile;
+            let zipFileData = this.$refs.zipFile.files[0];
+
+            createProjectService.createProject(
+                this.projectId,
+                this.repositoryUrl,
+                this.environments,
+                zipFileData
+            );
         },
 
         newEnvironment: function () {

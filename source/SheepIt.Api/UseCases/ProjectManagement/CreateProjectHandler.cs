@@ -52,7 +52,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     {
         [HttpPost]
         [Route("create-project")]
-        [AllowAnonymous]
         public async Task CreateProject([FromForm] CreateProjectRequest model)
         {
             await Handle(model);
