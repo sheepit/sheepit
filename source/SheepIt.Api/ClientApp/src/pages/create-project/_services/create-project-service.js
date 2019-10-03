@@ -17,7 +17,10 @@ export default {
         formData.append('ZipFile', zipFileData);
         formData.append('ProjectId', projectId);
         formData.append('RepositoryUrl', repositoryUrl);
-        formData.append('EnvironmentNames', environmentNames);
+
+        for(let i = 0; i < environmentNames.length; i++) {
+            formData.append('EnvironmentNames[]', environmentNames[i]);
+        }
 
         const fetchSettings = {
             method: "POST",
