@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcesses;
@@ -18,7 +17,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     public class CreateProjectRequest : IRequest
     {
         public string ProjectId { get; set; }
-        public string RepositoryUrl { get; set; }
         public string[] EnvironmentNames { get; set; }
         public IFormFile ZipFile { get; set; }
     }
@@ -30,9 +28,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             RuleFor(x => x.ProjectId)
                 .NotNull()
                 .MinimumLength(3);
-
-            RuleFor(x => x.RepositoryUrl)
-                .NotNull();
 
             RuleFor(x => x.EnvironmentNames)
                 .NotNull();
@@ -81,8 +76,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         {
             var project = new Project
             {
-                Id = request.ProjectId,
-                RepositoryUrl = request.RepositoryUrl,
+                Id = request.ProjectId
             };
 
             await _database.Projects

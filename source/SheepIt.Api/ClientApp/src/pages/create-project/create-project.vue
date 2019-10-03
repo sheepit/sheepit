@@ -22,21 +22,6 @@
         </div>
 
         <div class="form-group">
-          <label for="sourceUrl">Git repository URL</label>
-          <input
-            id="sourceUrl"
-            v-model="repositoryUrl"
-            type="text"
-            class="form-control"
-            :class="{ 'is-invalid': submitted && $v.repositoryUrl.$error }"
-          />
-          <div v-if="submitted && $v.repositoryUrl.$error" class="invalid-feedback">
-            <span v-if="!$v.repositoryUrl.required">Field is required</span>
-            <span v-if="!$v.repositoryUrl.url">URL invalid</span>
-          </div>
-        </div>
-
-        <div class="form-group">
             <label for="sourceUrl">Process definition</label>
             <div class="input-group">
                 <div class="custom-file">
@@ -114,7 +99,6 @@ export default {
   data() {
     return {
       projectId: "",
-      repositoryUrl: "",
       environments: [""],
 
       submitted: false
@@ -134,7 +118,6 @@ export default {
 
       createProjectService.createProject(
         this.projectId,
-        this.repositoryUrl,
         this.environments,
         zipFileData
       );
@@ -154,10 +137,6 @@ export default {
     projectId: {
       required,
       minLength: minLength(3)
-    },
-    repositoryUrl: {
-      required,
-      url
     },
     environments: {
       required,

@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Api.UseCases.ProjectManagement;
 
@@ -24,8 +23,6 @@ namespace SheepIt.Api.Tests.FeatureObjects
                 _request = new CreateProjectRequest
                 {
                     ProjectId = projectId,
-                    // todo: [ts] hardcoded paths will not work on other systems
-                    RepositoryUrl = "c:\\sheep-it\\sample-process",
                     EnvironmentNames = new[] {"dev", "test", "prod"}
                 };
             }

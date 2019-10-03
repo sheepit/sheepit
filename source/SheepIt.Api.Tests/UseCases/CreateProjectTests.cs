@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.Api.Tests.TestInfrastructure;
-using SheepIt.Api.UseCases;
 using SheepIt.Api.UseCases.ProjectManagement;
 
 namespace SheepIt.Api.Tests.UseCases
@@ -17,7 +16,6 @@ namespace SheepIt.Api.Tests.UseCases
             await Fixture.Handle(new CreateProjectRequest
             {
                 ProjectId = "foo",
-                RepositoryUrl = "c:\\sheep-it\\sample-process",
                 EnvironmentNames = new[] {"dev", "test", "prod"}
             });
             
@@ -34,7 +32,7 @@ namespace SheepIt.Api.Tests.UseCases
                     new ListProjectsResponse.ProjectDto
                     {
                         Id = "foo",
-                        RepositoryUrl = "c:\\sheep-it\\sample-process"
+                        RepositoryUrl = null
                     }
                 }
             });

@@ -3,7 +3,6 @@ import defaults from './../../../common/defaults'
 export default {
     createProject(
         projectId,
-        repositoryUrl,
         environmentNames,
         zipFileData) {
 
@@ -16,7 +15,6 @@ export default {
         const formData = new FormData();
         formData.append('ZipFile', zipFileData);
         formData.append('ProjectId', projectId);
-        formData.append('RepositoryUrl', repositoryUrl);
 
         for(let i = 0; i < environmentNames.length; i++) {
             formData.append('EnvironmentNames[]', environmentNames[i]);
