@@ -61,6 +61,7 @@ export default {
             .then(this.handleErrors)
             .catch(error => {
                 messageService.error(error);
+                return Promise.reject(error);
             });
     },
 
@@ -68,13 +69,16 @@ export default {
         if (!response.ok) {
             
             if (response.status === 401) {
-                events.emit('unauthorized')
+                events.emit('unauthorized');
             }
             
-            response.json()
+            response
+                .json()
                 .then(error => console.log(error));
+
             throw Error(response.statusText);
         }
+
         return response;
     }
 };

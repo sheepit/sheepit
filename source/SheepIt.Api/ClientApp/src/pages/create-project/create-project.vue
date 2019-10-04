@@ -92,7 +92,8 @@
 <script>
 import { required, minLength, url } from "vuelidate/lib/validators";
 
-import createProjectService from "./_services/create-project-service.js";
+import messageService from "./../../common/message/message-service";
+import createProjectService from "./_services/create-project-service";
 
 export default {
   name: "CreateProject",
@@ -120,7 +121,11 @@ export default {
         this.projectId,
         this.environments,
         zipFileData
-      );
+      )
+      .then(response => {
+        messageService.success('Projekt został stworzony');
+        this.$router.push({ name: 'project', params: { projectId: this.projectId }});
+      });
     },
 
     newEnvironment: function() {

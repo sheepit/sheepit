@@ -1,4 +1,5 @@
 import defaults from './../../../common/defaults'
+import messageService from "./../../../common/message/message-service";
 
 export default {
     createProject(
@@ -31,11 +32,27 @@ export default {
         const responsePromise = fetch(requestUrl, fetchSettings);
 
         return responsePromise
-            .then(
-                this.handleErrors,
-                error => console.error(error))
+            .then(this.handleErrors)
             .catch(error => {
-                console.error(error);
+                messageService.error(error);
+                return Promise.reject(error);
             });
+    },
+
+    handleErrors(response) {
+        if (!response.ok) {
+            
+            if (response.status === 401) {
+                events.emit('unauthorized')
+            }
+            
+            response
+                .json()
+                .then(error => console.log(error));
+
+            throw Error(response.statusText);
+        }
+
+        return response;
     }
 }
