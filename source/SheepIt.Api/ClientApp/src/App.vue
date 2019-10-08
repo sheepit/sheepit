@@ -19,6 +19,7 @@ import Project from './pages/project/project.vue'
 import ProjectLayout from './pages/project-layout/project-layout.vue'
 import ProjectList from './pages/project-list/project-list.vue'
 import ReleaseDetails from './pages/release-details/release-details.vue'
+import UpdateProcess from './pages/update-process/update-process.vue'
 
 
 const router = new VueRouter({
@@ -201,6 +202,26 @@ const router = new VueRouter({
                                     {
                                         name: ':releaseId'
                                     }
+                                ]
+                            }
+                        },
+                        {
+                            path: 'update-process',
+                            name: 'update-process',
+                            component: UpdateProcess,
+                            meta: {
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'project-list'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'update process'
+                                    },
                                 ]
                             }
                         }

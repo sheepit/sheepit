@@ -21,12 +21,12 @@
                 >
                     Edit variables
                 </router-link>
-                <button
-                    class="btn btn-primary"
-                    @click="updateProcess()"
+                <router-link
+                    class="btn btn-primary link-button"
+                    :to="{ name: 'update-process' }"
                 >
                     Update process
-                </button>
+                </router-link>
             </div>
         </div>
         

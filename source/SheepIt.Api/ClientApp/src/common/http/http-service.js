@@ -65,6 +65,28 @@ export default {
             });
     },
 
+    postFormData(url, formData) {
+
+        const requestUrl = this.baseUrl + url;
+
+        const fetchSettings = {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${window.localStorage.getItem("jwtToken")}` // todo: remove duplication, create jwt-token-storage
+            },
+            body: formData
+        }
+    
+        const responsePromise = fetch(requestUrl, fetchSettings);
+
+        return responsePromise
+            .then(this.handleErrors)
+            .catch(error => {
+                messageService.error(error);
+                return Promise.reject(error);
+            });
+    },
+
     handleErrors(response) {
         if (!response.ok) {
             
