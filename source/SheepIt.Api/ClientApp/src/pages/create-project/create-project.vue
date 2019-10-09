@@ -22,19 +22,13 @@
         </div>
 
         <div class="form-group">
-            <label for="sourceUrl">Process definition</label>
-            <div class="input-group">
-                <div class="custom-file">
-                    <input
-                        id="zipFile"
-                        type="file"
-                        class="custom-file-input"
-                        aria-describedby="inputGroupFileAddon01"
-                        ref="zipFile"
-                    />
-                    <label class="custom-file-label" for="zipFile">Upload zip file</label>
-                </div>
-            </div>
+            <label for="zipFile">Process definition</label>
+            <input
+                id="zipFile" 
+                type="file"
+                class="form-control-file"
+                ref="zipFile"
+            >
         </div>
 
       </div>
