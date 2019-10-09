@@ -66,7 +66,6 @@ export default {
     },
 
     postFormData(url, formData) {
-
         const requestUrl = this.baseUrl + url;
 
         const fetchSettings = {

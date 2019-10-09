@@ -43,6 +43,8 @@
 import { required, minLength, url } from 'vuelidate/lib/validators'
 
 import httpService from "./../../common/http/http-service.js";
+import messageService from "./../../common/message/message-service.js";
+
 import updateProcessService from "./_services/update-process-service.js";
 
 export default {
@@ -61,7 +63,6 @@ export default {
 
             updateProcessService.updateProcess(
                 this.projectId,
-                this.environments,
                 zipFileData
             )
             .then(response => {

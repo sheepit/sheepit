@@ -45,7 +45,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
     {
         private readonly DeploymentsStorage _deploymentsStorage;
         private readonly DeploymentProcessSettings _deploymentProcessSettings;
-        private readonly DeploymentProcessGitRepositoryFactory _deploymentProcessGitRepositoryFactory;
         private readonly DeploymentProcessRunner _deploymentProcessRunner;
         private readonly IProjectContext _projectContext;
         private readonly SheepItDatabase _database;
@@ -55,7 +54,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         public DeployReleaseHandler(
             DeploymentsStorage deploymentsStorage,
             DeploymentProcessSettings deploymentProcessSettings,
-            DeploymentProcessGitRepositoryFactory deploymentProcessGitRepositoryFactory,
             DeploymentProcessRunner deploymentProcessRunner,
             IProjectContext projectContext,
             SheepItDatabase database,
@@ -64,7 +62,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         {
             _deploymentsStorage = deploymentsStorage;
             _deploymentProcessSettings = deploymentProcessSettings;
-            _deploymentProcessGitRepositoryFactory = deploymentProcessGitRepositoryFactory;
             _deploymentProcessRunner = deploymentProcessRunner;
             _projectContext = projectContext;
             _database = database;

@@ -60,7 +60,6 @@
 
 <script>
 import getDashboardService from "./_services/get-dashboard-service.js";
-import updateProcessService from "./_services/update-process-service.js";
 
 import ProjectDashboard from "./_components/project-dashboard.vue";
 import ProjectReleases from "./_components/project-releases.vue";
@@ -104,12 +103,6 @@ export default {
                     this.deployments = response.deployments
                     this.releases = response.releases
                 });
-        },
-
-        updateProcess() {
-            updateProcessService
-                .updateProcess(this.project.id)
-                .then(() => {});
         }
     }
 };
