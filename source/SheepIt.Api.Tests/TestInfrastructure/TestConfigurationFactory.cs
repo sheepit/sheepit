@@ -1,23 +1,20 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Configuration;
+using SheepIt.Api.Infrastructure.Configuration;
 
 namespace SheepIt.Api.Tests.TestInfrastructure
 {
-    internal class TestConfigurationFactory
+    internal static class TestConfigurationFactory
     {
         public static IConfiguration Build()
         {
-            var configurationBuilder = new ConfigurationBuilder()
+            return new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                configurationBuilder.AddJsonFile("appsettings.linux.json", optional: true);
-            }
-            
-            return configurationBuilder.Build();
+                .AddPrimaryJsonFile()
+                .AddOperatingSystemJsonFile()
+                .WriteConfigurationSourcesToConsole()
+                .Build();
         }
     }
 }
