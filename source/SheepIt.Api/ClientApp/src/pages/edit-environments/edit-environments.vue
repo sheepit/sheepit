@@ -17,7 +17,7 @@
                         <div v-for="(environment, environmentIndex) in environments"
                             :key="environmentIndex"
                             :class="{'dragMe': !environments[environmentIndex].edition}"
-                            >
+                        >
 
                             <div v-if="environments[environmentIndex].edition"
                                 class="input-group mb-3">
@@ -123,6 +123,7 @@ import { required, minLength, url } from 'vuelidate/lib/validators'
 
 import httpService from "./../../common/http/http-service.js";
 import draggable from 'vuedraggable';
+import messageService from "../../common/message/message-service";
 
 export default {
     name: 'EditEnvironments',
@@ -170,7 +171,9 @@ export default {
 
             updateEnvironments(this.projectId, environments)
                 .then(() => {
-                    this.markEnvironmentsAsPersisted();            
+                    this.markEnvironmentsAsPersisted();
+                    messageService.success('Environments were updated.');
+                    this.$router.push({ name: 'project', params: { projectId: this.projectId }});
                 });
         },
 
@@ -251,7 +254,6 @@ export default {
     }
 }
 
-// todo: rename
 function updateEnvironments(projectId, environments) {
     return httpService.post('api/project/environment/update-environments', {
         projectId: projectId,
