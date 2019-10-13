@@ -15,29 +15,10 @@
                         v-model="project.id"
                         type="text"
                         class="form-control"
-                        :class="{ 'is-invalid': submitted && $v.project.id.$error }"
                         disabled="disabled"
                     >
-                    <div v-if="submitted && $v.project.id.$error" class="invalid-feedback">
-                        <span v-if="!$v.project.id.required">Field is required</span>
-                        <span v-if="!$v.project.id.minLength">Field should have at least 3 characters</span>
-                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="repositoryUrl">Git repository URL</label>
-                    <input
-                        id="repositoryUrl"
-                        v-model="project.repositoryUrl"
-                        type="text"
-                        class="form-control"
-                        :class="{ 'is-invalid': submitted && $v.project.repositoryUrl.$error }"
-                    >
-                    <div v-if="submitted && $v.project.repositoryUrl.$error" class="invalid-feedback">
-                        <span v-if="!$v.project.repositoryUrl.required">Field is required</span>
-                        <span v-if="!$v.project.repositoryUrl.url">URL invalid</span>
-                    </div>
-                </div>
             </div>
 
             <div class="form-section">
@@ -202,7 +183,7 @@ export default {
                 };
             });
 
-            updateProject(this.projectId, this.project.repositoryUrl, environments)
+            updateProject(this.projectId, environments)
                 .then(() => {
                     this.markEnvironmentsAsPersisted();            
                 });
@@ -268,17 +249,6 @@ export default {
         }
     },
     validations: {
-        project: {
-            id: {
-                required,
-                minLength: minLength(3)
-            },
-            repositoryUrl: {
-                required,
-                url
-            },
-        },
-        
         environments: {
             required,
             minLength: minLength(1),
@@ -292,10 +262,9 @@ export default {
     }
 }
 
-function updateProject(projectId, repositoryUrl, environments) {
+function updateProject(projectId, environments) {
     return httpService.post('api/update-project', {
         projectId: projectId,
-        repositoryUrl: repositoryUrl,
         environments: environments
     }, false);
 }

@@ -87,20 +87,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
                 CreatedReleaseId = releaseId
             };
         }
-        
-        private async Task<int> CreateDeploymentProcess(
-            CreateProjectRequest request)
-        {
-            using (var stream = new MemoryStream())
-            {
-                await request.ZipFile.CopyToAsync(stream);
-                
-                var deploymentProcessId = await _deploymentProcessStorage.Add(
-                    request.ProjectId, stream.ToArray());
-
-                return deploymentProcessId;
-            }
-        }
     }
     
     public class UpdateReleaseProcessModule : Module

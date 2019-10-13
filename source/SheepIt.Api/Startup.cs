@@ -35,7 +35,9 @@ namespace SheepIt.Api
                     );
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<SheepItModule>());
+                .AddFluentValidation(configuration => 
+                    configuration.RegisterValidatorsFromAssemblyContaining<SheepItModule>()
+                );
             
             services.AddSwaggerGen(c =>
             {

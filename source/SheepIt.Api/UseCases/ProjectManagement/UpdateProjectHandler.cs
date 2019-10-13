@@ -1,22 +1,21 @@
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
+using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.UseCases.ProjectManagement
 {
     public class UpdateProjectRequest : IRequest, IProjectRequest
     {
         public string ProjectId { get; set; }
-        public string RepositoryUrl { get; set; }
 
         public EnvironmentDto[] Environments { get; set; }
 
@@ -32,15 +31,13 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     {
         public UpdateProjectRequestValidator()
         {
-            RuleFor(x => x.ProjectId)
-                .NotNull()
-                .MinimumLength(3);
-
-            RuleFor(x => x.RepositoryUrl)
+            RuleFor(request => request.ProjectId)
                 .NotNull();
 
-            RuleForEach(x => x.Environments)
+            RuleForEach(request => request.Environments)
                 .NotNull();
+            
+            // todo: check if they are unique
         }
     }
 
@@ -58,67 +55,61 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
     public class UpdateProjectHandler : IHandler<UpdateProjectRequest>
     {
-        private readonly IProjectContext _projectContext;
         private readonly SheepItDatabase _database;
         private readonly IdentityProvider _identityProvider;
 
         public UpdateProjectHandler(
-            IProjectContext projectContext,
             SheepItDatabase database,
             IdentityProvider identityProvider)
         {
-            _projectContext = projectContext;
             _database = database;
             _identityProvider = identityProvider;
         }
         
         public async Task Handle(UpdateProjectRequest request)
         {
-            _projectContext.Project.UpdateRepositoryUrl(request.RepositoryUrl);
-            
-            await _database.Projects
-                .ReplaceOneById(_projectContext.Project);
-
             await PersistEnvironments(request);
         }
 
         private async Task PersistEnvironments(UpdateProjectRequest request)
         {
-            var persistedEnvironments = await _database.Environments
+            var currentEnvironments = await _database.Environments
                 .Find(filter => filter.FromProject(request.ProjectId))
                 .ToListAsync();
 
-            var environmentFromRequest = request.Environments;
-
-            var toAdd = new List<Environment>();
-            
-            foreach (var environmentDto in environmentFromRequest)
+            foreach (var environmentDto in request.Environments)
             {
-                var env = Map(environmentDto, request.ProjectId);
-
                 if (environmentDto.Id == 0)
                 {
-                    env.Id = await _identityProvider.GetNextId("Environment");
-                    toAdd.Add(env);
+                    var newEnvironment = new Environment
+                    {
+                        Id = await _identityProvider.GetNextId("Environment"),
+                        ProjectId = request.ProjectId,
+                        Rank = environmentDto.Rank,
+                        DisplayName = environmentDto.DisplayName
+                    };
+                    
+                    await _database.Environments.InsertOneAsync(newEnvironment);
                 }
-                else if(persistedEnvironments.Any(x => x.Id == environmentDto.Id))
+                else
                 {
-                    await _database.Environments.ReplaceOneById(env);
+                    var environmentToUpdate = currentEnvironments.FirstOrDefault(
+                        environment => environment.Id == environmentDto.Id
+                    );
+
+                    if (environmentToUpdate == null)
+                    {
+                        throw new InvalidOperationException(
+                            $"Environment with id {environmentDto.Id} does not exist in project {request.ProjectId}."
+                        );
+                    }
+
+                    environmentToUpdate.Rank = environmentDto.Rank;
+                    environmentToUpdate.DisplayName = environmentDto.DisplayName;
+                    
+                    await _database.Environments.ReplaceOneById(environmentToUpdate);
                 }
             }
-
-            await _database.Environments.InsertManyAsync(toAdd);
-        }
-
-        private Environment Map(UpdateProjectRequest.EnvironmentDto dto, string projectId)
-        {
-            return new Environment
-            {
-                Id = dto.Id,
-                Rank = dto.Rank,
-                DisplayName = dto.DisplayName,
-                ProjectId = projectId
-            };
         }
     }
     
