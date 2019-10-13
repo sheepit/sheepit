@@ -36,8 +36,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
             RuleForEach(request => request.Environments)
                 .NotNull();
-            
-            // todo: check if they are unique
         }
     }
 
@@ -78,11 +76,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         }
         
         public async Task Handle(UpdateEnvironmentsRequest request)
-        {
-            await PersistEnvironments(request);
-        }
-
-        private async Task PersistEnvironments(UpdateEnvironmentsRequest request)
         {
             var currentEnvironments = await _database.Environments
                 .Find(filter => filter.FromProject(request.ProjectId))
