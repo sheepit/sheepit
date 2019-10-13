@@ -10,6 +10,5 @@ namespace SheepIt.Api.Core.Projects
         public ObjectId ObjectId { get; set; }
         
         public string Id { get; set; }
-        public string RepositoryUrl { get; set; }
     }
 }
