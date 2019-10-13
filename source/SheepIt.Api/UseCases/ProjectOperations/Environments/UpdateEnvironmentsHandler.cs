@@ -87,7 +87,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
                 {
                     var newEnvironment = new Environment
                     {
-                        Id = await _identityProvider.GetNextId("Environment"),
+                        // todo: should we use identity provider?
+                        Id = await _database.Environments.GetNextId(),
                         ProjectId = request.ProjectId,
                         Rank = environmentDto.Rank,
                         DisplayName = environmentDto.DisplayName

@@ -30,6 +30,10 @@
     <Content Include="appsettings.os-windows.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="TestFiles\simple-process.zip" />
+    <Content Include="TestProcess\test-process.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

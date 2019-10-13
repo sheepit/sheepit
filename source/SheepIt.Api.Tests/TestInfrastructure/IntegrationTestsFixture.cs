@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
 using SheepIt.Api.Infrastructure.Handlers;
@@ -19,6 +20,7 @@ namespace SheepIt.Api.Tests.TestInfrastructure
             _container = builder.Build();
 
             DropDatabase();
+            InitializeIdentityProvider();
         }
 
         private void DropDatabase()
@@ -26,6 +28,20 @@ namespace SheepIt.Api.Tests.TestInfrastructure
             var databaseName = Database.MongoDatabase.DatabaseNamespace.DatabaseName;
 
             Database.MongoClient.DropDatabase(databaseName);
+        }
+
+        private void InitializeIdentityProvider()
+        {
+            // todo: this should be unified with production app
+            _container
+                .Resolve<IdentityProvider>()
+                .InitializeIdentities(new List<string>
+                {
+                    "Environment",
+                    "DeploymentProcess"
+                })
+                .GetAwaiter()
+                .GetResult();
         }
 
         private SheepItDatabase Database => _container.Resolve<SheepItDatabase>();
