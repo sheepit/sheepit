@@ -168,7 +168,7 @@ export default {
                 };
             });
 
-            updateProject(this.projectId, environments)
+            updateEnvironments(this.projectId, environments)
                 .then(() => {
                     this.markEnvironmentsAsPersisted();            
                 });
@@ -229,13 +229,11 @@ export default {
                     projectId: this.projectId
                 })
                 .then(response => {
-                    // todo: use spread instead
-                    this.environments = response.environments.map(env => {
-                        env.persisted = true;
-                        env.edition = false;
-
-                        return env;
-                    });
+                    this.environments = response.environments.map(environment => ({
+                        ...environment,
+                        persisted: true,
+                        edition: false
+                    }));
                 });
         }
     },
@@ -254,7 +252,7 @@ export default {
 }
 
 // todo: rename
-function updateProject(projectId, environments) {
+function updateEnvironments(projectId, environments) {
     return httpService.post('api/project/environment/update-environments', {
         projectId: projectId,
         environments: environments
