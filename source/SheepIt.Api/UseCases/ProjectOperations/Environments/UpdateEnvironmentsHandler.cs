@@ -11,7 +11,7 @@ using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 using Environment = SheepIt.Api.Core.Environments.Environment;
 
-namespace SheepIt.Api.UseCases.ProjectManagement
+namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 {
     public class UpdateEnvironmentsRequest : IRequest, IProjectRequest
     {

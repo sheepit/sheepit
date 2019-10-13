@@ -3,19 +3,18 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.Environments;
-using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases.ProjectManagement
+namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 {
-    public class GetProjectDetailsRequest : IRequest<GetProjectDetailsResponse>
+    public class GetEnvironmentsForUpdateRequest : IRequest<GetEnvironmentsForUpdateResponse>
     {
         public string Id { get; set; }
     }
 
-    public class GetProjectDetailsResponse
+    public class GetEnvironmentsForUpdateResponse
     {
         public string Id { get; set; }
         public string RepositoryUrl { get; set; }
@@ -31,26 +30,35 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
     [Route("api")]
     [ApiController]
-    public class GetProjectDetailsController : MediatorController
+    public class GetEnvironmentsForUpdateController : MediatorController
     {
         [HttpPost]
-        [Route("get-project-details")]
-        public async Task<GetProjectDetailsResponse> GetProjectDetails(GetProjectDetailsRequest request)
+        [Route("project/environment/get-environments-for-update")]
+        public async Task<GetEnvironmentsForUpdateResponse> GetProjectDetails(GetEnvironmentsForUpdateRequest request)
         {
             return await Handle(request);
         }
     }
 
-    public class GetProjectDetailsHandler : IHandler<GetProjectDetailsRequest, GetProjectDetailsResponse>
+    public class GetEnvironmentsForUpdateModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<GetEnvironmentsForUpdateHandler>()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
+    public class GetEnvironmentsForUpdateHandler : IHandler<GetEnvironmentsForUpdateRequest, GetEnvironmentsForUpdateResponse>
     {
         private readonly SheepItDatabase _database;
 
-        public GetProjectDetailsHandler(SheepItDatabase database)
+        public GetEnvironmentsForUpdateHandler(SheepItDatabase database)
         {
             _database = database;
         }
 
-        public async Task<GetProjectDetailsResponse> Handle(GetProjectDetailsRequest request)
+        public async Task<GetEnvironmentsForUpdateResponse> Handle(GetEnvironmentsForUpdateRequest request)
         {
             var project = await _database.Projects
                 .FindById(request.Id);
@@ -60,7 +68,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 .Sort(sort => sort.Ascending(environment => environment.Rank)) // todo: create ByRank extension
                 .ToArray();
             
-            return new GetProjectDetailsResponse
+            return new GetEnvironmentsForUpdateResponse
             {
                 Id = project.Id,
                 RepositoryUrl = project.RepositoryUrl,
@@ -70,22 +78,13 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             };
         }
 
-        private static GetProjectDetailsResponse.EnvironmentDto MapEnvironment(Environment environment)
+        private static GetEnvironmentsForUpdateResponse.EnvironmentDto MapEnvironment(Environment environment)
         {
-            return new GetProjectDetailsResponse.EnvironmentDto
+            return new GetEnvironmentsForUpdateResponse.EnvironmentDto
             {
                 DisplayName = environment.DisplayName,
                 EnvironmentId = environment.Id
             };
-        }
-    }
-    
-    public class GetProjectDetailsModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<GetProjectDetailsHandler>()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }

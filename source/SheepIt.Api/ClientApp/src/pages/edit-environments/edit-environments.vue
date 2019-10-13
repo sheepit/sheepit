@@ -147,7 +147,7 @@ export default {
     },
 
     mounted() {
-        this.getProjectDetails();
+        this.getEnvironments();
     },
 
     methods: {
@@ -222,9 +222,11 @@ export default {
             this.environments.splice(index, 1);
         },
 
-        getProjectDetails() {
+        getEnvironments() {
             httpService
-                .post('api/get-project-details', { id: this.projectId })
+                .post('api/project/environment/get-environments-for-update', {
+                    id: this.projectId
+                })
                 .then(response => {
                     this.project = response;
                     this.environments = response.environments.map(env => {
