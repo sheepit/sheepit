@@ -24,9 +24,6 @@
                             <th scope="col">
                                 Project ID
                             </th>
-                            <th scope="col">
-                                Repository url
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,9 +37,6 @@
                                 >
                                     {{ item.id }}
                                 </router-link>
-                            </td>
-                            <td>
-                                {{ item.repositoryUrl }}
                             </td>
                         </tr>
                     </tbody>

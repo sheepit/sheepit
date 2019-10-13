@@ -32,8 +32,7 @@ namespace SheepIt.Api.Tests.UseCases
                 {
                     new ListProjectsResponse.ProjectDto
                     {
-                        Id = "foo",
-                        RepositoryUrl = null
+                        Id = "foo"
                     }
                 }
             });

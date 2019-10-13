@@ -21,7 +21,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         public class ProjectDto
         {
             public string Id { get; set; }
-            public string RepositoryUrl { get; set; }
         }
     }
 
@@ -65,8 +64,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         {
             return new ListProjectsResponse.ProjectDto
             {
-                Id = project.Id,
-                RepositoryUrl = project.RepositoryUrl
+                Id = project.Id
             };
         }
     }

@@ -5,7 +5,6 @@
                 <h2 class="display-4">
                     {{ project.id }}
                 </h2>
-                <p><code>{{ project.repositoryUrl }}</code></p>
             </div>
             <div class="col text-right">
                 <router-link
