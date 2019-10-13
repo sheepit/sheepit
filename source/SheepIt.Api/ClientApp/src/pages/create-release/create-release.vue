@@ -1,6 +1,5 @@
 <template>
     <div>
-  
         <div v-if="release">
             <h4 class="mt-5">
                 Editing variables based on

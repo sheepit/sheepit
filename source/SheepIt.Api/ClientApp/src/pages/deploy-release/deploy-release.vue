@@ -1,6 +1,5 @@
 <template>
     <div>
-     
         <h4 class="mt-4">
             Deploy <release-badge
                 :project-id="project.id"

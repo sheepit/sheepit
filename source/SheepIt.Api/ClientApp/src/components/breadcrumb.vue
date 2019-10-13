@@ -2,7 +2,8 @@
     <div>
         <nav v-if="breadcrumbs && breadcrumbs.length > 0">
             <ol class="breadcrumb">
-                <li v-for="(breadcrumb, index) in breadcrumbs"
+                <li
+                    v-for="(breadcrumb, index) in breadcrumbs"
                     :key="index"
                     class="breadcrumb-item"
                 >
@@ -29,13 +30,13 @@ export default {
             breadcrumbs: null
         }
     },
-    mounted() {
-        this.updateBreadcrumbsBasedOnRouting()
-    },
     watch: { 
         '$route' () { 
             this.updateBreadcrumbsBasedOnRouting() 
         } 
+    },
+    mounted() {
+        this.updateBreadcrumbsBasedOnRouting()
     },
     methods: {
         updateBreadcrumbsBasedOnRouting() {

@@ -1,6 +1,5 @@
 <template>
     <div v-if="project">
-
         <div class="row project-title">
             <div class="col">
                 <h2 class="display-4">

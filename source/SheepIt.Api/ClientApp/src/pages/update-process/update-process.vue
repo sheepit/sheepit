@@ -1,22 +1,20 @@
 <template>
     <div>
-
-        <div class="view-title">Update process</div>
+        <div class="view-title">
+            Update process
+        </div>
 
         <div class="form">
-        
             <div class="form-section">
-
                 <div class="form-group">
                     <label for="zipFile">Process definition</label>
                     <input
                         id="zipFile" 
+                        ref="zipFile"
                         type="file"
                         class="form-control-file"
-                        ref="zipFile"
                     >
                 </div>
-
             </div>
 
             <div class="submit-button-container">
@@ -29,7 +27,6 @@
                 </button>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -59,10 +56,10 @@ export default {
                 this.projectId,
                 zipFileData
             )
-            .then(response => {
-                messageService.success('Proces został zaktualizowany');
-                this.$router.push({ name: 'project', params: { projectId: this.projectId }});
-            });
+                .then(response => {
+                    messageService.success('Proces został zaktualizowany');
+                    this.$router.push({ name: 'project', params: { projectId: this.projectId }});
+                });
         }      
     }
 }

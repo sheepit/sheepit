@@ -2,7 +2,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <router-link
             class="navbar-brand"
-            :to="{ name: 'default' }">
+            :to="{ name: 'default' }"
+        >
             Sheep It
         </router-link>
         <button
@@ -24,7 +25,8 @@
                 <li class="nav-item">
                     <router-link
                         class="nav-link"
-                        :to="{ name: 'project-list' }">
+                        :to="{ name: 'project-list' }"
+                    >
                         Projects
                     </router-link>
                 </li>
@@ -44,18 +46,18 @@
 
 <script>
 
-    import jwtTokenStorage from "../../common/authentication/jwt-token-storage.js";
+import jwtTokenStorage from "../../common/authentication/jwt-token-storage.js";
 
 
-    export default {
-        name: 'Navigation',
+export default {
+    name: 'Navigation',
         
-        methods: {
-            signOut() {
-                jwtTokenStorage.remove()
-                this.$router.push({ name: 'sign-in' })
-            }
+    methods: {
+        signOut() {
+            jwtTokenStorage.remove()
+            this.$router.push({ name: 'sign-in' })
         }
     }
+}
     
 </script>

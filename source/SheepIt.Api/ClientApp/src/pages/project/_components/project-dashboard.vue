@@ -1,6 +1,9 @@
 <template>
     <div class="row">
-        <div v-if="environments && environments.length > 0" class="col-md-3">
+        <div
+            v-if="environments && environments.length > 0"
+            class="col-md-3"
+        >
             <div
                 v-for="environment in environments"
                 :key="environment.environmentId"

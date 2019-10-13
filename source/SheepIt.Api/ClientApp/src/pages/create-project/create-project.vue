@@ -1,21 +1,31 @@
 <template>
     <div>
-    <div class="view-title">Add new project</div>
+        <div class="view-title">
+            Add new project
+        </div>
 
         <div class="form">
             <div class="form-section">
-        <div class="form-title">Details</div>
+                <div class="form-title">
+                    Details
+                </div>
 
                 <div class="form-group">
-          <label for="projectId" class="form-label">Project id</label>
+                    <label
+                        for="projectId"
+                        class="form-label"
+                    >Project id</label>
                     <input
                         id="projectId"
                         v-model="projectId"
                         type="text"
                         class="form-control"
                         :class="{ 'is-invalid': submitted && $v.projectId.$error }"
-          />
-          <div v-if="submitted && $v.projectId.$error" class="invalid-feedback">
+                    >
+                    <div
+                        v-if="submitted && $v.projectId.$error"
+                        class="invalid-feedback"
+                    >
                         <span v-if="!$v.projectId.required">Field is required</span>
                         <span v-if="!$v.projectId.minLength">Field should have at least 3 characters</span>
                     </div>
@@ -25,16 +35,17 @@
                     <label for="zipFile">Process definition</label>
                     <input
                         id="zipFile" 
+                        ref="zipFile"
                         type="file"
                         class="form-control-file"
-                ref="zipFile"
                     >
                 </div>
-
             </div>
 
             <div class="form-section">
-        <div class="form-title">Environments</div>
+                <div class="form-title">
+                    Environments
+                </div>
                 <div class="form-group">
                     <label>List of environments</label>
 
@@ -48,7 +59,7 @@
                             type="text"
                             class="form-control"
                             :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].$error }"
-            />
+                        >
                         <div class="input-group-append">
                             <button
                                 class="btn btn-outline-secondary"
@@ -72,12 +83,23 @@
                 </div>
 
                 <div class="button-container">
-          <button class="btn btn-secondary" @click="newEnvironment()">Add new</button>
+                    <button
+                        class="btn btn-secondary"
+                        @click="newEnvironment()"
+                    >
+                        Add new
+                    </button>
                 </div>
             </div>
 
             <div class="submit-button-container">
-        <button type="button" class="btn btn-primary" @click="onSubmit()">Save</button>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="onSubmit()"
+                >
+                    Save
+                </button>
             </div>
         </div>
     </div>

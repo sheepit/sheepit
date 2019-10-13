@@ -15,7 +15,8 @@
             v-if="projects && projects.length > 0"
             class="mt-4"
             :all-items="projects"
-            initial-length="10000">
+            initial-length="10000"
+        >
             <template slot-scope="{ items }">
                 <table class="table table-bordered">
                     <thead>
@@ -31,11 +32,12 @@
                     <tbody>
                         <tr
                             v-for="item in items"
-                            :key="item.id">
-                            
+                            :key="item.id"
+                        >
                             <td scope="row">
                                 <router-link
-                                    :to="{ name: 'project', params: { projectId: item.id }}">
+                                    :to="{ name: 'project', params: { projectId: item.id }}"
+                                >
                                     {{ item.id }}
                                 </router-link>
                             </td>

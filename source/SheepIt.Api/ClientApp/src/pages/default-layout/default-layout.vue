@@ -1,7 +1,8 @@
 <template>
-    <div data-event-handler 
-        @unauthorized="handleUnauthorized()">
-        
+    <div
+        data-event-handler 
+        @unauthorized="handleUnauthorized()"
+    >
         <navigation />
 
         <breadcrumb />
@@ -11,7 +12,6 @@
                 <router-view />
             </main>
         </div>
-        
     </div>
 </template>
 

@@ -1,13 +1,14 @@
 <template>
     <div>
         <h2>Dashboard</h2>
-        <br />
+        <br>
         <h3>Last deployments</h3>
         <expanding-list
             v-if="deployments && deployments.length > 0"
             class="mt-4"
             :all-items="deployments"
-            initial-length="10000">
+            initial-length="10000"
+        >
             <template slot-scope="{ items }">
                 <table class="table table-bordered">
                     <thead>
@@ -30,17 +31,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in items"
-                            :key="item.id">
-                            
+                        <tr
+                            v-for="item in items"
+                            :key="item.id"
+                        >
                             <td>
                                 <deployment-badge
                                     :project-id="item.projectId"
-                                    :deployment-id="item.deploymentId"/>
+                                    :deployment-id="item.deploymentId"
+                                />
                             </td>
                             <td>
                                 <router-link
-                                    :to="{ name: 'project', params: { projectId: item.projectId }}">
+                                    :to="{ name: 'project', params: { projectId: item.projectId }}"
+                                >
                                     {{ item.projectId }}
                                 </router-link>
                             </td>

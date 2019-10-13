@@ -1,26 +1,31 @@
 <template>
     <div v-if="environments">
-
-        <div class="view-title">Edit environments</div>
+        <div class="view-title">
+            Edit environments
+        </div>
 
         <div class="form">
-        
             <div class="form-section">
-                <div class="form-title">Environments</div>
+                <div class="form-title">
+                    Environments
+                </div>
 
                 <div class="form-group">
-
                     <label>List of environments</label>
 
-                    <draggable v-model="environments" draggable=".dragMe">
-
-                        <div v-for="(environment, environmentIndex) in environments"
+                    <draggable
+                        v-model="environments"
+                        draggable=".dragMe"
+                    >
+                        <div
+                            v-for="(environment, environmentIndex) in environments"
                             :key="environmentIndex"
                             :class="{'dragMe': !environments[environmentIndex].edition}"
                         >
-
-                            <div v-if="environments[environmentIndex].edition"
-                                class="input-group mb-3">
+                            <div
+                                v-if="environments[environmentIndex].edition"
+                                class="input-group mb-3"
+                            >
                                 <input
                                     v-model="environments[environmentIndex].displayName"
                                     type="text"
@@ -47,14 +52,19 @@
                                     </button>
                                 </div>
 
-                                <div v-if="submitted && $v.environments.$each[environmentIndex].displayName.$error" class="invalid-feedback">
+                                <div
+                                    v-if="submitted && $v.environments.$each[environmentIndex].displayName.$error"
+                                    class="invalid-feedback"
+                                >
                                     <span v-if="!$v.environments.$each[environmentIndex].displayName.required">Field is required</span>
                                     <span v-if="!$v.environments.$each[environmentIndex].displayName.minLength">Field should have at least 3 characters</span>
                                 </div>
                             </div>
 
-                            <div v-else
-                                class="input-group mb-3 form-draggable">
+                            <div
+                                v-else
+                                class="input-group mb-3 form-draggable"
+                            >
                                 <input
                                     v-model="environments[environmentIndex].displayName"
                                     type="text"
@@ -82,16 +92,16 @@
                                     </button>
                                 </div>
 
-                                <div v-if="submitted && $v.environments.$each[environmentIndex].displayName.$error" class="invalid-feedback">
+                                <div
+                                    v-if="submitted && $v.environments.$each[environmentIndex].displayName.$error"
+                                    class="invalid-feedback"
+                                >
                                     <span v-if="!$v.environments.$each[environmentIndex].displayName.required">Field is required</span>
                                     <span v-if="!$v.environments.$each[environmentIndex].displayName.minLength">Field should have at least 3 characters</span>
                                 </div>
                             </div>
-
                         </div>
-
                     </draggable>
-
                 </div>
 
                 <div class="button-container">
@@ -114,7 +124,6 @@
                 </button>
             </div>
         </div>
-
     </div>
 </template>
 

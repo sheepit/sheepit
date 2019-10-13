@@ -18,15 +18,15 @@ export default {
         }
     },
 
-    created() {
-        this.updateProjects()
-    },
-
     computed: {
         project() {
             return this.projects
                 .filter(project => project.id === this.$route.params.projectId)[0]
         }
+    },
+
+    created() {
+        this.updateProjects()
     },
 
     methods: {

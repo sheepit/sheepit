@@ -1,6 +1,5 @@
 <template>
     <div v-if="deployment">
-
         <table class="table table-bordered">
             <thead>
                 <tr>
