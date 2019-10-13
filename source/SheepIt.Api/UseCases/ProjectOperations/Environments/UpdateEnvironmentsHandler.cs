@@ -13,7 +13,7 @@ using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.UseCases.ProjectManagement
 {
-    public class UpdateProjectRequest : IRequest, IProjectRequest
+    public class UpdateEnvironmentsRequest : IRequest, IProjectRequest
     {
         public string ProjectId { get; set; }
 
@@ -27,9 +27,9 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         }
     }
 
-    public class UpdateProjectRequestValidator : AbstractValidator<UpdateProjectRequest>
+    public class UpdateEnvironmentsRequestValidator : AbstractValidator<UpdateEnvironmentsRequest>
     {
-        public UpdateProjectRequestValidator()
+        public UpdateEnvironmentsRequestValidator()
         {
             RuleFor(request => request.ProjectId)
                 .NotNull();
@@ -43,22 +43,33 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
     [Route("api")]
     [ApiController]
-    public class UpdateProjectController : MediatorController
+    public class UpdateEnvironmentsController : MediatorController
     {
         [HttpPost]
-        [Route("update-project")]
-        public async Task UpdateProject(UpdateProjectRequest request)
+        [Route("project/environment/update-environments")]
+        public async Task UpdateProject(UpdateEnvironmentsRequest request)
         {
             await Handle(request);
         }
     }
 
-    public class UpdateProjectHandler : IHandler<UpdateProjectRequest>
+    public class UpdateEnvironmentsModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<UpdateEnvironmentsHandler>()
+                .WithDefaultResponse()
+                .InProjectContext()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
+    public class UpdateEnvironmentsHandler : IHandler<UpdateEnvironmentsRequest>
     {
         private readonly SheepItDatabase _database;
         private readonly IdentityProvider _identityProvider;
 
-        public UpdateProjectHandler(
+        public UpdateEnvironmentsHandler(
             SheepItDatabase database,
             IdentityProvider identityProvider)
         {
@@ -66,12 +77,12 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             _identityProvider = identityProvider;
         }
         
-        public async Task Handle(UpdateProjectRequest request)
+        public async Task Handle(UpdateEnvironmentsRequest request)
         {
             await PersistEnvironments(request);
         }
 
-        private async Task PersistEnvironments(UpdateProjectRequest request)
+        private async Task PersistEnvironments(UpdateEnvironmentsRequest request)
         {
             var currentEnvironments = await _database.Environments
                 .Find(filter => filter.FromProject(request.ProjectId))
@@ -110,17 +121,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                     await _database.Environments.ReplaceOneById(environmentToUpdate);
                 }
             }
-        }
-    }
-    
-    public class UpdateProjectModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<UpdateProjectHandler>()
-                .WithDefaultResponse()
-                .InProjectContext()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }

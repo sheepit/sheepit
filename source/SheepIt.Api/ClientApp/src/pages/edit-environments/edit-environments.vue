@@ -1,26 +1,10 @@
 <template>
     <div v-if="project">
 
-        <div class="view-title">Edit project</div>
+        <div class="view-title">Edit environments</div>
 
         <div class="form">
         
-            <div class="form-section">
-                <div class="form-title">Details</div>
-
-                <div class="form-group">
-                    <label for="projectId">Project id</label>
-                    <input
-                        id="projectId"
-                        v-model="project.id"
-                        type="text"
-                        class="form-control"
-                        disabled="disabled"
-                    >
-                </div>
-
-            </div>
-
             <div class="form-section">
                 <div class="form-title">Environments</div>
 
@@ -141,7 +125,7 @@ import httpService from "./../../common/http/http-service.js";
 import draggable from 'vuedraggable';
 
 export default {
-    name: 'EditProject',
+    name: 'EditEnvironments',
 
     components: {
         draggable
@@ -171,11 +155,12 @@ export default {
             this.submitted = true;
 
             this.$v.$touch();
+            
             if (this.$v.$invalid) {
                 return;
             }
 
-            let environments = this.environments.map((item, index) => {
+            const environments = this.environments.map((item, index) => {
                 return {
                     id: item.environmentId,
                     displayName: item.displayName,
@@ -192,9 +177,9 @@ export default {
         markEnvironmentsAsPersisted() {
             if(this.environments)
             {
-                this.environments = this.environments.map((item, index) => {
+                // todo: y mapping instead of iterating?
+                this.environments = this.environments.map(item => {
                     item.persisted = true;
-
                     return item;
                 });
 
@@ -212,18 +197,21 @@ export default {
         },
 
         enableEnvironmentEdition(index) {
+            // todo: y mapping instead of iterating?
             let environments = this.environments.map(item => item.edition = false);
 
-            if(this.environments[index]) {
+            if (this.environments[index]) {
                 this.$set(this.environments[index], 'edition', true);
             }
+            
             this.$forceUpdate();
         },
 
         disableEnvironmentEdition(index) {
-            if(this.environments[index]) {
+            if (this.environments[index]) {
                 this.$set(this.environments[index], 'edition', false);
             }
+            
             this.$forceUpdate();
         },
 
@@ -263,7 +251,7 @@ export default {
 }
 
 function updateProject(projectId, environments) {
-    return httpService.post('api/update-project', {
+    return httpService.post('api/project/environment/update-environments', {
         projectId: projectId,
         environments: environments
     }, false);

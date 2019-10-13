@@ -6,7 +6,6 @@
 
 <script>
 import VueRouter from 'vue-router';
-
 import Authenticate from './pages/authenticate/authenticate.vue'
 import CreateProject from './pages/create-project/create-project.vue'
 import CreateRelease from './pages/create-release/create-release.vue'
@@ -14,13 +13,12 @@ import Default from './pages/default/default.vue'
 import DefaultLayout from './pages/default-layout/default-layout.vue'
 import DeployRelease from './pages/deploy-release/deploy-release.vue'
 import DeploymentDetails from './pages/deployment-details/deployment-details.vue'
-import EditProject from './pages/edit-project/edit-project.vue'
+import EditEnvironments from './pages/edit-environments/edit-environments.vue'
 import Project from './pages/project/project.vue'
 import ProjectLayout from './pages/project-layout/project-layout.vue'
 import ProjectList from './pages/project-list/project-list.vue'
 import ReleaseDetails from './pages/release-details/release-details.vue'
 import UpdateProcess from './pages/update-process/update-process.vue'
-
 
 const router = new VueRouter({
     routes: [
@@ -94,9 +92,9 @@ const router = new VueRouter({
                             }
                         },
                         {
-                            path: 'edit',
-                            name: 'edit-project',
-                            component: EditProject,
+                            path: 'edit-environments',
+                            name: 'edit-environments',
+                            component: EditEnvironments,
                             meta: {
                                 breadcrumbs: [
                                     {
@@ -108,7 +106,7 @@ const router = new VueRouter({
                                         link: 'project'
                                     },
                                     {
-                                        name: 'edit'
+                                        name: 'edit environments'
                                     }
                                 ]
                             }

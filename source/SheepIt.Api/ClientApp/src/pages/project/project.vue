@@ -11,9 +11,9 @@
             <div class="col text-right">
                 <router-link
                     class="btn btn-primary link-button"
-                    :to="{ name: 'edit-project' }"
+                    :to="{ name: 'edit-environments' }"
                 >
-                    Edit project
+                    Edit environments
                 </router-link>
                 <router-link
                     class="btn btn-primary link-button"
