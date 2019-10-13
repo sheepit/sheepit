@@ -11,14 +11,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 {
     public class GetEnvironmentsForUpdateRequest : IRequest<GetEnvironmentsForUpdateResponse>
     {
-        public string Id { get; set; }
+        public string ProjectId { get; set; }
     }
 
     public class GetEnvironmentsForUpdateResponse
     {
-        public string Id { get; set; }
-        public string RepositoryUrl { get; set; }
-        
         public EnvironmentDto[] Environments { get; set; }
 
         public class EnvironmentDto
@@ -60,18 +57,13 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
         public async Task<GetEnvironmentsForUpdateResponse> Handle(GetEnvironmentsForUpdateRequest request)
         {
-            var project = await _database.Projects
-                .FindById(request.Id);
-            
             var environments = await _database.Environments
-                .Find(filter => filter.FromProject(request.Id))
+                .Find(filter => filter.FromProject(request.ProjectId))
                 .Sort(sort => sort.Ascending(environment => environment.Rank)) // todo: create ByRank extension
                 .ToArray();
             
             return new GetEnvironmentsForUpdateResponse
             {
-                Id = project.Id,
-                RepositoryUrl = project.RepositoryUrl,
                 Environments = environments
                     .Select(MapEnvironment)
                     .ToArray()

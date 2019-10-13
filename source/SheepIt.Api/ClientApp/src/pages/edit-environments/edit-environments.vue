@@ -1,5 +1,5 @@
 <template>
-    <div v-if="project">
+    <div v-if="environments">
 
         <div class="view-title">Edit environments</div>
 
@@ -175,7 +175,7 @@ export default {
         },
 
         markEnvironmentsAsPersisted() {
-            if(this.environments)
+            if (this.environments)
             {
                 // todo: y mapping instead of iterating?
                 this.environments = this.environments.map(item => {
@@ -216,8 +216,9 @@ export default {
         },
 
         removeEnvironment: function(index) {
-            if(this.environments.length < 2)
+            if (this.environments.length < 2) {
                 return;
+            }
 
             this.environments.splice(index, 1);
         },
@@ -225,10 +226,10 @@ export default {
         getEnvironments() {
             httpService
                 .post('api/project/environment/get-environments-for-update', {
-                    id: this.projectId
+                    projectId: this.projectId
                 })
                 .then(response => {
-                    this.project = response;
+                    // todo: use spread instead
                     this.environments = response.environments.map(env => {
                         env.persisted = true;
                         env.edition = false;
@@ -252,6 +253,7 @@ export default {
     }
 }
 
+// todo: rename
 function updateProject(projectId, environments) {
     return httpService.post('api/project/environment/update-environments', {
         projectId: projectId,
