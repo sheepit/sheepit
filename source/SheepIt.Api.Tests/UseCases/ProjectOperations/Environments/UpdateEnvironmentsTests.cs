@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using SheepIt.Api.Tests.FeatureObjects;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Api.Tests.TestProcess;
 using SheepIt.Api.UseCases.ProjectManagement;
@@ -11,21 +12,15 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
 {
     public class UpdateEnvironmentsTests : Test<IntegrationTestsFixture>
     {
-        private string _projectId;
+        private const string _projectId = "foo";
 
         [SetUp]
         public async Task set_up()
         {
-            _projectId = "foo";
-
-            var zipFile = TestProcessZip.GetAsFromFile();
-
-            await Fixture.Handle(new CreateProjectRequest
-            {
-                ProjectId = _projectId,
-                ZipFile = zipFile,
-                EnvironmentNames = new[] {"test", "prod"}
-            });
+            await Fixture
+                .CreateProject(_projectId)
+                .WithEnvironmentNames("test", "prod")
+                .Create();
         }
 
         [Test]

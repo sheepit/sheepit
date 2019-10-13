@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -120,6 +121,11 @@ namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning
         [Test]
         public void commands_retain_directory_context()
         {
+            if (Directory.Exists("foo"))
+            {
+                Directory.Delete("foo");
+            }
+
             var result = RunCommand(
                 "mkdir foo",
                 "cd foo",

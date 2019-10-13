@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using SheepIt.Api.Tests.TestInfrastructure;
+using SheepIt.Api.Tests.TestProcess;
 using SheepIt.Api.UseCases.ProjectManagement;
 
 namespace SheepIt.Api.Tests.FeatureObjects
@@ -23,6 +24,7 @@ namespace SheepIt.Api.Tests.FeatureObjects
                 _request = new CreateProjectRequest
                 {
                     ProjectId = projectId,
+                    ZipFile = TestProcessZip.GetAsFromFile(),
                     EnvironmentNames = new[] {"dev", "test", "prod"}
                 };
             }
