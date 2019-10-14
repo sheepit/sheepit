@@ -11,42 +11,46 @@
                 </router-link>
             </div>
         </div>
-        <expanding-list
-            v-if="projects && projects.length > 0"
-            class="mt-4"
-            :all-items="projects"
-            initial-length="10000"
-        >
-            <template slot-scope="{ items }">
-                <table class="table table-bordered">
-                    <thead>
+        <div v-if="loading">
+            <preloader />
+        </div>
+        <div v-else>
+            <expanding-list
+                    v-if="projects && projects.length > 0"
+                    class="mt-4"
+                    :all-items="projects"
+                    initial-length="10000"
+            >
+                <template slot-scope="{ items }">
+                    <table class="table table-bordered">
+                        <thead>
                         <tr>
                             <th scope="col">
                                 Project ID
                             </th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         <tr
-                            v-for="item in items"
-                            :key="item.id"
+                                v-for="item in items"
+                                :key="item.id"
                         >
                             <td scope="row">
                                 <router-link
-                                    :to="{ name: 'project', params: { projectId: item.id }}"
+                                        :to="{ name: 'project', params: { projectId: item.id }}"
                                 >
                                     {{ item.id }}
                                 </router-link>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-            </template>
-        </expanding-list>
-        <div v-else-if="projects && projects.length > 0">
-            There are no projects yet
+                        </tbody>
+                    </table>
+                </template>
+            </expanding-list>
+            <div v-else>
+                There are no projects yet
+            </div>
         </div>
-        <preloader v-else />
     </div>
 </template>
 
@@ -58,6 +62,7 @@ export default {
 
     data() {
         return {
+            loading: true,
             projects: []
         }
     },
@@ -70,7 +75,10 @@ export default {
         getProjectsList() {
             getProjectListService
                 .getProjectList()
-                .then(response => this.projects = response.projects)
+                .then(response => {
+                    this.projects = response.projects
+                    this.loading = false
+                })
         }
     }
 }
