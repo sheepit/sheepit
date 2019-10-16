@@ -3,7 +3,7 @@
         <h3 class="mt-5">
             Deployment variables
         </h3>
-        <table class="table table-bordered">
+        <table>
             <thead>
                 <tr>
                     <th>name</th>

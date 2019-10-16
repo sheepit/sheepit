@@ -1,6 +1,6 @@
 <template>
     <div>        
-        <table class="table table-bordered">
+        <table>
             <thead>
                 <tr>
                     <th>name</th>

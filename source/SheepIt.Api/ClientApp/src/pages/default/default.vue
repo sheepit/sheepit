@@ -10,7 +10,7 @@
             initial-length="10000"
         >
             <template slot-scope="{ items }">
-                <table class="table table-bordered">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">

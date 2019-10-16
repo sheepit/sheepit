@@ -1,6 +1,6 @@
 <template>
     <div v-if="deployment">
-        <table class="table table-bordered">
+        <table>
             <thead>
                 <tr>
                     <th>id</th>

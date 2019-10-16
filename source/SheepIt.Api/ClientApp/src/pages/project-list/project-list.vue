@@ -22,13 +22,13 @@
                     initial-length="10000"
             >
                 <template slot-scope="{ items }">
-                    <table class="table table-bordered">
+                    <table>
                         <thead>
-                        <tr>
-                            <th scope="col">
-                                Project ID
-                            </th>
-                        </tr>
+                            <tr>
+                                <th scope="col">
+                                    Project ID
+                                </th>
+                            </tr>
                         </thead>
                         <tbody>
                         <tr
@@ -45,6 +45,7 @@
                         </tr>
                         </tbody>
                     </table>
+
                 </template>
             </expanding-list>
             <div v-else>
