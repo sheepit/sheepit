@@ -59,6 +59,16 @@ namespace SheepIt.Api.Infrastructure.Mongo
             return foundDocumentOrNull;
         }
 
+        public static async Task<TDocument> TryFindById<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, TId id)
+            where TDocument : IDocumentWithId<TId>
+        {
+            var foundDocumentOrNull = await mongoCollection
+                .Find(filter => filter.WithId(id))
+                .SingleOrDefaultAsync();
+
+            return foundDocumentOrNull;
+        }
+
         public static async Task<TDocument> FindByProjectAndId<TDocument, TId>(this IMongoCollection<TDocument> mongoCollection, string projectId, TId id)
             where TDocument : IDocumentWithId<TId>, IDocumentInProject
         {

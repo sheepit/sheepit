@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -74,6 +75,8 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
         public async Task Handle(CreateProjectRequest request)
         {
+            await Validate(request.ProjectId);
+
             var project = new Project
             {
                 Id = request.ProjectId
@@ -90,6 +93,16 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             await CreateFirstRelease(project, deploymentProcessId);
         }
 
+        private async Task Validate(string projectId)
+        {
+            var project = await _database.Projects.TryFindById(projectId);
+            
+            if(project != null)
+                throw new CustomException(
+                    "CREATE_PROJECT_ID_NOT_UNIQUE",
+                    "Project with specified id already exists");
+        }
+        
         private async Task CreateEnvironments(CreateProjectRequest request)
         {
             foreach (var environmentName in request.EnvironmentNames)

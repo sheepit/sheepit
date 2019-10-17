@@ -5,14 +5,14 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
 {
     public class ErrorResponse
     {
-        public int ErrorCode { get; }
+        public string ErrorCode { get; }
         public string Type { get; }
         public string HumanReadableMessage { get; }
         public DeveloperDetails DeveloperDetails { get; }
 
         public ErrorResponse(Exception e, ErrorHandlingSettings settings)
         {
-            ErrorCode = -1;
+            ErrorCode = "-1";
             Type = e.GetType().Name;
             HumanReadableMessage = "Server error occured";
 
