@@ -51,18 +51,11 @@ export default {
         if (jsonResponse) {
             return responsePromise
                 .then(this.handleErrors)
-                .then(response => response.json())
-                .catch(error => {
-                    messageService.error(error);
-                })
+                .then(response => response.json());
         }
 
         return responsePromise
-            .then(this.handleErrors)
-            .catch(error => {
-                messageService.error(error);
-                return Promise.reject(error);
-            });
+            .then(this.handleErrors);
     },
 
     postFormData(url, formData) {
@@ -79,11 +72,7 @@ export default {
         const responsePromise = fetch(requestUrl, fetchSettings);
 
         return responsePromise
-            .then(this.handleErrors)
-            .catch(error => {
-                messageService.error(error);
-                return Promise.reject(error);
-            });
+            .then(this.handleErrors);
     },
 
     handleErrors(response) {
@@ -95,9 +84,18 @@ export default {
             
             response
                 .json()
-                .then(error => console.log(error));
+                .then(error => {
+                    if(error.Type && error.Type === "CustomException") {
+                        messageService.error(error.HumanReadableMessage);
+                    }
+                    else {
+                        messageService.error('Server error. Please try again later.');
+                    }
+                    console.log(error)
+                    return;
+                });
 
-            throw Error(response.statusText);
+            return Promise.reject(response.statusText);
         }
 
         return response;

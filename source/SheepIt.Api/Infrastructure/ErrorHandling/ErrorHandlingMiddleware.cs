@@ -11,6 +11,8 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
     {
         private readonly RequestDelegate next;
 
+        private readonly int _customHttpStatusCode = 555;
+
         public ErrorHandlingMiddleware(RequestDelegate next)
         {
             this.next = next;
@@ -24,19 +26,34 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
             }
             catch (CustomException ex)
             {
-                await HandleExceptionAsync(context, new ErrorResponse(ex, settings));
+                await HandleExceptionAsync(
+                    context,
+                    _customHttpStatusCode,
+                    new ErrorResponse(ex, settings));
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, new ErrorResponse(ex, settings));
+                await HandleExceptionAsync(
+                    context,
+                    new ErrorResponse(ex, settings));
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, ErrorResponse errorResponse)
+        private Task HandleExceptionAsync(
+            HttpContext context,
+            ErrorResponse errorResponse)
         {
-            var code = HttpStatusCode.InternalServerError;
+            return HandleExceptionAsync(
+                context,
+                (int)HttpStatusCode.InternalServerError,
+                errorResponse);
+        }
 
-            
+        private Task HandleExceptionAsync(
+            HttpContext context,
+            int httpStatusCode,
+            ErrorResponse errorResponse)
+        {
             var result = JsonConvert.SerializeObject(
                 errorResponse,
                 new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
@@ -45,7 +62,7 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
             Log.Error(result);
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)code;
+            context.Response.StatusCode = httpStatusCode;
 
             return context.Response.WriteAsync(result);
         }
