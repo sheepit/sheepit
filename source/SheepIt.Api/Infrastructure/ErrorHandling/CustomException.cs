@@ -8,14 +8,7 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
         public string HumanReadableMessage { get; }
 
         public CustomException(string errorCode, string humanReadableMessage)
-            : base(humanReadableMessage)
-        {
-            ErrorCode = errorCode;
-            HumanReadableMessage = humanReadableMessage;
-        }
-
-        public CustomException(string errorCode, string message, string humanReadableMessage)
-            : base(message)
+            : base($"{errorCode} - {humanReadableMessage}")
         {
             ErrorCode = errorCode;
             HumanReadableMessage = humanReadableMessage;
