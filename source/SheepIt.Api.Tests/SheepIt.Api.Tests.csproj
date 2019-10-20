@@ -34,6 +34,14 @@
     <Content Include="TestProcess\test-process.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="TestProcess\empty-archive.zip" />
+    <Content Include="TestProcess\empty-archive.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="TestProcess\invalid-process-yaml.zip" />
+    <Content Include="TestProcess\invalid-process-yaml.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

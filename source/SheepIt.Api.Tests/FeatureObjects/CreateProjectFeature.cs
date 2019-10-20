@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Api.Tests.TestProcess;
 using SheepIt.Api.UseCases.ProjectManagement;
@@ -24,7 +26,7 @@ namespace SheepIt.Api.Tests.FeatureObjects
                 _request = new CreateProjectRequest
                 {
                     ProjectId = projectId,
-                    ZipFile = TestProcessZip.GetAsFromFile(),
+                    ZipFile = TestProcessZipArchives.TestProcess,
                     EnvironmentNames = new[] {"dev", "test", "prod"}
                 };
             }
@@ -33,6 +35,13 @@ namespace SheepIt.Api.Tests.FeatureObjects
             {
                 _request.EnvironmentNames = environmentNames;
 
+                return this;
+            }
+
+            public Builder WithZipFile(IFormFile zipArchive)
+            {
+                _request.ZipFile = zipArchive;
+                
                 return this;
             }
 

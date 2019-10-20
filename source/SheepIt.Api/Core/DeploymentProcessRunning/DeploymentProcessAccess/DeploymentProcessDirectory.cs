@@ -4,6 +4,8 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
 {
     public class DeploymentProcessDirectory
     {
+        public const string ProcessFileName = "process.yaml";
+        
         public LocalPath Path { get; }
         
         public DeploymentProcessDirectory(LocalPath path)
@@ -13,9 +15,9 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
 
         public DeploymentProcessFile OpenProcessDescriptionFile()
         {
-            var processDescriptionFilePath = Path.AddSegment("process.yaml").ToString();
+            var processDescriptionFilePath = Path.AddSegment(ProcessFileName).ToString();
 
-            return DeploymentProcessFile.Open(processDescriptionFilePath);
+            return DeploymentProcessFile.OpenFromFile(processDescriptionFilePath);
         }
     }
 }

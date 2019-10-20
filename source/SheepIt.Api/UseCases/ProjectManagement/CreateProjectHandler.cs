@@ -12,6 +12,7 @@ using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
+using SheepIt.Api.Infrastructure.Web;
 
 namespace SheepIt.Api.UseCases.ProjectManagement
 {
@@ -26,18 +27,18 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     {
         public CreateProjectRequestValidator()
         {
-            RuleFor(x => x.ProjectId)
+            RuleFor(request => request.ProjectId)
                 .NotNull()
                 .MinimumLength(3);
 
-            RuleFor(x => x.EnvironmentNames)
+            RuleFor(request => request.EnvironmentNames)
                 .NotNull();
 
-            RuleForEach(x => x.EnvironmentNames)
+            RuleForEach(request => request.EnvironmentNames)
                 .NotNull()
-                .MinimumLength(3);
+                 .MinimumLength(3);
             
-            RuleFor(x => x.ZipFile)
+            RuleFor(request => request.ZipFile)
                 .NotNull();
         }
     }
@@ -75,58 +76,55 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
         public async Task Handle(CreateProjectRequest request)
         {
-            await Validate(request.ProjectId);
+            // validation and persisting is split, as we don't have transactions yet
+            // and failing midway would leave system in an inconsistent state
+            
+            // validation
+            
+            await ValidateProjectIdUniqueness(request.ProjectId);
+            
+            var zipFileBytes = await request.ZipFile.ToByteArray();
+            
+            _deploymentProcessStorage.ValidateZipFile(zipFileBytes);
 
-            var project = new Project
+            // persisting
+            
+            await _database.Projects.InsertOneAsync(new Project
             {
                 Id = request.ProjectId
-            };
+            });
 
-            await _database.Projects
-                .InsertOneAsync(project);
-
-            var deploymentProcessId = await CreateDeploymentProcess(request);
-
-            await CreateEnvironments(request);
-
-            // first release is created so other operations can copy it
-            await CreateFirstRelease(project, deploymentProcessId);
-        }
-
-        private async Task Validate(string projectId)
-        {
-            var project = await _database.Projects.TryFindById(projectId);
-            
-            if(project != null)
-                throw new CustomException(
-                    "CREATE_PROJECT_ID_NOT_UNIQUE",
-                    "Project with specified id already exists");
-        }
-        
-        private async Task CreateEnvironments(CreateProjectRequest request)
-        {
             foreach (var environmentName in request.EnvironmentNames)
             {
                 await _addEnvironment.Add(request.ProjectId, environmentName);
             }
-        }
-        
-        private async Task CreateFirstRelease(Project project, int deploymentProcessId)
-        {
+
+            var deploymentProcessId = await _deploymentProcessStorage.Add(
+                projectId: request.ProjectId,
+                zipFileBytes: zipFileBytes
+            );
+
+            // first release is created so other operations can copy it
             await _releasesStorage.Add(new Release
             {
                 Variables = new VariableCollection(),
                 CreatedAt = DateTime.UtcNow,
-                ProjectId = project.Id,
+                ProjectId = request.ProjectId,
                 DeploymentProcessId = deploymentProcessId
             });
         }
 
-        private async Task<int> CreateDeploymentProcess(
-            CreateProjectRequest request)
+        private async Task ValidateProjectIdUniqueness(string projectId)
         {
-            return await _deploymentProcessStorage.Add(
-                request.ProjectId, request.ZipFile);
+            var duplicatedProject = await _database.Projects.TryFindById(projectId);
+            
+            if (duplicatedProject != null)
+            {
+                throw new CustomException(
+                    "CREATE_PROJECT_ID_NOT_UNIQUE",
+                    "Project with specified id already exists"
+                );
+            }
         }
     }
 

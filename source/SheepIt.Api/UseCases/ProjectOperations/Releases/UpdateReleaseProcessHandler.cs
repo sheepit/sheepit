@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +8,7 @@ using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Releases;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
-using SheepIt.Api.UseCases.ProjectManagement;
+using SheepIt.Api.Infrastructure.Web;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 {
@@ -67,18 +66,18 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
         public async Task<UpdateReleaseProcessResponse> Handle(UpdateReleaseProcessRequest request)
         {
-            var project = _projectContext.Project;
-
-            var deploymentProcessId = await _deploymentProcessStorage
-                .Add(
-                    project.Id,
-                    request.ZipFile
-                );
+            var zipFileBytes = await request.ZipFile.ToByteArray();
+            
+            _deploymentProcessStorage.ValidateZipFile(zipFileBytes);
+            
+            var deploymentProcessId = await _deploymentProcessStorage.Add(
+                projectId: request.ProjectId,
+                zipFileBytes: zipFileBytes
+            );
 
             var release = await _releasesStorage.GetNewest(request.ProjectId);
 
-            var newRelease = release
-                .WithUpdatedDeploymentProcess(deploymentProcessId);
+            var newRelease = release.WithUpdatedDeploymentProcess(deploymentProcessId);
             
             var releaseId = await _releasesStorage.Add(newRelease);
 

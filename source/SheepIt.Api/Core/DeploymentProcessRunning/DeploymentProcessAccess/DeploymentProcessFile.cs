@@ -10,7 +10,7 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
     {
         public string[] Commands { get; set; }
 
-        public static DeploymentProcessFile Open(string processDescriptionFilePath)
+        public static DeploymentProcessFile OpenFromFile(string processDescriptionFilePath)
         {
             // TODO: [ts] Should we have add here some validation i.e. if the file exists.
             // If it is in correct format etc.
@@ -18,11 +18,16 @@ namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
 
             using (var fileStream = File.OpenText(processDescriptionFilePath))
             {
-                return new DeserializerBuilder()
-                    .WithNamingConvention(new UnderscoredNamingConvention())
-                    .Build()
-                    .Deserialize<DeploymentProcessFile>(fileStream);
+                return OpenFomStream(fileStream);
             }
+        }
+
+        public static DeploymentProcessFile OpenFomStream(StreamReader fileStream)
+        {
+            return new DeserializerBuilder()
+                .WithNamingConvention(new UnderscoredNamingConvention())
+                .Build()
+                .Deserialize<DeploymentProcessFile>(fileStream);
         }
     }
 }

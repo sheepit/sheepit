@@ -1,7 +1,11 @@
+using System;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
+using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
+using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Core.DeploymentProcesses
@@ -19,17 +23,54 @@ namespace SheepIt.Api.Core.DeploymentProcesses
             _identityProvider = identityProvider;
         }
 
-        public async Task<int> Add(string projectId, IFormFile zipFile)
+        public void ValidateZipFile(byte[] zipFileBytes)
         {
-            using (var zipStream = new MemoryStream())
+            using (var memoryStream = new MemoryStream(zipFileBytes))
+            using (var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Read))
             {
-                await zipFile.CopyToAsync(zipStream);
+                var processFileEntry = GetProcessFileEntry(zipArchive);
 
-                return await Add(projectId, zipStream.ToArray());
+                ValidateProcessFileCanBeDeserialized(processFileEntry);
             }
         }
 
-        public async Task<int> Add(string projectId, byte[] zipFile)
+        private static ZipArchiveEntry GetProcessFileEntry(ZipArchive zipArchive)
+        {
+            var processFileEntryOrNull = zipArchive.Entries
+                .FirstOrDefault(entry => entry.FullName == DeploymentProcessDirectory.ProcessFileName);
+
+            if (processFileEntryOrNull == null)
+            {
+                throw new CustomException(
+                    "CREATE_DEPLOYMENT_STORAGE_ZIP_DOES_NOT_CONTAIN_PROCESS_YAML",
+                    "The provided zip file does not contain process.yaml in its root."
+                );
+            }
+
+            return processFileEntryOrNull;
+        }
+
+        private static void ValidateProcessFileCanBeDeserialized(ZipArchiveEntry processFileEntry)
+        {
+            using (var processFileEntryStream = processFileEntry.Open())
+            using (var processFileEntryStreamReader = new StreamReader(processFileEntryStream))
+            {
+                try
+                {
+                    DeploymentProcessFile.OpenFomStream(processFileEntryStreamReader);
+                }
+                catch (Exception exception)
+                {
+                    throw new CustomException(
+                        errorCode: "CREATE_DEPLOYMENT_STORAGE_CANNOT_DESERIALIZE_PROCESS_YAML",
+                        humanReadableMessage: "Deserializing provided process.yaml file failed - please check its formatting.",
+                        innerException: exception
+                    );
+                }
+            }
+        }
+
+        public async Task<int> Add(string projectId, byte[] zipFileBytes)
         {
             var objectId = ObjectId.GenerateNewId();
             var id = await _identityProvider.GetNextId("DeploymentProcess");
@@ -39,7 +80,7 @@ namespace SheepIt.Api.Core.DeploymentProcesses
                 ObjectId = objectId,
                 Id = id,
                 ProjectId = projectId,
-                File = zipFile
+                File = zipFileBytes
             });
 
             return id;
