@@ -1,3 +1,3 @@
 export default {
-    baseUrl: 'http://localhost:8088/'
+    baseUrl: 'https://localhost:5001/'
 }
