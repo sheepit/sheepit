@@ -7,13 +7,19 @@ services:
     build: ../source/
     restart: always
     ports:
-      - 8088:8088
+      - 8080:80
+      - 443:443
     environment:
       ASPNETCORE_ENVIRONMENT: development
-      BASE_URL: http://localhost:8088/
+      BASE_URL: https://localhost:443/
       Mongo:ConnectionString: mongodb://root:example@mongo:27017
+      ASPNETCORE_URLS: "https://+443;http://+80"
+      ASPNETCORE_HTTPS_PORT: 443
+      ASPNETCORE_Kestrel__Certificates__Default__Password: password
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
     volumes:
       - sheepit-volume:/data
+      - ${HOME}/.aspnet/https:/https/
 
   mongo:
     image: mongo
@@ -29,7 +35,7 @@ services:
   mongo-express:
     image: mongo-express
     restart: always
-    ports:
+    ports:      
       - 8081:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root

@@ -22,7 +22,8 @@ COPY --from=build-stage-frontend /wwwroot ./wwwroot
 
 RUN mkdir -p /data
 
-EXPOSE 8088
+EXPOSE 80
+EXPOSE 443
 
 COPY ./run-script.sh .
 RUN chmod +x ./run-script.sh
