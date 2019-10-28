@@ -40,25 +40,6 @@
                         class="form-control-file"
                     >
                 </div>
-
-                <div class="form-group">
-                    <label
-                        for="releaseDisplayName"
-                        class="form-label"
-                    >Release display name</label>
-                    <tooltip
-                        data-placement="bottom"
-                        :text="'Display name will show a defined variable when defined in brackets i.e.: release-${variable-name}'"
-                    >
-                        <input
-                            id="releaseDisplayName"
-                            v-model="releaseDisplayName"
-                            type="text"
-                            class="form-control"
-                            :class="{ 'is-invalid': submitted && $v.releaseDisplayName.$error }"
-                        >
-                    </tooltip>
-                </div>
             </div>
 
             <div class="form-section">
@@ -135,7 +116,6 @@ export default {
     data() {
         return {
             projectId: "",
-            releaseDisplayName: "",
             environments: [""],
 
             submitted: false
@@ -156,7 +136,6 @@ export default {
             createProjectService.createProject(
                 this.projectId,
                 this.environments,
-                this.releaseDisplayName,
                 zipFileData
             )
                 .then(response => {
@@ -179,8 +158,6 @@ export default {
         projectId: {
             required,
             minLength: minLength(3)
-        },
-        releaseDisplayName: {
         },
         environments: {
             required,
