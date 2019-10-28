@@ -21,7 +21,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         public string ProjectId { get; set; }
         public string[] EnvironmentNames { get; set; }
         public IFormFile ZipFile { get; set; }
-        public string ReleaseDisplayName { get; set; }
     }
 
     public class CreateProjectRequestValidator : AbstractValidator<CreateProjectRequest>
@@ -92,8 +91,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             
             await _database.Projects.InsertOneAsync(new Project
             {
-                Id = request.ProjectId,
-                ReleaseDisplayName = request.ReleaseDisplayName
+                Id = request.ProjectId
             });
 
             foreach (var environmentName in request.EnvironmentNames)
