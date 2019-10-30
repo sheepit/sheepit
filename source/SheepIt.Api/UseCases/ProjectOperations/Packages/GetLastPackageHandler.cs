@@ -5,18 +5,18 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.Releases
+namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 {
-    public class GetLastReleaseRequest : IRequest<GetLastReleaseResponse>, IProjectRequest
+    public class GetLastPackageRequest : IRequest<GetLastPackageResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
     }
 
-    public class GetLastReleaseResponse
+    public class GetLastPackageResponse
     {
         public int Id { get; set; }
         public string ProjectId { get; set; }
@@ -33,37 +33,37 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
     [Route("api")]
     [ApiController]
-    public class GetLastReleaseController : MediatorController
+    public class GetLastPackageController : MediatorController
     {
         // currently used for editing variables
         [HttpPost]
-        [Route("project/release/get-last-release")]
-        public async Task<GetLastReleaseResponse> GetLastRelease(GetLastReleaseRequest request)
+        [Route("project/package/get-last-package")]
+        public async Task<GetLastPackageResponse> GetLastPackage(GetLastPackageRequest request)
         {
             return await Handle(request);
         }
     }
 
-    public class GetLastReleaseHandler : IHandler<GetLastReleaseRequest, GetLastReleaseResponse>
+    public class GetLastPackageHandler : IHandler<GetLastPackageRequest, GetLastPackageResponse>
     {
-        private readonly ReleasesStorage _releasesStorage;
+        private readonly PackagesStorage _packagesStorage;
 
-        public GetLastReleaseHandler(ReleasesStorage releasesStorage)
+        public GetLastPackageHandler(PackagesStorage packagesStorage)
         {
-            _releasesStorage = releasesStorage;
+            _packagesStorage = packagesStorage;
         }
 
-        public async Task<GetLastReleaseResponse> Handle(GetLastReleaseRequest request)
+        public async Task<GetLastPackageResponse> Handle(GetLastPackageRequest request)
         {
-            var release = await _releasesStorage.GetNewest(request.ProjectId);
+            var package = await _packagesStorage.GetNewest(request.ProjectId);
 
-            return new GetLastReleaseResponse
+            return new GetLastPackageResponse
             {
-                Id = release.Id,
-                ProjectId = release.ProjectId,
-                CreatedAt = release.CreatedAt,
-                Variables = release.Variables.Variables
-                    .Select(values => new GetLastReleaseResponse.VariableDto
+                Id = package.Id,
+                ProjectId = package.ProjectId,
+                CreatedAt = package.CreatedAt,
+                Variables = package.Variables.Variables
+                    .Select(values => new GetLastPackageResponse.VariableDto
                     {
                         Name = values.Name,
                         DefaultValue = values.DefaultValue,
@@ -74,11 +74,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         }
     }
     
-    public class GetLastReleaseModule : Module
+    public class GetLastPackageModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            BuildRegistration.Type<GetLastReleaseHandler>()
+            BuildRegistration.Type<GetLastPackageHandler>()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }

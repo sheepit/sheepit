@@ -5,7 +5,7 @@ using SheepIt.Api.Core.DeploymentProcessRunning;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Mongo;
@@ -16,7 +16,7 @@ using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
 using SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails;
 using SheepIt.Api.UseCases.ProjectOperations.Deployments;
 using SheepIt.Api.UseCases.ProjectOperations.Environments;
-using SheepIt.Api.UseCases.ProjectOperations.Releases;
+using SheepIt.Api.UseCases.ProjectOperations.Packages;
 
 namespace SheepIt.Api
 {
@@ -46,7 +46,7 @@ namespace SheepIt.Api
             builder.RegisterModule<ProjectContextModule>();
             
             builder.RegisterType<DeploymentsStorage>().AsSelf();
-            builder.RegisterType<ReleasesStorage>().AsSelf();
+            builder.RegisterType<PackagesStorage>().AsSelf();
             builder.RegisterType<DeploymentProcess>().AsSelf();
             builder.RegisterModule<DeploymentProcessModule>();
         }
@@ -65,18 +65,18 @@ namespace SheepIt.Api
             
             // Deployment
             builder.RegisterModule<GetDeploymentDetailsModule>();
-            builder.RegisterModule<ListReleaseDeploymentsModule>();
+            builder.RegisterModule<ListPackageDeploymentsModule>();
             
             // Environment
             builder.RegisterModule<ListEnvironmentsModule>();
             
-            // Release
-            builder.RegisterModule<DeployReleaseModule>();
-            builder.RegisterModule<EditReleaseVariablesModule>();
-            builder.RegisterModule<GetLastReleaseModule>();
-            builder.RegisterModule<GetReleaseDetailsModule>();
-            builder.RegisterModule<UpdateReleaseProcessModule>();
-            builder.RegisterModule<UpdateReleaseVariablesModule>();
+            // Package
+            builder.RegisterModule<DeployPackageModule>();
+            builder.RegisterModule<EditPackageVariablesModule>();
+            builder.RegisterModule<GetLastPackageModule>();
+            builder.RegisterModule<GetPackageDetailsModule>();
+            builder.RegisterModule<UpdatePackageProcessModule>();
+            builder.RegisterModule<UpdatePackageVariablesModule>();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
     {
         public EnvironmentDto[] Environments { get; set; }
         public DeploymentDto[] Deployments { get; set; }
-        public ReleaseDto[] Releases { get; set; }
+        public PackageDto[] Packages { get; set; }
 
         public class EnvironmentDto
         {
@@ -31,20 +31,20 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         {
             public DateTime LastDeployedAt { get; set; }
             public int CurrentDeploymentId { get; set; }
-            public int CurrentReleaseId { get; set; }
+            public int CurrentPackageId { get; set; }
         }
         
         public class DeploymentDto
         {
             public int Id { get; set; }
-            public int ReleaseId { get; set; }
+            public int PackageId { get; set; }
             public DateTime DeployedAt { get; set; }
             public int EnvironmentId { get; set; }
             public string EnvironmentDisplayName { get; set; }
             public string Status { get; set; }
         }
 
-        public class ReleaseDto
+        public class PackageDto
         {
             public int Id { get; set; }
             public DateTime CreatedAt { get; set; }
@@ -80,7 +80,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 .Find(filter => filter.FromProject(options.ProjectId))
                 .ToArray();
 
-            var releases = await _database.Releases
+            var packages = await _database.Packages
                 .Find(filter => filter.FromProject(options.ProjectId))
                 .ToArray();
 
@@ -88,7 +88,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             {
                 Environments = EnvironmentList.GetEnvironments(_projectContext.Environments, deployments),
                 Deployments = DeploymentList.GetDeployments(deployments, _projectContext.Environments),
-                Releases = ReleaseList.GetReleases(releases)
+                Packages = PackageList.GetPackages(packages)
             };
         }
     }

@@ -9,7 +9,7 @@ using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
-using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -17,31 +17,31 @@ using SheepIt.Api.Infrastructure.Time;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 {
-    public class DeployReleaseRequest : IRequest<DeployReleaseResponse>, IProjectRequest
+    public class DeployPackageRequest : IRequest<DeployPackageResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
-        public int ReleaseId { get; set; }
+        public int PackageId { get; set; }
         public int EnvironmentId { get; set; }
     }
 
-    public class DeployReleaseResponse
+    public class DeployPackageResponse
     {
         public int CreatedDeploymentId { get; set; }
     }
 
     [Route("api")]
     [ApiController]
-    public class DeployReleaseController : MediatorController
+    public class DeployPackageController : MediatorController
     {
         [HttpPost]
-        [Route("project/deployment/deploy-release")]
-        public async Task<DeployReleaseResponse> DeployRelease(DeployReleaseRequest request)
+        [Route("project/deployment/deploy-package")]
+        public async Task<DeployPackageResponse> DeployPackage(DeployPackageRequest request)
         {
             return await Handle(request);
         }
     }
 
-    public class DeployReleaseHandler : IHandler<DeployReleaseRequest, DeployReleaseResponse>
+    public class DeployPackageHandler : IHandler<DeployPackageRequest, DeployPackageResponse>
     {
         private readonly DeploymentsStorage _deploymentsStorage;
         private readonly DeploymentProcessSettings _deploymentProcessSettings;
@@ -51,7 +51,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         private readonly DeploymentProcessDirectoryFactory _deploymentProcessDirectoryFactory;
         private readonly DeploymentProcessStorage _deploymentProcessStorage;
 
-        public DeployReleaseHandler(
+        public DeployPackageHandler(
             DeploymentsStorage deploymentsStorage,
             DeploymentProcessSettings deploymentProcessSettings,
             DeploymentProcessRunner deploymentProcessRunner,
@@ -69,14 +69,14 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             _deploymentProcessStorage = deploymentProcessStorage;
         }
 
-        public async Task<DeployReleaseResponse> Handle(DeployReleaseRequest request)
+        public async Task<DeployPackageResponse> Handle(DeployPackageRequest request)
         {
-            var release = await _database.Releases
-                .FindByProjectAndId(request.ProjectId, request.ReleaseId);
+            var package = await _database.Packages
+                .FindByProjectAndId(request.ProjectId, request.PackageId);
 
             var deployment = new Deployment
             {
-                ReleaseId = release.Id,
+                PackageId = package.Id,
                 ProjectId = request.ProjectId,
                 DeployedAt = DateTime.UtcNow,
                 EnvironmentId = request.EnvironmentId,
@@ -87,19 +87,19 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 
             var deploymentProcess = await _database.DeploymentProcesses
                 .Find(builder => builder
-                    .Eq(process => process.Id, release.DeploymentProcessId)
+                    .Eq(process => process.Id, package.DeploymentProcessId)
                 )
                 .SingleAsync();
 
-            await RunDeployment(_projectContext.Project, release, deployment, deploymentProcess);
+            await RunDeployment(_projectContext.Project, package, deployment, deploymentProcess);
 
-            return new DeployReleaseResponse
+            return new DeployPackageResponse
             {
                 CreatedDeploymentId = deploymentId
             };
         }
 
-        private async Task RunDeployment(Project project, Release release, Deployment deployment,
+        private async Task RunDeployment(Project project, Package package, Deployment deployment,
             DeploymentProcess deploymentProcess)
         {
             try
@@ -107,8 +107,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
                 // todo: extract part of it to another class
                 var deploymentWorkingDir = _deploymentProcessSettings.WorkingDir
                     .AddSegment(project.Id)
-                    .AddSegment("deploying-releases")
-                    .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_release-{release.Id}");
+                    .AddSegment("deploying-packages")
+                    .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_package-{package.Id}");
 
                 // todo: make asynchronous
                 var processDirectory = _deploymentProcessDirectoryFactory.CreateFromZip(
@@ -119,7 +119,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
                 var processOutput = _deploymentProcessRunner.Run(
                     processDirectory.Path.ToString(),
                     deploymentProcessFile: processDirectory.OpenProcessDescriptionFile(),
-                    variablesForEnvironment: release.GetVariablesForEnvironment(deployment.EnvironmentId)
+                    variablesForEnvironment: package.GetVariablesForEnvironment(deployment.EnvironmentId)
                 );
 
                 deployment.MarkFinished(processOutput);
@@ -141,11 +141,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         }
     }
     
-    public class DeployReleaseModule : Module
+    public class DeployPackageModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            BuildRegistration.Type<DeployReleaseHandler>()
+            BuildRegistration.Type<DeployPackageHandler>()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }

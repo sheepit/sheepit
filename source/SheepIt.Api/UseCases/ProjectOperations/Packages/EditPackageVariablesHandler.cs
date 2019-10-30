@@ -5,13 +5,13 @@ using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
-using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.Releases
+namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 {
-    public class EditReleaseVariablesRequest : IRequest, IProjectRequest
+    public class EditPackageVariablesRequest : IRequest, IProjectRequest
     {
         public string ProjectId { get; set; }
         public VariableDto[] NewVariables { get; set; }
@@ -26,28 +26,28 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
     [Route("api")]
     [ApiController]
-    public class EditReleaseVariablesController : MediatorController
+    public class EditPackageVariablesController : MediatorController
     {
         [HttpPost]
-        [Route("project/release/edit-release-variables")]
-        public async Task EditReleaseVariables(EditReleaseVariablesRequest request)
+        [Route("project/package/edit-package-variables")]
+        public async Task EditPackageVariables(EditPackageVariablesRequest request)
         {
             await Handle(request);
         }
     }
 
-    public class EditReleaseVariablesHandler : IHandler<EditReleaseVariablesRequest>
+    public class EditPackageVariablesHandler : IHandler<EditPackageVariablesRequest>
     {
-        private readonly ReleasesStorage _releasesStorage;
+        private readonly PackagesStorage _packagesStorage;
 
-        public EditReleaseVariablesHandler(ReleasesStorage releasesStorage)
+        public EditPackageVariablesHandler(PackagesStorage packagesStorage)
         {
-            _releasesStorage = releasesStorage;
+            _packagesStorage = packagesStorage;
         }
 
-        public async Task Handle(EditReleaseVariablesRequest request)
+        public async Task Handle(EditPackageVariablesRequest request)
         {
-            var release = await _releasesStorage.GetNewest(request.ProjectId);
+            var package = await _packagesStorage.GetNewest(request.ProjectId);
             
             var variableValues = request.NewVariables
                 .Select(update => new VariableValues
@@ -58,17 +58,17 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
                 })
                 .ToArray();
             
-            var newRelease = release.WithNewVariables(variableValues);
+            var newPackage = package.WithNewVariables(variableValues);
 
-            await _releasesStorage.Add(newRelease);
+            await _packagesStorage.Add(newPackage);
         }
     }
     
-    public class EditReleaseVariablesModule : Module
+    public class EditPackageVariablesModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            BuildRegistration.Type<EditReleaseVariablesHandler>()
+            BuildRegistration.Type<EditPackageVariablesHandler>()
                 .WithDefaultResponse()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);

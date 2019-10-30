@@ -7,7 +7,7 @@ using NUnit.Framework;
 using SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Core.Deployments;
-using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.Utils;
 using SheepIt.Api.Tests.TestInfrastructure;
 

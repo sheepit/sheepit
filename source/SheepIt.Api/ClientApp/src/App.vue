@@ -8,16 +8,16 @@
 import VueRouter from 'vue-router';
 import Authenticate from './pages/authenticate/authenticate.vue'
 import CreateProject from './pages/create-project/create-project.vue'
-import CreateRelease from './pages/create-release/create-release.vue'
+import CreatePackage from './pages/create-package/create-package.vue'
 import Default from './pages/default/default.vue'
 import DefaultLayout from './pages/default-layout/default-layout.vue'
-import DeployRelease from './pages/deploy-release/deploy-release.vue'
+import DeployPackage from './pages/deploy-package/deploy-package.vue'
 import DeploymentDetails from './pages/deployment-details/deployment-details.vue'
 import EditEnvironments from './pages/edit-environments/edit-environments.vue'
 import Project from './pages/project/project.vue'
 import ProjectLayout from './pages/project-layout/project-layout.vue'
 import ProjectList from './pages/project-list/project-list.vue'
-import ReleaseDetails from './pages/release-details/release-details.vue'
+import PackageDetails from './pages/package-details/package-details.vue'
 import UpdateProcess from './pages/update-process/update-process.vue'
 
 const router = new VueRouter({
@@ -112,9 +112,9 @@ const router = new VueRouter({
                             }
                         },
                         {
-                            path: 'create-release',
-                            name: 'create-release',
-                            component: CreateRelease,
+                            path: 'create-package',
+                            name: 'create-package',
+                            component: CreatePackage,
                             meta: {
                                 breadcrumbs: [
                                     {
@@ -155,9 +155,9 @@ const router = new VueRouter({
                             }
                         },
                         {
-                            path: 'deploy-release/:releaseId',
-                            name: 'deploy-release',
-                            component: DeployRelease,
+                            path: 'deploy-package/:packageId',
+                            name: 'deploy-package',
+                            component: DeployPackage,
                             meta: {
                                 breadcrumbs: [
                                     {
@@ -169,10 +169,10 @@ const router = new VueRouter({
                                         link: 'project'
                                     },
                                     {
-                                        name: 'releases'
+                                        name: 'packages'
                                     },
                                     {
-                                        name: ':releaseId'
+                                        name: ':packageId'
                                     },
                                     {
                                         name: 'deploy'
@@ -181,9 +181,9 @@ const router = new VueRouter({
                             }
                         },
                         {
-                            path: 'release-details/:releaseId',
-                            name: 'release-details',
-                            component: ReleaseDetails,
+                            path: 'package-details/:packageId',
+                            name: 'package-details',
+                            component: PackageDetails,
                             meta: {
                                 breadcrumbs: [
                                     {
@@ -195,10 +195,10 @@ const router = new VueRouter({
                                         link: 'project'
                                     },
                                     {
-                                        name: 'releases'
+                                        name: 'packages'
                                     },
                                     {
-                                        name: ':releaseId'
+                                        name: ':packageId'
                                     }
                                 ]
                             }

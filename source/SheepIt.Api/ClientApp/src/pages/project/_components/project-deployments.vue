@@ -16,7 +16,7 @@
                             status
                         </th>
                         <th scope="col">
-                            release id
+                            package id
                         </th>
                         <th scope="col">
                             environment
@@ -41,9 +41,9 @@
                             <deployment-status-badge :status="deployment.status" />
                         </td>
                         <td>
-                            <release-badge
+                            <package-badge
                                 :project-id="project.id"
-                                :release-id="deployment.releaseId"
+                                :package-id="deployment.packageId"
                             />
                         </td>
                         <td>

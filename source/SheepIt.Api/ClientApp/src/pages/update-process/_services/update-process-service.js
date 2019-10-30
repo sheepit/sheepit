@@ -8,7 +8,7 @@ export default {
 
         return httpService
             .postFormData(
-                'api/project/release/update-release-process',
+                'api/project/package/update-package-process',
                 formData
             );
     }

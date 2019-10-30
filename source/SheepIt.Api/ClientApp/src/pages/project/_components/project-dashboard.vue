@@ -18,9 +18,9 @@
                     >
                         <li class="list-group-item lead">
                             <div>
-                                <release-badge
+                                <package-badge
                                     :project-id="project.id"
-                                    :release-id="environment.deployment.currentReleaseId"
+                                    :package-id="environment.deployment.currentPackageId"
                                 />
                             </div>
                             <div>

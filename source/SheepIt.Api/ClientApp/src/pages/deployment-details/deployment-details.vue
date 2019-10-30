@@ -5,7 +5,7 @@
                 <tr>
                     <th>id</th>
                     <th>status</th>
-                    <th>release id</th>
+                    <th>package id</th>
                     <th>environment</th>
                     <th>deployed at</th>
                 </tr>
@@ -22,9 +22,9 @@
                         <deployment-status-badge :status="deployment.status" />
                     </td>
                     <td>
-                        <release-badge
+                        <package-badge
                             :project-id="project.id"
-                            :release-id="deployment.releaseId"
+                            :package-id="deployment.packageId"
                         />
                     </td>
                     <td>

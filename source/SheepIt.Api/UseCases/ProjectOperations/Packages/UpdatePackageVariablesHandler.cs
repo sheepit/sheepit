@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.Releases
+namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 {
-    public class UpdateReleaseVariablesRequest : IRequest<UpdateReleaseVariablesResponse>, IProjectRequest
+    public class UpdatePackageVariablesRequest : IRequest<UpdatePackageVariablesResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
         public UpdateVariable[] Updates { get; set; }
@@ -23,36 +23,36 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         }
     }
 
-    public class UpdateReleaseVariablesResponse
+    public class UpdatePackageVariablesResponse
     {
-        public int CreatedReleaseId { get; set; }
+        public int CreatedPackageId { get; set; }
     }
 
     [Route("api")]
     [ApiController]
-    public class UpdateReleaseVariablesController : MediatorController
+    public class UpdatePackageVariablesController : MediatorController
     {
         // meant to be used programatically via public API, e. g. when you want to update single variable, like service version
         [HttpPost]
-        [Route("project/release/update-release-variables")]
-        public async Task<UpdateReleaseVariablesResponse> UpdateReleaseVariables(UpdateReleaseVariablesRequest request)
+        [Route("project/package/update-package-variables")]
+        public async Task<UpdatePackageVariablesResponse> UpdatePackageVariables(UpdatePackageVariablesRequest request)
         {
             return await Handle(request);
         }
     }
 
-    public class UpdateReleaseVariablesHandler : IHandler<UpdateReleaseVariablesRequest, UpdateReleaseVariablesResponse>
+    public class UpdatePackageVariablesHandler : IHandler<UpdatePackageVariablesRequest, UpdatePackageVariablesResponse>
     {
-        private readonly ReleasesStorage _releasesStorage;
+        private readonly PackagesStorage _packagesStorage;
 
-        public UpdateReleaseVariablesHandler(ReleasesStorage releasesStorage)
+        public UpdatePackageVariablesHandler(PackagesStorage packagesStorage)
         {
-            _releasesStorage = releasesStorage;
+            _packagesStorage = packagesStorage;
         }
 
-        public async Task<UpdateReleaseVariablesResponse> Handle(UpdateReleaseVariablesRequest request)
+        public async Task<UpdatePackageVariablesResponse> Handle(UpdatePackageVariablesRequest request)
         {
-            var release = await _releasesStorage.GetNewest(request.ProjectId);
+            var package = await _packagesStorage.GetNewest(request.ProjectId);
 
             var variableValues = request.Updates
                 .Select(update => new VariableValues
@@ -63,22 +63,22 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
                 })
                 .ToArray();
 
-            var newRelease = release.WithUpdatedVariables(variableValues);
+            var newPackage = package.WithUpdatedVariables(variableValues);
 
-            var newReleaseId = await _releasesStorage.Add(newRelease);
+            var newPackageId = await _packagesStorage.Add(newPackage);
 
-            return new UpdateReleaseVariablesResponse
+            return new UpdatePackageVariablesResponse
             {
-                CreatedReleaseId = newReleaseId
+                CreatedPackageId = newPackageId
             };
         }
     }
     
-    public class UpdateReleaseVariablesModule : Module
+    public class UpdatePackageVariablesModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            BuildRegistration.Type<UpdateReleaseVariablesHandler>()
+            BuildRegistration.Type<UpdatePackageVariablesHandler>()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }

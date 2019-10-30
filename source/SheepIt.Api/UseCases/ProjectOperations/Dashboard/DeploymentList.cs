@@ -27,7 +27,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 EnvironmentId = environment.Id,
                 EnvironmentDisplayName = environment.DisplayName,
                 DeployedAt = deployment.DeployedAt,
-                ReleaseId = deployment.ReleaseId,
+                PackageId = deployment.PackageId,
                 Status = deployment.Status.ToString()
             };
         }

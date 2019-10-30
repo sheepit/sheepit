@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.Projects;
-using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
@@ -58,18 +58,18 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     public class CreateProjectHandler : IHandler<CreateProjectRequest>
     {
         private readonly Core.Environments.AddEnvironment _addEnvironment;
-        private readonly ReleasesStorage _releasesStorage;
+        private readonly PackagesStorage _packagesStorage;
         private readonly SheepItDatabase _database;
         private readonly DeploymentProcessStorage _deploymentProcessStorage;
 
         public CreateProjectHandler(
             Core.Environments.AddEnvironment addEnvironment,
-            ReleasesStorage releasesStorage,
+            PackagesStorage packagesStorage,
             SheepItDatabase database,
             DeploymentProcessStorage deploymentProcessStorage)
         {
             _addEnvironment = addEnvironment;
-            _releasesStorage = releasesStorage;
+            _packagesStorage = packagesStorage;
             _database = database;
             _deploymentProcessStorage = deploymentProcessStorage;
         }
@@ -104,8 +104,8 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 zipFileBytes: zipFileBytes
             );
 
-            // first release is created so other operations can copy it
-            await _releasesStorage.Add(new Release
+            // first package is created so other operations can copy it
+            await _packagesStorage.Add(new Package
             {
                 Variables = new VariableCollection(),
                 CreatedAt = DateTime.UtcNow,

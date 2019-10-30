@@ -58,11 +58,11 @@
 import httpService from "./../../../common/http/http-service.js";
 
 export default {
-    name: "ReleaseDeployments",
+    name: "PackageDeployments",
 
     props: [
         'project',
-        'release'
+        'package'
     ],
 
     data() {
@@ -76,7 +76,7 @@ export default {
             immediate: true,
             handler: 'updateDeployments'
         },
-        release: {
+        package: {
             immediate: true,
             handler: 'updateDeployments'
         }
@@ -84,13 +84,13 @@ export default {
 
     methods: {
         updateDeployments() {
-            getDeployments(this.project.id, this.release.id)
+            getDeployments(this.project.id, this.package.id)
                 .then(response => this.deployments = response.deployments.reverse())
         }
     }
 };
 
-function getDeployments(projectId, releaseId) {
-    return httpService.post('api/project/release/list-deployments', { projectId, releaseId });
+function getDeployments(projectId, packageId) {
+    return httpService.post('api/project/package/list-deployments', { projectId, packageId });
 }
 </script>

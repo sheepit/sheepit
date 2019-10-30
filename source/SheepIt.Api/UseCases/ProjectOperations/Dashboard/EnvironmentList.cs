@@ -42,7 +42,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 return new GetProjectDashboardResponse.EnvironmentDeploymentDto
                 {
                     CurrentDeploymentId = lastDeploymentOrNull.Id,
-                    CurrentReleaseId = lastDeploymentOrNull.ReleaseId,
+                    CurrentPackageId = lastDeploymentOrNull.PackageId,
                     LastDeployedAt = lastDeploymentOrNull.DeployedAt
                 };
             }

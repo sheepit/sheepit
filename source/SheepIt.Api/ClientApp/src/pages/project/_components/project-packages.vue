@@ -1,8 +1,8 @@
 <template>
     <expanding-list
-        v-if="releases && releases.length > 0"
+        v-if="packages && packages.length > 0"
         class="mt-4"
-        :all-items="releases"
+        :all-items="packages"
         initial-length="5"
     >
         <template slot-scope="{ items }">
@@ -22,22 +22,25 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="release in items"
-                        :key="release.id"
+                        v-for="_package in items"
+                        :key="_package.id"
                     >
                         <td scope="row">
-                            <release-badge
+                            <package-badge
                                 :project-id="project.id"
-                                :release-id="release.id"
+                                :package-id="_package.id"
                             />
                         </td>
                         <td>
-                            <humanized-date :date="release.createdAt" />
+                            <humanized-date :date="_package.createdAt" />
                         </td>
                         <td>
                             <router-link
                                 tag="button"
-                                :to="{ name: 'deploy-release', params: { projectId: project.id, releaseId: release.id } }"
+                                :to="{ name: 'deploy-package', params: {
+                                    projectId: project.id,
+                                    packageId: _package.id
+                                } }"
                                 class="btn btn-success"
                             >
                                 Deploy!
@@ -48,19 +51,19 @@
             </table>
         </template>
     </expanding-list>
-    <div v-else-if="releases && releases.length === 0">
-        No releases found for this project
+    <div v-else-if="packages && packages.length === 0">
+        No packages found for this project
     </div>
     <preloader v-else />
 </template>
 
 <script>
 export default {
-    name: "ProjectReleases",
+    name: "ProjectPackages",
 
     props: [
         'project',
-        'releases'
+        'packages'
     ],
     
     methods: {

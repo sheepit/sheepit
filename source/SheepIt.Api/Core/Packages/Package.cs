@@ -5,9 +5,9 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using SheepIt.Api.Infrastructure.Mongo;
 
-namespace SheepIt.Api.Core.Releases
+namespace SheepIt.Api.Core.Packages
 {
-    public class Release : IDocumentWithId<int>, IDocumentInProject
+    public class Package : IDocumentWithId<int>, IDocumentInProject
     {
         [BsonId]
         public ObjectId ObjectId { get; set; }
@@ -23,9 +23,9 @@ namespace SheepIt.Api.Core.Releases
             return Variables.GetForEnvironment(environmentId);
         }
         
-        public Release WithUpdatedDeploymentProcess(int newDeploymentProcessId)
+        public Package WithUpdatedDeploymentProcess(int newDeploymentProcessId)
         {
-            return new Release
+            return new Package
             {
                 Id = 0,
                 ProjectId = ProjectId,
@@ -35,9 +35,9 @@ namespace SheepIt.Api.Core.Releases
             };
         }
 
-        public Release WithUpdatedVariables(VariableValues[] newVariables)
+        public Package WithUpdatedVariables(VariableValues[] newVariables)
         {
-            return new Release
+            return new Package
             {
                 Id = 0,
                 ProjectId = ProjectId,
@@ -47,9 +47,9 @@ namespace SheepIt.Api.Core.Releases
             };
         }
 
-        public Release WithNewVariables(IEnumerable<VariableValues> newVariables)
+        public Package WithNewVariables(IEnumerable<VariableValues> newVariables)
         {
-            return new Release
+            return new Package
             {
                 Id = 0,
                 ProjectId = ProjectId,

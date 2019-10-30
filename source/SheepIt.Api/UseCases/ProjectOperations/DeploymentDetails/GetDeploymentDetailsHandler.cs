@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -23,7 +23,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
     {
         public int Id { get; set; }
         public string Status { get; set; }
-        public int ReleaseId { get; set; }
+        public int PackageId { get; set; }
         public int EnvironmentId { get; set; }
         public string EnvironmentDisplayName { get; set; }
         public DateTime DeployedAt { get; set; }
@@ -73,16 +73,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
             var environment = await _database.Environments
                 .FindByProjectAndId(request.ProjectId, deployment.EnvironmentId);
 
-            var release = await _database.Releases
-                .FindByProjectAndId(request.ProjectId, deployment.ReleaseId);
+            var package = await _database.Packages
+                .FindByProjectAndId(request.ProjectId, deployment.PackageId);
 
-            var variablesForEnvironment = release.GetVariablesForEnvironment(environment.Id);
+            var variablesForEnvironment = package.GetVariablesForEnvironment(environment.Id);
             
             return new GetDeploymentDetailsResponse
             {
                 Id = deployment.Id,
                 Status = deployment.Status.ToString(),
-                ReleaseId = deployment.ReleaseId,
+                PackageId = deployment.PackageId,
                 EnvironmentId = environment.Id,
                 EnvironmentDisplayName = environment.DisplayName,
                 DeployedAt = deployment.DeployedAt,

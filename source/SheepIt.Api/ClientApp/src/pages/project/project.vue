@@ -15,7 +15,7 @@
                 </router-link>
                 <router-link
                     class="btn btn-primary link-button"
-                    :to="{ name: 'create-release', params: { projectId: project.id }}"
+                    :to="{ name: 'create-package', params: { projectId: project.id }}"
                 >
                     Edit variables
                 </router-link>
@@ -38,11 +38,11 @@
         />
 
         <h3 class="mt-5">
-            Releases
+            Packages
         </h3>
-        <project-releases
+        <project-packages
             :project="project"
-            :releases="releases"
+            :packages="packages"
         />
 
         <h3 class="mt-5">
@@ -60,7 +60,7 @@
 import getDashboardService from "./_services/get-dashboard-service.js";
 
 import ProjectDashboard from "./_components/project-dashboard.vue";
-import ProjectReleases from "./_components/project-releases.vue";
+import ProjectPackages from "./_components/project-packages.vue";
 import ProjectDeployments from "./_components/project-deployments.vue";
 
 export default {
@@ -68,7 +68,7 @@ export default {
     
     components: {
         'project-dashboard': ProjectDashboard,
-        'project-releases': ProjectReleases,
+        'project-packages': ProjectPackages,
         'project-deployments': ProjectDeployments
     },
     
@@ -80,7 +80,7 @@ export default {
         return {
             deployments: null,
             environments: null,
-            releases: null
+            packages: null
         }
     },
      
@@ -99,7 +99,7 @@ export default {
                 .then(response => {
                     this.environments = response.environments
                     this.deployments = response.deployments
-                    this.releases = response.releases
+                    this.packages = response.packages
                 });
         }
     }

@@ -1,36 +1,36 @@
 <template>
-    <div v-if="release">
-        <h1>Release details</h1>
+    <div v-if="package">
+        <h1>Package details</h1>
 
         <div class="form-group row">
             <label class="col-2 col-form-label">Id</label>
             <div class="col-10">
-                <span>{{ release.id }}</span>
+                <span>{{ package.id }}</span>
             </div>
         </div>
 
         <div class="form-group row">
             <label class="col-2 col-form-label">Project</label>
             <div class="col-10">
-                <span>{{ release.projectId }}</span>
+                <span>{{ package.projectId }}</span>
             </div>
         </div>
 
         <div class="form-group row">
             <label class="col-2 col-form-label">Created At</label>
             <div class="col-10">
-                <humanized-date :date="release.createdAt" />
+                <humanized-date :date="package.createdAt" />
             </div>
         </div>
         
         <variable-details
-            :variables="release.variables"
+            :variables="package.variables"
             :environments="environments"
         />
 
-        <release-deployments
+        <package-deployments
             :project="project"
-            :release="release"
+            :package="package"
         />
     </div>
 </template>
@@ -39,14 +39,14 @@
 import httpService from "./../../common/http/http-service.js";
 
 import VariableDetails from "./_components/variable-details.vue";
-import ReleaseDeployments from "./_components/release-deployments.vue";
+import PackageDeployments from "./_components/package-deployments.vue";
 
 export default {
-    name: 'ReleaseDetails',
+    name: 'PackageDetails',
 
     components: {
         'variable-details': VariableDetails,
-        'release-deployments': ReleaseDeployments
+        'package-deployments': PackageDeployments
     },
 
     props: [
@@ -55,25 +55,25 @@ export default {
     
     data() {
         return {
-            release: null,
+            package: null,
             environments: null
         }
     },
 
     computed: {
-        releaseId() {
-            return this.$route.params.releaseId
+        packageId() {
+            return this.$route.params.packageId
         }
     },
 
     watch: {
         'project': {
             immediate: true,
-            handler: 'getReleaseDetails'
+            handler: 'getPackageDetails'
         },
-        'releaseId': {
+        'packageId': {
             immediate: true,
-            handler: 'getReleaseDetails'
+            handler: 'getPackageDetails'
         }            
     },
 
@@ -82,9 +82,9 @@ export default {
     },
     
     methods: {
-        getReleaseDetails() {
-            getReleaseDetails(this.project.id, this.releaseId)
-                .then(response => this.release = response);
+        getPackageDetails() {
+            getPackageDetails(this.project.id, this.packageId)
+                .then(response => this.package = response);
 
             this.getProjectEnvironments();
         },
@@ -96,8 +96,8 @@ export default {
     }
 };
 
-function getReleaseDetails(projectId, releaseId) {
+function getPackageDetails(projectId, packageId) {
     return httpService
-        .post('api/project/release/get-release-details', { projectId, releaseId });
+        .post('api/project/package/get-package-details', { projectId, packageId });
 }
 </script>

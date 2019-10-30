@@ -5,22 +5,22 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Web;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.Releases
+namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 {
-    public class UpdateReleaseProcessRequest : IRequest<UpdateReleaseProcessResponse>, IProjectRequest
+    public class UpdatePackageProcessRequest : IRequest<UpdatePackageProcessResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
         public IFormFile ZipFile { get; set; }
     }
 
-    public class UpdateReleaseProcessRequestValidator : AbstractValidator<UpdateReleaseProcessRequest>
+    public class UpdatePackageProcessRequestValidator : AbstractValidator<UpdatePackageProcessRequest>
     {
-        public UpdateReleaseProcessRequestValidator()
+        public UpdatePackageProcessRequestValidator()
         {
             RuleFor(x => x.ProjectId)
                 .NotNull();
@@ -30,41 +30,41 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         }
     }
 
-    public class UpdateReleaseProcessResponse
+    public class UpdatePackageProcessResponse
     {
-        public int CreatedReleaseId { get; set; }
+        public int CreatedPackageId { get; set; }
     }
 
     [Route("api")]
     [ApiController]
-    public class UpdateReleaseProcessController : MediatorController
+    public class UpdatePackageProcessController : MediatorController
     {
         [HttpPost]
-        [Route("project/release/update-release-process")]
-        public async Task<UpdateReleaseProcessResponse> UpdateReleaseProcess(
-            [FromForm] UpdateReleaseProcessRequest request)
+        [Route("project/package/update-package-process")]
+        public async Task<UpdatePackageProcessResponse> UpdatePackageProcess(
+            [FromForm] UpdatePackageProcessRequest request)
         {
             return await Handle(request);
         }
     }
 
-    public class UpdateReleaseProcessHandler : IHandler<UpdateReleaseProcessRequest, UpdateReleaseProcessResponse>
+    public class UpdatePackageProcessHandler : IHandler<UpdatePackageProcessRequest, UpdatePackageProcessResponse>
     {
-        private readonly ReleasesStorage _releasesStorage;
+        private readonly PackagesStorage _packagesStorage;
         private readonly IProjectContext _projectContext;
         private readonly DeploymentProcessStorage _deploymentProcessStorage;
 
-        public UpdateReleaseProcessHandler(
-            ReleasesStorage releasesStorage,
+        public UpdatePackageProcessHandler(
+            PackagesStorage packagesStorage,
             IProjectContext projectContext,
             DeploymentProcessStorage deploymentProcessStorage)
         {
-            _releasesStorage = releasesStorage;
+            _packagesStorage = packagesStorage;
             _projectContext = projectContext;
             _deploymentProcessStorage = deploymentProcessStorage;
         }
 
-        public async Task<UpdateReleaseProcessResponse> Handle(UpdateReleaseProcessRequest request)
+        public async Task<UpdatePackageProcessResponse> Handle(UpdatePackageProcessRequest request)
         {
             var zipFileBytes = await request.ZipFile.ToByteArray();
             
@@ -75,24 +75,24 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
                 zipFileBytes: zipFileBytes
             );
 
-            var release = await _releasesStorage.GetNewest(request.ProjectId);
+            var package = await _packagesStorage.GetNewest(request.ProjectId);
 
-            var newRelease = release.WithUpdatedDeploymentProcess(deploymentProcessId);
+            var newPackage = package.WithUpdatedDeploymentProcess(deploymentProcessId);
             
-            var releaseId = await _releasesStorage.Add(newRelease);
+            var packageId = await _packagesStorage.Add(newPackage);
 
-            return new UpdateReleaseProcessResponse
+            return new UpdatePackageProcessResponse
             {
-                CreatedReleaseId = releaseId
+                CreatedPackageId = packageId
             };
         }
     }
     
-    public class UpdateReleaseProcessModule : Module
+    public class UpdatePackageProcessModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            BuildRegistration.Type<UpdateReleaseProcessHandler>()
+            BuildRegistration.Type<UpdatePackageProcessHandler>()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }

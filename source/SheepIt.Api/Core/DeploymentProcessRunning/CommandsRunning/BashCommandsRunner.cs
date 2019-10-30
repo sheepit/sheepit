@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SheepIt.Api.Core.Deployments;
-using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.Utils;
 
 namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning

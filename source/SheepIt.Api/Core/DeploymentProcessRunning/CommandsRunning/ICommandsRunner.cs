@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using SheepIt.Api.Core.Releases;
+using SheepIt.Api.Core.Packages;
 
 namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning
 {

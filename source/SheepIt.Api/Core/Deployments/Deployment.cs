@@ -14,7 +14,7 @@ namespace SheepIt.Api.Core.Deployments
         
         public int Id { get; set; }
         public string ProjectId { get; set; }
-        public int ReleaseId { get; set; }
+        public int PackageId { get; set; }
         public DateTime DeployedAt { get; set; } // todo: started at?
         public int EnvironmentId { get; set; }
         public DeploymentStatus Status { get; set; }
@@ -57,9 +57,9 @@ namespace SheepIt.Api.Core.Deployments
 
     public static class DeploymentFilters
     {
-        public static FilterDefinition<Deployment> OfRelease(this FilterDefinitionBuilder<Deployment> filter, int releaseId)
+        public static FilterDefinition<Deployment> OfPackage(this FilterDefinitionBuilder<Deployment> filter, int packageId)
         {
-            return filter.Eq(deployment => deployment.ReleaseId, releaseId);
+            return filter.Eq(deployment => deployment.PackageId, packageId);
         }
     }
 }

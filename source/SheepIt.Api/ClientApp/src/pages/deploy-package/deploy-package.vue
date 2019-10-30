@@ -1,9 +1,9 @@
 <template>
     <div>
         <h4 class="mt-4">
-            Deploy <release-badge
+            Deploy <package-badge
                 :project-id="project.id"
-                :release-id="releaseId"
+                :package-id="packageId"
             /> to:
         </h4>
         <p>
@@ -23,7 +23,7 @@
 import httpService from "./../../common/http/http-service.js";
 
 export default {
-    name: 'DeployRelease',
+    name: 'DeployPackage',
     
     props: ['project'],
     
@@ -34,8 +34,8 @@ export default {
     },
     
     computed: {
-        releaseId() {
-            return this.$route.params.releaseId
+        packageId() {
+            return this.$route.params.packageId
         }
     },
 
@@ -47,12 +47,12 @@ export default {
         deploy(environmentId) {
             const request = {
                 projectId: this.project.id,
-                releaseId: this.releaseId,
+                packageId: this.packageId,
                 environmentId: environmentId
             };
             
             httpService
-                .post('api/project/deployment/deploy-release', request)
+                .post('api/project/deployment/deploy-package', request)
                 .then(response => this.redirectToDeployment(response.createdDeploymentId))
         },
         redirectToDeployment(deploymentId) {

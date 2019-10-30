@@ -9,15 +9,15 @@ using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.Releases
+namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 {
-    public class GetReleaseDetailsRequest : IRequest<GetReleaseDetailsResponse>, IProjectRequest
+    public class GetPackageDetailsRequest : IRequest<GetPackageDetailsResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
-        public int ReleaseId { get; set; }
+        public int PackageId { get; set; }
     }
 
-    public class GetReleaseDetailsResponse
+    public class GetPackageDetailsResponse
     {
         public int Id { get; set; }
         public string ProjectId { get; set; }
@@ -34,37 +34,37 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
     [Route("api")]
     [ApiController]
-    public class GetReleaseDetailsController : MediatorController
+    public class GetPackageDetailsController : MediatorController
     {
         [HttpPost]
-        [Route("project/release/get-release-details")]
-        public async Task<GetReleaseDetailsResponse> GetReleaseDetails(GetReleaseDetailsRequest request)
+        [Route("project/package/get-package-details")]
+        public async Task<GetPackageDetailsResponse> GetPackageDetails(GetPackageDetailsRequest request)
         {
             return await Handle(request);
         }
     }
 
-    public class GetReleaseDetailsHandler : IHandler<GetReleaseDetailsRequest, GetReleaseDetailsResponse>
+    public class GetPackageDetailsHandler : IHandler<GetPackageDetailsRequest, GetPackageDetailsResponse>
     {
         private readonly SheepItDatabase _database;
 
-        public GetReleaseDetailsHandler(SheepItDatabase database)
+        public GetPackageDetailsHandler(SheepItDatabase database)
         {
             _database = database;
         }
 
-        public async Task<GetReleaseDetailsResponse> Handle(GetReleaseDetailsRequest request)
+        public async Task<GetPackageDetailsResponse> Handle(GetPackageDetailsRequest request)
         {
-            var release = await _database.Releases
-                .FindByProjectAndId(request.ProjectId, request.ReleaseId);
+            var package = await _database.Packages
+                .FindByProjectAndId(request.ProjectId, request.PackageId);
 
-            return new GetReleaseDetailsResponse
+            return new GetPackageDetailsResponse
             {
-                Id = release.Id,
-                ProjectId = release.ProjectId,
-                CreatedAt = release.CreatedAt,
-                Variables = release.Variables.Variables
-                    .Select(values => new GetReleaseDetailsResponse.VariableDto
+                Id = package.Id,
+                ProjectId = package.ProjectId,
+                CreatedAt = package.CreatedAt,
+                Variables = package.Variables.Variables
+                    .Select(values => new GetPackageDetailsResponse.VariableDto
                     {
                         Name = values.Name,
                         DefaultValue = values.DefaultValue,
@@ -75,11 +75,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
         }
     }
 
-    public class GetReleaseDetailsModule : Module
+    public class GetPackageDetailsModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            BuildRegistration.Type<GetReleaseDetailsHandler>()
+            BuildRegistration.Type<GetPackageDetailsHandler>()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }

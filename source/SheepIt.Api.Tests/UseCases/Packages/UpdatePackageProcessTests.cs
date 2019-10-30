@@ -6,11 +6,11 @@ using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Tests.FeatureObjects;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Api.Tests.TestProcess;
-using SheepIt.Api.UseCases.ProjectOperations.Releases;
+using SheepIt.Api.UseCases.ProjectOperations.Packages;
 
-namespace SheepIt.Api.Tests.UseCases.Releases
+namespace SheepIt.Api.Tests.UseCases.Packages
 {
-    public class UpdateReleaseProcessTests : Test<IntegrationTestsFixture>
+    public class UpdatePackageProcessTests : Test<IntegrationTestsFixture>
     {
         private const string ProjectId = "foo";
 
@@ -27,7 +27,7 @@ namespace SheepIt.Api.Tests.UseCases.Releases
         {
             // when
 
-            Func<Task> updatingProcess = () => Fixture.Handle(new UpdateReleaseProcessRequest
+            Func<Task> updatingProcess = () => Fixture.Handle(new UpdatePackageProcessRequest
             {
                 ProjectId = ProjectId,
                 ZipFile = TestProcessZipArchives.TestProcess
@@ -43,7 +43,7 @@ namespace SheepIt.Api.Tests.UseCases.Releases
         {
             // when
             
-            Func<Task> updatingProcess = () => Fixture.Handle(new UpdateReleaseProcessRequest
+            Func<Task> updatingProcess = () => Fixture.Handle(new UpdatePackageProcessRequest
             {
                 ProjectId = ProjectId,
                 ZipFile = TestProcessZipArchives.EmptyArchive
@@ -60,7 +60,7 @@ namespace SheepIt.Api.Tests.UseCases.Releases
         {
             // when
             
-            Func<Task> updatingProcess = () => Fixture.Handle(new UpdateReleaseProcessRequest
+            Func<Task> updatingProcess = () => Fixture.Handle(new UpdatePackageProcessRequest
             {
                 ProjectId = ProjectId,
                 ZipFile = TestProcessZipArchives.InvalidProcessYaml

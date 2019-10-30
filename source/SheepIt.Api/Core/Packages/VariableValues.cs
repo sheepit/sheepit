@@ -4,7 +4,7 @@ using System.Linq;
 using MongoDB.Bson.Serialization.Attributes;
 using SheepIt.Api.Infrastructure.Utils;
 
-namespace SheepIt.Api.Core.Releases
+namespace SheepIt.Api.Core.Packages
 {
     public class VariableCollection
     {

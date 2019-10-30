@@ -12,22 +12,22 @@ using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 using Environment = SheepIt.Api.Core.Environments.Environment;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.Releases
+namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 {
-    public class ListReleaseDeploymentsRequest : IRequest<ListReleaseDeploymentsResponse>, IProjectRequest
+    public class ListPackageDeploymentsRequest : IRequest<ListPackageDeploymentsResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
-        public int ReleaseId { get; set; }
+        public int PackageId { get; set; }
     }
 
-    public class ListReleaseDeploymentsResponse
+    public class ListPackageDeploymentsResponse
     {
         public DeploymentDto[] Deployments { get; set; }
         
         public class DeploymentDto
         {
             public int Id { get; set; }
-            public int ReleaseId { get; set; }
+            public int PackageId { get; set; }
             public DateTime DeployedAt { get; set; }
             public int EnvironmentId { get; set; }
             public string EnvironmentDisplayName { get; set; }
@@ -37,31 +37,31 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
 
     [Route("api")]
     [ApiController]
-    public class ListReleaseDeploymentsController : MediatorController
+    public class ListPackageDeploymentsController : MediatorController
     {
         [HttpPost]
-        [Route("project/release/list-deployments")]
-        public async Task<ListReleaseDeploymentsResponse> ListDeployments(ListReleaseDeploymentsRequest request)
+        [Route("project/package/list-deployments")]
+        public async Task<ListPackageDeploymentsResponse> ListDeployments(ListPackageDeploymentsRequest request)
         {
             return await Handle(request);
         }
     }
 
-    public class ListReleaseDeploymentsHandler : IHandler<ListReleaseDeploymentsRequest, ListReleaseDeploymentsResponse>
+    public class ListPackageDeploymentsHandler : IHandler<ListPackageDeploymentsRequest, ListPackageDeploymentsResponse>
     {
         private readonly SheepItDatabase sheepItDatabase;
 
-        public ListReleaseDeploymentsHandler(SheepItDatabase sheepItDatabase)
+        public ListPackageDeploymentsHandler(SheepItDatabase sheepItDatabase)
         {
             this.sheepItDatabase = sheepItDatabase;
         }
 
-        public async Task<ListReleaseDeploymentsResponse> Handle(ListReleaseDeploymentsRequest options)
+        public async Task<ListPackageDeploymentsResponse> Handle(ListPackageDeploymentsRequest options)
         {
             var deployments = await sheepItDatabase.Deployments
                 .Find(filter => filter.And(
                     filter.FromProject(options.ProjectId),
-                    filter.OfRelease(options.ReleaseId)
+                    filter.OfPackage(options.PackageId)
                 ))
                 .SortBy(deployment => deployment.DeployedAt)
                 .ToArray();
@@ -74,29 +74,29 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Releases
                 inner: environments,
                 outerKeySelector: deployment => deployment.EnvironmentId,
                 innerKeySelector: environment => environment.Id,
-                resultSelector: (deployment, environment) => new ListReleaseDeploymentsResponse.DeploymentDto
+                resultSelector: (deployment, environment) => new ListPackageDeploymentsResponse.DeploymentDto
                 {
                     Id = deployment.Id,
                     EnvironmentId = environment.Id,
                     EnvironmentDisplayName = environment.DisplayName,
                     DeployedAt = deployment.DeployedAt,
-                    ReleaseId = deployment.ReleaseId,
+                    PackageId = deployment.PackageId,
                     Status = deployment.Status.ToString()
                 }
             );
 
-            return new ListReleaseDeploymentsResponse
+            return new ListPackageDeploymentsResponse
             {
                 Deployments = deploymentDtos.ToArray()
             };
         }
     }
     
-    public class ListReleaseDeploymentsModule : Module
+    public class ListPackageDeploymentsModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            BuildRegistration.Type<ListReleaseDeploymentsHandler>()
+            BuildRegistration.Type<ListPackageDeploymentsHandler>()
                 .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
