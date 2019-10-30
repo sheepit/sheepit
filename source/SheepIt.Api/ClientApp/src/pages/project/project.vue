@@ -1,10 +1,16 @@
 <template>
     <div v-if="project">
         <div class="row project-title">
+            <h2 class="display-4">
+                {{ project.id }}
+            </h2>
+        </div>
+        
+        <div class="row">
             <div class="col">
-                <h2 class="display-4">
-                    {{ project.id }}
-                </h2>
+                <h3>
+                    Environments
+                </h3>
             </div>
             <div class="col text-right">
                 <router-link
@@ -13,33 +19,37 @@
                 >
                     Edit environments
                 </router-link>
-                <router-link
-                    class="btn btn-primary link-button"
-                    :to="{ name: 'create-package', params: { projectId: project.id }}"
-                >
-                    Edit variables
-                </router-link>
-                <router-link
-                    class="btn btn-primary link-button"
-                    :to="{ name: 'update-process' }"
-                >
-                    Update process
-                </router-link>
             </div>
         </div>
-        
-        <h3 class="mt-5">
-            Environments
-        </h3>
+
         <project-dashboard
             class="mt-4"
             :project="project"
             :environments="environments"
         />
 
-        <h3 class="mt-5">
-            Packages
-        </h3>
+        <div class="row">
+            <div class="col">
+                <h3>
+                    Packages
+                </h3>
+            </div>
+            <div class="col text-right">
+                <router-link
+                    class="btn btn-primary link-button"
+                    :to="{ name: 'create-package', params: { projectId: project.id }}"
+                >
+                    Create package
+                </router-link>
+                <router-link
+                    class="btn btn-primary link-button"
+                    :to="{ name: 'update-process' }"
+                >
+                    Update process
+                </router-link>    
+            </div>
+        </div>
+
         <project-packages
             :project="project"
             :packages="packages"
@@ -109,6 +119,7 @@ export default {
 <style lang="scss">
 .project-title {
     text-align: left;
+    padding-bottom: 3rem;
 }
 
 .link-button {

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="form">
         <div v-if="package">
             <h4 class="mt-5">
                 Editing variables based on
@@ -15,12 +15,15 @@
             />
         </div>
         
-        <button
-            class="btn btn-success mt-4"
-            @click="createPackage()"
-        >
-            Create package
-        </button>
+        <div class="submit-button-container">
+            <button
+                type="button"
+                class="btn btn-primary"
+                @click="createPackage()"
+            >
+                Create package
+            </button>
+        </div>
     </div>
 </template>
 
