@@ -15,6 +15,7 @@ namespace SheepIt.Api.Core.Packages
         public int Id { get; set; }
         public string ProjectId { get; set; }
         public int DeploymentProcessId { get; set; }
+        public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public VariableCollection Variables { get; set; } = new VariableCollection();
 
