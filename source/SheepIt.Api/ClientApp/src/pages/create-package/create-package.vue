@@ -16,7 +16,15 @@
                         v-model="description"
                         type="text"
                         class="form-control"
+                        :class="{ 'is-invalid': submitted && $v.description.$error }"
                     >
+                    <div
+                        v-if="submitted && $v.description.$error"
+                        class="invalid-feedback"
+                    >
+                        <span v-if="!$v.description.required">Field is required</span>
+                        <span v-if="!$v.description.minLength">Field should have at least 1 character</span>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -46,6 +54,14 @@
                     :environments="environments"
                 />
             </div>
+            <div v-else>
+                <h4 class="mt-5">
+                    Editing variables based on
+                </h4>
+
+                <preloader />
+            </div>
+
             
             <div class="submit-button-container">
                 <button
@@ -61,7 +77,10 @@
 </template>
 
 <script>
+import { required, minLength } from "vuelidate/lib/validators";
+
 import httpService from "./../../common/http/http-service.js";
+import messageService from "./../../common/message/message-service.js";
 
 import createPackageService from "./_services/create-package-service.js";
 
@@ -80,8 +99,8 @@ export default {
         return {
             packagee: null,
             environments: null,
-
-            description: null
+            description: null,
+            submitted: false
         }
     },
 
@@ -94,6 +113,13 @@ export default {
 
     methods: {
         createPackage() {
+            this.submitted = true;
+
+            this.$v.$touch();
+            if (this.$v.$invalid) {
+                return;
+            }
+
             let zipFileData = this.$refs.zipFile.files[0];
             let newVariables = this.packagee
                 ? this.packagee.variables
@@ -125,6 +151,13 @@ export default {
             httpService
                 .post('api/project/environment/list-environments', { projectId: this.project.id })
                 .then(response => this.environments = response.environments);
+        }
+    },
+
+    validations: {
+        description: {
+            required,
+            minLength: minLength(1)
         }
     }
 };

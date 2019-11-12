@@ -18,7 +18,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
     {
         public string ProjectId { get; set; }
         public string Description { get; set; }
-        public string[] VariableUpdatess { get; set; }
         public UpdateVariable[] VariableUpdates { get; set; }
         public IFormFile ZipFile { get; set; }
 
@@ -30,17 +29,20 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         }
     }
 
-//    public class CreatePackageRequestValidator : AbstractValidator<CreatePackageRequest>
-//    {
-//        public CreatePackageRequestValidator()
-//        {
-//            RuleFor(x => x.ProjectId)
-//                .NotNull();
-//            
-//            RuleFor(x => x.ZipFile)
-//                .NotNull();
-//        }
-//    }
+    public class CreatePackageRequestValidator : AbstractValidator<CreatePackageRequest>
+    {
+        public CreatePackageRequestValidator()
+        {
+            RuleFor(x => x.ProjectId)
+                .NotNull();
+            
+            RuleFor(x => x.Description)
+                .NotNull();
+            
+            RuleFor(x => x.ZipFile)
+                .NotNull();
+        }
+    }
 
     public class CreatePackageResponse
     {
@@ -77,18 +79,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         {
             var package = await _packagesStorage.GetNewest(request.ProjectId);
 
-            var variableValues = request
-                .VariableUpdates?
-                .Select(update => new VariableValues
-                {
-                    Name = update.Name,
-                    DefaultValue = update.DefaultValue,
-                    EnvironmentValues = update.EnvironmentValues
-                })
-                .ToArray() ?? new VariableValues[0];
-
             var zipFileBytes = await request.ZipFile.ToByteArray();
-            
             _deploymentProcessStorage.ValidateZipFile(zipFileBytes);
             
             var deploymentProcessId = await _deploymentProcessStorage.Add(
@@ -96,16 +87,32 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                 zipFileBytes: zipFileBytes
             );
 
-            var newPackage = package.WithUpdatedVariables(variableValues);
-            newPackage.Description = request.Description;
-            newPackage.DeploymentProcessId = deploymentProcessId;
+            var variableValues = ComputeVariableValues(request);
 
+            var newPackage = package.WithUpdatedProperties(
+                variableValues,
+                request.Description,
+                deploymentProcessId);
+            
             var newPackageId = await _packagesStorage.Add(newPackage);
 
             return new CreatePackageResponse
             {
                 CreatedPackageId = newPackageId
             };
+        }
+
+        private VariableValues[] ComputeVariableValues(CreatePackageRequest request)
+        {
+            return request
+               .VariableUpdates?
+               .Select(update => new VariableValues
+               {
+                   Name = update.Name,
+                   DefaultValue = update.DefaultValue,
+                   EnvironmentValues = update.EnvironmentValues
+               })
+               .ToArray() ?? new VariableValues[0];
         }
     }
     

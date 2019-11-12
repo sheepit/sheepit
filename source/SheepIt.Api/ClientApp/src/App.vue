@@ -18,7 +18,6 @@ import Project from './pages/project/project.vue'
 import ProjectLayout from './pages/project-layout/project-layout.vue'
 import ProjectList from './pages/project-list/project-list.vue'
 import PackageDetails from './pages/package-details/package-details.vue'
-import UpdateProcess from './pages/update-process/update-process.vue'
 
 const router = new VueRouter({
     routes: [
@@ -126,7 +125,7 @@ const router = new VueRouter({
                                         link: 'project'
                                     },
                                     {
-                                        name: 'edit variables'
+                                        name: 'create package'
                                     }
                                 ]
                             }
@@ -200,26 +199,6 @@ const router = new VueRouter({
                                     {
                                         name: ':packageId'
                                     }
-                                ]
-                            }
-                        },
-                        {
-                            path: 'update-process',
-                            name: 'update-process',
-                            component: UpdateProcess,
-                            meta: {
-                                breadcrumbs: [
-                                    {
-                                        name: 'projects',
-                                        link: 'project-list'
-                                    },
-                                    {
-                                        name: ':projectId',
-                                        link: 'project'
-                                    },
-                                    {
-                                        name: 'update process'
-                                    },
                                 ]
                             }
                         }

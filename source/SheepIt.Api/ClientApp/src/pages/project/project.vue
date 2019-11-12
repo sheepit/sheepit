@@ -40,13 +40,7 @@
                     :to="{ name: 'create-package', params: { projectId: project.id }}"
                 >
                     Create package
-                </router-link>
-                <router-link
-                    class="btn btn-primary link-button"
-                    :to="{ name: 'update-process' }"
-                >
-                    Update process
-                </router-link>    
+                </router-link> 
             </div>
         </div>
 

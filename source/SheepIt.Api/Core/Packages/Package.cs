@@ -23,26 +23,18 @@ namespace SheepIt.Api.Core.Packages
         {
             return Variables.GetForEnvironment(environmentId);
         }
-        
-        public Package WithUpdatedDeploymentProcess(int newDeploymentProcessId)
-        {
-            return new Package
-            {
-                Id = 0,
-                ProjectId = ProjectId,
-                DeploymentProcessId = newDeploymentProcessId,
-                CreatedAt = DateTime.UtcNow,
-                Variables = Variables.Clone()
-            };
-        }
 
-        public Package WithUpdatedVariables(VariableValues[] newVariables)
+        public Package WithUpdatedProperties(
+            VariableValues[] newVariables,
+            string description,
+            int deploymentPackageId)
         {
             return new Package
             {
                 Id = 0,
                 ProjectId = ProjectId,
-                DeploymentProcessId = DeploymentProcessId,
+                DeploymentProcessId = deploymentPackageId,
+                Description = description,
                 CreatedAt = DateTime.UtcNow,
                 Variables = Variables.WithUpdatedVariables(newVariables)
             };
