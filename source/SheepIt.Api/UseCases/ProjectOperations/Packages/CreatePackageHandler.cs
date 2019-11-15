@@ -25,7 +25,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         {
             public string Name { get; set; }
             public string DefaultValue { get; set; }
-            public Dictionary<int, string> EnvironmentValues { get; set; }
+            public Dictionary<int, string> EnvironmentValues { get; set; } =
+                new Dictionary<int, string>();
         }
     }
 
