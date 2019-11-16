@@ -61,17 +61,20 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         private readonly PackagesStorage _packagesStorage;
         private readonly SheepItDatabase _database;
         private readonly DeploymentProcessStorage _deploymentProcessStorage;
+        private readonly ValidateZipFile _validateZipFile;
 
         public CreateProjectHandler(
             Core.Environments.AddEnvironment addEnvironment,
             PackagesStorage packagesStorage,
             SheepItDatabase database,
-            DeploymentProcessStorage deploymentProcessStorage)
+            DeploymentProcessStorage deploymentProcessStorage,
+            ValidateZipFile validateZipFile)
         {
             _addEnvironment = addEnvironment;
             _packagesStorage = packagesStorage;
             _database = database;
             _deploymentProcessStorage = deploymentProcessStorage;
+            _validateZipFile = validateZipFile;
         }
 
         public async Task Handle(CreateProjectRequest request)
@@ -85,7 +88,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             
             var zipFileBytes = await request.ZipFile.ToByteArray();
             
-            _deploymentProcessStorage.ValidateZipFile(zipFileBytes);
+            _validateZipFile.Validate(zipFileBytes);
 
             // persisting
             

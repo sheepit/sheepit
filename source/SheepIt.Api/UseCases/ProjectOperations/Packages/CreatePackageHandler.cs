@@ -67,13 +67,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
     {
         private readonly PackagesStorage _packagesStorage;
         private readonly DeploymentProcessStorage _deploymentProcessStorage;
+        private readonly ValidateZipFile _validateZipFile;
 
         public CreatePackageHandler(
             PackagesStorage packagesStorage,
-            DeploymentProcessStorage deploymentProcessStorage)
+            DeploymentProcessStorage deploymentProcessStorage,
+            ValidateZipFile validateZipFile)
         {
             _packagesStorage = packagesStorage;
             _deploymentProcessStorage = deploymentProcessStorage;
+            _validateZipFile = validateZipFile;
         }
 
         public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
@@ -81,7 +84,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             var package = await _packagesStorage.GetNewest(request.ProjectId);
 
             var zipFileBytes = await request.ZipFile.ToByteArray();
-            _deploymentProcessStorage.ValidateZipFile(zipFileBytes);
+            
+            _validateZipFile.Validate(zipFileBytes);
             
             var deploymentProcessId = await _deploymentProcessStorage.Add(
                 projectId: request.ProjectId,
