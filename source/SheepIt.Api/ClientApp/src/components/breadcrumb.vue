@@ -11,10 +11,10 @@
                         v-if="breadcrumb.link" 
                         :to="{ name: breadcrumb.link }"
                     >
-                        {{ breadcrumb.name }}
+                        {{ breadcrumb.text }}
                     </router-link>
                     <span v-else>
-                        {{ breadcrumb.name }}
+                        {{ breadcrumb.text }}
                     </span>
                 </li>
             </ol>
@@ -39,22 +39,32 @@ export default {
         this.updateBreadcrumbsBasedOnRouting()
     },
     methods: {
-        updateBreadcrumbsBasedOnRouting() {
-            if(!this.$route.meta || !this.$route.meta.breadcrumbs) {
-                this.breadcrumbs = null;
-                return;
+        updateBreadcrumbsBasedOnRouting: function () {
+            this.breadcrumbs = this.getBreadcrumbs();
+        },
+        
+        getBreadcrumbs() {
+            const routerBreadcrumbs = this.$route.meta && this.$route.meta.breadcrumbs
+                ? this.$route.meta.breadcrumbs
+                : null;
+
+            if (!routerBreadcrumbs) {
+                return null;
             }
 
-            this.breadcrumbs = this.$route.meta.breadcrumbs;
+            return routerBreadcrumbs.map(routerBreadcrumb => ({
+                text: this.getBreadcrumbText(routerBreadcrumb.name),
+                link: routerBreadcrumb.link
+            }));
+        },
 
-            this.breadcrumbs = this.breadcrumbs.map(item => {
-                if(item.name && item.name.startsWith(":")){
-                    let temp = item.name.replace(":", "");
-                    item.name = this.$route.params[temp];
-                }
-
-                return item;
-            });
+        getBreadcrumbText(breadcrumbName) {
+            if (breadcrumbName && breadcrumbName.startsWith(":")) {
+                const parameterName = breadcrumbName.replace(":", "");
+                return this.$route.params[parameterName];
+            }
+            
+            return breadcrumbName;
         }
     }
 }
