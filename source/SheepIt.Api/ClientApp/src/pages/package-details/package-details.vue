@@ -1,37 +1,51 @@
 <template>
-    <div v-if="package">
-        <h1>Package details</h1>
-
-        <div class="form-group row">
-            <label class="col-2 col-form-label">Id</label>
-            <div class="col-10">
-                <span>{{ package.id }}</span>
-            </div>
+    <div>
+        <div class="view-title">
+            Package details
         </div>
 
-        <div class="form-group row">
-            <label class="col-2 col-form-label">Project</label>
-            <div class="col-10">
-                <span>{{ package.projectId }}</span>
+        <div v-if="packagee">
+            <div class="form-group row">
+                <label class="col-2 col-form-label">Id</label>
+                <div class="col-10 value">
+                    <span>{{ packagee.id }}</span>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label class="col-2 col-form-label">Created At</label>
-            <div class="col-10">
-                <humanized-date :date="package.createdAt" />
+            <div class="form-group row">
+                <label class="col-2 col-form-label">Project</label>
+                <div class="col-10 value">
+                    <span>{{ packagee.projectId }}</span>
+                </div>
             </div>
-        </div>
-        
-        <variable-details
-            :variables="package.variables"
-            :environments="environments"
-        />
 
-        <package-deployments
-            :project="project"
-            :package="package"
-        />
+            <div class="form-group row">
+                <label class="col-2 col-form-label">Description</label>
+                <div class="col-10 value">
+                    <span>{{ packagee.description }}</span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-2 col-form-label">Created At</label>
+                <div class="col-10 value">
+                    <humanized-date :date="packagee.createdAt" />
+                </div>
+            </div>
+            
+            <variable-details
+                :variables="packagee.variables"
+                :environments="environments"
+            />
+
+            <package-deployments
+                :project="project"
+                :package="packagee"
+            />
+        </div>
+        <div v-else>
+            <preloader />
+        </div>
     </div>
 </template>
 
@@ -55,7 +69,7 @@ export default {
     
     data() {
         return {
-            package: null,
+            packagee: null,
             environments: null
         }
     },
@@ -84,7 +98,7 @@ export default {
     methods: {
         getPackageDetails() {
             getPackageDetails(this.project.id, this.packageId)
-                .then(response => this.package = response);
+                .then(response => this.packagee = response);
 
             this.getProjectEnvironments();
         },
@@ -101,3 +115,10 @@ function getPackageDetails(projectId, packageId) {
         .post('api/project/package/get-package-details', { projectId, packageId });
 }
 </script>
+
+<style lang="scss" scoped>
+.value {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+</style>

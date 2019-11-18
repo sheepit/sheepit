@@ -3,54 +3,60 @@
         <h3 class="mt-5">
             Deployments
         </h3>
-        <expanding-list
-            class="mt-4"
-            :all-items="deployments"
-            initial-length="5"
-        >
-            <template slot-scope="{ items }">
-                <table>
-                    <thead>
-                        <tr>
-                            <th scope="col">
-                                id
-                            </th>
-                            <th scope="col">
-                                status
-                            </th>
-                            <th scope="col">
-                                environment
-                            </th>
-                            <th scope="col">
-                                deployed
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="deployment in items"
-                            :key="deployment.id"
-                        >
-                            <th scope="row">
-                                <deployment-badge
-                                    :project-id="project.id"
-                                    :deployment-id="deployment.id"
-                                />
-                            </th>
-                            <td>
-                                <deployment-status-badge :status="deployment.status" />
-                            </td>
-                            <td>
-                                <span class="badge badge-warning">{{ deployment.environmentDisplayName }}</span>
-                            </td>
-                            <td>
-                                <humanized-date :date="deployment.deployedAt" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </template>
-        </expanding-list>
+
+        <div v-if="deployments && deployments.length > 0">
+            <expanding-list
+                class="mt-4"
+                :all-items="deployments"
+                initial-length="5"
+            >
+                <template slot-scope="{ items }">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    id
+                                </th>
+                                <th scope="col">
+                                    status
+                                </th>
+                                <th scope="col">
+                                    environment
+                                </th>
+                                <th scope="col">
+                                    deployed
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="deployment in items"
+                                :key="deployment.id"
+                            >
+                                <th scope="row">
+                                    <deployment-badge
+                                        :project-id="project.id"
+                                        :deployment-id="deployment.id"
+                                    />
+                                </th>
+                                <td>
+                                    <deployment-status-badge :status="deployment.status" />
+                                </td>
+                                <td>
+                                    <span class="badge badge-warning">{{ deployment.environmentDisplayName }}</span>
+                                </td>
+                                <td>
+                                    <humanized-date :date="deployment.deployedAt" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </template>
+            </expanding-list>
+        </div>
+        <div v-else>
+            No deployments found for this package
+        </div>
     </div>
 </template>
 

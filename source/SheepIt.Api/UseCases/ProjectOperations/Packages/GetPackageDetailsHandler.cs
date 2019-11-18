@@ -21,6 +21,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
     {
         public int Id { get; set; }
         public string ProjectId { get; set; }
+        public string Description { get; set; }
+        
         public DateTime CreatedAt { get; set; }
         public VariableDto[] Variables { get; set; }
 
@@ -62,6 +64,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             {
                 Id = package.Id,
                 ProjectId = package.ProjectId,
+                Description = package.Description,
                 CreatedAt = package.CreatedAt,
                 Variables = package.Variables.Variables
                     .Select(values => new GetPackageDetailsResponse.VariableDto
