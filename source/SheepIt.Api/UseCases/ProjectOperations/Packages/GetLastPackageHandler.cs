@@ -19,6 +19,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
     public class GetLastPackageResponse
     {
         public int Id { get; set; }
+        public string Description { get; set; }
         public string ProjectId { get; set; }
         public DateTime CreatedAt { get; set; }
         public VariableDto[] Variables { get; set; }
@@ -60,6 +61,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             return new GetLastPackageResponse
             {
                 Id = package.Id,
+                Description = package.Description,
                 ProjectId = package.ProjectId,
                 CreatedAt = package.CreatedAt,
                 Variables = package.Variables.Variables

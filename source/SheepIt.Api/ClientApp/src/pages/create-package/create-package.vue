@@ -46,6 +46,7 @@
                     <package-badge
                         :project-id="project.id"
                         :package-id="packagee.id"
+                        :description="packagee.description"
                     />
                 </h4>
                 
