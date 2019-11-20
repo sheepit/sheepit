@@ -32,12 +32,14 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             public DateTime LastDeployedAt { get; set; }
             public int CurrentDeploymentId { get; set; }
             public int CurrentPackageId { get; set; }
+            public string CurrentPackageDescription { get; set; }
         }
         
         public class DeploymentDto
         {
             public int Id { get; set; }
             public int PackageId { get; set; }
+            public string PackageDescription { get; set; }
             public DateTime DeployedAt { get; set; }
             public int EnvironmentId { get; set; }
             public string EnvironmentDisplayName { get; set; }
@@ -48,6 +50,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         {
             public int Id { get; set; }
             public DateTime CreatedAt { get; set; }
+            public string Description { get; set; }
         }
     }
 
@@ -86,8 +89,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 
             return new GetProjectDashboardResponse
             {
-                Environments = EnvironmentList.GetEnvironments(_projectContext.Environments, deployments),
-                Deployments = DeploymentList.GetDeployments(deployments, _projectContext.Environments),
+                Environments = EnvironmentList.GetEnvironments(
+                    _projectContext.Environments, deployments, packages),
+                Deployments = DeploymentList.GetDeployments(
+                    deployments, _projectContext.Environments, packages),
                 Packages = PackageList.GetPackages(packages)
             };
         }

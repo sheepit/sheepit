@@ -29,6 +29,7 @@
                             <package-badge
                                 :project-id="project.id"
                                 :package-id="_package.id"
+                                :description="_package.description"
                             />
                         </td>
                         <td>

@@ -18,7 +18,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             return new GetProjectDashboardResponse.PackageDto
             {
                 Id = package.Id,
-                CreatedAt = package.CreatedAt
+                CreatedAt = package.CreatedAt,
+                Description = package.Description
             };
         }
     }
