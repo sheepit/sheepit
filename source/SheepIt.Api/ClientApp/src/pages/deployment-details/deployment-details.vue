@@ -25,6 +25,7 @@
                         <package-badge
                             :project-id="project.id"
                             :package-id="deployment.packageId"
+                            :description="deployment.packageDescription"
                         />
                     </td>
                     <td>

@@ -24,6 +24,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
         public int Id { get; set; }
         public string Status { get; set; }
         public int PackageId { get; set; }
+        public string PackageDescription { get; set; }
         public int EnvironmentId { get; set; }
         public string EnvironmentDisplayName { get; set; }
         public DateTime DeployedAt { get; set; }
@@ -83,6 +84,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
                 Id = deployment.Id,
                 Status = deployment.Status.ToString(),
                 PackageId = deployment.PackageId,
+                PackageDescription = package.Description,
                 EnvironmentId = environment.Id,
                 EnvironmentDisplayName = environment.DisplayName,
                 DeployedAt = deployment.DeployedAt,
