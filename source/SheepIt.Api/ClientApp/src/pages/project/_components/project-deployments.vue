@@ -31,12 +31,12 @@
                         v-for="deployment in items"
                         :key="deployment.id"
                     >
-                        <th scope="row">
+                        <td>
                             <deployment-badge
                                 :project-id="project.id"
                                 :deployment-id="deployment.id"
                             />
-                        </th>
+                        </td>
                         <td>
                             <deployment-status-badge :status="deployment.status" />
                         </td>
