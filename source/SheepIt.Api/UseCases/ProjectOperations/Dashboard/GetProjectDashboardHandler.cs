@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
@@ -87,10 +89,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 .Find(filter => filter.FromProject(options.ProjectId))
                 .ToArray();
 
+            var environments = await _database.Environments
+                .Find(filter => filter.FromProject(options.ProjectId))
+                .SortBy(environment => environment.Rank)
+                .ToArray();
+            
             return new GetProjectDashboardResponse
             {
                 Environments = EnvironmentList.GetEnvironments(
-                    _projectContext.Environments, deployments, packages),
+                    environments, deployments, packages),
                 Deployments = DeploymentList.GetDeployments(
                     deployments, _projectContext.Environments, packages),
                 Packages = PackageList.GetPackages(packages)
