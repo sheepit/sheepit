@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Logger;
@@ -28,26 +29,26 @@ namespace SheepIt.Api
             
             services.AddSheepItAuthentication(_configuration);
 
-            services.AddMvc(mvcOptions =>
+            services
+                .AddControllers(mvcOptions =>
                 {
                     mvcOptions.Filters.Add(
                         new AuthorizeFilter()
                     );
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddFluentValidation(configuration => 
                     configuration.RegisterValidatorsFromAssemblyContaining<SheepItModule>()
                 );
             
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "sheepIt", Version = "v1" });
-            });
-
-            services.FixSwaggerRegistration();
+//            services.AddSwaggerGen(c =>
+//            {
+//                c.SwaggerDoc("v1", new Info { Title = "sheepIt", Version = "v1" });
+//            });
+//
+//            services.FixSwaggerRegistration();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -77,16 +78,19 @@ namespace SheepIt.Api
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .AllowCredentials()
             );
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             
-            app.UseMvc();
-            
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+//            app.UseSwagger();
+//            app.UseSwaggerUI(c =>
+//            {
+//                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+//            });
         }
     }
 }

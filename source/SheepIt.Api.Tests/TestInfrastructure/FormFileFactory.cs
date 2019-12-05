@@ -1,5 +1,5 @@
 using System.IO;
-using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Http;
 
 namespace SheepIt.Api.Tests.TestInfrastructure
 {

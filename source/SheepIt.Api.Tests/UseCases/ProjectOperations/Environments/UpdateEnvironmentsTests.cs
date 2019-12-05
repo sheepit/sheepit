@@ -203,7 +203,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
         }
 
         [Test]
-        public async Task cannot_edit_nonexistent_environments_details()
+        public void cannot_edit_nonexistent_environments_details()
         {
             // when
             

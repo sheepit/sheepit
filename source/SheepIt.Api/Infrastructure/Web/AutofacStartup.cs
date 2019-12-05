@@ -36,7 +36,7 @@ namespace SheepIt.Api.Infrastructure.Web
             return new AutofacServiceProvider(_webScope);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime applicationLifetime)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApplicationLifetime applicationLifetime)
         {
             _startup.Configure(app, env);
             

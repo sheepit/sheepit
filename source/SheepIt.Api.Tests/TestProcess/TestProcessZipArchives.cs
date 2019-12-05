@@ -1,5 +1,4 @@
-using System.IO;
-using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Http;
 using SheepIt.Api.Tests.TestInfrastructure;
 
 namespace SheepIt.Api.Tests.TestProcess
