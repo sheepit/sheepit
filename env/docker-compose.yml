@@ -17,6 +17,8 @@ services:
       ASPNETCORE_HTTPS_PORT: 443
       ASPNETCORE_Kestrel__Certificates__Default__Password: password
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+    networks:
+      - sheepit-network
     volumes:
       - sheepit-volume:/data
       - ${HOME}/.aspnet/https:/https/
@@ -41,6 +43,35 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
 
+  postgres:
+    image: postgres:12-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - sheepit-network
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "postgres"
+    ports:
+      - 8082:80
+    depends_on:
+      - postgres
+    networks:
+      - sheepit-network
+
 volumes:
-    sheepit-volume:
-    mongo-volume:
+  sheepit-volume:
+  mongo-volume:
+  postgres-volume:
+
+networks:
+  sheepit-network:
+    driver: bridge
