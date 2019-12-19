@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using Autofac;
-using Microsoft.Extensions.Configuration;
+using System.IO;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using SheepIt.Api.Infrastructure;
+using SheepIt.Api.Infrastructure.Configuration;
 using SheepIt.Api.Infrastructure.Logger;
-using SheepIt.Api.Infrastructure.Mongo;
-using SheepIt.Api.Infrastructure.Web;
 
 namespace SheepIt.Api
 {
@@ -20,32 +20,27 @@ namespace SheepIt.Api
             
             try
             {
+                var hostBuilder = Host
+                    .CreateDefaultBuilder(args)
+                    .UseSerilog()
+                    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                    .ConfigureWebHostDefaults(webBuilder =>
+                    {
+                        webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
+                        webBuilder.UseStartup<Startup>();
+                    });
+            
+                hostBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddOperatingSystemJsonFile();
+                    config.AddEnvironmentJsonFile();
+                });
+
+                var host = hostBuilder.Build();
+
                 Log.Information("Starting web host");
 
-                var containerBuilder = new ContainerBuilder();
-
-                containerBuilder.RegisterModule<SheepItModule>();
-
-                containerBuilder.RegisterInstance(configuration)
-                    .As<IConfiguration>()
-                    .SingleInstance();
-
-                using (var container = containerBuilder.Build())
-                {
-                    var webApp = container.Resolve<WebApp>();
-
-                    var idProvider = container.Resolve<IdentityProvider>();
-                    idProvider
-                        .InitializeIdentities(new List<string>
-                        {
-                            "Environment",
-                            "DeploymentProcess"
-                        })
-                        .GetAwaiter()
-                        .GetResult();
-                    
-                    webApp.StartAndWait(args);
-                }
+                host.Run();
             }
             catch (Exception exception)
             {
@@ -60,5 +55,12 @@ namespace SheepIt.Api
                 Log.CloseAndFlush();
             }
         }
+        
+//        public static IHostBuilder CreateHostBuilder(string[] args) =>
+//            Host.CreateDefaultBuilder(args)
+//                .ConfigureWebHostDefaults(webBuilder =>
+//                {
+//                    webBuilder.UseStartup<Startup>();
+//                });
     }
 }

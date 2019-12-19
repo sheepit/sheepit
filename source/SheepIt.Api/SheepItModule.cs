@@ -35,7 +35,6 @@ namespace SheepIt.Api
         private static void RegisterInfrastructure(ContainerBuilder builder)
         {
             builder.RegisterModule<ErrorHandlingModule>();
-            builder.RegisterModule<WebModule>();
             builder.RegisterModule<MongoDbModule>();
             builder.RegisterModule<SheepItAuthenticationModule>();
         }
