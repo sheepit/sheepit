@@ -1,14 +1,10 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using SheepIt.Api.Infrastructure.Mongo;
+﻿using System;
 
 namespace SheepIt.Api.Core.Projects
 {
-    public class Project : IDocumentWithId<string>
+    public class Project
     {
-        [BsonId]
-        public ObjectId ObjectId { get; set; }
-        
+        public Guid ObjectId { get; set; }
         public string Id { get; set; }
     }
 }

@@ -2,10 +2,8 @@
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectManagement
@@ -38,19 +36,17 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
     public class ListProjectsHandler : IHandler<ListProjectsRequest, ListProjectsResponse>
     {
-        private readonly SheepItDatabase _database;
+        private readonly GetProjectsListQuery _getProjectsListQuery;
 
-        public ListProjectsHandler(SheepItDatabase database)
+        public ListProjectsHandler(GetProjectsListQuery getProjectsListQuery)
         {
-            _database = database;
+            _getProjectsListQuery = getProjectsListQuery;
         }
 
         public async Task<ListProjectsResponse> Handle(ListProjectsRequest request)
         {
-            var projects = await _database.Projects
-                .FindAll()
-                .SortBy(deployment => deployment.Id)
-                .ToArray();
+            var projects = await _getProjectsListQuery
+                .Get();
 
             return new ListProjectsResponse
             {

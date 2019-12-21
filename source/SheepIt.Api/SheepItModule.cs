@@ -6,6 +6,7 @@ using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Packages;
+using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Mongo;
@@ -61,6 +62,8 @@ namespace SheepIt.Api
             builder.RegisterModule<GetEnvironmentsForUpdateModule>();
             builder.RegisterModule<ListProjectsModule>();
             builder.RegisterModule<UpdateEnvironmentsModule>();
+            builder.RegisterType<ProjectRepository>();
+            builder.RegisterType<GetProjectsListQuery>();
             
             // Deployment
             builder.RegisterModule<GetDeploymentDetailsModule>();

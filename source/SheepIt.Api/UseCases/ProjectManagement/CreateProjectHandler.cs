@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
@@ -10,7 +9,6 @@ using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Web;
 
@@ -59,22 +57,22 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     {
         private readonly Core.Environments.AddEnvironment _addEnvironment;
         private readonly PackagesStorage _packagesStorage;
-        private readonly SheepItDatabase _database;
         private readonly DeploymentProcessStorage _deploymentProcessStorage;
         private readonly ValidateZipFile _validateZipFile;
+        private readonly ProjectRepository _projectRepository;
 
         public CreateProjectHandler(
             Core.Environments.AddEnvironment addEnvironment,
             PackagesStorage packagesStorage,
-            SheepItDatabase database,
             DeploymentProcessStorage deploymentProcessStorage,
-            ValidateZipFile validateZipFile)
+            ValidateZipFile validateZipFile,
+            ProjectRepository projectRepository)
         {
             _addEnvironment = addEnvironment;
             _packagesStorage = packagesStorage;
-            _database = database;
             _deploymentProcessStorage = deploymentProcessStorage;
             _validateZipFile = validateZipFile;
+            _projectRepository = projectRepository;
         }
 
         public async Task Handle(CreateProjectRequest request)
@@ -91,9 +89,10 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             _validateZipFile.Validate(zipFileBytes);
 
             // persisting
-            
-            await _database.Projects.InsertOneAsync(new Project
+
+            _projectRepository.Create(new Project
             {
+                ObjectId = Guid.NewGuid(),
                 Id = request.ProjectId
             });
 
@@ -115,11 +114,13 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 ProjectId = request.ProjectId,
                 DeploymentProcessId = deploymentProcessId
             });
+
+            await _projectRepository.Save();
         }
 
         private async Task ValidateProjectIdUniqueness(string projectId)
         {
-            var duplicatedProject = await _database.Projects.TryFindById(projectId);
+            var duplicatedProject = await _projectRepository.Get(projectId);
             
             if (duplicatedProject != null)
             {

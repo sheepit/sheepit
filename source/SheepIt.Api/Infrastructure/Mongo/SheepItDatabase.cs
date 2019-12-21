@@ -20,7 +20,6 @@ namespace SheepIt.Api.Infrastructure.Mongo
         }
 
         public IMongoCollection<Environment> Environments => MongoDatabase.GetCollection<Environment>();
-        public IMongoCollection<Project> Projects => MongoDatabase.GetCollection<Project>();
         public IMongoCollection<Deployment> Deployments => MongoDatabase.GetCollection<Deployment>();
         public IMongoCollection<Package> Packages => MongoDatabase.GetCollection<Package>();
         public IMongoCollection<DeploymentProcess> DeploymentProcesses => MongoDatabase.GetCollection<DeploymentProcess>();
