@@ -6,6 +6,7 @@ using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
@@ -48,16 +49,21 @@ namespace SheepIt.Api.UseCases.Dashboard
     public class GetDashboardHandler : IHandler<GetDashboardRequest, GetDashboardResponse>
     {
         private readonly SheepItDatabase _database;
+        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
 
-        public GetDashboardHandler(SheepItDatabase database)
+        public GetDashboardHandler(
+            SheepItDatabase database,
+            GetEnvironmentsQuery getEnvironmentsQuery)
         {
             _database = database;
+            _getEnvironmentsQuery = getEnvironmentsQuery;
         }
 
         public async Task<GetDashboardResponse> Handle(GetDashboardRequest options)
         {
             var deployments = await GetLastDeployments();
-            var environments = await GetEnvironmentsByIds(deployments.Select(x => x.EnvironmentId));
+            var environments = await _getEnvironmentsQuery
+                .Get(deployments.Select(x => x.EnvironmentId)); 
 
             var mappedDeployments = MapDeployments(deployments, environments);
             return new GetDashboardResponse
@@ -68,10 +74,7 @@ namespace SheepIt.Api.UseCases.Dashboard
 
         private async Task<List<Environment>> GetEnvironmentsByIds(IEnumerable<int> environmentIds)
         {
-            return await _database
-                .Environments
-                .Find(x => x.In(field => field.Id, environmentIds))
-                .ToListAsync();
+            return await _getEnvironmentsQuery.Get(environmentIds); 
         }
 
         private async Task<List<Deployment>> GetLastDeployments()

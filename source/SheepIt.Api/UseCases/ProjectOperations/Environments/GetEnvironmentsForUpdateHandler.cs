@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.Environments;
+using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Environments
@@ -48,19 +48,17 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
     public class GetEnvironmentsForUpdateHandler : IHandler<GetEnvironmentsForUpdateRequest, GetEnvironmentsForUpdateResponse>
     {
-        private readonly SheepItDatabase _database;
+        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
 
-        public GetEnvironmentsForUpdateHandler(SheepItDatabase database)
+        public GetEnvironmentsForUpdateHandler(GetEnvironmentsQuery getEnvironmentsQuery)
         {
-            _database = database;
+            _getEnvironmentsQuery = getEnvironmentsQuery;
         }
 
         public async Task<GetEnvironmentsForUpdateResponse> Handle(GetEnvironmentsForUpdateRequest request)
         {
-            var environments = await _database.Environments
-                .Find(filter => filter.FromProject(request.ProjectId))
-                .Sort(sort => sort.Ascending(environment => environment.Rank)) // todo: create ByRank extension
-                .ToArray();
+            var environments = await _getEnvironmentsQuery
+                .GetOrderedByRank(request.ProjectId);
             
             return new GetEnvironmentsForUpdateResponse
             {

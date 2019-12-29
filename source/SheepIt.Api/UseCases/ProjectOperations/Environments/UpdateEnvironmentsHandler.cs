@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
+using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
+using SheepIt.Api.Core.Projects;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 using Environment = SheepIt.Api.Core.Environments.Environment;
 
@@ -64,22 +65,23 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
     public class UpdateEnvironmentsHandler : IHandler<UpdateEnvironmentsRequest>
     {
-        private readonly SheepItDatabase _database;
-        private readonly IdentityProvider _identityProvider;
+        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
+        private readonly IdStorage _idStorage;
+        private readonly EnvironmentRepository _environmentRepository;
 
         public UpdateEnvironmentsHandler(
-            SheepItDatabase database,
-            IdentityProvider identityProvider)
+            GetEnvironmentsQuery getEnvironmentsQuery,
+            IdStorage idStorage,
+            EnvironmentRepository environmentRepository)
         {
-            _database = database;
-            _identityProvider = identityProvider;
+            _getEnvironmentsQuery = getEnvironmentsQuery;
+            _idStorage = idStorage;
+            _environmentRepository = environmentRepository;
         }
         
         public async Task Handle(UpdateEnvironmentsRequest request)
         {
-            var currentEnvironments = await _database.Environments
-                .Find(filter => filter.FromProject(request.ProjectId))
-                .ToListAsync();
+            var currentEnvironments = await _getEnvironmentsQuery.Get(request.ProjectId); 
 
             foreach (var environmentDto in request.Environments)
             {
@@ -87,14 +89,13 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
                 {
                     var newEnvironment = new Environment
                     {
-                        // todo: should we use identity provider?
-                        Id = await _database.Environments.GetNextId(),
+                        Id = await _idStorage.GetNext(typeof(Environment)),
                         ProjectId = request.ProjectId,
                         Rank = environmentDto.Rank,
                         DisplayName = environmentDto.DisplayName
                     };
-                    
-                    await _database.Environments.InsertOneAsync(newEnvironment);
+
+                    _environmentRepository.Add(newEnvironment); 
                 }
                 else
                 {
@@ -111,10 +112,12 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
                     environmentToUpdate.Rank = environmentDto.Rank;
                     environmentToUpdate.DisplayName = environmentDto.DisplayName;
-                    
-                    await _database.Environments.ReplaceOneById(environmentToUpdate);
+
+                    _environmentRepository.Update(environmentToUpdate);
                 }
             }
+            
+            await _environmentRepository.Save();
         }
     }
 }

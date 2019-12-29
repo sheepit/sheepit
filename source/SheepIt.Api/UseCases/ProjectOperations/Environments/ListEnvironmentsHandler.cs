@@ -4,6 +4,7 @@ using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Environments;
+using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
@@ -42,18 +43,20 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
     public class ListEnvironmentsHandler : IHandler<ListEnvironmentsRequest, ListEnvironmentsResponse>
     {
         private readonly SheepItDatabase _database;
+        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
 
-        public ListEnvironmentsHandler(SheepItDatabase database)
+        public ListEnvironmentsHandler(
+            SheepItDatabase database,
+            GetEnvironmentsQuery getEnvironmentsQuery)
         {
             _database = database;
+            _getEnvironmentsQuery = getEnvironmentsQuery;
         }
 
         public async Task<ListEnvironmentsResponse> Handle(ListEnvironmentsRequest request)
         {
-            var environments = await _database.Environments
-                .Find(filter => filter.FromProject(request.ProjectId))
-                .SortBy(environment => environment.Rank)
-                .ToArray();
+            var environments = await _getEnvironmentsQuery
+                .GetOrderedByRank(request.ProjectId);
 
             return new ListEnvironmentsResponse
             {

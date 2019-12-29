@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
@@ -72,11 +73,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
     {
         private readonly SheepItDatabase _database;
         private readonly IProjectContext _projectContext;
+        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
 
-        public GetProjectDashboardHandler(SheepItDatabase database, IProjectContext projectContext)
+        public GetProjectDashboardHandler(
+            SheepItDatabase database,
+            IProjectContext projectContext,
+            GetEnvironmentsQuery getEnvironmentsQuery)
         {
             _database = database;
             _projectContext = projectContext;
+            _getEnvironmentsQuery = getEnvironmentsQuery;
         }
 
         public async Task<GetProjectDashboardResponse> Handle(GetProjectDashboardRequest options)
@@ -89,15 +95,13 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 .Find(filter => filter.FromProject(options.ProjectId))
                 .ToArray();
 
-            var environments = await _database.Environments
-                .Find(filter => filter.FromProject(options.ProjectId))
-                .SortBy(environment => environment.Rank)
-                .ToArray();
+            var environments = await _getEnvironmentsQuery
+                .GetOrderedByRank(options.ProjectId);
             
             return new GetProjectDashboardResponse
             {
                 Environments = EnvironmentList.GetEnvironments(
-                    environments, deployments, packages),
+                    environments.ToArray(), deployments, packages),
                 Deployments = DeploymentList.GetDeployments(
                     deployments, _projectContext.Environments, packages),
                 Packages = PackageList.GetPackages(packages)

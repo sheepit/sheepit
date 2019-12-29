@@ -5,6 +5,7 @@ using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Infrastructure.Handlers;
@@ -60,10 +61,14 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
     public class GetDeploymentDetailsHandler : IHandler<GetDeploymentDetailsRequest, GetDeploymentDetailsResponse>
     {
         private readonly SheepItDatabase _database;
+        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
 
-        public GetDeploymentDetailsHandler(SheepItDatabase database)
+        public GetDeploymentDetailsHandler(
+            SheepItDatabase database,
+            GetEnvironmentsQuery getEnvironmentsQuery)
         {
             _database = database;
+            _getEnvironmentsQuery = getEnvironmentsQuery;
         }
 
         public async Task<GetDeploymentDetailsResponse> Handle(GetDeploymentDetailsRequest request)
@@ -71,8 +76,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
             var deployment = await _database.Deployments
                 .FindByProjectAndId(request.ProjectId, request.DeploymentId);
 
-            var environment = await _database.Environments
-                .FindByProjectAndId(request.ProjectId, deployment.EnvironmentId);
+            var environment = await _getEnvironmentsQuery
+                .GetByProjectAndId(request.ProjectId, deployment.EnvironmentId);
 
             var package = await _database.Packages
                 .FindByProjectAndId(request.ProjectId, deployment.PackageId);

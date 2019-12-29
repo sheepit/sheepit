@@ -6,6 +6,7 @@ using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
@@ -50,10 +51,14 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
     public class ListPackageDeploymentsHandler : IHandler<ListPackageDeploymentsRequest, ListPackageDeploymentsResponse>
     {
         private readonly SheepItDatabase sheepItDatabase;
+        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
 
-        public ListPackageDeploymentsHandler(SheepItDatabase sheepItDatabase)
+        public ListPackageDeploymentsHandler(
+            SheepItDatabase sheepItDatabase,
+            GetEnvironmentsQuery getEnvironmentsQuery)
         {
             this.sheepItDatabase = sheepItDatabase;
+            _getEnvironmentsQuery = getEnvironmentsQuery;
         }
 
         public async Task<ListPackageDeploymentsResponse> Handle(ListPackageDeploymentsRequest options)
@@ -65,10 +70,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                 ))
                 .SortBy(deployment => deployment.DeployedAt)
                 .ToArray();
-            
-            var environments = await sheepItDatabase.Environments
-                .Find(filter => filter.FromProject(options.ProjectId))
-                .ToArray();
+
+            var environments = await _getEnvironmentsQuery
+                .Get(options.ProjectId);
             
             var deploymentDtos = deployments.Join(
                 inner: environments,
