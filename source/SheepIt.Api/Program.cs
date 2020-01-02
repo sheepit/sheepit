@@ -39,14 +39,15 @@ namespace SheepIt.Api
                 var host = hostBuilder.Build();
 
                 Log.Information("Starting web host");
-
+                
                 host.Run();
             }
             catch (Exception exception)
             {
-                Console.Error.WriteLine(exception.ToString(), "Terminated unexpectedly!");
-                
                 Log.Fatal(exception, "Terminated unexpectedly!");
+                
+                Console.WriteLine("Terminated unexpectedly!");
+                Console.Error.WriteLine(exception.ToString());
                 
                 throw;
             }
@@ -55,12 +56,5 @@ namespace SheepIt.Api
                 Log.CloseAndFlush();
             }
         }
-        
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
     }
 }

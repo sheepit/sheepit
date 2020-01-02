@@ -8,12 +8,11 @@ namespace SheepIt.Api.Infrastructure.Web
     {
         public static async Task<byte[]> ToByteArray(this IFormFile file)
         {
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
+            await using var memoryStream = new MemoryStream();
+            
+            await file.CopyToAsync(memoryStream);
 
-                return memoryStream.ToArray();
-            }
+            return memoryStream.ToArray();
         }
     }
 }

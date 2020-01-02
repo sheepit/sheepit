@@ -43,7 +43,8 @@ namespace SheepIt.Api
                 
 
             services.AddDbContext<SheepItDbContext>(options =>
-                options.UseNpgsql(_configuration.GetConnectionString("SheepItContext")));
+                options.UseNpgsql(_configuration.GetConnectionString("SheepItContext"))
+                );
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -58,7 +59,11 @@ namespace SheepIt.Api
                 app.UseHsts();
             }
 
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            app.UseCors(options => options
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+            );
 
             app.UseHttpsRedirection();
 
@@ -75,7 +80,10 @@ namespace SheepIt.Api
             app.UseAuthorization();
             app.UseAuthentication();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
         
         public void ConfigureContainer(ContainerBuilder builder) {
