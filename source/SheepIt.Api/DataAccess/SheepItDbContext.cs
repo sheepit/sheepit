@@ -25,14 +25,5 @@ namespace SheepIt.Api.DataAccess
 
             modelBuilder.ApplySequenceConfiguration<Environment>();
         }
-
-        public static DbContextOptions<SheepItDbContext> CreateOptions(IConfiguration configuration)
-        {
-            var connectionString = configuration.GetConnectionString("SheepItContext");
-
-            return new DbContextOptionsBuilder<SheepItDbContext>()
-                .UseNpgsql(connectionString)
-                .Options;
-        } 
     }
 }

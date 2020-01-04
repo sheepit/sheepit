@@ -16,7 +16,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         {
             _dbContext = dbContext;
         }
-
+    
         public Task<List<Project>> Get()
         {
             var query = _dbContext

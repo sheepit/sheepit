@@ -8,6 +8,7 @@ using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -70,11 +71,6 @@ namespace SheepIt.Api.UseCases.Dashboard
             {
                 LastDeployments = mappedDeployments
             };
-        }
-
-        private async Task<List<Environment>> GetEnvironmentsByIds(IEnumerable<int> environmentIds)
-        {
-            return await _getEnvironmentsQuery.Get(environmentIds); 
         }
 
         private async Task<List<Deployment>> GetLastDeployments()

@@ -81,7 +81,10 @@ namespace SheepIt.Api.Tests.TestInfrastructure
         private SheepItDbContext CreateSheepItDbContext()
         {
             var configuration = _container.Resolve<IConfiguration>();
-            var dbContextOptions = SheepItDbContext.CreateOptions(configuration);
+            
+            var dbContextOptions = new DbContextOptionsBuilder<SheepItDbContext>()
+                .UseNpgsql(configuration.GetConnectionString("SheepItContext"))
+                .Options;
             
             return new SheepItDbContext(dbContextOptions);
         }
