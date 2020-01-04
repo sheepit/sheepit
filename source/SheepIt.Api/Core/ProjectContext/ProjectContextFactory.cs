@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.Projects;
-using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Core.ProjectContext
 {
@@ -12,16 +11,13 @@ namespace SheepIt.Api.Core.ProjectContext
 
     public class ProjectContextFactory : IProjectContextFactory
     {
-        private readonly SheepItDatabase _database;
         private readonly ProjectRepository _projectRepository;
         private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
 
         public ProjectContextFactory(
-            SheepItDatabase database,
             ProjectRepository projectRepository,
             GetEnvironmentsQuery getEnvironmentsQuery)
         {
-            _database = database;
             _projectRepository = projectRepository;
             _getEnvironmentsQuery = getEnvironmentsQuery;
         }

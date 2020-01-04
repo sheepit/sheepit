@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Packages;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -120,7 +121,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
         private async Task ValidateProjectIdUniqueness(string projectId)
         {
-            var duplicatedProject = await _projectRepository.Get(projectId);
+            var duplicatedProject = await _projectRepository.TryGet(projectId);
             
             if (duplicatedProject != null)
             {

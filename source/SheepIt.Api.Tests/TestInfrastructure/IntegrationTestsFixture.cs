@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
+using SheepIt.Api.UseCases.ProjectManagement;
 
 namespace SheepIt.Api.Tests.TestInfrastructure
 {
@@ -19,11 +23,20 @@ namespace SheepIt.Api.Tests.TestInfrastructure
 
             _container = builder.Build();
 
-            DropDatabase();
+            ClearDatabase();
+            DropMongoDatabase();
             InitializeIdentityProvider();
         }
 
-        private void DropDatabase()
+        private void ClearDatabase()
+        {
+            using var dbContext = CreateSheepItDbContext();
+            
+            dbContext.Database.EnsureDeleted();
+            dbContext.Database.Migrate();
+        }
+
+        private void DropMongoDatabase()
         {
             var databaseName = Database.MongoDatabase.DatabaseNamespace.DatabaseName;
 
@@ -45,12 +58,32 @@ namespace SheepIt.Api.Tests.TestInfrastructure
         }
 
         private SheepItDatabase Database => _container.Resolve<SheepItDatabase>();
-        
+
         public async Task<TResponse> Handle<TResponse>(IRequest<TResponse> request)
         {
-            var mediator = _container.Resolve<HandlerMediator>();
-
+            using var scope = BeginDbContextScope();
+            
+            var mediator = scope.Resolve<HandlerMediator>();
+                
             return await mediator.Handle(request);
+        }
+
+        public ILifetimeScope BeginDbContextScope()
+        {
+            return _container.BeginLifetimeScope(builder =>
+            {
+                builder.Register(context => CreateSheepItDbContext())
+                    .SingleInstance()
+                    .AsSelf();
+            });
+        }
+
+        private SheepItDbContext CreateSheepItDbContext()
+        {
+            var configuration = _container.Resolve<IConfiguration>();
+            var dbContextOptions = SheepItDbContext.CreateOptions(configuration);
+            
+            return new SheepItDbContext(dbContextOptions);
         }
 
         public TResolved Resolve<TResolved>() => _container.Resolve<TResolved>();

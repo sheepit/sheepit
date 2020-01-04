@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using SheepIt.Api.Core.Projects;
 using Environment = SheepIt.Api.Core.Environments.Environment;
 
@@ -24,15 +25,14 @@ namespace SheepIt.Api.DataAccess
 
             modelBuilder.ApplySequenceConfiguration<Environment>();
         }
-    }
 
-    public class SheepItDbContextFactory : IDesignTimeDbContextFactory<SheepItDbContext>
-    {
-        public SheepItDbContext CreateDbContext(string[] args)
+        public static DbContextOptions<SheepItDbContext> CreateOptions(IConfiguration configuration)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<SheepItDbContext>();
-            optionsBuilder.UseNpgsql(@"Host=localhost;Database=sheepit;Username=postgres;Password=postgres", opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds));
-            return new SheepItDbContext(optionsBuilder.Options);
-        }
+            var connectionString = configuration.GetConnectionString("SheepItContext");
+
+            return new DbContextOptionsBuilder<SheepItDbContext>()
+                .UseNpgsql(connectionString)
+                .Options;
+        } 
     }
 }

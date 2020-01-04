@@ -10,7 +10,7 @@ namespace SheepIt.Api.Core.ProjectContext
             
             builder.RegisterType<ProjectContextFactory>()
                 .As<IProjectContextFactory>()
-                .SingleInstance();
+                .InstancePerDependency();
         }
     }
 }

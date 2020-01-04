@@ -16,16 +16,35 @@ namespace SheepIt.Api.Core.Projects
 
         public async Task<Project> Get(Guid objectId)
         {
-            return await _dbContext
+            var projectOrNull = await _dbContext
                 .Projects
-                .FirstOrDefaultAsync(x => x.ObjectId == objectId);
+                .FirstOrDefaultAsync(project => project.ObjectId == objectId);
+            
+            if (projectOrNull == null)
+            {
+                throw new InvalidOperationException($"Project with objectId {objectId} was not found.");
+            }
+            
+            return projectOrNull;
         }
         
         public async Task<Project> Get(string id)
         {
+            var projectOrNull = await TryGet(id);
+
+            if (projectOrNull == null)
+            {
+                throw new InvalidOperationException($"Project with id {id} was not found.");
+            }
+            
+            return projectOrNull;
+        }
+
+        public async Task<Project> TryGet(string id)
+        {
             return await _dbContext
                 .Projects
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(project => project.Id == id);
         }
 
         public Project Create(Project project)

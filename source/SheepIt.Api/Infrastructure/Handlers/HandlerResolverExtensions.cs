@@ -11,7 +11,7 @@ namespace SheepIt.Api.Infrastructure.Handlers
         {
             handlerResolver.RegisterIn(builder)
                 .As<IHandler<TRequest, TResponse>>()
-                .SingleInstance();
+                .InstancePerDependency();
         }
     }
 }

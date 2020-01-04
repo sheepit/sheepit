@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.Api.Core.ProjectContext;
@@ -18,7 +19,9 @@ namespace SheepIt.Api.Tests.Core.ProjectContext
             
             var nonexistentProjectId = "foo";
             
-            var projectContextFactory = Fixture.Resolve<IProjectContextFactory>();
+            using var dbContextScope = Fixture.BeginDbContextScope();
+            
+            var projectContextFactory = dbContextScope.Resolve<IProjectContextFactory>();
             
             // when
             
@@ -44,7 +47,10 @@ namespace SheepIt.Api.Tests.Core.ProjectContext
             
             // when
 
-            var projectContext = await Fixture.Resolve<IProjectContextFactory>()
+            using var dbContextScope = Fixture.BeginDbContextScope();
+
+            var projectContext = await dbContextScope
+                .Resolve<IProjectContextFactory>()
                 .Create(projectId);
             
             // then
