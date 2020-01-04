@@ -48,6 +48,12 @@ namespace SheepIt.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // todo: [rt] should this be here?
+            using (var dbContext = app.ApplicationServices.GetService<SheepItDbContext>())
+            {
+                dbContext.Database.Migrate();
+            }
+            
             if (env.IsDevelopment())
             {
                 // todo: do we really need this? we have SPA anyway
