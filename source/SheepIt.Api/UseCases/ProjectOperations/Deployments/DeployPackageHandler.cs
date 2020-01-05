@@ -52,8 +52,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         private readonly IProjectContext _projectContext;
         private readonly SheepItDatabase _database;
         private readonly DeploymentProcessDirectoryFactory _deploymentProcessDirectoryFactory;
-        private readonly DeploymentProcessStorage _deploymentProcessStorage;
         private readonly SheepItDbContext _dbContext;
+        private readonly IClock _clock;
 
         public DeployPackageHandler(
             DeploymentsStorage deploymentsStorage,
@@ -62,8 +62,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             IProjectContext projectContext,
             SheepItDatabase database,
             DeploymentProcessDirectoryFactory deploymentProcessDirectoryFactory,
-            DeploymentProcessStorage deploymentProcessStorage,
-            SheepItDbContext dbContext)
+            SheepItDbContext dbContext,
+            IClock clock)
         {
             _deploymentsStorage = deploymentsStorage;
             _deploymentProcessSettings = deploymentProcessSettings;
@@ -71,8 +71,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             _projectContext = projectContext;
             _database = database;
             _deploymentProcessDirectoryFactory = deploymentProcessDirectoryFactory;
-            _deploymentProcessStorage = deploymentProcessStorage;
             _dbContext = dbContext;
+            _clock = clock;
         }
 
         public async Task<DeployPackageResponse> Handle(DeployPackageRequest request)
@@ -86,7 +86,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             {
                 PackageId = package.Id,
                 ProjectId = request.ProjectId,
-                DeployedAt = DateTime.UtcNow,
+                DeployedAt = _clock.UtcNow,
                 EnvironmentId = request.EnvironmentId,
                 Status = DeploymentStatus.InProgress
             };
@@ -116,7 +116,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
                 var deploymentWorkingDir = _deploymentProcessSettings.WorkingDir
                     .AddSegment(project.Id)
                     .AddSegment("deploying-packages")
-                    .AddSegment($"{DateTime.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_package-{package.Id}");
+                    .AddSegment($"{_clock.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_package-{package.Id}");
 
                 // todo: make asynchronous
                 var processDirectory = _deploymentProcessDirectoryFactory.CreateFromZip(
