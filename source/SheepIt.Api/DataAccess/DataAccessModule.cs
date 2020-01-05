@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using SheepIt.Api.DataAccess.Sequencing;
 
 namespace SheepIt.Api.DataAccess
 {

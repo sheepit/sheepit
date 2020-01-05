@@ -8,6 +8,7 @@ using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.DataAccess;
+using SheepIt.Api.DataAccess.Sequencing;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 using Environment = SheepIt.Api.Core.Environments.Environment;
@@ -89,13 +90,13 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
                 {
                     var newEnvironment = new Environment
                     {
-                        Id = await _idStorage.GetNext(typeof(Environment)),
+                        Id = await _idStorage.GetNext(IdSequence.Environment),
                         ProjectId = request.ProjectId,
                         Rank = environmentDto.Rank,
                         DisplayName = environmentDto.DisplayName
                     };
 
-                    _environmentRepository.Add(newEnvironment); 
+                    _environmentRepository.Add(newEnvironment);
                 }
                 else
                 {

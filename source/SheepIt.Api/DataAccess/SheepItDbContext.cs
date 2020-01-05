@@ -2,6 +2,7 @@
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Core.Projects;
+using SheepIt.Api.DataAccess.Sequencing;
 using Environment = SheepIt.Api.Core.Environments.Environment;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Local - db sets are created by EF
@@ -26,10 +27,10 @@ namespace SheepIt.Api.DataAccess
             modelBuilder.ApplyConfiguration(new ProjectMap());
             
             modelBuilder.ApplyConfiguration(new EnvironmentMap());
-            modelBuilder.ApplySequenceConfiguration<Environment>();
+            modelBuilder.ApplySequenceConfiguration(IdSequence.Environment);
 
             modelBuilder.ApplyConfiguration(new PackageMap());
-            modelBuilder.ApplySequenceConfiguration<Package>();
+            modelBuilder.ApplySequenceConfiguration(IdSequence.Package);
         }
     }
 }

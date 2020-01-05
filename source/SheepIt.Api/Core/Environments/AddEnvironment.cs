@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.DataAccess;
+using SheepIt.Api.DataAccess.Sequencing;
 using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Core.Environments
@@ -27,7 +28,7 @@ namespace SheepIt.Api.Core.Environments
         
         public async Task Add(string projectId, string displayName)
         {
-            var id = await _idStorage.GetNext(typeof(Environment));
+            var id = await _idStorage.GetNext(IdSequence.Environment);
             
             var environment = new Environment
             {
