@@ -42,7 +42,7 @@ namespace SheepIt.Api
                 );
                 
             services.AddDbContext<SheepItDbContext>(options =>
-                options.UseNpgsql(_configuration.GetConnectionString("SheepItContext"))
+                options.UseNpgsql(_configuration.GetConnectionString(SheepItDbContext.ConnectionStringName))
             );
         }
 

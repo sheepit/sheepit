@@ -2,13 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using SheepIt.Api.Core.Environments;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Infrastructure;
 using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.DataAccess
 {
     public class SheepItDbContext : DbContext
     {
+        public static string ConnectionStringName = "SheepItContext";
+        
         public DbSet<Project> Projects { get; set; }
         public DbSet<Environment> Environments { get; set; }
         
@@ -24,6 +29,26 @@ namespace SheepIt.Api.DataAccess
             modelBuilder.ApplyConfiguration(new EnvironmentMap());
 
             modelBuilder.ApplySequenceConfiguration<Environment>();
+
+            modelBuilder.ApplyConfiguration(new PackageMap());
+        }
+    }
+    
+    // ReSharper disable once UnusedMember.Global - this class is used by EF CLI tool, e.g. when creating migrations
+    public class SheepItDbContextFactory : IDesignTimeDbContextFactory<SheepItDbContext>
+    {
+        public SheepItDbContext CreateDbContext(string[] args)
+        {
+            var configuration = ConfigurationFactory.CreateConfiguration(args);
+            var connectionString = configuration.GetConnectionString(SheepItDbContext.ConnectionStringName);
+
+            var optionsBuilder = new DbContextOptionsBuilder<SheepItDbContext>();
+            
+            optionsBuilder.UseNpgsql(connectionString, opts => opts
+                .CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds)
+            );
+            
+            return new SheepItDbContext(optionsBuilder.Options);
         }
     }
 }

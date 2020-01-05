@@ -99,7 +99,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             };
         }
 
-        private async Task RunDeployment(Project project, Package package, Deployment deployment,
+        private async Task RunDeployment(Project project, PackageMongoEntity package, Deployment deployment,
             DeploymentProcess deploymentProcess)
         {
             try

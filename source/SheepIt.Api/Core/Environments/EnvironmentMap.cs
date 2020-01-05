@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SheepIt.Api.Core.Environments;
 
-namespace SheepIt.Api.DataAccess
+namespace SheepIt.Api.Core.Environments
 {
     public class EnvironmentMap : IEntityTypeConfiguration<Environment>
     {

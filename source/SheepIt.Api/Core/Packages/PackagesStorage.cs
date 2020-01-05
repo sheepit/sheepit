@@ -13,7 +13,7 @@ namespace SheepIt.Api.Core.Packages
             _database = database;
         }
 
-        public async Task<int> Add(Package package)
+        public async Task<int> Add(PackageMongoEntity package)
         {
             var nextId = await _database.Packages.GetNextId();
             
@@ -24,7 +24,7 @@ namespace SheepIt.Api.Core.Packages
             return nextId;
         }
 
-        public async Task<Package> GetNewest(string projectId)
+        public async Task<PackageMongoEntity> GetNewest(string projectId)
         {
             return await _database.Packages
                 .Find(filter => filter.FromProject(projectId))

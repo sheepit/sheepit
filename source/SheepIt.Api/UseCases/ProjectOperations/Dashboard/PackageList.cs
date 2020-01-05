@@ -5,7 +5,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 {
     public static class PackageList
     {
-        public static GetProjectDashboardResponse.PackageDto[] GetPackages(Package[] packages)
+        public static GetProjectDashboardResponse.PackageDto[] GetPackages(PackageMongoEntity[] packages)
         {
             return packages
                 .OrderByDescending(package => package.CreatedAt)
@@ -13,7 +13,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 .ToArray();
         }
 
-        private static GetProjectDashboardResponse.PackageDto MapPackage(Package package)
+        private static GetProjectDashboardResponse.PackageDto MapPackage(PackageMongoEntity package)
         {
             return new GetProjectDashboardResponse.PackageDto
             {
