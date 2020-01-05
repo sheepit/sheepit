@@ -1,9 +1,8 @@
 using System;
-using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Core.Environments
 {
-    public class Environment : IDocumentInProject
+    public class Environment
     {
         public Guid ObjectId { get; set; }
         public int Id { get; set; }

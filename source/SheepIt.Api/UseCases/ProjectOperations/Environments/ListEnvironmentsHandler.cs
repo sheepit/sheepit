@@ -2,12 +2,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Environments
@@ -42,14 +40,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
     public class ListEnvironmentsHandler : IHandler<ListEnvironmentsRequest, ListEnvironmentsResponse>
     {
-        private readonly SheepItDatabase _database;
         private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
 
         public ListEnvironmentsHandler(
-            SheepItDatabase database,
             GetEnvironmentsQuery getEnvironmentsQuery)
         {
-            _database = database;
             _getEnvironmentsQuery = getEnvironmentsQuery;
         }
 

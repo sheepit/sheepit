@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
 using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.DeploymentProcessRunning;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
@@ -15,7 +14,6 @@ using SheepIt.Api.Core.Packages;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.DataAccess.Sequencing;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Time;
 
@@ -50,7 +48,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         private readonly DeploymentProcessSettings _deploymentProcessSettings;
         private readonly DeploymentProcessRunner _deploymentProcessRunner;
         private readonly IProjectContext _projectContext;
-        private readonly SheepItDatabase _database;
         private readonly DeploymentProcessDirectoryFactory _deploymentProcessDirectoryFactory;
         private readonly SheepItDbContext _dbContext;
         private readonly IClock _clock;
@@ -60,7 +57,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             DeploymentProcessSettings deploymentProcessSettings,
             DeploymentProcessRunner deploymentProcessRunner,
             IProjectContext projectContext,
-            SheepItDatabase database,
             DeploymentProcessDirectoryFactory deploymentProcessDirectoryFactory,
             SheepItDbContext dbContext,
             IClock clock,
@@ -69,7 +65,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             _deploymentProcessSettings = deploymentProcessSettings;
             _deploymentProcessRunner = deploymentProcessRunner;
             _projectContext = projectContext;
-            _database = database;
             _deploymentProcessDirectoryFactory = deploymentProcessDirectoryFactory;
             _dbContext = dbContext;
             _clock = clock;

@@ -1,17 +1,13 @@
 using Autofac;
 using Autofac.Features.ResolveAnything;
-using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.DeploymentProcessRunning;
-using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.ErrorHandling;
-using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Time;
-using SheepIt.Api.Infrastructure.Web;
 using SheepIt.Api.UseCases.Dashboard;
 using SheepIt.Api.UseCases.ProjectManagement;
 using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
@@ -19,7 +15,6 @@ using SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails;
 using SheepIt.Api.UseCases.ProjectOperations.Deployments;
 using SheepIt.Api.UseCases.ProjectOperations.Environments;
 using SheepIt.Api.UseCases.ProjectOperations.Packages;
-using SystemClock = Microsoft.Extensions.Internal.SystemClock;
 
 namespace SheepIt.Api
 {
@@ -38,7 +33,6 @@ namespace SheepIt.Api
         private static void RegisterInfrastructure(ContainerBuilder builder)
         {
             builder.RegisterModule<ErrorHandlingModule>();
-            builder.RegisterModule<MongoDbModule>();
             builder.RegisterModule<SheepItAuthenticationModule>();
             builder.RegisterModule<TimeModule>();
         }

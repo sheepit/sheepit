@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
-using SheepIt.Api.DataAccess;
 using SheepIt.Api.DataAccess.Sequencing;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;

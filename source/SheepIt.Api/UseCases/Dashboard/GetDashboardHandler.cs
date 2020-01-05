@@ -5,13 +5,10 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments.Queries;
-using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 using Environment = SheepIt.Api.Core.Environments.Environment;
 
@@ -50,16 +47,13 @@ namespace SheepIt.Api.UseCases.Dashboard
 
     public class GetDashboardHandler : IHandler<GetDashboardRequest, GetDashboardResponse>
     {
-        private readonly SheepItDatabase _database;
         private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
         private readonly SheepItDbContext _dbContext;
 
         public GetDashboardHandler(
-            SheepItDatabase database,
             GetEnvironmentsQuery getEnvironmentsQuery,
             SheepItDbContext dbContext)
         {
-            _database = database;
             _getEnvironmentsQuery = getEnvironmentsQuery;
             _dbContext = dbContext;
         }

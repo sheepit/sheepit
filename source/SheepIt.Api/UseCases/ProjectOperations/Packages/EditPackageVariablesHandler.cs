@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;

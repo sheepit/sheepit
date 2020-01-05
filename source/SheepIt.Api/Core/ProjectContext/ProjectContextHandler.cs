@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Autofac;
-using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 

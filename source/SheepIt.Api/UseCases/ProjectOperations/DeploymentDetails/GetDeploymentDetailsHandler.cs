@@ -3,15 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
@@ -62,16 +59,13 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
 
     public class GetDeploymentDetailsHandler : IHandler<GetDeploymentDetailsRequest, GetDeploymentDetailsResponse>
     {
-        private readonly SheepItDatabase _database;
         private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
         private readonly SheepItDbContext _dbContext;
 
         public GetDeploymentDetailsHandler(
-            SheepItDatabase database,
             GetEnvironmentsQuery getEnvironmentsQuery,
             SheepItDbContext dbContext)
         {
-            _database = database;
             _getEnvironmentsQuery = getEnvironmentsQuery;
             _dbContext = dbContext;
         }
