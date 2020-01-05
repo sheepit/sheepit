@@ -1,5 +1,5 @@
 # Build backend
-FROM microsoft/dotnet:2.1-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build-env
 WORKDIR /app
 COPY SheepIt.Api/. .
 RUN dotnet restore
@@ -15,7 +15,7 @@ COPY SheepIt.Api/ClientApp/. .
 RUN npm run build
 
 # Build runtime image
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS final
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0 AS final
 WORKDIR /app
 COPY --from=build-env /app/out .
 COPY --from=build-stage-frontend /wwwroot ./wwwroot
