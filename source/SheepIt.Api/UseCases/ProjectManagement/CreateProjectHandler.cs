@@ -57,23 +57,26 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     public class CreateProjectHandler : IHandler<CreateProjectRequest>
     {
         private readonly Core.Environments.AddEnvironment _addEnvironment;
-        private readonly PackagesStorage _packagesStorage;
         private readonly DeploymentProcessStorage _deploymentProcessStorage;
         private readonly ValidateZipFile _validateZipFile;
         private readonly ProjectRepository _projectRepository;
+        private readonly SheepItDbContext _dbContext;
+        private readonly PackageFactory _packageFactory;
 
         public CreateProjectHandler(
             Core.Environments.AddEnvironment addEnvironment,
-            PackagesStorage packagesStorage,
             DeploymentProcessStorage deploymentProcessStorage,
             ValidateZipFile validateZipFile,
-            ProjectRepository projectRepository)
+            ProjectRepository projectRepository,
+            SheepItDbContext dbContext,
+            PackageFactory packageFactory)
         {
             _addEnvironment = addEnvironment;
-            _packagesStorage = packagesStorage;
             _deploymentProcessStorage = deploymentProcessStorage;
             _validateZipFile = validateZipFile;
             _projectRepository = projectRepository;
+            _dbContext = dbContext;
+            _packageFactory = packageFactory;
         }
 
         public async Task Handle(CreateProjectRequest request)
@@ -108,16 +111,14 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             );
 
             // first package is created so other operations can copy it
-            await _packagesStorage.Add(new Package
-            {
-                ObjectId = Guid.NewGuid(),
-                Variables = new VariableCollection(),
-                CreatedAt = DateTime.UtcNow,
-                ProjectId = request.ProjectId,
-                DeploymentProcessId = deploymentProcessId
-            });
+            var firstPackage = await _packageFactory.CreateFirstPackage(
+                projectId: request.ProjectId,
+                deploymentProcessId: deploymentProcessId
+            );
 
-            await _projectRepository.Save();
+            _dbContext.Packages.Add(firstPackage);
+
+            await _dbContext.SaveChangesAsync();
         }
 
         private async Task ValidateProjectIdUniqueness(string projectId)

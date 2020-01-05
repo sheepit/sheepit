@@ -47,16 +47,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class GetLastPackageHandler : IHandler<GetLastPackageRequest, GetLastPackageResponse>
     {
-        private readonly PackagesStorage _packagesStorage;
+        private readonly PackageRepository _packageRepository;
 
-        public GetLastPackageHandler(PackagesStorage packagesStorage)
+        public GetLastPackageHandler(PackageRepository packageRepository)
         {
-            _packagesStorage = packagesStorage;
+            _packageRepository = packageRepository;
         }
 
         public async Task<GetLastPackageResponse> Handle(GetLastPackageRequest request)
         {
-            var package = await _packagesStorage.GetNewest(request.ProjectId);
+            var package = await _packageRepository.GetNewest(request.ProjectId);
 
             return new GetLastPackageResponse
             {

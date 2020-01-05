@@ -66,26 +66,29 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class CreatePackageHandler : IHandler<CreatePackageRequest, CreatePackageResponse>
     {
-        private readonly PackagesStorage _packagesStorage;
+        private readonly PackageRepository _packageRepository;
         private readonly DeploymentProcessStorage _deploymentProcessStorage;
         private readonly ValidateZipFile _validateZipFile;
         private readonly SheepItDbContext _dbContext;
+        private readonly PackageFactory _packageFactory;
 
         public CreatePackageHandler(
-            PackagesStorage packagesStorage,
+            PackageRepository packageRepository,
             DeploymentProcessStorage deploymentProcessStorage,
             ValidateZipFile validateZipFile,
-            SheepItDbContext dbContext)
+            SheepItDbContext dbContext,
+            PackageFactory packageFactory)
         {
-            _packagesStorage = packagesStorage;
+            _packageRepository = packageRepository;
             _deploymentProcessStorage = deploymentProcessStorage;
             _validateZipFile = validateZipFile;
             _dbContext = dbContext;
+            _packageFactory = packageFactory;
         }
 
         public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
         {
-            var package = await _packagesStorage.GetNewest(request.ProjectId);
+            var package = await _packageRepository.GetNewest(request.ProjectId);
 
             var zipFileBytes = await request.ZipFile.ToByteArray();
             
@@ -98,19 +101,20 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
             var variableValues = ComputeVariableValues(request);
 
-            var newPackage = package.WithUpdatedProperties(
-                newVariables: variableValues,
-                description: request.Description,
-                deploymentPackageId: deploymentProcessId
+            var newPackage = await _packageFactory.CreatePackageWithUpdatedProperties(
+                package,
+                variableValues,
+                request.Description,
+                deploymentProcessId
             );
-            
-            var newPackageId = await _packagesStorage.Add(newPackage);
 
+            _dbContext.Packages.Add(newPackage);
+            
             await _dbContext.SaveChangesAsync();
 
             return new CreatePackageResponse
             {
-                CreatedPackageId = newPackageId
+                CreatedPackageId = newPackage.Id
             };
         }
 

@@ -14,20 +14,6 @@ namespace SheepIt.Api.Core.Projects
             _dbContext = dbContext;
         }
 
-        public async Task<Project> Get(Guid objectId)
-        {
-            var projectOrNull = await _dbContext
-                .Projects
-                .FirstOrDefaultAsync(project => project.ObjectId == objectId);
-            
-            if (projectOrNull == null)
-            {
-                throw new InvalidOperationException($"Project with objectId {objectId} was not found.");
-            }
-            
-            return projectOrNull;
-        }
-        
         public async Task<Project> Get(string id)
         {
             var projectOrNull = await TryGet(id);
@@ -50,11 +36,6 @@ namespace SheepIt.Api.Core.Projects
         public Project Create(Project project)
         {
             return _dbContext.Projects.Add(project).Entity;
-        }
-
-        public async Task<int> Save()
-        {
-            return await _dbContext.SaveChangesAsync();
         }
     }
 }

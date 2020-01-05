@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Packages;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
@@ -38,24 +39,34 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class EditPackageVariablesHandler : IHandler<EditPackageVariablesRequest>
     {
-        private readonly PackagesStorage _packagesStorage;
+        private readonly PackageRepository _packageRepository;
+        private readonly SheepItDbContext _dbContext;
+        private readonly PackageFactory _packageFactory;
 
-        public EditPackageVariablesHandler(PackagesStorage packagesStorage)
+        public EditPackageVariablesHandler(
+            PackageRepository packageRepository,
+            SheepItDbContext dbContext,
+            PackageFactory packageFactory)
         {
-            _packagesStorage = packagesStorage;
+            _packageRepository = packageRepository;
+            _dbContext = dbContext;
+            _packageFactory = packageFactory;
         }
 
         public async Task Handle(EditPackageVariablesRequest request)
         {
-            var package = await _packagesStorage.GetNewest(request.ProjectId);
+            var package = await _packageRepository.GetNewest(request.ProjectId);
             
             var variableValues = request.NewVariables
                 .Select(update => VariableValues.Create(update.Name, update.DefaultValue, update.EnvironmentValues))
                 .ToArray();
-            
-            var newPackage = package.WithNewVariables(variableValues);
 
-            await _packagesStorage.Add(newPackage);
+            var newPackage = _packageFactory.CreatePackageWithNewVariables(
+                basePackage: package,
+                newVariables: variableValues
+            );
+
+            _dbContext.Add(newPackage);
         }
     }
     
