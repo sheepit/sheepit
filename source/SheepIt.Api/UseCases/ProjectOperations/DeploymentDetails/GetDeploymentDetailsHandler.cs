@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments.Queries;
@@ -77,8 +78,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
 
         public async Task<GetDeploymentDetailsResponse> Handle(GetDeploymentDetailsRequest request)
         {
-            var deployment = await _database.Deployments
-                .FindByProjectAndId(request.ProjectId, request.DeploymentId);
+            var deployment = await _dbContext.Deployments.FindByIdAndProjectId(
+                projectId: request.ProjectId,
+                deploymentId: request.DeploymentId
+            );
 
             var environment = await _getEnvironmentsQuery
                 .GetByProjectAndId(request.ProjectId, deployment.EnvironmentId);
@@ -98,13 +101,14 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
                 PackageDescription = package.Description,
                 EnvironmentId = environment.Id,
                 EnvironmentDisplayName = environment.DisplayName,
-                DeployedAt = deployment.DeployedAt,
+                DeployedAt = deployment.StartedAt,
                 StepResults = GetStepResults(deployment),
                 Variables = variablesForEnvironment
                     .Select(MapVariableForEnvironment)
                     .ToArray()
             };
         }
+
 
         private GetDeploymentDetailsResponse.CommandOutput[] GetStepResults(Deployment deployment)
         {

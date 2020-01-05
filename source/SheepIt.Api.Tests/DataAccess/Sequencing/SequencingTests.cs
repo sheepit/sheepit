@@ -12,7 +12,7 @@ namespace SheepIt.Api.Tests.DataAccess.Sequencing
     public class SequencingTests : Test<IntegrationTestsFixture>
     {
         [Test]
-        public async Task sequence_creates_subsequent_numbers_starting_with_zero()
+        public async Task sequence_creates_subsequent_numbers_starting_with_one()
         {
             using var dbContextScope = Fixture.BeginDbContextScope();
             

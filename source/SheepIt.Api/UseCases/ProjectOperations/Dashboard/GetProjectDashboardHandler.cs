@@ -45,7 +45,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             public int Id { get; set; }
             public int PackageId { get; set; }
             public string PackageDescription { get; set; }
-            public DateTime DeployedAt { get; set; }
+            public DateTime DeployedAt { get; set; } // todo: [rt] started at
             public int EnvironmentId { get; set; }
             public string EnvironmentDisplayName { get; set; }
             public string Status { get; set; }
@@ -92,9 +92,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 
         public async Task<GetProjectDashboardResponse> Handle(GetProjectDashboardRequest options)
         {
-            var deployments = await _database.Deployments
-                .Find(filter => filter.FromProject(options.ProjectId))
-                .ToArray();
+            var deployments = await _dbContext.Deployments
+                .Where(deployment => deployment.ProjectId == options.ProjectId)
+                .ToArrayAsync();
 
             var packages = await _dbContext.Packages
                 .Where(package => package.ProjectId == options.ProjectId)
@@ -107,8 +107,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             {
                 Environments = EnvironmentList.GetEnvironments(
                     environments.ToArray(), deployments, packages),
+                
                 Deployments = DeploymentList.GetDeployments(
                     deployments, _projectContext.Environments, packages),
+                
                 Packages = PackageList.GetPackages(packages)
             };
         }

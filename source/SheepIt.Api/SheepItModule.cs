@@ -49,7 +49,6 @@ namespace SheepIt.Api
             builder.RegisterModule<ProjectContextModule>();
             builder.RegisterModule<PackageModule>();
             
-            builder.RegisterType<DeploymentsStorage>().AsSelf();
             builder.RegisterType<PackageRepository>().AsSelf();
             builder.RegisterType<DeploymentProcess>().AsSelf();
             builder.RegisterModule<DeploymentProcessModule>();

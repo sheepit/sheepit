@@ -1,21 +1,16 @@
-﻿using System;
+using System;
 using System.Linq;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Driver;
-using SheepIt.Api.Infrastructure.Mongo;
 
 namespace SheepIt.Api.Core.Deployments
 {
-    public class Deployment : IDocumentWithId<int>, IDocumentInProject
+    public class Deployment
     {
-        [BsonId]
-        public ObjectId ObjectId { get; set; }
+        public Guid ObjectId { get; set; }
         
         public int Id { get; set; }
         public string ProjectId { get; set; }
         public int PackageId { get; set; }
-        public DateTime DeployedAt { get; set; } // todo: started at?
+        public DateTime StartedAt { get; set; }
         public int EnvironmentId { get; set; }
         public DeploymentStatus Status { get; set; }
         public ProcessOutput ProcessOutput { get; set; }
@@ -33,8 +28,9 @@ namespace SheepIt.Api.Core.Deployments
         {
             Status = DeploymentStatus.ExecutionFailed;
         }
-    }
 
+    }
+    
     public enum DeploymentStatus
     {
         InProgress,
@@ -53,13 +49,5 @@ namespace SheepIt.Api.Core.Deployments
         public bool Successful { get; set; }
         public string Command { get; set; }
         public string[] Output { get; set; }
-    }
-
-    public static class DeploymentFilters
-    {
-        public static FilterDefinition<Deployment> OfPackage(this FilterDefinitionBuilder<Deployment> filter, int packageId)
-        {
-            return filter.Eq(deployment => deployment.PackageId, packageId);
-        }
     }
 }

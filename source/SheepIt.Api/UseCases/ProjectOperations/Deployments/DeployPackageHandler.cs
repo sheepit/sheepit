@@ -13,6 +13,7 @@ using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.DataAccess;
+using SheepIt.Api.DataAccess.Sequencing;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -46,7 +47,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 
     public class DeployPackageHandler : IHandler<DeployPackageRequest, DeployPackageResponse>
     {
-        private readonly DeploymentsStorage _deploymentsStorage;
         private readonly DeploymentProcessSettings _deploymentProcessSettings;
         private readonly DeploymentProcessRunner _deploymentProcessRunner;
         private readonly IProjectContext _projectContext;
@@ -54,18 +54,18 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         private readonly DeploymentProcessDirectoryFactory _deploymentProcessDirectoryFactory;
         private readonly SheepItDbContext _dbContext;
         private readonly IClock _clock;
+        private readonly IdStorage _idStorage;
 
         public DeployPackageHandler(
-            DeploymentsStorage deploymentsStorage,
             DeploymentProcessSettings deploymentProcessSettings,
             DeploymentProcessRunner deploymentProcessRunner,
             IProjectContext projectContext,
             SheepItDatabase database,
             DeploymentProcessDirectoryFactory deploymentProcessDirectoryFactory,
             SheepItDbContext dbContext,
-            IClock clock)
+            IClock clock,
+            IdStorage idStorage)
         {
-            _deploymentsStorage = deploymentsStorage;
             _deploymentProcessSettings = deploymentProcessSettings;
             _deploymentProcessRunner = deploymentProcessRunner;
             _projectContext = projectContext;
@@ -73,6 +73,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             _deploymentProcessDirectoryFactory = deploymentProcessDirectoryFactory;
             _dbContext = dbContext;
             _clock = clock;
+            _idStorage = idStorage;
         }
 
         public async Task<DeployPackageResponse> Handle(DeployPackageRequest request)
@@ -84,30 +85,38 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 
             var deployment = new Deployment
             {
+                Id = await _idStorage.GetNext(IdSequence.Deployment),
                 PackageId = package.Id,
                 ProjectId = request.ProjectId,
-                DeployedAt = _clock.UtcNow,
+                StartedAt = _clock.UtcNow,
                 EnvironmentId = request.EnvironmentId,
                 Status = DeploymentStatus.InProgress
             };
-            
-            var deploymentId = await _deploymentsStorage.Add(deployment);
 
+            _dbContext.Deployments.Add(deployment);
+            
             var deploymentProcess = await _database.DeploymentProcesses
                 .Find(builder => builder
                     .Eq(process => process.Id, package.DeploymentProcessId)
                 )
                 .SingleAsync();
 
-            await RunDeployment(_projectContext.Project, package, deployment, deploymentProcess);
+            // todo: [rt] think if this double SaveChanges is a good solution
+            
+            await _dbContext.SaveChangesAsync();
+
+            // todo: [rt] it looks like the deployment could run asynchronously
+            RunDeployment(_projectContext.Project, package, deployment, deploymentProcess);
+            
+            await _dbContext.SaveChangesAsync();
 
             return new DeployPackageResponse
             {
-                CreatedDeploymentId = deploymentId
+                CreatedDeploymentId = deployment.Id
             };
         }
 
-        private async Task RunDeployment(Project project, Package package, Deployment deployment,
+        private void RunDeployment(Project project, Package package, Deployment deployment,
             DeploymentProcess deploymentProcess)
         {
             try
@@ -131,18 +140,12 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
                 );
 
                 deployment.MarkFinished(processOutput);
-
-                await _database.Deployments
-                    .ReplaceOneById(deployment);
             }
             catch (Exception)
             {
                 // todo: log exception
 
                 deployment.MarkExecutionFailed();
-
-                await _database.Deployments
-                    .ReplaceOneById(deployment);
 
                 throw;
             }

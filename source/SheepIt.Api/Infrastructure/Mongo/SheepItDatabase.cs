@@ -19,7 +19,6 @@ namespace SheepIt.Api.Infrastructure.Mongo
             MongoDatabase = MongoClient.GetDatabase(name: settings.DatabaseName);
         }
 
-        public IMongoCollection<Deployment> Deployments => MongoDatabase.GetCollection<Deployment>();
         public IMongoCollection<DeploymentProcess> DeploymentProcesses => MongoDatabase.GetCollection<DeploymentProcess>();
     }
 

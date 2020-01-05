@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -52,24 +54,25 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
     {
         private readonly SheepItDatabase sheepItDatabase;
         private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
+        private readonly SheepItDbContext _dbContext;
 
         public ListPackageDeploymentsHandler(
             SheepItDatabase sheepItDatabase,
-            GetEnvironmentsQuery getEnvironmentsQuery)
+            GetEnvironmentsQuery getEnvironmentsQuery,
+            SheepItDbContext dbContext)
         {
             this.sheepItDatabase = sheepItDatabase;
             _getEnvironmentsQuery = getEnvironmentsQuery;
+            _dbContext = dbContext;
         }
 
         public async Task<ListPackageDeploymentsResponse> Handle(ListPackageDeploymentsRequest options)
         {
-            var deployments = await sheepItDatabase.Deployments
-                .Find(filter => filter.And(
-                    filter.FromProject(options.ProjectId),
-                    filter.OfPackage(options.PackageId)
-                ))
-                .SortBy(deployment => deployment.DeployedAt)
-                .ToArray();
+            var deployments = await _dbContext.Deployments
+                .Where(deployment => deployment.ProjectId == options.ProjectId)
+                .Where(deployment => deployment.PackageId == options.PackageId)
+                .OrderBy(deployment => deployment.StartedAt)
+                .ToArrayAsync();
 
             var environments = await _getEnvironmentsQuery
                 .Get(options.ProjectId);
@@ -83,7 +86,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                     Id = deployment.Id,
                     EnvironmentId = environment.Id,
                     EnvironmentDisplayName = environment.DisplayName,
-                    DeployedAt = deployment.DeployedAt,
+                    DeployedAt = deployment.StartedAt,
                     PackageId = deployment.PackageId,
                     Status = deployment.Status.ToString()
                 }

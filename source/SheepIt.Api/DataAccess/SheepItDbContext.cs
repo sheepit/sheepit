@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Core.Projects;
@@ -16,6 +17,7 @@ namespace SheepIt.Api.DataAccess
         public DbSet<Project> Projects { get; private set; }
         public DbSet<Environment> Environments { get; private set; }
         public DbSet<Package> Packages { get; private set; }
+        public DbSet<Deployment> Deployments { get; private set; }
         
         public SheepItDbContext(DbContextOptions<SheepItDbContext> option)
             : base(option)
@@ -31,6 +33,9 @@ namespace SheepIt.Api.DataAccess
 
             modelBuilder.ApplyConfiguration(new PackageMap());
             modelBuilder.ApplySequenceConfiguration(IdSequence.Package);
+
+            modelBuilder.ApplyConfiguration(new DeploymentMap());
+            modelBuilder.ApplySequenceConfiguration(IdSequence.Deployment);
         }
     }
 }

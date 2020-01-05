@@ -18,7 +18,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 {
                     var lastDeploymentOrNull = deployments
                         .Where(deployment => deployment.EnvironmentId == environment.Id)
-                        .OrderByDescending(deployment => deployment.DeployedAt)
+                        .OrderByDescending(deployment => deployment.StartedAt)
                         .FirstOrDefault();
 
                     return MapEnvironment(environment, lastDeploymentOrNull, packages);
@@ -28,34 +28,34 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 
         private static GetProjectDashboardResponse.EnvironmentDto MapEnvironment(
             Environment environment,
-            Deployment lastDeploymentOrNull,
+            Deployment lastDeploymentMongoEntityOrNull,
             Package[] packages)
         {
             return new GetProjectDashboardResponse.EnvironmentDto
             {
                 EnvironmentId = environment.Id,
                 DisplayName = environment.DisplayName,
-                Deployment = MapLastDeployment(lastDeploymentOrNull, packages)
+                Deployment = MapLastDeployment(lastDeploymentMongoEntityOrNull, packages)
             };
         }
 
         private static GetProjectDashboardResponse.EnvironmentDeploymentDto MapLastDeployment(
-            Deployment lastDeploymentOrNull, 
+            Deployment lastDeploymentMongoEntityOrNull, 
             Package[] packages)
         {
-            if (lastDeploymentOrNull != null)
+            if (lastDeploymentMongoEntityOrNull != null)
             {
                 var packageDescription =
                     packages
-                        .FirstOrDefault(x => x.Id == lastDeploymentOrNull.PackageId)
+                        .FirstOrDefault(x => x.Id == lastDeploymentMongoEntityOrNull.PackageId)
                         ?.Description ?? string.Empty;
 
                 return new GetProjectDashboardResponse.EnvironmentDeploymentDto
                 {
-                    CurrentDeploymentId = lastDeploymentOrNull.Id,
-                    CurrentPackageId = lastDeploymentOrNull.PackageId,
+                    CurrentDeploymentId = lastDeploymentMongoEntityOrNull.Id,
+                    CurrentPackageId = lastDeploymentMongoEntityOrNull.PackageId,
                     CurrentPackageDescription = packageDescription, 
-                    LastDeployedAt = lastDeploymentOrNull.DeployedAt
+                    LastDeployedAt = lastDeploymentMongoEntityOrNull.StartedAt
                 };
             }
 

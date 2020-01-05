@@ -10,11 +10,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         public static GetProjectDashboardResponse.DeploymentDto[] GetDeployments(
             Deployment[] deployments,
             Environment[] environments,
-            Package[] packages
-            )
+            Package[] packages)
         {
             return deployments
-                .OrderByDescending(deployment => deployment.DeployedAt)
+                .OrderByDescending(deployment => deployment.StartedAt)
                 .Join(
                     inner: environments,
                     outerKeySelector: deployment => deployment.EnvironmentId,
@@ -38,7 +37,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 Id = deployment.Id,
                 EnvironmentId = environment.Id,
                 EnvironmentDisplayName = environment.DisplayName,
-                DeployedAt = deployment.DeployedAt,
+                DeployedAt = deployment.StartedAt,
                 PackageId = deployment.PackageId,
                 PackageDescription = description,
                 Status = deployment.Status.ToString()

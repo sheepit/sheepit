@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments.Queries;
@@ -51,13 +52,16 @@ namespace SheepIt.Api.UseCases.Dashboard
     {
         private readonly SheepItDatabase _database;
         private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
+        private readonly SheepItDbContext _dbContext;
 
         public GetDashboardHandler(
             SheepItDatabase database,
-            GetEnvironmentsQuery getEnvironmentsQuery)
+            GetEnvironmentsQuery getEnvironmentsQuery,
+            SheepItDbContext dbContext)
         {
             _database = database;
             _getEnvironmentsQuery = getEnvironmentsQuery;
+            _dbContext = dbContext;
         }
 
         public async Task<GetDashboardResponse> Handle(GetDashboardRequest options)
@@ -75,15 +79,16 @@ namespace SheepIt.Api.UseCases.Dashboard
 
         private async Task<List<Deployment>> GetLastDeployments()
         {
-            return await _database
+            return await _dbContext
                 .Deployments
-                .Find(x => x.Empty)
-                .Sort(x => x.Descending(y => y.DeployedAt))
-                .Limit(10)
+                .OrderByDescending(deployment => deployment.StartedAt)
+                .Take(10)
                 .ToListAsync();
         }
 
-        private GetDashboardResponse.DeploymentDto[] MapDeployments(List<Deployment> deployments, List<Environment> environments)
+        private GetDashboardResponse.DeploymentDto[] MapDeployments(
+            List<Deployment> deployments,
+            List<Environment> environments)
         {
             var mappedDeployments = deployments.Select(deployment => new GetDashboardResponse.DeploymentDto
             {
@@ -91,12 +96,12 @@ namespace SheepIt.Api.UseCases.Dashboard
                 ProjectId = deployment.ProjectId,
                 Status = deployment.Status.ToString(),
                 EnvironmentId = deployment.EnvironmentId,
-                DeployedAt = deployment.DeployedAt
+                DeployedAt = deployment.StartedAt
             }).ToArray();
             
             foreach (var deployment in mappedDeployments)
             {
-                var environment = environments.SingleOrDefault(env => env.Id == deployment.EnvironmentId);
+                var environment = environments.Single(env => env.Id == deployment.EnvironmentId);
                 deployment.EnvironmentDisplayName = environment.DisplayName;
             }
 
