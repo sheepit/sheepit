@@ -94,11 +94,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             };
 
             _dbContext.Deployments.Add(deployment);
-            
-            var deploymentProcess = await _database.DeploymentProcesses
-                .Find(builder => builder
-                    .Eq(process => process.Id, package.DeploymentProcessId)
-                )
+
+            var deploymentProcess = await _dbContext.DeploymentProcesses
+                .Where(process => process.Id == package.DeploymentProcessId)
                 .SingleAsync();
 
             // todo: [rt] think if this double SaveChanges is a good solution

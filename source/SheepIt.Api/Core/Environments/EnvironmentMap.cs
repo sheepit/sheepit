@@ -9,7 +9,7 @@ namespace SheepIt.Api.Core.Environments
         {
             builder.ToTable("Environment");
 
-            builder.HasKey(x => x.ObjectId);
+            builder.HasKey(environment => environment.ObjectId);
         }
     }
 }

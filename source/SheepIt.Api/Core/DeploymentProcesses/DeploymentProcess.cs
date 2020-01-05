@@ -1,12 +1,10 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace SheepIt.Api.Core.DeploymentProcesses
 {
     public class DeploymentProcess
     {
-        [BsonId]
-        public ObjectId ObjectId { get; set; }
+        public Guid ObjectId { get; set; }
         public int Id { get; set; }
         public string ProjectId { get; set; }
         public byte[] File { get; set; }

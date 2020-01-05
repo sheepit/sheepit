@@ -8,6 +8,7 @@ using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.DataAccess;
+using SheepIt.Api.DataAccess.Sequencing;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -57,26 +58,29 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     public class CreateProjectHandler : IHandler<CreateProjectRequest>
     {
         private readonly Core.Environments.AddEnvironment _addEnvironment;
-        private readonly DeploymentProcessStorage _deploymentProcessStorage;
         private readonly ValidateZipFile _validateZipFile;
         private readonly ProjectRepository _projectRepository;
         private readonly SheepItDbContext _dbContext;
         private readonly PackageFactory _packageFactory;
+        private readonly IdStorage _idStorage;
+        private readonly DeploymentProcessFactory _deploymentProcessFactory;
 
         public CreateProjectHandler(
             Core.Environments.AddEnvironment addEnvironment,
-            DeploymentProcessStorage deploymentProcessStorage,
             ValidateZipFile validateZipFile,
             ProjectRepository projectRepository,
             SheepItDbContext dbContext,
-            PackageFactory packageFactory)
+            PackageFactory packageFactory,
+            IdStorage idStorage,
+            DeploymentProcessFactory deploymentProcessFactory)
         {
             _addEnvironment = addEnvironment;
-            _deploymentProcessStorage = deploymentProcessStorage;
             _validateZipFile = validateZipFile;
             _projectRepository = projectRepository;
             _dbContext = dbContext;
             _packageFactory = packageFactory;
+            _idStorage = idStorage;
+            _deploymentProcessFactory = deploymentProcessFactory;
         }
 
         public async Task Handle(CreateProjectRequest request)
@@ -105,15 +109,17 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 await _addEnvironment.Add(request.ProjectId, environmentName);
             }
 
-            var deploymentProcessId = await _deploymentProcessStorage.Add(
+            var deploymentProcess = await _deploymentProcessFactory.Create(
                 projectId: request.ProjectId,
                 zipFileBytes: zipFileBytes
             );
 
+            _dbContext.DeploymentProcesses.Add(deploymentProcess);
+
             // first package is created so other operations can copy it
             var firstPackage = await _packageFactory.CreateFirstPackage(
                 projectId: request.ProjectId,
-                deploymentProcessId: deploymentProcessId
+                deploymentProcessId: deploymentProcess.Id
             );
 
             _dbContext.Packages.Add(firstPackage);

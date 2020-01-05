@@ -67,23 +67,23 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
     public class CreatePackageHandler : IHandler<CreatePackageRequest, CreatePackageResponse>
     {
         private readonly PackageRepository _packageRepository;
-        private readonly DeploymentProcessStorage _deploymentProcessStorage;
         private readonly ValidateZipFile _validateZipFile;
         private readonly SheepItDbContext _dbContext;
         private readonly PackageFactory _packageFactory;
+        private readonly DeploymentProcessFactory _deploymentProcessFactory;
 
         public CreatePackageHandler(
             PackageRepository packageRepository,
-            DeploymentProcessStorage deploymentProcessStorage,
             ValidateZipFile validateZipFile,
             SheepItDbContext dbContext,
-            PackageFactory packageFactory)
+            PackageFactory packageFactory,
+            DeploymentProcessFactory deploymentProcessFactory)
         {
             _packageRepository = packageRepository;
-            _deploymentProcessStorage = deploymentProcessStorage;
             _validateZipFile = validateZipFile;
             _dbContext = dbContext;
             _packageFactory = packageFactory;
+            _deploymentProcessFactory = deploymentProcessFactory;
         }
 
         public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
@@ -93,11 +93,13 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             var zipFileBytes = await request.ZipFile.ToByteArray();
             
             _validateZipFile.Validate(zipFileBytes);
-            
-            var deploymentProcessId = await _deploymentProcessStorage.Add(
+
+            var deploymentProcess = await _deploymentProcessFactory.Create(
                 projectId: request.ProjectId,
                 zipFileBytes: zipFileBytes
             );
+
+            _dbContext.DeploymentProcesses.Add(deploymentProcess);
 
             var variableValues = ComputeVariableValues(request);
 
@@ -105,7 +107,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                 package,
                 variableValues,
                 request.Description,
-                deploymentProcessId
+                deploymentProcess.Id
             );
 
             _dbContext.Packages.Add(newPackage);

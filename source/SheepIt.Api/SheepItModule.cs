@@ -50,7 +50,6 @@ namespace SheepIt.Api
             builder.RegisterModule<PackageModule>();
             
             builder.RegisterType<PackageRepository>().AsSelf();
-            builder.RegisterType<DeploymentProcess>().AsSelf();
             builder.RegisterModule<DeploymentProcessModule>();
         }
 

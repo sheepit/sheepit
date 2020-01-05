@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SheepIt.Api.DataAccess;
 using SheepIt.Api.DataAccess.Sequencing;
 using SheepIt.Api.Infrastructure.Time;
 
