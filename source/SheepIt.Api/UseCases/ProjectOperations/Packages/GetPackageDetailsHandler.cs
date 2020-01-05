@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Core.ProjectContext;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Packages
@@ -48,18 +49,20 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class GetPackageDetailsHandler : IHandler<GetPackageDetailsRequest, GetPackageDetailsResponse>
     {
-        private readonly SheepItDatabase _database;
+        private readonly SheepItDbContext _dbContext;
 
-        public GetPackageDetailsHandler(SheepItDatabase database)
+        public GetPackageDetailsHandler(SheepItDbContext dbContext)
         {
-            _database = database;
+            _dbContext = dbContext;
         }
 
         public async Task<GetPackageDetailsResponse> Handle(GetPackageDetailsRequest request)
         {
-            var package = await _database.Packages
-                .FindByProjectAndId(request.ProjectId, request.PackageId);
-
+            var package = await _dbContext.Packages.FindByIdAndProjectId(
+                packageId: request.PackageId,
+                projectId: request.ProjectId
+            );
+            
             return new GetPackageDetailsResponse
             {
                 Id = package.Id,
@@ -71,7 +74,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                     {
                         Name = values.Name,
                         DefaultValue = values.DefaultValue,
-                        EnvironmentValues = values.EnvironmentValues.ToDictionary(pair => pair.Key, pair => pair.Value)
+                        EnvironmentValues = values.GetEnvironmentValues().ToDictionary(pair => pair.Key, pair => pair.Value)
                     })
                     .ToArray()
             };

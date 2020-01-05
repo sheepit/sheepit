@@ -10,7 +10,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         public static GetProjectDashboardResponse.DeploymentDto[] GetDeployments(
             Deployment[] deployments,
             Environment[] environments,
-            PackageMongoEntity[] packages
+            Package[] packages
             )
         {
             return deployments
@@ -28,7 +28,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         private static GetProjectDashboardResponse.DeploymentDto MapDeployment(
             Deployment deployment,
             Environment environment,
-            PackageMongoEntity[] packages)
+            Package[] packages)
         {
             var package = packages.FirstOrDefault(x => x.Id == deployment.PackageId);
             var description = package?.Description ?? string.Empty;

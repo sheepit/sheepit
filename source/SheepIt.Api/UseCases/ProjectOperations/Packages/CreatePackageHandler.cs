@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Packages;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Web;
@@ -68,15 +69,18 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         private readonly PackagesStorage _packagesStorage;
         private readonly DeploymentProcessStorage _deploymentProcessStorage;
         private readonly ValidateZipFile _validateZipFile;
+        private readonly SheepItDbContext _dbContext;
 
         public CreatePackageHandler(
             PackagesStorage packagesStorage,
             DeploymentProcessStorage deploymentProcessStorage,
-            ValidateZipFile validateZipFile)
+            ValidateZipFile validateZipFile,
+            SheepItDbContext dbContext)
         {
             _packagesStorage = packagesStorage;
             _deploymentProcessStorage = deploymentProcessStorage;
             _validateZipFile = validateZipFile;
+            _dbContext = dbContext;
         }
 
         public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
@@ -95,11 +99,14 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             var variableValues = ComputeVariableValues(request);
 
             var newPackage = package.WithUpdatedProperties(
-                variableValues,
-                request.Description,
-                deploymentProcessId);
+                newVariables: variableValues,
+                description: request.Description,
+                deploymentPackageId: deploymentProcessId
+            );
             
             var newPackageId = await _packagesStorage.Add(newPackage);
+
+            await _dbContext.SaveChangesAsync();
 
             return new CreatePackageResponse
             {
@@ -110,13 +117,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         private VariableValues[] ComputeVariableValues(CreatePackageRequest request)
         {
             return request
-               .VariableUpdates?
-               .Select(update => new VariableValues
-               {
-                   Name = update.Name,
-                   DefaultValue = update.DefaultValue,
-                   EnvironmentValues = update.EnvironmentValues
-               })
+               .VariableUpdates
+               ?.Select(update => VariableValues.Create(update.Name, update.DefaultValue, update.EnvironmentValues))
                .ToArray() ?? new VariableValues[0];
         }
     }

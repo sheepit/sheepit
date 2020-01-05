@@ -11,7 +11,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         public static GetProjectDashboardResponse.EnvironmentDto[] GetEnvironments(
             Environment[] environments,
             Deployment[] deployments,
-            PackageMongoEntity[] packages)
+            Package[] packages)
         {
             return environments
                 .Select(environment =>
@@ -29,7 +29,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         private static GetProjectDashboardResponse.EnvironmentDto MapEnvironment(
             Environment environment,
             Deployment lastDeploymentOrNull,
-            PackageMongoEntity[] packages)
+            Package[] packages)
         {
             return new GetProjectDashboardResponse.EnvironmentDto
             {
@@ -40,7 +40,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         }
 
         private static GetProjectDashboardResponse.EnvironmentDeploymentDto MapLastDeployment(
-            Deployment lastDeploymentOrNull, PackageMongoEntity[] packages)
+            Deployment lastDeploymentOrNull, 
+            Package[] packages)
         {
             if (lastDeploymentOrNull != null)
             {

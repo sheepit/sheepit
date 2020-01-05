@@ -50,12 +50,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             var package = await _packagesStorage.GetNewest(request.ProjectId);
             
             var variableValues = request.NewVariables
-                .Select(update => new VariableValues
-                {
-                    Name = update.Name,
-                    DefaultValue = update.DefaultValue,
-                    EnvironmentValues = update.EnvironmentValues
-                })
+                .Select(update => VariableValues.Create(update.Name, update.DefaultValue, update.EnvironmentValues))
                 .ToArray();
             
             var newPackage = package.WithNewVariables(variableValues);

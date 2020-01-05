@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using MongoDB.Bson.Serialization.Attributes;
 using SheepIt.Api.Infrastructure.Utils;
 
 namespace SheepIt.Api.Core.Packages
@@ -19,7 +18,10 @@ namespace SheepIt.Api.Core.Packages
 
         public VariableCollection WithUpdatedVariables(VariableValues[] newVariables)
         {
-            var dict = Variables.ToDictionary(keySelector: variable => variable.Name, elementSelector: variable => variable);
+            var dict = Variables.ToDictionary(
+                variable => variable.Name,
+                variable => variable
+            );
 
             foreach (var newVariable in newVariables)
             {
@@ -35,34 +37,37 @@ namespace SheepIt.Api.Core.Packages
                 Variables = updatedVariables
             };
         }
-
-        // todo: clone won't be necessary, when databse document is separated from immutable domain object
-        public VariableCollection Clone()
-        {
-            return new VariableCollection
-            {
-                Variables = Variables
-                    .Select(variable => variable.Clone())
-                    .ToArray()
-            };
-        }
     }
 
     public class VariableValues
     {
+        public static VariableValues Create(string name, string defaultValue, Dictionary<int, string> environmentValues)
+        {
+            return new VariableValues
+            {
+                Name = name,
+                DefaultValue = defaultValue,
+                ActualEnvironmentValues = environmentValues.ToDictionary(
+                    pair => pair.Key.ToString(CultureInfo.InvariantCulture),
+                    pair => pair.Value
+                )
+            };
+        }
+        
         public string Name { get; set; }
         public string DefaultValue { get; set; }
         
-        // todo: mongo requires string id-s in dictionaries
+        // todo: [rt] postgres probably requires objects to have string keys, but it can be checked
         public Dictionary<string, string> ActualEnvironmentValues { get; set; }
 
-        [BsonIgnore]
-        public Dictionary<int, string> EnvironmentValues
+        public Dictionary<int, string> GetEnvironmentValues()
         {
-            get => ActualEnvironmentValues.ToDictionary(pair => pair.Key.ToInt(), pair => pair.Value);
-            set => ActualEnvironmentValues = value.ToDictionary(pair => pair.Key.ToString(CultureInfo.InvariantCulture), pair => pair.Value);
+            return ActualEnvironmentValues.ToDictionary(
+                pair => pair.Key.ToInt(),
+                pair => pair.Value
+            );
         }
-        
+
         public VariableForEnvironment ForEnvironment(int environmentId)
         {
             return new VariableForEnvironment(Name, ValueForEnvironment(environmentId));
@@ -70,25 +75,12 @@ namespace SheepIt.Api.Core.Packages
 
         private string ValueForEnvironment(int environmentId)
         {
-            if (EnvironmentValues != null && EnvironmentValues.TryGetValue(environmentId, out var environmentSpecificValue))
-            {
-                return environmentSpecificValue;
-            }
-
-            return DefaultValue;
-        }
-
-        public VariableValues Clone()
-        {
-            return new VariableValues
-            {
-                Name = Name,
-                DefaultValue = DefaultValue,
-                EnvironmentValues = EnvironmentValues.ToDictionary(
-                    keySelector: pair => pair.Key,
-                    elementSelector: pair => pair.Value
-                )
-            };
+            var valueFound = GetEnvironmentValues()
+                .TryGetValue(environmentId, out var environmentSpecificValue);
+            
+            return valueFound
+                ? environmentSpecificValue 
+                : DefaultValue;
         }
     }
 

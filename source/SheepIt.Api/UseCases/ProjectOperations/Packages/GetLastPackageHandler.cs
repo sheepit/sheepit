@@ -69,7 +69,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                     {
                         Name = values.Name,
                         DefaultValue = values.DefaultValue,
-                        EnvironmentValues = values.EnvironmentValues.ToDictionary(pair => pair.Key, pair => pair.Value)
+                        EnvironmentValues = values.GetEnvironmentValues().ToDictionary(pair => pair.Key, pair => pair.Value)
                     })
                     .ToArray()
             };

@@ -8,6 +8,7 @@ using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Packages;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -62,13 +63,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
     {
         private readonly SheepItDatabase _database;
         private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
+        private readonly SheepItDbContext _dbContext;
 
         public GetDeploymentDetailsHandler(
             SheepItDatabase database,
-            GetEnvironmentsQuery getEnvironmentsQuery)
+            GetEnvironmentsQuery getEnvironmentsQuery,
+            SheepItDbContext dbContext)
         {
             _database = database;
             _getEnvironmentsQuery = getEnvironmentsQuery;
+            _dbContext = dbContext;
         }
 
         public async Task<GetDeploymentDetailsResponse> Handle(GetDeploymentDetailsRequest request)
@@ -79,8 +83,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
             var environment = await _getEnvironmentsQuery
                 .GetByProjectAndId(request.ProjectId, deployment.EnvironmentId);
 
-            var package = await _database.Packages
-                .FindByProjectAndId(request.ProjectId, deployment.PackageId);
+            var package = await _dbContext.Packages.FindByIdAndProjectId(
+                packageId: deployment.PackageId,
+                projectId: request.ProjectId
+            );
 
             var variablesForEnvironment = package.GetVariablesForEnvironment(environment.Id);
             

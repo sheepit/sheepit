@@ -16,6 +16,7 @@ namespace SheepIt.Api.DataAccess
         
         public DbSet<Project> Projects { get; set; }
         public DbSet<Environment> Environments { get; set; }
+        public DbSet<Package> Packages { get; set; }
         
         public SheepItDbContext(DbContextOptions<SheepItDbContext> option)
             : base(option)
@@ -27,10 +28,10 @@ namespace SheepIt.Api.DataAccess
             modelBuilder.Entity<Project>().ToTable("Project");
             
             modelBuilder.ApplyConfiguration(new EnvironmentMap());
-
             modelBuilder.ApplySequenceConfiguration<Environment>();
 
             modelBuilder.ApplyConfiguration(new PackageMap());
+            modelBuilder.ApplySequenceConfiguration<Package>();
         }
     }
     

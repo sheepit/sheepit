@@ -3,9 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -74,15 +76,18 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         private readonly SheepItDatabase _database;
         private readonly IProjectContext _projectContext;
         private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
+        private readonly SheepItDbContext _dbContext;
 
         public GetProjectDashboardHandler(
             SheepItDatabase database,
             IProjectContext projectContext,
-            GetEnvironmentsQuery getEnvironmentsQuery)
+            GetEnvironmentsQuery getEnvironmentsQuery,
+            SheepItDbContext dbContext)
         {
             _database = database;
             _projectContext = projectContext;
             _getEnvironmentsQuery = getEnvironmentsQuery;
+            _dbContext = dbContext;
         }
 
         public async Task<GetProjectDashboardResponse> Handle(GetProjectDashboardRequest options)
@@ -91,9 +96,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 .Find(filter => filter.FromProject(options.ProjectId))
                 .ToArray();
 
-            var packages = await _database.Packages
-                .Find(filter => filter.FromProject(options.ProjectId))
-                .ToArray();
+            var packages = await _dbContext.Packages
+                .Where(package => package.ProjectId == options.ProjectId)
+                .ToArrayAsync();
 
             var environments = await _getEnvironmentsQuery
                 .GetOrderedByRank(options.ProjectId);

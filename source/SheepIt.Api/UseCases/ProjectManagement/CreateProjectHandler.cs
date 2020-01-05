@@ -108,8 +108,9 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             );
 
             // first package is created so other operations can copy it
-            await _packagesStorage.Add(new PackageMongoEntity
+            await _packagesStorage.Add(new Package
             {
+                ObjectId = Guid.NewGuid(),
                 Variables = new VariableCollection(),
                 CreatedAt = DateTime.UtcNow,
                 ProjectId = request.ProjectId,

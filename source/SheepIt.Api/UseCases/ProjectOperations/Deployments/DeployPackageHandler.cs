@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.DeploymentProcessRunning;
@@ -10,6 +12,7 @@ using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Packages;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Mongo;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -50,6 +53,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         private readonly SheepItDatabase _database;
         private readonly DeploymentProcessDirectoryFactory _deploymentProcessDirectoryFactory;
         private readonly DeploymentProcessStorage _deploymentProcessStorage;
+        private readonly SheepItDbContext _dbContext;
 
         public DeployPackageHandler(
             DeploymentsStorage deploymentsStorage,
@@ -58,7 +62,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             IProjectContext projectContext,
             SheepItDatabase database,
             DeploymentProcessDirectoryFactory deploymentProcessDirectoryFactory,
-            DeploymentProcessStorage deploymentProcessStorage)
+            DeploymentProcessStorage deploymentProcessStorage,
+            SheepItDbContext dbContext)
         {
             _deploymentsStorage = deploymentsStorage;
             _deploymentProcessSettings = deploymentProcessSettings;
@@ -67,12 +72,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             _database = database;
             _deploymentProcessDirectoryFactory = deploymentProcessDirectoryFactory;
             _deploymentProcessStorage = deploymentProcessStorage;
+            _dbContext = dbContext;
         }
 
         public async Task<DeployPackageResponse> Handle(DeployPackageRequest request)
         {
-            var package = await _database.Packages
-                .FindByProjectAndId(request.ProjectId, request.PackageId);
+            var package = await _dbContext.Packages.FindByIdAndProjectId(
+                packageId: request.PackageId,
+                projectId: request.ProjectId
+            );
 
             var deployment = new Deployment
             {
@@ -99,7 +107,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             };
         }
 
-        private async Task RunDeployment(Project project, PackageMongoEntity package, Deployment deployment,
+        private async Task RunDeployment(Project project, Package package, Deployment deployment,
             DeploymentProcess deploymentProcess)
         {
             try

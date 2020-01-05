@@ -1,34 +1,37 @@
-﻿using System.Threading.Tasks;
-using MongoDB.Driver;
-using SheepIt.Api.Infrastructure.Mongo;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SheepIt.Api.DataAccess;
 
 namespace SheepIt.Api.Core.Packages
 {
     public class PackagesStorage
     {
-        private readonly SheepItDatabase _database;
+        private readonly SheepItDbContext _dbContext;
+        private readonly IdStorage _idStorage;
 
-        public PackagesStorage(SheepItDatabase database)
+        public PackagesStorage(SheepItDbContext dbContext, IdStorage idStorage)
         {
-            _database = database;
+            _dbContext = dbContext;
+            _idStorage = idStorage;
         }
 
-        public async Task<int> Add(PackageMongoEntity package)
+        public async Task<int> Add(Package package)
         {
-            var nextId = await _database.Packages.GetNextId();
+            var nextId = await _idStorage.GetNext(typeof(Package));
             
             package.Id = nextId;
 
-            await _database.Packages.InsertOneAsync(package);
+            _dbContext.Packages.Add(package);
 
             return nextId;
         }
 
-        public async Task<PackageMongoEntity> GetNewest(string projectId)
+        public async Task<Package> GetNewest(string projectId)
         {
-            return await _database.Packages
-                .Find(filter => filter.FromProject(projectId))
-                .Sort(sort => sort.Descending(package => package.Id))
+            return await _dbContext.Packages
+                .Where(package => package.ProjectId == projectId)
+                .OrderByDescending(package => package.Id)
                 .FirstAsync();
         }
     }
