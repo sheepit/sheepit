@@ -84,8 +84,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
     {
         private readonly SheepItDbContext _dbContext;
 
-        public GetProjectDashboardHandler(
-            SheepItDbContext dbContext)
+        public GetProjectDashboardHandler(SheepItDbContext dbContext)
         {
             _dbContext = dbContext;
         }

@@ -8,32 +8,25 @@ namespace SheepIt.Api.Core.DeploymentProcesses
     {
         private readonly IdStorage _idStorage;
         private readonly ValidateZipFile _validateZipFile;
-        private readonly SheepItDbContext _dbContext;
 
         public DeploymentProcessFactory(
             IdStorage idStorage,
-            ValidateZipFile validateZipFile,
-            SheepItDbContext dbContext)
+            ValidateZipFile validateZipFile)
         {
             _idStorage = idStorage;
             _validateZipFile = validateZipFile;
-            _dbContext = dbContext;
         }
 
         public async Task<DeploymentProcess> Create(string projectId, byte[] zipFileBytes)
         {
             _validateZipFile.Validate(zipFileBytes);
 
-            var deploymentProcess = new DeploymentProcess
+            return new DeploymentProcess
             {
                 Id = await _idStorage.GetNext(IdSequence.DeploymentProcess),
                 ProjectId = projectId,
                 File = zipFileBytes
             };
-
-            _dbContext.DeploymentProcesses.Add(deploymentProcess);
-            
-            return deploymentProcess;
         }
     }
 }

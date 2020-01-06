@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 
 // ReSharper disable MemberCanBePrivate.Global - npgsql requires json fields to have public setters
@@ -12,11 +11,6 @@ namespace SheepIt.Api.Core.Packages
         public VariableCollection()
         {
             Variables = new VariableValues[0];
-        }
-        
-        public VariableCollection(IEnumerable<VariableValues> variables)
-        {
-            Variables = variables.ToArray();
         }
 
         public VariableForEnvironment[] GetForEnvironment(int environmentId)

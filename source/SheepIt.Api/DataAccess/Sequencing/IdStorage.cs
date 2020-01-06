@@ -12,7 +12,7 @@ namespace SheepIt.Api.DataAccess.Sequencing
         public IdStorage(SheepItDbContext context)
         {
             _context = context;
-        }        
+        }
 
         public async Task<int> GetNext(IdSequence sequence)
         {

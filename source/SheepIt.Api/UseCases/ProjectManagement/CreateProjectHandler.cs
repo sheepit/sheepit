@@ -89,9 +89,11 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
         public async Task Handle(CreateProjectRequest request)
         {
-            await _projectFactory.Create(
+            var project = await _projectFactory.Create(
                 projectId: request.ProjectId
             );
+            
+            _dbContext.Projects.Add(project);
 
             await CreateEnvironments(
                 projectId: request.ProjectId,
@@ -103,13 +105,17 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 zipFileBytes: await request.ZipFile.ToByteArray()
             );
 
+            _dbContext.DeploymentProcesses.Add(deploymentProcess);
+
             // first package is created so other operations can copy it
-            await _packageFactory.CreatePackage(
+            var firstPackage = await _packageFactory.Create(
                 projectId: request.ProjectId,
                 deploymentProcessId: deploymentProcess.Id,
                 description: "Initial package",
                 variableCollection: new VariableCollection()
             );
+
+            _dbContext.Packages.Add(firstPackage);
 
             await _dbContext.SaveChangesAsync();
         }
@@ -120,11 +126,13 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             
             foreach (var environmentName in environmentNames)
             {
-                await _environmentFactory.Create(
+                var environment = await _environmentFactory.Create(
                     projectId: projectId,
                     rank: currentEnvironmentRank,
                     displayName: environmentName
                 );
+
+                _dbContext.Add(environment);
 
                 currentEnvironmentRank++;
             }

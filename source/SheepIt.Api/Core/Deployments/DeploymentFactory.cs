@@ -9,21 +9,18 @@ namespace SheepIt.Api.Core.Deployments
     {
         private readonly IdStorage _idStorage;
         private readonly IClock _clock;
-        private readonly SheepItDbContext _dbContext;
 
         public DeploymentFactory(
             IdStorage idStorage,
-            IClock clock,
-            SheepItDbContext dbContext)
+            IClock clock)
         {
             _idStorage = idStorage;
             _clock = clock;
-            _dbContext = dbContext;
         }
 
         public async Task<Deployment> Create(string projectId, int environmentId, int packageId)
         {
-            var deployment = new Deployment
+            return new Deployment
             {
                 Id = await _idStorage.GetNext(IdSequence.Deployment),
                 
@@ -34,10 +31,6 @@ namespace SheepIt.Api.Core.Deployments
                 StartedAt = _clock.UtcNow,
                 Status = DeploymentStatus.InProgress
             };
-
-            _dbContext.Deployments.Add(deployment);
-            
-            return deployment;
         }
     }
 }

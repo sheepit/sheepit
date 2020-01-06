@@ -12,7 +12,7 @@ namespace SheepIt.Api.Core.Packages
         public string Name { get; set; }
         public string DefaultValue { get; set; }
         public Dictionary<string, string> ActualEnvironmentValues { get; set; }
-        
+
         public static VariableValues Create(string name, string defaultValue, Dictionary<int, string> environmentValues)
         {
             return new VariableValues

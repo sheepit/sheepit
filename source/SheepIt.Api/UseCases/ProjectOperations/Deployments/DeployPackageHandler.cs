@@ -83,6 +83,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
                 packageId: request.PackageId
             );
 
+            _dbContext.Deployments.Add(deployment);
+
             // todo: [rt] think if this double SaveChanges is a good solution
             await _dbContext.SaveChangesAsync();
 

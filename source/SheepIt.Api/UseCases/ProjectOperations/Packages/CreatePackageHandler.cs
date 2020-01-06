@@ -100,14 +100,18 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                 zipFileBytes: await request.ZipFile.ToByteArray()
             );
 
+            _dbContext.DeploymentProcesses.Add(deploymentProcess);
+
             var newVariables = MapVariableValues(request.VariableUpdates);
             
-            var newPackage = await _packageFactory.CreatePackage(
+            var newPackage = await _packageFactory.Create(
                 projectId: basePackage.ProjectId,
                 deploymentProcessId: deploymentProcess.Id,
                 description: request.Description,
                 variableCollection: basePackage.Variables.WithUpdatedVariables(newVariables)
             );
+
+            _dbContext.Packages.Add(newPackage);
 
             await _dbContext.SaveChangesAsync();
 
