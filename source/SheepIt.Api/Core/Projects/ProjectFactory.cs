@@ -18,10 +18,14 @@ namespace SheepIt.Api.Core.Projects
         {
             await ValidateProjectIdUniqueness(projectId);
 
-            return new Project
+            var project = new Project
             {
                 Id = projectId
             };
+
+            _dbContext.Projects.Add(project);
+            
+            return project;
         }
         
         private async Task ValidateProjectIdUniqueness(string projectId)

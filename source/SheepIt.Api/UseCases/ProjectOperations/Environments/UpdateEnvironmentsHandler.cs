@@ -86,13 +86,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
             {
                 if (environmentDto.Id == 0)
                 {
-                    var newEnvironment = await _environmentFactory.Create(
+                    await _environmentFactory.Create(
                         projectId: request.ProjectId,
                         rank: environmentDto.Rank,
                         displayName: environmentDto.DisplayName
                     );
-
-                    _dbContext.Environments.Add(newEnvironment);
                 }
                 else
                 {

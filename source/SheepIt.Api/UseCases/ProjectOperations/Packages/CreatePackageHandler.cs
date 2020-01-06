@@ -81,7 +81,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
         public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
         {
-            var package = await _dbContext.Packages.FindNewestInProject(
+            var basePackage = await _dbContext.Packages.FindNewestInProject(
                 projectId: request.ProjectId
             );
 
@@ -90,17 +90,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                 zipFileBytes: await request.ZipFile.ToByteArray()
             );
 
-            _dbContext.DeploymentProcesses.Add(deploymentProcess);
-
-            var newPackage = await _packageFactory.CreatePackageWithUpdatedProperties(
-                basePackage: package,
-                newVariables: MapVariableValues(request.VariableUpdates),
-                newDescription: request.Description,
-                deploymentPackageId: deploymentProcess.Id
+            var newVariables = MapVariableValues(request.VariableUpdates);
+            
+            var newPackage = await _packageFactory.CreatePackage(
+                projectId: basePackage.ProjectId,
+                deploymentProcessId: deploymentProcess.Id,
+                description: request.Description,
+                variableCollection: basePackage.Variables.WithUpdatedVariables(newVariables)
             );
 
-            _dbContext.Packages.Add(newPackage);
-            
             await _dbContext.SaveChangesAsync();
 
             return new CreatePackageResponse

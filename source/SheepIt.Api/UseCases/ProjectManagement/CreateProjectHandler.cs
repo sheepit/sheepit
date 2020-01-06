@@ -79,7 +79,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
         public async Task Handle(CreateProjectRequest request)
         {
-            await CreateProject(
+            await _projectFactory.Create(
                 projectId: request.ProjectId
             );
 
@@ -88,27 +88,20 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 environmentNames: request.EnvironmentNames
             );
             
-            var deploymentProcess = await CreateDeploymentProcess(
+            var deploymentProcess = await _deploymentProcessFactory.Create(
                 projectId: request.ProjectId,
-                zipFile: request.ZipFile
+                zipFileBytes: await request.ZipFile.ToByteArray()
             );
 
             // first package is created so other operations can copy it
-            await CreatePackage(
+            await _packageFactory.CreatePackage(
                 projectId: request.ProjectId,
-                deploymentProcessId: deploymentProcess.Id
+                deploymentProcessId: deploymentProcess.Id,
+                description: "Initial package",
+                variableCollection: new VariableCollection()
             );
 
             await _dbContext.SaveChangesAsync();
-        }
-
-        private async Task CreateProject(string projectId)
-        {
-            var project = await _projectFactory.Create(
-                projectId: projectId
-            );
-
-            _dbContext.Projects.Add(project);
         }
 
         private async Task CreateEnvironments(string projectId, string[] environmentNames)
@@ -117,38 +110,14 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             
             foreach (var environmentName in environmentNames)
             {
-                var environment = await _environmentFactory.Create(
+                await _environmentFactory.Create(
                     projectId: projectId,
                     rank: currentEnvironmentRank,
                     displayName: environmentName
                 );
 
-                _dbContext.Environments.Add(environment);
-
                 currentEnvironmentRank++;
             }
-        }
-
-        private async Task<DeploymentProcess> CreateDeploymentProcess(string projectId, IFormFile zipFile)
-        {
-            var deploymentProcess = await _deploymentProcessFactory.Create(
-                projectId: projectId,
-                zipFileBytes: await zipFile.ToByteArray()
-            );
-
-            _dbContext.DeploymentProcesses.Add(deploymentProcess);
-            
-            return deploymentProcess;
-        }
-
-        private async Task CreatePackage(string projectId, int deploymentProcessId)
-        {
-            var firstPackage = await _packageFactory.CreateFirstPackage(
-                projectId: projectId,
-                deploymentProcessId: deploymentProcessId
-            );
-
-            _dbContext.Packages.Add(firstPackage);
         }
     }
 
