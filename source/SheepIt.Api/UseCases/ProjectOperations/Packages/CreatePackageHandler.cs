@@ -5,7 +5,6 @@ using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Packages;
@@ -27,8 +26,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         {
             public string Name { get; set; }
             public string DefaultValue { get; set; }
-            public Dictionary<int, string> EnvironmentValues { get; set; } =
-                new Dictionary<int, string>();
+            public Dictionary<int, string> EnvironmentValues { get; set; }
         }
     }
 
@@ -36,13 +34,13 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
     {
         public CreatePackageRequestValidator()
         {
-            RuleFor(x => x.ProjectId)
+            RuleFor(request => request.ProjectId)
                 .NotNull();
             
-            RuleFor(x => x.Description)
+            RuleFor(request => request.Description)
                 .NotNull();
             
-            RuleFor(x => x.ZipFile)
+            RuleFor(request => request.ZipFile)
                 .NotNull();
         }
     }
@@ -67,18 +65,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class CreatePackageHandler : IHandler<CreatePackageRequest, CreatePackageResponse>
     {
-        private readonly ValidateZipFile _validateZipFile;
         private readonly SheepItDbContext _dbContext;
         private readonly PackageFactory _packageFactory;
         private readonly DeploymentProcessFactory _deploymentProcessFactory;
 
         public CreatePackageHandler(
-            ValidateZipFile validateZipFile,
             SheepItDbContext dbContext,
             PackageFactory packageFactory,
             DeploymentProcessFactory deploymentProcessFactory)
         {
-            _validateZipFile = validateZipFile;
             _dbContext = dbContext;
             _packageFactory = packageFactory;
             _deploymentProcessFactory = deploymentProcessFactory;
@@ -90,23 +85,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                 projectId: request.ProjectId
             );
 
-            var zipFileBytes = await request.ZipFile.ToByteArray();
-            
-            _validateZipFile.Validate(zipFileBytes);
-
             var deploymentProcess = await _deploymentProcessFactory.Create(
                 projectId: request.ProjectId,
-                zipFileBytes: zipFileBytes
+                zipFileBytes: await request.ZipFile.ToByteArray()
             );
 
             _dbContext.DeploymentProcesses.Add(deploymentProcess);
 
-            var variableValues = ComputeVariableValues(request
-                .VariableUpdates);
-
             var newPackage = await _packageFactory.CreatePackageWithUpdatedProperties(
                 basePackage: package,
-                newVariables: variableValues,
+                newVariables: MapVariableValues(request.VariableUpdates),
                 newDescription: request.Description,
                 deploymentPackageId: deploymentProcess.Id
             );
@@ -121,11 +109,22 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             };
         }
 
-        private VariableValues[] ComputeVariableValues(CreatePackageRequest.UpdateVariable[] variableUpdates)
+        private VariableValues[] MapVariableValues(CreatePackageRequest.UpdateVariable[] variableUpdates)
         {
-            return variableUpdates
-               ?.Select(update => VariableValues.Create(update.Name, update.DefaultValue, update.EnvironmentValues))
-               .ToArray() ?? new VariableValues[0];
+            var updatesOrNull = variableUpdates
+                ?.Select(MapVariableValue)
+                .ToArray();
+            
+            return updatesOrNull ?? new VariableValues[0];
+        }
+
+        private VariableValues MapVariableValue(CreatePackageRequest.UpdateVariable variableUpdate)
+        {
+            return VariableValues.Create(
+                name: variableUpdate.Name,
+                defaultValue: variableUpdate.DefaultValue,
+                environmentValues: variableUpdate.EnvironmentValues ?? new Dictionary<int, string>()
+            );
         }
     }
     

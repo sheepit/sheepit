@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SheepIt.Api.DataAccess.Sequencing;
 
-namespace SheepIt.Api.DataAccess
+namespace SheepIt.Api.DataAccess.Sequencing
 {
-    public static class ModelBuilderExtensions
+    public static class SequencingModelBuilderExtensions
     {
         public static void ApplySequenceConfiguration(this ModelBuilder modelBuilder, IdSequence sequence)
         {

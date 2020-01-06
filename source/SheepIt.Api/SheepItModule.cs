@@ -39,9 +39,7 @@ namespace SheepIt.Api
 
         private void RegisterCore(ContainerBuilder builder)
         {
-            builder.RegisterModule<EnvironmentsModule>();
             builder.RegisterModule<ProjectContextModule>();
-            builder.RegisterModule<PackageModule>();
             builder.RegisterModule<DeploymentProcessModule>();
         }
 
@@ -56,7 +54,6 @@ namespace SheepIt.Api
             builder.RegisterModule<GetEnvironmentsForUpdateModule>();
             builder.RegisterModule<ListProjectsModule>();
             builder.RegisterModule<UpdateEnvironmentsModule>();
-            builder.RegisterType<ProjectRepository>();
             
             // Deployment
             builder.RegisterModule<GetDeploymentDetailsModule>();

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.DataAccess;

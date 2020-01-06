@@ -1,16 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.DeploymentProcesses;
+using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.DataAccess;
-using SheepIt.Api.DataAccess.Sequencing;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -59,24 +57,21 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
     public class CreateProjectHandler : IHandler<CreateProjectRequest>
     {
-        private readonly Core.Environments.AddEnvironment _addEnvironment;
-        private readonly ValidateZipFile _validateZipFile;
         private readonly SheepItDbContext _dbContext;
         private readonly PackageFactory _packageFactory;
         private readonly DeploymentProcessFactory _deploymentProcessFactory;
+        private readonly EnvironmentFactory _environmentFactory;
 
         public CreateProjectHandler(
-            Core.Environments.AddEnvironment addEnvironment,
-            ValidateZipFile validateZipFile,
             SheepItDbContext dbContext,
             PackageFactory packageFactory,
-            DeploymentProcessFactory deploymentProcessFactory)
+            DeploymentProcessFactory deploymentProcessFactory,
+            EnvironmentFactory environmentFactory)
         {
-            _addEnvironment = addEnvironment;
-            _validateZipFile = validateZipFile;
             _dbContext = dbContext;
             _packageFactory = packageFactory;
             _deploymentProcessFactory = deploymentProcessFactory;
+            _environmentFactory = environmentFactory;
         }
 
         public async Task Handle(CreateProjectRequest request)
@@ -133,21 +128,27 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
         private async Task CreateEnvironments(string projectId, string[] environmentNames)
         {
-            await _addEnvironment.AddMany(
-                projectId: projectId,
-                displayNames: environmentNames
-            );
+            var currentEnvironmentRank = 1;
+            
+            foreach (var environmentName in environmentNames)
+            {
+                var environment = await _environmentFactory.Create(
+                    projectId: projectId,
+                    rank: currentEnvironmentRank,
+                    displayName: environmentName
+                );
+
+                _dbContext.Environments.Add(environment);
+
+                currentEnvironmentRank++;
+            }
         }
 
         private async Task<DeploymentProcess> CreateDeploymentProcess(string projectId, IFormFile zipFile)
         {
-            var zipFileBytes = await zipFile.ToByteArray();
-
-            _validateZipFile.Validate(zipFileBytes);
-
             var deploymentProcess = await _deploymentProcessFactory.Create(
                 projectId: projectId,
-                zipFileBytes: zipFileBytes
+                zipFileBytes: await zipFile.ToByteArray()
             );
 
             _dbContext.DeploymentProcesses.Add(deploymentProcess);

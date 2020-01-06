@@ -11,13 +11,12 @@ namespace SheepIt.Api.Core.DeploymentProcesses
     {
         public void Validate(byte[] zipFileBytes)
         {
-            using (var memoryStream = new MemoryStream(zipFileBytes))
-            using (var zipArchive = OpenZipArchive(memoryStream))
-            {
-                var processFileEntry = GetProcessFileEntry(zipArchive);
+            using var memoryStream = new MemoryStream(zipFileBytes);
+            using var zipArchive = OpenZipArchive(memoryStream);
+            
+            var processFileEntry = GetProcessFileEntry(zipArchive);
 
-                ValidateProcessFileCanBeDeserialized(processFileEntry);
-            }
+            ValidateProcessFileCanBeDeserialized(processFileEntry);
         }
 
         private static ZipArchive OpenZipArchive(MemoryStream memoryStream)
@@ -54,21 +53,19 @@ namespace SheepIt.Api.Core.DeploymentProcesses
 
         private static void ValidateProcessFileCanBeDeserialized(ZipArchiveEntry processFileEntry)
         {
-            using (var processFileEntryStream = processFileEntry.Open())
-            using (var processFileEntryStreamReader = new StreamReader(processFileEntryStream))
+            using var processFileEntryStream = processFileEntry.Open();
+            using var processFileEntryStreamReader = new StreamReader(processFileEntryStream);
+            try
             {
-                try
-                {
-                    DeploymentProcessFile.OpenFomStream(processFileEntryStreamReader);
-                }
-                catch (Exception exception)
-                {
-                    throw new CustomException(
-                        errorCode: "CREATE_DEPLOYMENT_STORAGE_CANNOT_DESERIALIZE_PROCESS_YAML",
-                        humanReadableMessage: "Deserializing provided process.yaml file failed - please check its formatting.",
-                        innerException: exception
-                    );
-                }
+                DeploymentProcessFile.OpenFomStream(processFileEntryStreamReader);
+            }
+            catch (Exception exception)
+            {
+                throw new CustomException(
+                    errorCode: "CREATE_DEPLOYMENT_STORAGE_CANNOT_DESERIALIZE_PROCESS_YAML",
+                    humanReadableMessage: "Deserializing provided process.yaml file failed - please check its formatting.",
+                    innerException: exception
+                );
             }
         }
     }

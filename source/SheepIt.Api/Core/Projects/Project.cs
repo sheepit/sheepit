@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Packages;
 using Environment = SheepIt.Api.Core.Environments.Environment;

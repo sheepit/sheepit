@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Core.Projects;
 using Environment = SheepIt.Api.Core.Environments.Environment;
