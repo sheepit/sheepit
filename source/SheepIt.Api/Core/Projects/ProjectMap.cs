@@ -8,6 +8,8 @@ namespace SheepIt.Api.Core.Projects
         public void Configure(EntityTypeBuilder<Project> builder)
         {
             builder.ToTable("Project");
+
+            builder.HasKey(project => project.Id);
         }
     }
 }

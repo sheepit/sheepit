@@ -1,17 +1,32 @@
 using System;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using SheepIt.Api.Core.Packages;
+using SheepIt.Api.Core.Projects;
+using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.Core.Deployments
 {
     public class Deployment
     {
-        public Guid ObjectId { get; set; }
+        // identity
         
         public int Id { get; set; }
+        
+        // relations
+        
         public string ProjectId { get; set; }
+        public virtual Project Project { get; set; }
+        
         public int PackageId { get; set; }
-        public DateTime StartedAt { get; set; }
+        public virtual Package Package { get; set; }
+        
         public int EnvironmentId { get; set; }
+        public virtual Environment Environment { get; set; }
+        
+        // data
+        
+        public DateTime StartedAt { get; set; }
         public DeploymentStatus Status { get; set; }
         public ProcessOutput ProcessOutput { get; set; }
 

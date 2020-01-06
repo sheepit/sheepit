@@ -10,7 +10,7 @@ namespace SheepIt.Api.Core.Deployments
         {
             builder.ToTable("Deployment");
 
-            builder.HasKey(deployment => deployment.ObjectId);
+            builder.HasKey(deployment => deployment.Id);
             
             builder.Property(package => package.ProcessOutput)
                 .HasColumnType("jsonb");

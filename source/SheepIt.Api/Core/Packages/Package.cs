@@ -1,20 +1,32 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SheepIt.Api.Core.DeploymentProcesses;
+using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Projects;
 
 namespace SheepIt.Api.Core.Packages
 {
     public class Package
     {
-        public Guid ObjectId { get; private set; }
+        // identity
         
         public int Id { get; private set; }
+        
+        // relations
+        
         public string ProjectId { get; private set; }
+        public virtual Project Project { get; set; }
         
         public int DeploymentProcessId { get; private set; }
+        public virtual DeploymentProcess DeploymentProcess { get; set; }
+
+        public virtual List<Deployment> Deployments { get; set; }
+        
+        // data
+        
         public string Description { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        
         public VariableCollection Variables { get; private set; }
 
         // ef needs private ctor
@@ -26,7 +38,6 @@ namespace SheepIt.Api.Core.Packages
         {
             return new Package
             {
-                ObjectId = Guid.NewGuid(),
                 Id = packageId,
                 Variables = new VariableCollection(),
                 CreatedAt = createdAt,
@@ -49,7 +60,6 @@ namespace SheepIt.Api.Core.Packages
         {
             return new Package
             {
-                ObjectId = Guid.NewGuid(),
                 Id = newPackageId,
                 ProjectId = ProjectId,
                 DeploymentProcessId = deploymentPackageId,
@@ -64,7 +74,6 @@ namespace SheepIt.Api.Core.Packages
         {
             return new Package
             {
-                ObjectId = Guid.NewGuid(),
                 Id = newPackageId,
                 ProjectId = ProjectId,
                 DeploymentProcessId = DeploymentProcessId,

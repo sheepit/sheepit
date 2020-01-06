@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.DataAccess.Sequencing;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
@@ -67,21 +69,21 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
     {
         private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
         private readonly IdStorage _idStorage;
-        private readonly EnvironmentRepository _environmentRepository;
+        private readonly SheepItDbContext _dbContext;
 
         public UpdateEnvironmentsHandler(
             GetEnvironmentsQuery getEnvironmentsQuery,
             IdStorage idStorage,
-            EnvironmentRepository environmentRepository)
+            SheepItDbContext dbContext)
         {
             _getEnvironmentsQuery = getEnvironmentsQuery;
             _idStorage = idStorage;
-            _environmentRepository = environmentRepository;
+            _dbContext = dbContext;
         }
         
         public async Task Handle(UpdateEnvironmentsRequest request)
         {
-            var currentEnvironments = await _getEnvironmentsQuery.Get(request.ProjectId); 
+            var currentEnvironments = await _getEnvironmentsQuery.GetOrderedByRank(request.ProjectId); 
 
             foreach (var environmentDto in request.Environments)
             {
@@ -95,7 +97,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
                         DisplayName = environmentDto.DisplayName
                     };
 
-                    _environmentRepository.Add(newEnvironment);
+                    _dbContext.Environments.Add(newEnvironment);
                 }
                 else
                 {
@@ -112,12 +114,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
                     environmentToUpdate.Rank = environmentDto.Rank;
                     environmentToUpdate.DisplayName = environmentDto.DisplayName;
-
-                    _environmentRepository.Update(environmentToUpdate);
                 }
             }
-            
-            await _environmentRepository.Save();
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

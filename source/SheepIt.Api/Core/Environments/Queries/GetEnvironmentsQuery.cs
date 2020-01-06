@@ -16,20 +16,12 @@ namespace SheepIt.Api.Core.Environments.Queries
             _dbContext = dbContext;
         }
 
-        public Task<List<Environment>> Get(string projectId)
-        {
-            return _dbContext
-                .Environments
-                .Where(x => x.ProjectId == projectId)
-                .ToListAsync();
-        }
-
         public Task<List<Environment>> GetOrderedByRank(string projectId)
         {
             return _dbContext
                 .Environments
-                .Where(x => x.ProjectId == projectId)
-                .OrderBy(x => x.Rank)
+                .Where(environment => environment.ProjectId == projectId)
+                .OrderBy(environment => environment.Rank)
                 .ToListAsync();
         }
         

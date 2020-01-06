@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.Projects;
 
@@ -26,7 +28,7 @@ namespace SheepIt.Api.Core.ProjectContext
         {
             var project = await _projectRepository.Get(projectId);
 
-            var environments = await _getEnvironmentsQuery.Get(projectId);
+            var environments = await _getEnvironmentsQuery.GetOrderedByRank(projectId);
 
             return new ProjectContext(project, environments.ToArray());
         }

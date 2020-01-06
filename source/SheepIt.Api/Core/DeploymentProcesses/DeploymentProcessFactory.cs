@@ -17,7 +17,6 @@ namespace SheepIt.Api.Core.DeploymentProcesses
         {
             return new DeploymentProcess
             {
-                ObjectId = Guid.NewGuid(),
                 Id = await _idStorage.GetNext(IdSequence.DeploymentProcess),
                 ProjectId = projectId,
                 File = zipFileBytes

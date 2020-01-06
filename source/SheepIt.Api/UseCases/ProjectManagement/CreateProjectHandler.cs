@@ -62,7 +62,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         private readonly ProjectRepository _projectRepository;
         private readonly SheepItDbContext _dbContext;
         private readonly PackageFactory _packageFactory;
-        private readonly IdStorage _idStorage;
         private readonly DeploymentProcessFactory _deploymentProcessFactory;
 
         public CreateProjectHandler(
@@ -71,7 +70,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             ProjectRepository projectRepository,
             SheepItDbContext dbContext,
             PackageFactory packageFactory,
-            IdStorage idStorage,
             DeploymentProcessFactory deploymentProcessFactory)
         {
             _addEnvironment = addEnvironment;
@@ -79,7 +77,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             _projectRepository = projectRepository;
             _dbContext = dbContext;
             _packageFactory = packageFactory;
-            _idStorage = idStorage;
             _deploymentProcessFactory = deploymentProcessFactory;
         }
 
@@ -100,15 +97,14 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
             _projectRepository.Create(new Project
             {
-                ObjectId = Guid.NewGuid(),
                 Id = request.ProjectId
             });
 
-            foreach (var environmentName in request.EnvironmentNames)
-            {
-                await _addEnvironment.Add(request.ProjectId, environmentName);
-            }
-
+            await _addEnvironment.AddMany(
+                projectId: request.ProjectId,
+                displayNames: request.EnvironmentNames
+            );
+            
             var deploymentProcess = await _deploymentProcessFactory.Create(
                 projectId: request.ProjectId,
                 zipFileBytes: zipFileBytes

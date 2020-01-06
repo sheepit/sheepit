@@ -9,7 +9,7 @@ namespace SheepIt.Api.Core.DeploymentProcesses
         {
             builder.ToTable("DeploymentProcess");
             
-            builder.HasKey(deploymentProcess => deploymentProcess.ObjectId);
+            builder.HasKey(deploymentProcess => deploymentProcess.Id);
         }
     }
 }

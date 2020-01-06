@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SheepIt.Api.Core.Deployments;
@@ -11,9 +12,10 @@ using SheepIt.Api.DataAccess;
 namespace SheepIt.Api.Migrations
 {
     [DbContext(typeof(SheepItDbContext))]
-    partial class SheepItDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200106122606_removed object ids as primary keys")]
+    partial class removedobjectidsasprimarykeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,8 +41,6 @@ namespace SheepIt.Api.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("DeploymentProcess");
                 });
@@ -73,12 +73,6 @@ namespace SheepIt.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EnvironmentId");
-
-                    b.HasIndex("PackageId");
-
-                    b.HasIndex("ProjectId");
-
                     b.ToTable("Deployment");
                 });
 
@@ -99,8 +93,6 @@ namespace SheepIt.Api.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("Environment");
                 });
@@ -129,10 +121,6 @@ namespace SheepIt.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeploymentProcessId");
-
-                    b.HasIndex("ProjectId");
-
                     b.ToTable("Package");
                 });
 
@@ -144,52 +132,6 @@ namespace SheepIt.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Project");
-                });
-
-            modelBuilder.Entity("SheepIt.Api.Core.DeploymentProcesses.DeploymentProcess", b =>
-                {
-                    b.HasOne("SheepIt.Api.Core.Projects.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
-                });
-
-            modelBuilder.Entity("SheepIt.Api.Core.Deployments.Deployment", b =>
-                {
-                    b.HasOne("SheepIt.Api.Core.Environments.Environment", "Environment")
-                        .WithMany("Deployments")
-                        .HasForeignKey("EnvironmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SheepIt.Api.Core.Packages.Package", "Package")
-                        .WithMany("Deployments")
-                        .HasForeignKey("PackageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SheepIt.Api.Core.Projects.Project", "Project")
-                        .WithMany("Deployments")
-                        .HasForeignKey("ProjectId");
-                });
-
-            modelBuilder.Entity("SheepIt.Api.Core.Environments.Environment", b =>
-                {
-                    b.HasOne("SheepIt.Api.Core.Projects.Project", "Project")
-                        .WithMany("Environments")
-                        .HasForeignKey("ProjectId");
-                });
-
-            modelBuilder.Entity("SheepIt.Api.Core.Packages.Package", b =>
-                {
-                    b.HasOne("SheepIt.Api.Core.DeploymentProcesses.DeploymentProcess", "DeploymentProcess")
-                        .WithMany("Packages")
-                        .HasForeignKey("DeploymentProcessId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SheepIt.Api.Core.Projects.Project", "Project")
-                        .WithMany("Packages")
-                        .HasForeignKey("ProjectId");
                 });
 #pragma warning restore 612, 618
         }

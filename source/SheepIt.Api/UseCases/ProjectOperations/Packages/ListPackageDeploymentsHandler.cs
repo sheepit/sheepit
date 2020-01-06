@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -9,6 +10,7 @@ using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
+using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 {
@@ -66,8 +68,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                 .OrderBy(deployment => deployment.StartedAt)
                 .ToArrayAsync();
 
-            var environments = await _getEnvironmentsQuery
-                .Get(options.ProjectId);
+            var environments = await _getEnvironmentsQuery.GetOrderedByRank(options.ProjectId);
             
             var deploymentDtos = deployments.Join(
                 inner: environments,
