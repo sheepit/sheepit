@@ -61,17 +61,20 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         private readonly PackageFactory _packageFactory;
         private readonly DeploymentProcessFactory _deploymentProcessFactory;
         private readonly EnvironmentFactory _environmentFactory;
+        private readonly ProjectFactory _projectFactory;
 
         public CreateProjectHandler(
             SheepItDbContext dbContext,
             PackageFactory packageFactory,
             DeploymentProcessFactory deploymentProcessFactory,
-            EnvironmentFactory environmentFactory)
+            EnvironmentFactory environmentFactory,
+            ProjectFactory projectFactory)
         {
             _dbContext = dbContext;
             _packageFactory = packageFactory;
             _deploymentProcessFactory = deploymentProcessFactory;
             _environmentFactory = environmentFactory;
+            _projectFactory = projectFactory;
         }
 
         public async Task Handle(CreateProjectRequest request)
@@ -101,29 +104,11 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
         private async Task CreateProject(string projectId)
         {
-            await ValidateProjectIdUniqueness(projectId);
-
-            var project = new Project
-            {
-                Id = projectId
-            };
+            var project = await _projectFactory.Create(
+                projectId: projectId
+            );
 
             _dbContext.Projects.Add(project);
-        }
-
-        private async Task ValidateProjectIdUniqueness(string projectId)
-        {
-            var projectExists = await _dbContext.Projects
-                .WithId(projectId)
-                .AnyAsync();
-
-            if (projectExists)
-            {
-                throw new CustomException(
-                    "CREATE_PROJECT_ID_NOT_UNIQUE",
-                    "Project with specified id already exists"
-                );
-            }
         }
 
         private async Task CreateEnvironments(string projectId, string[] environmentNames)
