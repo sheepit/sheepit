@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.Deployments;
-using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
-using Environment = SheepIt.Api.Core.Environments.Environment;
 
 namespace SheepIt.Api.UseCases.Dashboard
 {
@@ -47,62 +44,36 @@ namespace SheepIt.Api.UseCases.Dashboard
 
     public class GetDashboardHandler : IHandler<GetDashboardRequest, GetDashboardResponse>
     {
-        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
         private readonly SheepItDbContext _dbContext;
 
-        public GetDashboardHandler(
-            GetEnvironmentsQuery getEnvironmentsQuery,
-            SheepItDbContext dbContext)
+        public GetDashboardHandler(SheepItDbContext dbContext)
         {
-            _getEnvironmentsQuery = getEnvironmentsQuery;
             _dbContext = dbContext;
         }
 
         public async Task<GetDashboardResponse> Handle(GetDashboardRequest options)
         {
-            var deployments = await GetLastDeployments();
-            var environments = await _getEnvironmentsQuery
-                .Get(deployments.Select(x => x.EnvironmentId)); 
+            var deployments = await _dbContext.Deployments
+                .OrderByNewest()
+                .Take(10)
+                .Select(deployment => new GetDashboardResponse.DeploymentDto
+                {
+                    DeploymentId = deployment.Id,
+                    ProjectId = deployment.ProjectId,
+                    Status = deployment.Status.ToString(),
+                    EnvironmentId = deployment.EnvironmentId,
+                    DeployedAt = deployment.StartedAt,
+                    EnvironmentDisplayName = deployment.Environment.DisplayName
+                })
+                .ToArrayAsync();
 
-            var mappedDeployments = MapDeployments(deployments, environments);
             return new GetDashboardResponse
             {
-                LastDeployments = mappedDeployments
+                LastDeployments = deployments
             };
         }
-
-        private async Task<List<Deployment>> GetLastDeployments()
-        {
-            return await _dbContext
-                .Deployments
-                .OrderByDescending(deployment => deployment.StartedAt)
-                .Take(10)
-                .ToListAsync();
-        }
-
-        private GetDashboardResponse.DeploymentDto[] MapDeployments(
-            List<Deployment> deployments,
-            List<Environment> environments)
-        {
-            var mappedDeployments = deployments.Select(deployment => new GetDashboardResponse.DeploymentDto
-            {
-                DeploymentId = deployment.Id,
-                ProjectId = deployment.ProjectId,
-                Status = deployment.Status.ToString(),
-                EnvironmentId = deployment.EnvironmentId,
-                DeployedAt = deployment.StartedAt
-            }).ToArray();
-            
-            foreach (var deployment in mappedDeployments)
-            {
-                var environment = environments.Single(env => env.Id == deployment.EnvironmentId);
-                deployment.EnvironmentDisplayName = environment.DisplayName;
-            }
-
-            return mappedDeployments;
-        }
     }
-    
+
     public class GetDashboardModule : Module
     {
         protected override void Load(ContainerBuilder builder)

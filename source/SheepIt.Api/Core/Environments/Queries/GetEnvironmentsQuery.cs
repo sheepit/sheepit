@@ -23,12 +23,5 @@ namespace SheepIt.Api.Core.Environments.Queries
                 .OrderBy(environment => environment.Rank)
                 .ToListAsync();
         }
-        
-        public Task<List<Environment>> Get(IEnumerable<int> environmentIds)
-        {
-            return _dbContext.Environments
-                .Where(x => environmentIds.Contains(x.Id))
-                .ToListAsync();
-        }
     }
 }
