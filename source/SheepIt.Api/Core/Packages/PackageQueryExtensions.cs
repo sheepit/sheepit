@@ -7,17 +7,21 @@ namespace SheepIt.Api.Core.Packages
 {
     public static class PackageQueryExtensions
     {
-        public static async Task<Package> FindByIdAndProjectId(this DbSet<Package> dbSet, int packageId, string projectId)
+        public static async Task<Package> FindByIdAndProjectId(
+            this IQueryable<Package> dbSet,
+            int packageId,
+            string projectId)
         {
             var foundPackageOrNull = await dbSet
                 .Where(package => package.Id == packageId)
-                .Where(package => package.ProjectId == projectId)
+                .FromProject(projectId)
                 .SingleOrDefaultAsync();
 
             if (foundPackageOrNull == null)
             {
                 throw new InvalidOperationException(
-                    $"Package with id {packageId} in project {projectId} could not be found.");
+                    $"Package with id {packageId} in project {projectId} could not be found."
+                );
             }
 
             return foundPackageOrNull;

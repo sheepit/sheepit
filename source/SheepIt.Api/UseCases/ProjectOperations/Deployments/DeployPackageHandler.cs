@@ -47,59 +47,55 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
     {
         private readonly DeploymentProcessSettings _deploymentProcessSettings;
         private readonly DeploymentProcessRunner _deploymentProcessRunner;
-        private readonly IProjectContext _projectContext;
         private readonly DeploymentProcessDirectoryFactory _deploymentProcessDirectoryFactory;
         private readonly SheepItDbContext _dbContext;
+        private readonly DeploymentFactory _deploymentFactory;
         private readonly IClock _clock;
-        private readonly IdStorage _idStorage;
 
         public DeployPackageHandler(
             DeploymentProcessSettings deploymentProcessSettings,
             DeploymentProcessRunner deploymentProcessRunner,
-            IProjectContext projectContext,
             DeploymentProcessDirectoryFactory deploymentProcessDirectoryFactory,
             SheepItDbContext dbContext,
-            IClock clock,
-            IdStorage idStorage)
+            DeploymentFactory deploymentFactory,
+            IClock clock)
         {
             _deploymentProcessSettings = deploymentProcessSettings;
             _deploymentProcessRunner = deploymentProcessRunner;
-            _projectContext = projectContext;
             _deploymentProcessDirectoryFactory = deploymentProcessDirectoryFactory;
             _dbContext = dbContext;
+            _deploymentFactory = deploymentFactory;
             _clock = clock;
-            _idStorage = idStorage;
         }
 
         public async Task<DeployPackageResponse> Handle(DeployPackageRequest request)
         {
-            var package = await _dbContext.Packages.FindByIdAndProjectId(
-                packageId: request.PackageId,
-                projectId: request.ProjectId
-            );
+            var deployedPackage = await _dbContext.Packages
+                .Include(package => package.Project)
+                .Include(package => package.DeploymentProcess)
+                .FindByIdAndProjectId(
+                    packageId: request.PackageId,
+                    projectId: request.ProjectId
+                );
 
-            var deployment = new Deployment
-            {
-                Id = await _idStorage.GetNext(IdSequence.Deployment),
-                PackageId = package.Id,
-                ProjectId = request.ProjectId,
-                StartedAt = _clock.UtcNow,
-                EnvironmentId = request.EnvironmentId,
-                Status = DeploymentStatus.InProgress
-            };
+            var deployment = await _deploymentFactory.Create(
+                request.ProjectId,
+                request.EnvironmentId,
+                request.PackageId
+            );
 
             _dbContext.Deployments.Add(deployment);
 
-            var deploymentProcess = await _dbContext.DeploymentProcesses
-                .Where(process => process.Id == package.DeploymentProcessId)
-                .SingleAsync();
-
             // todo: [rt] think if this double SaveChanges is a good solution
-            
             await _dbContext.SaveChangesAsync();
 
             // todo: [rt] it looks like the deployment could run asynchronously
-            RunDeployment(_projectContext.Project, package, deployment, deploymentProcess);
+            RunDeployment(
+                project: deployedPackage.Project,
+                package: deployedPackage,
+                deployment: deployment,
+                deploymentProcess: deployedPackage.DeploymentProcess
+            );
             
             await _dbContext.SaveChangesAsync();
 
@@ -109,7 +105,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             };
         }
 
-        private void RunDeployment(Project project, Package package, Deployment deployment,
+        private void RunDeployment(
+            Project project,
+            Package package,
+            Deployment deployment,
             DeploymentProcess deploymentProcess)
         {
             try
@@ -136,8 +135,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             }
             catch (Exception)
             {
-                // todo: log exception
-
                 deployment.MarkExecutionFailed();
 
                 throw;

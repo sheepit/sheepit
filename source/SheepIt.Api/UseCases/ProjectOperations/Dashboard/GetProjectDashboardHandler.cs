@@ -147,6 +147,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         {
             return await _dbContext.Packages
                 .FromProject(projectId)
+                .OrderByNewest()
                 .Select(package => new GetProjectDashboardResponse.PackageDto
                 {
                     Id = package.Id,
