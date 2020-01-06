@@ -23,5 +23,17 @@ namespace SheepIt.Api.Core.Packages
             return foundPackageOrNull;
         }
         
+        public static IQueryable<Package> FromProject(
+            this IQueryable<Package> query,
+            string projectId)
+        {
+            return query.Where(package => package.ProjectId == projectId);
+        }
+        
+        public static IQueryable<Package> OrderByNewest(
+            this IQueryable<Package> query)
+        {
+            return query.OrderByDescending(package => package.CreatedAt);
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace SheepIt.Api.Core.Deployments
             int deploymentId)
         {
             var foundDeploymentOrNull = await dbSet
-                .Where(deployment => deployment.ProjectId == projectId)
+                .FromProject(projectId)
                 .Where(deployment => deployment.Id == deploymentId)
                 .FirstOrDefaultAsync();
 
@@ -27,5 +27,17 @@ namespace SheepIt.Api.Core.Deployments
             return foundDeploymentOrNull;
         }
 
+        public static IQueryable<Deployment> FromProject(
+            this IQueryable<Deployment> query,
+            string projectId)
+        {
+            return query.Where(deployment => deployment.ProjectId == projectId);
+        }
+        
+        public static IQueryable<Deployment> OrderByNewest(
+            this IQueryable<Deployment> query)
+        {
+            return query.OrderByDescending(deployment => deployment.StartedAt);
+        }
     }
 }

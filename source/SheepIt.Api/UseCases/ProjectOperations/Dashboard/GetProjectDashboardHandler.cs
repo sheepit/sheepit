@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SheepIt.Api.Core.Environments.Queries;
+using SheepIt.Api.Core.Deployments;
+using SheepIt.Api.Core.Environments;
+using SheepIt.Api.Core.Packages;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
@@ -71,43 +73,87 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 
     public class GetProjectDashboardHandler : IHandler<GetProjectDashboardRequest, GetProjectDashboardResponse>
     {
-        private readonly IProjectContext _projectContext;
-        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
         private readonly SheepItDbContext _dbContext;
 
         public GetProjectDashboardHandler(
-            IProjectContext projectContext,
-            GetEnvironmentsQuery getEnvironmentsQuery,
             SheepItDbContext dbContext)
         {
-            _projectContext = projectContext;
-            _getEnvironmentsQuery = getEnvironmentsQuery;
             _dbContext = dbContext;
         }
 
-        public async Task<GetProjectDashboardResponse> Handle(GetProjectDashboardRequest options)
+        public async Task<GetProjectDashboardResponse> Handle(GetProjectDashboardRequest request)
         {
-            var deployments = await _dbContext.Deployments
-                .Where(deployment => deployment.ProjectId == options.ProjectId)
-                .ToArrayAsync();
-
-            var packages = await _dbContext.Packages
-                .Where(package => package.ProjectId == options.ProjectId)
-                .ToArrayAsync();
-
-            var environments = await _getEnvironmentsQuery
-                .GetOrderedByRank(options.ProjectId);
-            
             return new GetProjectDashboardResponse
             {
-                Environments = EnvironmentList.GetEnvironments(
-                    environments.ToArray(), deployments, packages),
-                
-                Deployments = DeploymentList.GetDeployments(
-                    deployments, _projectContext.Environments, packages),
-                
-                Packages = PackageList.GetPackages(packages)
+                Environments = await GetEnvironments(request.ProjectId),
+                Deployments = await GetDeployments(request.ProjectId),
+                Packages = await GetPackages(request.ProjectId)
             };
+        }
+
+        private async Task<GetProjectDashboardResponse.EnvironmentDto[]> GetEnvironments(string projectId)
+        {
+            var environmentsWithDeployments = await _dbContext.Environments
+                .FromProject(projectId)
+                .OrderByRank()
+                .Select(environment => new
+                {
+                    EnvironmentId = environment.Id,
+                    DisplayName = environment.DisplayName,
+                    Deployments = environment.Deployments
+                        .OrderByDescending(deployment => deployment.StartedAt)
+                        .Take(1)
+                        .Select(deployment => new GetProjectDashboardResponse.EnvironmentDeploymentDto
+                        {
+                            CurrentDeploymentId = deployment.Id,
+                            CurrentPackageId = deployment.PackageId,
+                            CurrentPackageDescription = deployment.Package.Description,
+                            LastDeployedAt = deployment.StartedAt
+                        })
+                })
+                .ToArrayAsync();
+            
+            // additional in-memory selecting is performed because EF doesn't handle FirstOrDefault
+            // in subqueries well - lack of any deployments was mapped into an empty DTO, instead of a null
+            return environmentsWithDeployments
+                .Select(result => new GetProjectDashboardResponse.EnvironmentDto
+                {
+                    EnvironmentId = result.EnvironmentId,
+                    DisplayName = result.DisplayName,
+                    Deployment = result.Deployments.FirstOrDefault()
+                })
+                .ToArray();
+        }
+
+        private async Task<GetProjectDashboardResponse.DeploymentDto[]> GetDeployments(string projectId)
+        {
+            return await _dbContext.Deployments
+                .FromProject(projectId)
+                .OrderByNewest()
+                .Select(deployment => new GetProjectDashboardResponse.DeploymentDto
+                {
+                    Id = deployment.Id,
+                    EnvironmentId = deployment.Environment.Id,
+                    EnvironmentDisplayName = deployment.Environment.DisplayName,
+                    DeployedAt = deployment.StartedAt,
+                    PackageId = deployment.PackageId,
+                    PackageDescription = deployment.Package.Description,
+                    Status = deployment.Status.ToString()
+                })
+                .ToArrayAsync();
+        }
+
+        private async Task<GetProjectDashboardResponse.PackageDto[]> GetPackages(string projectId)
+        {
+            return await _dbContext.Packages
+                .FromProject(projectId)
+                .Select(package => new GetProjectDashboardResponse.PackageDto
+                {
+                    Id = package.Id,
+                    CreatedAt = package.CreatedAt,
+                    Description = package.Description
+                })
+                .ToArrayAsync();
         }
     }
     
@@ -116,7 +162,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<GetProjectDashboardHandler>()
-                .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
     }
