@@ -43,27 +43,18 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 
     public class DeployPackageHandler : IHandler<DeployPackageRequest, DeployPackageResponse>
     {
-        private readonly DeploymentProcessSettings _deploymentProcessSettings;
-        private readonly DeploymentProcessRunner _deploymentProcessRunner;
-        private readonly DeploymentProcessDirectoryFactory _deploymentProcessDirectoryFactory;
         private readonly SheepItDbContext _dbContext;
         private readonly DeploymentFactory _deploymentFactory;
-        private readonly IClock _clock;
+        private readonly RunDeployment _runDeployment;
 
         public DeployPackageHandler(
-            DeploymentProcessSettings deploymentProcessSettings,
-            DeploymentProcessRunner deploymentProcessRunner,
-            DeploymentProcessDirectoryFactory deploymentProcessDirectoryFactory,
             SheepItDbContext dbContext,
             DeploymentFactory deploymentFactory,
-            IClock clock)
+            RunDeployment runDeployment)
         {
-            _deploymentProcessSettings = deploymentProcessSettings;
-            _deploymentProcessRunner = deploymentProcessRunner;
-            _deploymentProcessDirectoryFactory = deploymentProcessDirectoryFactory;
             _dbContext = dbContext;
             _deploymentFactory = deploymentFactory;
-            _clock = clock;
+            _runDeployment = runDeployment;
         }
 
         public async Task<DeployPackageResponse> Handle(DeployPackageRequest request)
@@ -86,7 +77,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             await _dbContext.SaveChangesAsync();
 
             // todo: [rt] it looks like the deployment could run asynchronously
-            RunDeployment(
+            _runDeployment.Run(
                 project: deployedPackage.Project,
                 package: deployedPackage,
                 deployment: deployment,
@@ -99,42 +90,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             {
                 CreatedDeploymentId = deployment.Id
             };
-        }
-
-        private void RunDeployment(
-            Project project,
-            Package package,
-            Deployment deployment,
-            DeploymentProcess deploymentProcess)
-        {
-            try
-            {
-                // todo: extract part of it to another class
-                var deploymentWorkingDir = _deploymentProcessSettings.WorkingDir
-                    .AddSegment(project.Id)
-                    .AddSegment("deploying-packages")
-                    .AddSegment($"{_clock.UtcNow.FileFriendlyFormat()}_{deployment.EnvironmentId}_package-{package.Id}");
-
-                // todo: make asynchronous
-                var processDirectory = _deploymentProcessDirectoryFactory.CreateFromZip(
-                    deploymentProcessZip: deploymentProcess.File,
-                    toDirectory: deploymentWorkingDir
-                );
-                
-                var processOutput = _deploymentProcessRunner.Run(
-                    processDirectory.Path.ToString(),
-                    deploymentProcessFile: processDirectory.OpenProcessDescriptionFile(),
-                    variablesForEnvironment: package.GetVariablesForEnvironment(deployment.EnvironmentId)
-                );
-
-                deployment.MarkFinished(processOutput);
-            }
-            catch (Exception)
-            {
-                deployment.MarkExecutionFailed();
-
-                throw;
-            }
         }
     }
     
