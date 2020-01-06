@@ -2,8 +2,11 @@
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Environments.Queries;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
@@ -48,32 +51,28 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
     public class GetEnvironmentsForUpdateHandler : IHandler<GetEnvironmentsForUpdateRequest, GetEnvironmentsForUpdateResponse>
     {
-        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
+        private readonly SheepItDbContext _dbContext;
 
-        public GetEnvironmentsForUpdateHandler(GetEnvironmentsQuery getEnvironmentsQuery)
+        public GetEnvironmentsForUpdateHandler(SheepItDbContext dbContext)
         {
-            _getEnvironmentsQuery = getEnvironmentsQuery;
+            _dbContext = dbContext;
         }
 
         public async Task<GetEnvironmentsForUpdateResponse> Handle(GetEnvironmentsForUpdateRequest request)
         {
-            var environments = await _getEnvironmentsQuery
-                .GetOrderedByRank(request.ProjectId);
-            
+            var environments = await _dbContext.Environments
+                .FromProject(request.ProjectId)
+                .OrderByRank()
+                .Select(environment => new GetEnvironmentsForUpdateResponse.EnvironmentDto
+                {
+                    EnvironmentId = environment.Id,
+                    DisplayName = environment.DisplayName
+                })
+                .ToArrayAsync();
+
             return new GetEnvironmentsForUpdateResponse
             {
                 Environments = environments
-                    .Select(MapEnvironment)
-                    .ToArray()
-            };
-        }
-
-        private static GetEnvironmentsForUpdateResponse.EnvironmentDto MapEnvironment(Environment environment)
-        {
-            return new GetEnvironmentsForUpdateResponse.EnvironmentDto
-            {
-                DisplayName = environment.DisplayName,
-                EnvironmentId = environment.Id
             };
         }
     }
