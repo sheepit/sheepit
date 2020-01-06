@@ -6,6 +6,7 @@ using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Packages;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
@@ -47,16 +48,17 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class GetLastPackageHandler : IHandler<GetLastPackageRequest, GetLastPackageResponse>
     {
-        private readonly PackageRepository _packageRepository;
+        private readonly SheepItDbContext _sheepItDbContext;
 
-        public GetLastPackageHandler(PackageRepository packageRepository)
+        public GetLastPackageHandler(SheepItDbContext sheepItDbContext)
         {
-            _packageRepository = packageRepository;
+            _sheepItDbContext = sheepItDbContext;
         }
 
         public async Task<GetLastPackageResponse> Handle(GetLastPackageRequest request)
         {
-            var package = await _packageRepository.GetNewest(request.ProjectId);
+            var package = await _sheepItDbContext.Packages
+                .FindNewestInProject(request.ProjectId);
 
             return new GetLastPackageResponse
             {
@@ -69,7 +71,12 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                     {
                         Name = values.Name,
                         DefaultValue = values.DefaultValue,
-                        EnvironmentValues = values.GetEnvironmentValues().ToDictionary(pair => pair.Key, pair => pair.Value)
+                        EnvironmentValues = values
+                            .GetEnvironmentValues()
+                            .ToDictionary(
+                                pair => pair.Key,
+                                pair => pair.Value
+                            )
                     })
                     .ToArray()
             };

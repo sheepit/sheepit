@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Packages;
 using SheepIt.Api.DataAccess;
@@ -38,23 +39,23 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class EditPackageVariablesHandler : IHandler<EditPackageVariablesRequest>
     {
-        private readonly PackageRepository _packageRepository;
         private readonly SheepItDbContext _dbContext;
         private readonly PackageFactory _packageFactory;
 
         public EditPackageVariablesHandler(
-            PackageRepository packageRepository,
             SheepItDbContext dbContext,
             PackageFactory packageFactory)
         {
-            _packageRepository = packageRepository;
             _dbContext = dbContext;
             _packageFactory = packageFactory;
         }
 
         public async Task Handle(EditPackageVariablesRequest request)
         {
-            var package = await _packageRepository.GetNewest(request.ProjectId);
+            var package = await _dbContext.Packages
+                .FromProject(request.ProjectId)
+                .OrderByNewest()
+                .FirstAsync();
             
             var variableValues = request.NewVariables
                 .Select(update => VariableValues.Create(update.Name, update.DefaultValue, update.EnvironmentValues))

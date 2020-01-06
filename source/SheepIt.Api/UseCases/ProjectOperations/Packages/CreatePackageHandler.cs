@@ -5,6 +5,7 @@ using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Packages;
@@ -66,20 +67,17 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class CreatePackageHandler : IHandler<CreatePackageRequest, CreatePackageResponse>
     {
-        private readonly PackageRepository _packageRepository;
         private readonly ValidateZipFile _validateZipFile;
         private readonly SheepItDbContext _dbContext;
         private readonly PackageFactory _packageFactory;
         private readonly DeploymentProcessFactory _deploymentProcessFactory;
 
         public CreatePackageHandler(
-            PackageRepository packageRepository,
             ValidateZipFile validateZipFile,
             SheepItDbContext dbContext,
             PackageFactory packageFactory,
             DeploymentProcessFactory deploymentProcessFactory)
         {
-            _packageRepository = packageRepository;
             _validateZipFile = validateZipFile;
             _dbContext = dbContext;
             _packageFactory = packageFactory;
@@ -88,7 +86,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
         public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
         {
-            var package = await _packageRepository.GetNewest(request.ProjectId);
+            var package = await _dbContext.Packages
+                .FromProject(request.ProjectId)
+                .OrderByNewest()
+                .FirstAsync();
 
             var zipFileBytes = await request.ZipFile.ToByteArray();
             
@@ -101,13 +102,14 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
             _dbContext.DeploymentProcesses.Add(deploymentProcess);
 
-            var variableValues = ComputeVariableValues(request);
+            var variableValues = ComputeVariableValues(request
+                .VariableUpdates);
 
             var newPackage = await _packageFactory.CreatePackageWithUpdatedProperties(
-                package,
-                variableValues,
-                request.Description,
-                deploymentProcess.Id
+                basePackage: package,
+                newVariables: variableValues,
+                newDescription: request.Description,
+                deploymentPackageId: deploymentProcess.Id
             );
 
             _dbContext.Packages.Add(newPackage);
@@ -120,10 +122,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             };
         }
 
-        private VariableValues[] ComputeVariableValues(CreatePackageRequest request)
+        private VariableValues[] ComputeVariableValues(CreatePackageRequest.UpdateVariable[] variableUpdates)
         {
-            return request
-               .VariableUpdates
+            return variableUpdates
                ?.Select(update => VariableValues.Create(update.Name, update.DefaultValue, update.EnvironmentValues))
                .ToArray() ?? new VariableValues[0];
         }

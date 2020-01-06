@@ -41,6 +41,13 @@ namespace SheepIt.Api.Core.Deployments
             return query.Where(deployment => deployment.ProjectId == projectId);
         }
         
+        public static IQueryable<Deployment> OfPackage(
+            this IQueryable<Deployment> query,
+            int packageId)
+        {
+            return query.Where(deployment => deployment.PackageId == packageId);
+        }
+        
         public static IQueryable<Deployment> OrderByNewest(
             this IQueryable<Deployment> query)
         {

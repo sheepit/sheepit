@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.DataAccess;
@@ -60,34 +61,26 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             _dbContext = dbContext;
         }
 
-        public async Task<ListPackageDeploymentsResponse> Handle(ListPackageDeploymentsRequest options)
+        public async Task<ListPackageDeploymentsResponse> Handle(ListPackageDeploymentsRequest request)
         {
             var deployments = await _dbContext.Deployments
-                .Where(deployment => deployment.ProjectId == options.ProjectId)
-                .Where(deployment => deployment.PackageId == options.PackageId)
-                .OrderBy(deployment => deployment.StartedAt)
-                .ToArrayAsync();
-
-            var environments = await _getEnvironmentsQuery.GetOrderedByRank(options.ProjectId);
-            
-            var deploymentDtos = deployments.Join(
-                inner: environments,
-                outerKeySelector: deployment => deployment.EnvironmentId,
-                innerKeySelector: environment => environment.Id,
-                resultSelector: (deployment, environment) => new ListPackageDeploymentsResponse.DeploymentDto
+                .FromProject(request.ProjectId)
+                .OfPackage(request.PackageId)
+                .OrderByNewest()
+                .Select(deployment => new ListPackageDeploymentsResponse.DeploymentDto
                 {
                     Id = deployment.Id,
-                    EnvironmentId = environment.Id,
-                    EnvironmentDisplayName = environment.DisplayName,
+                    EnvironmentId = deployment.Environment.Id,
+                    EnvironmentDisplayName = deployment.Environment.DisplayName,
                     DeployedAt = deployment.StartedAt,
                     PackageId = deployment.PackageId,
                     Status = deployment.Status.ToString()
-                }
-            );
+                })
+                .ToArrayAsync();
 
             return new ListPackageDeploymentsResponse
             {
-                Deployments = deploymentDtos.ToArray()
+                Deployments = deployments
             };
         }
     }
