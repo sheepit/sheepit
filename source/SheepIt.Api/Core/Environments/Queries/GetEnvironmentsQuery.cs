@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -30,21 +29,6 @@ namespace SheepIt.Api.Core.Environments.Queries
             return _dbContext.Environments
                 .Where(x => environmentIds.Contains(x.Id))
                 .ToListAsync();
-        }
-        
-        public async Task<Environment> GetByProjectAndId(string projectId, int environmentId)
-        {
-            var foundDocumentOrNull = await _dbContext
-                .Environments
-                .SingleOrDefaultAsync(x => x.ProjectId == projectId && x.Id == environmentId);
-            
-            if (foundDocumentOrNull == null)
-            {
-                throw new InvalidOperationException(
-                    $"Document of type {typeof(Environment).Name} with id {environmentId} in project {projectId} could not be found.");
-            }
-
-            return foundDocumentOrNull;
         }
     }
 }

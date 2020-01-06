@@ -8,13 +8,13 @@ namespace SheepIt.Api.Core.Deployments
     public static class DeploymentQueryExtensions
     {
         public static async Task<Deployment> FindByIdAndProjectId(
-            this DbSet<Deployment> dbSet,
+            this IQueryable<Deployment> dbSet,
             string projectId,
             int deploymentId)
         {
             var foundDeploymentOrNull = await dbSet
                 .FromProject(projectId)
-                .Where(deployment => deployment.Id == deploymentId)
+                .WithId(deploymentId)
                 .FirstOrDefaultAsync();
 
             if (foundDeploymentOrNull == null)
@@ -27,6 +27,13 @@ namespace SheepIt.Api.Core.Deployments
             return foundDeploymentOrNull;
         }
 
+        public static IQueryable<Deployment> WithId(
+            this IQueryable<Deployment> query,
+            int deploymentId)
+        {
+            return query.Where(deployment => deployment.Id == deploymentId);
+        }
+        
         public static IQueryable<Deployment> FromProject(
             this IQueryable<Deployment> query,
             string projectId)

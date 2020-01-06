@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
@@ -59,77 +61,52 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
 
     public class GetDeploymentDetailsHandler : IHandler<GetDeploymentDetailsRequest, GetDeploymentDetailsResponse>
     {
-        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
         private readonly SheepItDbContext _dbContext;
 
         public GetDeploymentDetailsHandler(
-            GetEnvironmentsQuery getEnvironmentsQuery,
             SheepItDbContext dbContext)
         {
-            _getEnvironmentsQuery = getEnvironmentsQuery;
             _dbContext = dbContext;
         }
 
         public async Task<GetDeploymentDetailsResponse> Handle(GetDeploymentDetailsRequest request)
         {
-            var deployment = await _dbContext.Deployments.FindByIdAndProjectId(
-                projectId: request.ProjectId,
-                deploymentId: request.DeploymentId
-            );
+            var deployment = await _dbContext.Deployments
+                .Include(deployment1 => deployment1.Environment)
+                .Include(deployment1 => deployment1.Package)
+                .FindByIdAndProjectId(
+                    projectId: request.ProjectId,
+                    deploymentId: request.DeploymentId
+                );
 
-            var environment = await _getEnvironmentsQuery
-                .GetByProjectAndId(request.ProjectId, deployment.EnvironmentId);
-
-            var package = await _dbContext.Packages.FindByIdAndProjectId(
-                packageId: deployment.PackageId,
-                projectId: request.ProjectId
-            );
-
-            var variablesForEnvironment = package.GetVariablesForEnvironment(environment.Id);
-            
             return new GetDeploymentDetailsResponse
             {
                 Id = deployment.Id,
                 Status = deployment.Status.ToString(),
                 PackageId = deployment.PackageId,
-                PackageDescription = package.Description,
-                EnvironmentId = environment.Id,
-                EnvironmentDisplayName = environment.DisplayName,
+                PackageDescription = deployment.Package.Description,
+                EnvironmentId = deployment.Environment.Id,
+                EnvironmentDisplayName = deployment.Environment.DisplayName,
                 DeployedAt = deployment.StartedAt,
-                StepResults = GetStepResults(deployment),
-                Variables = variablesForEnvironment
-                    .Select(MapVariableForEnvironment)
+                
+                StepResults = deployment
+                    .GetOutputStepsOrEmpty()
+                    .Select(result => new GetDeploymentDetailsResponse.CommandOutput
+                    {
+                        Command = result.Command,
+                        Successful = result.Successful,
+                        Output = result.Output.ToArray()
+                    })
+                    .ToArray(),
+                
+                Variables = deployment.Package
+                    .GetVariablesForEnvironment(deployment.Environment.Id)
+                    .Select(variableForEnvironment => new GetDeploymentDetailsResponse.VariablesForEnvironmentDto
+                    {
+                        Name = variableForEnvironment.Name,
+                        Value = variableForEnvironment.Value
+                    })
                     .ToArray()
-            };
-        }
-
-
-        private GetDeploymentDetailsResponse.CommandOutput[] GetStepResults(Deployment deployment)
-        {
-            // todo: this is ugly af
-            var steps = deployment.ProcessOutput?.Steps ?? Enumerable.Empty<ProcessStepResult>();
-
-            return steps
-                .Select(MapStepResult)
-                .ToArray();
-        }
-
-        private GetDeploymentDetailsResponse.CommandOutput MapStepResult(ProcessStepResult result)
-        {
-            return new GetDeploymentDetailsResponse.CommandOutput
-            {
-                Command = result.Command,
-                Successful = result.Successful,
-                Output = result.Output.ToArray()
-            };
-        }
-
-        private static GetDeploymentDetailsResponse.VariablesForEnvironmentDto MapVariableForEnvironment(VariableForEnvironment variableForEnvironment)
-        {
-            return new GetDeploymentDetailsResponse.VariablesForEnvironmentDto
-            {
-                Name = variableForEnvironment.Name,
-                Value = variableForEnvironment.Value
             };
         }
     }
@@ -139,7 +116,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<GetDeploymentDetailsHandler>()
-                .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
     }

@@ -44,6 +44,11 @@ namespace SheepIt.Api.Core.Deployments
             Status = DeploymentStatus.ExecutionFailed;
         }
 
+        // todo: [rt] this should be replaced initiating ProcessOutput when deployment is created (with empty steps) 
+        public ProcessStepResult[] GetOutputStepsOrEmpty()
+        {
+            return ProcessOutput?.Steps ?? new ProcessStepResult[0];
+        }
     }
     
     public enum DeploymentStatus
