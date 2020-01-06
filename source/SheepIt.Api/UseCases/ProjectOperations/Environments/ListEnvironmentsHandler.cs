@@ -2,9 +2,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
@@ -40,33 +42,28 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
     public class ListEnvironmentsHandler : IHandler<ListEnvironmentsRequest, ListEnvironmentsResponse>
     {
-        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
+        private readonly SheepItDbContext _dbContext;
 
-        public ListEnvironmentsHandler(
-            GetEnvironmentsQuery getEnvironmentsQuery)
+        public ListEnvironmentsHandler(SheepItDbContext dbContext)
         {
-            _getEnvironmentsQuery = getEnvironmentsQuery;
+            _dbContext = dbContext;
         }
 
         public async Task<ListEnvironmentsResponse> Handle(ListEnvironmentsRequest request)
         {
-            var environments = await _getEnvironmentsQuery
-                .GetOrderedByRank(request.ProjectId);
-
+            var environments = await _dbContext.Environments
+                .FromProject(request.ProjectId)
+                .OrderByRank()
+                .Select(environment => new ListEnvironmentsResponse.EnvironmentDto
+                {
+                    Id = environment.Id,
+                    DisplayName = environment.DisplayName
+                })
+                .ToArrayAsync();
+            
             return new ListEnvironmentsResponse
             {
                 Environments = environments
-                    .Select(Map)
-                    .ToArray()
-            };
-        }
-
-        private ListEnvironmentsResponse.EnvironmentDto Map(Environment environment)
-        {
-            return new ListEnvironmentsResponse.EnvironmentDto
-            {
-                Id = environment.Id,
-                DisplayName = environment.DisplayName
             };
         }
     }
@@ -76,7 +73,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<ListEnvironmentsHandler>()
-                .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
     }
