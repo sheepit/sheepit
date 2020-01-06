@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace SheepIt.Api.Tests.TestInfrastructure
@@ -5,26 +6,26 @@ namespace SheepIt.Api.Tests.TestInfrastructure
     public class Test<TFixture>
         where TFixture : IFixture, new()
     {
-        public TFixture Fixture { get; private set; }
+        protected TFixture Fixture { get; private set; }
         
         [SetUp]
-        public void SetUp()
+        public async Task SetUp()
         {
             Fixture = new TFixture();
             
-            Fixture.SetUp();
+            await Fixture.SetUp();
         }
 
         [TearDown]
-        public void TearDown()
+        public async Task TearDown()
         {
-            Fixture.TearDown();
+            await Fixture.TearDown();
         }
     }
 
     public interface IFixture
     {
-        void SetUp();
-        void TearDown();
+        Task SetUp();
+        Task TearDown();
     }
 }

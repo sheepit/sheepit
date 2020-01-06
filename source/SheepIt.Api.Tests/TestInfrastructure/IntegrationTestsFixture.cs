@@ -11,7 +11,7 @@ namespace SheepIt.Api.Tests.TestInfrastructure
     {
         private IContainer _container;
         
-        public void SetUp()
+        public async Task SetUp()
         {
             var builder = new ContainerBuilder();
             
@@ -20,15 +20,15 @@ namespace SheepIt.Api.Tests.TestInfrastructure
 
             _container = builder.Build();
 
-            ClearDatabase();
+            await ClearDatabase();
         }
 
-        private void ClearDatabase()
+        private async Task ClearDatabase()
         {
-            using var dbContext = CreateSheepItDbContext();
+            await using var dbContext = CreateSheepItDbContext();
             
-            dbContext.Database.EnsureDeleted();
-            dbContext.Database.Migrate();
+            await TestDatabase.TruncateDatabase(dbContext);
+            await TestDatabase.ResetSequences(dbContext);
         }
 
         public async Task<TResponse> Handle<TResponse>(IRequest<TResponse> request)
@@ -53,19 +53,17 @@ namespace SheepIt.Api.Tests.TestInfrastructure
         private SheepItDbContext CreateSheepItDbContext()
         {
             var configuration = _container.Resolve<IConfiguration>();
-            
-            var dbContextOptions = new DbContextOptionsBuilder<SheepItDbContext>()
-                .UseNpgsql(configuration.GetConnectionString(SheepItDbContext.ConnectionStringName))
-                .Options;
-            
-            return new SheepItDbContext(dbContextOptions);
+
+            return TestDatabase.CreateSheepItDbContext(configuration);
         }
 
         public TResolved Resolve<TResolved>() => _container.Resolve<TResolved>();
 
-        public void TearDown()
+        public Task TearDown()
         {
             _container?.Dispose();
+
+            return Task.CompletedTask;
         }
     }
 }
