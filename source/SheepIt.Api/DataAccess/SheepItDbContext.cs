@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SheepIt.Api.Core.DeploymentProcesses;
-using SheepIt.Api.Core.Deployments;
-using SheepIt.Api.Core.Environments;
-using SheepIt.Api.Core.Packages;
-using SheepIt.Api.Core.Projects;
 using SheepIt.Api.DataAccess.Sequencing;
-using Environment = SheepIt.Api.Core.Environments.Environment;
+using SheepIt.Api.Model.DeploymentProcesses;
+using SheepIt.Api.Model.Deployments;
+using SheepIt.Api.Model.Environments;
+using SheepIt.Api.Model.Packages;
+using SheepIt.Api.Model.Projects;
+using Environment = SheepIt.Api.Model.Environments.Environment;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Local - db sets are created by EF
 

@@ -1,4 +1,4 @@
-namespace SheepIt.Api.Core.Packages
+namespace SheepIt.Api.Model.Packages
 {
     public class VariableForEnvironment
     {

@@ -5,13 +5,13 @@ using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Packages;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Web;
+using SheepIt.Api.Model.DeploymentProcesses;
+using SheepIt.Api.Model.Packages;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 {

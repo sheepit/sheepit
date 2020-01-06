@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using SheepIt.Api.Core.Deployments;
-using SheepIt.Api.Core.Packages;
-using Environment = SheepIt.Api.Core.Environments.Environment;
+using SheepIt.Api.Model.Deployments;
+using SheepIt.Api.Model.Packages;
+using Environment = SheepIt.Api.Model.Environments.Environment;
 
-namespace SheepIt.Api.Core.Projects
+namespace SheepIt.Api.Model.Projects
 {
     public class Project
     {

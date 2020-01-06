@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Amazon.CloudWatchLogs.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace SheepIt.Api.Core.Deployments
+namespace SheepIt.Api.Model.Deployments
 {
     public static class DeploymentQueryExtensions
     {

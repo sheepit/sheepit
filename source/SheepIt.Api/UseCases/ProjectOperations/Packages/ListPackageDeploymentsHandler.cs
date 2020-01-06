@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
+using SheepIt.Api.Model.Deployments;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 {

@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using SheepIt.Api.Core.DeploymentProcesses;
-using SheepIt.Api.Core.Deployments;
-using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Model.DeploymentProcesses;
+using SheepIt.Api.Model.Deployments;
+using SheepIt.Api.Model.Projects;
 
-namespace SheepIt.Api.Core.Packages
+namespace SheepIt.Api.Model.Packages
 {
     public class Package
     {

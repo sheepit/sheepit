@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.DataAccess.Sequencing;
 
-namespace SheepIt.Api.Core.Environments
+namespace SheepIt.Api.Model.Environments
 {
     public class EnvironmentFactory
     {

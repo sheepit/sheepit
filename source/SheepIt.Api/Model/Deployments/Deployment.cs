@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
-using SheepIt.Api.Core.Packages;
-using SheepIt.Api.Core.Projects;
-using Environment = SheepIt.Api.Core.Environments.Environment;
+using SheepIt.Api.Model.Packages;
+using SheepIt.Api.Model.Projects;
+using Environment = SheepIt.Api.Model.Environments.Environment;
 
-namespace SheepIt.Api.Core.Deployments
+namespace SheepIt.Api.Model.Deployments
 {
     public class Deployment
     {

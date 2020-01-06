@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
-using SheepIt.Api.DataAccess;
 using SheepIt.Api.DataAccess.Sequencing;
 
-namespace SheepIt.Api.Core.DeploymentProcesses
+namespace SheepIt.Api.Model.DeploymentProcesses
 {
     public class DeploymentProcessFactory
     {

@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using SheepIt.Api.DataAccess.Sequencing;
 using SheepIt.Api.Infrastructure.Time;
 
-namespace SheepIt.Api.Core.Packages
+namespace SheepIt.Api.Model.Packages
 {
     public class PackageFactory
     {

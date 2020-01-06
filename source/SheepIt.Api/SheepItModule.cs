@@ -1,10 +1,7 @@
 using Autofac;
 using Autofac.Features.ResolveAnything;
 using SheepIt.Api.Core.DeploymentProcessRunning;
-using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.Core.Packages;
-using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Time;

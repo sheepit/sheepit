@@ -5,7 +5,7 @@ using SheepIt.Api.Infrastructure.Utils;
 
 // ReSharper disable MemberCanBePrivate.Global - npgsql requires json fields to have public setters
 
-namespace SheepIt.Api.Core.Packages
+namespace SheepIt.Api.Model.Packages
 {
     public class VariableValues
     {

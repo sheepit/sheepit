@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace SheepIt.Api.Core.Deployments
+namespace SheepIt.Api.Model.Deployments
 {
     public class DeploymentMap : IEntityTypeConfiguration<Deployment>
     {

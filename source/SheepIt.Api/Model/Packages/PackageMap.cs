@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace SheepIt.Api.Core.Packages
+namespace SheepIt.Api.Model.Packages
 {
     public class PackageMap : IEntityTypeConfiguration<Package>
     {

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace SheepIt.Api.Core.DeploymentProcesses
+namespace SheepIt.Api.Model.DeploymentProcesses
 {
     public class DeploymentProcessMap : IEntityTypeConfiguration<DeploymentProcess>
     {

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace SheepIt.Api.Core.Projects
+namespace SheepIt.Api.Model.Projects
 {
     public class ProjectMap : IEntityTypeConfiguration<Project>
     {

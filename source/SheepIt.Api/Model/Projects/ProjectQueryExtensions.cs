@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace SheepIt.Api.Core.Projects
+namespace SheepIt.Api.Model.Projects
 {
     public static class ProjectQueryExtensions
     {

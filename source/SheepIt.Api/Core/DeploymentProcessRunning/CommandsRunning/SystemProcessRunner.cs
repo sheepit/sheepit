@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using SheepIt.Api.Core.Packages;
+using SheepIt.Api.Model.Packages;
 
 namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning
 {

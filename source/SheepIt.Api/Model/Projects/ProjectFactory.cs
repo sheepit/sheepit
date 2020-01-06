@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 
-namespace SheepIt.Api.Core.Projects
+namespace SheepIt.Api.Model.Projects
 {
     public class ProjectFactory
     {

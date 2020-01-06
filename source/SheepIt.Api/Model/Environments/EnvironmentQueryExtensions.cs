@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace SheepIt.Api.Core.Environments
+namespace SheepIt.Api.Model.Environments
 {
     public static class EnvironmentQueryExtensions
     {

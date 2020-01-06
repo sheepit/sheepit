@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
-using SheepIt.Api.Core.Deployments;
-using SheepIt.Api.Core.Packages;
+using SheepIt.Api.Model.Deployments;
+using SheepIt.Api.Model.Packages;
 
 namespace SheepIt.Api.Core.DeploymentProcessRunning
 {

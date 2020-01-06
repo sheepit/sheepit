@@ -5,7 +5,7 @@ using System.Linq;
 using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 
-namespace SheepIt.Api.Core.DeploymentProcesses
+namespace SheepIt.Api.Model.DeploymentProcesses
 {
     public class ValidateZipFile
     {

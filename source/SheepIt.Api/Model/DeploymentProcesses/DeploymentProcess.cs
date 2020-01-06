@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using SheepIt.Api.Core.Deployments;
-using SheepIt.Api.Core.Projects;
+using SheepIt.Api.Model.Packages;
+using SheepIt.Api.Model.Projects;
 
-namespace SheepIt.Api.Core.Environments
+namespace SheepIt.Api.Model.DeploymentProcesses
 {
-    public class Environment
+    public class DeploymentProcess
     {
         // identity
         
@@ -15,11 +15,10 @@ namespace SheepIt.Api.Core.Environments
         public string ProjectId { get; set; }
         public virtual Project Project { get; set; }
         
-        public virtual List<Deployment> Deployments { get; set; }
+        public virtual List<Package> Packages { get; set; }
         
         // data
         
-        public string DisplayName { get; set; }
-        public int Rank { get; set; }
+        public byte[] File { get; set; }
     }
 }

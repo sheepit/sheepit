@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Amazon.CloudWatchLogs.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace SheepIt.Api.Core.Packages
+namespace SheepIt.Api.Model.Packages
 {
     public static class PackageQueryExtensions
     {

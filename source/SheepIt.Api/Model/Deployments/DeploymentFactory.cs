@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
-using SheepIt.Api.DataAccess;
 using SheepIt.Api.DataAccess.Sequencing;
 using SheepIt.Api.Infrastructure.Time;
 
-namespace SheepIt.Api.Core.Deployments
+namespace SheepIt.Api.Model.Deployments
 {
     public class DeploymentFactory
     {

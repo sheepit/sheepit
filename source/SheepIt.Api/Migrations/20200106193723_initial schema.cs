@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using SheepIt.Api.Core.Deployments;
-using SheepIt.Api.Core.Packages;
+using SheepIt.Api.Model.Deployments;
+using SheepIt.Api.Model.Packages;
 
 namespace SheepIt.Api.Migrations
 {

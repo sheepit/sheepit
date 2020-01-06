@@ -4,15 +4,15 @@ using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SheepIt.Api.Core.DeploymentProcesses;
-using SheepIt.Api.Core.Environments;
-using SheepIt.Api.Core.Projects;
-using SheepIt.Api.Core.Packages;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Web;
+using SheepIt.Api.Model.DeploymentProcesses;
+using SheepIt.Api.Model.Environments;
+using SheepIt.Api.Model.Packages;
+using SheepIt.Api.Model.Projects;
 
 namespace SheepIt.Api.UseCases.ProjectManagement
 {
