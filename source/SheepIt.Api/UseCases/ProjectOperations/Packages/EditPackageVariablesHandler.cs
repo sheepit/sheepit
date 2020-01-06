@@ -52,10 +52,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
         public async Task Handle(EditPackageVariablesRequest request)
         {
-            var package = await _dbContext.Packages
-                .FromProject(request.ProjectId)
-                .OrderByNewest()
-                .FirstAsync();
+            var package = await _dbContext.Packages.FindNewestInProject(
+                projectId: request.ProjectId
+            );
             
             var variableValues = request.NewVariables
                 .Select(update => VariableValues.Create(update.Name, update.DefaultValue, update.EnvironmentValues))

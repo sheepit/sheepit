@@ -32,10 +32,5 @@ namespace SheepIt.Api.Core.Projects
                 .Projects
                 .FirstOrDefaultAsync(project => project.Id == id);
         }
-
-        public Project Create(Project project)
-        {
-            return _dbContext.Projects.Add(project).Entity;
-        }
     }
 }

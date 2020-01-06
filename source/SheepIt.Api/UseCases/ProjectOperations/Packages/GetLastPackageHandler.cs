@@ -48,17 +48,18 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class GetLastPackageHandler : IHandler<GetLastPackageRequest, GetLastPackageResponse>
     {
-        private readonly SheepItDbContext _sheepItDbContext;
+        private readonly SheepItDbContext _dbContext;
 
-        public GetLastPackageHandler(SheepItDbContext sheepItDbContext)
+        public GetLastPackageHandler(SheepItDbContext dbContext)
         {
-            _sheepItDbContext = sheepItDbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<GetLastPackageResponse> Handle(GetLastPackageRequest request)
         {
-            var package = await _sheepItDbContext.Packages
-                .FindNewestInProject(request.ProjectId);
+            var package = await _dbContext.Packages.FindNewestInProject(
+                projectId: request.ProjectId
+            );
 
             return new GetLastPackageResponse
             {

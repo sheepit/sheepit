@@ -86,10 +86,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
         public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
         {
-            var package = await _dbContext.Packages
-                .FromProject(request.ProjectId)
-                .OrderByNewest()
-                .FirstAsync();
+            var package = await _dbContext.Packages.FindNewestInProject(
+                projectId: request.ProjectId
+            );
 
             var zipFileBytes = await request.ZipFile.ToByteArray();
             

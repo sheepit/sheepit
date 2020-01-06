@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.Projects;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
@@ -36,31 +38,26 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
     public class ListProjectsHandler : IHandler<ListProjectsRequest, ListProjectsResponse>
     {
-        private readonly GetProjectsListQuery _getProjectsListQuery;
+        private readonly SheepItDbContext _dbContext;
 
-        public ListProjectsHandler(GetProjectsListQuery getProjectsListQuery)
+        public ListProjectsHandler(SheepItDbContext dbContext)
         {
-            _getProjectsListQuery = getProjectsListQuery;
+            _dbContext = dbContext;
         }
 
         public async Task<ListProjectsResponse> Handle(ListProjectsRequest request)
         {
-            var projects = await _getProjectsListQuery
-                .Get();
+            var projects = await _dbContext.Projects
+                .Select(project => new ListProjectsResponse.ProjectDto
+                {
+                    Id = project.Id
+                })                
+                .OrderBy(project => project.Id)
+                .ToArrayAsync();
 
             return new ListProjectsResponse
             {
                 Projects = projects
-                    .Select(MapProject)
-                    .ToArray()
-            };
-        }
-
-        private ListProjectsResponse.ProjectDto MapProject(Project project)
-        {
-            return new ListProjectsResponse.ProjectDto
-            {
-                Id = project.Id
             };
         }
     }

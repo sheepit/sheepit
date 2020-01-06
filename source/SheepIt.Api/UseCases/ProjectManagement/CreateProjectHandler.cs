@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.DeploymentProcesses;
 using SheepIt.Api.Core.Projects;
 using SheepIt.Api.Core.Packages;
@@ -59,7 +61,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     {
         private readonly Core.Environments.AddEnvironment _addEnvironment;
         private readonly ValidateZipFile _validateZipFile;
-        private readonly ProjectRepository _projectRepository;
         private readonly SheepItDbContext _dbContext;
         private readonly PackageFactory _packageFactory;
         private readonly DeploymentProcessFactory _deploymentProcessFactory;
@@ -67,14 +68,12 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         public CreateProjectHandler(
             Core.Environments.AddEnvironment addEnvironment,
             ValidateZipFile validateZipFile,
-            ProjectRepository projectRepository,
             SheepItDbContext dbContext,
             PackageFactory packageFactory,
             DeploymentProcessFactory deploymentProcessFactory)
         {
             _addEnvironment = addEnvironment;
             _validateZipFile = validateZipFile;
-            _projectRepository = projectRepository;
             _dbContext = dbContext;
             _packageFactory = packageFactory;
             _deploymentProcessFactory = deploymentProcessFactory;
@@ -82,58 +81,88 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
         public async Task Handle(CreateProjectRequest request)
         {
-            // validation and persisting is split, as we don't have transactions yet
-            // and failing midway would leave system in an inconsistent state
-            
-            // validation
-            
-            await ValidateProjectIdUniqueness(request.ProjectId);
-            
-            var zipFileBytes = await request.ZipFile.ToByteArray();
-            
-            _validateZipFile.Validate(zipFileBytes);
-
-            // persisting
-
-            _projectRepository.Create(new Project
-            {
-                Id = request.ProjectId
-            });
-
-            await _addEnvironment.AddMany(
-                projectId: request.ProjectId,
-                displayNames: request.EnvironmentNames
-            );
-            
-            var deploymentProcess = await _deploymentProcessFactory.Create(
-                projectId: request.ProjectId,
-                zipFileBytes: zipFileBytes
+            await CreateProject(
+                projectId: request.ProjectId
             );
 
-            _dbContext.DeploymentProcesses.Add(deploymentProcess);
+            await CreateEnvironments(
+                projectId: request.ProjectId,
+                environmentNames: request.EnvironmentNames
+            );
+            
+            var deploymentProcess = await CreateDeploymentProcess(
+                projectId: request.ProjectId,
+                zipFile: request.ZipFile
+            );
 
             // first package is created so other operations can copy it
-            var firstPackage = await _packageFactory.CreateFirstPackage(
+            await CreatePackage(
                 projectId: request.ProjectId,
                 deploymentProcessId: deploymentProcess.Id
             );
 
-            _dbContext.Packages.Add(firstPackage);
-
             await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task CreateProject(string projectId)
+        {
+            await ValidateProjectIdUniqueness(projectId);
+
+            var project = new Project
+            {
+                Id = projectId
+            };
+
+            _dbContext.Projects.Add(project);
         }
 
         private async Task ValidateProjectIdUniqueness(string projectId)
         {
-            var duplicatedProject = await _projectRepository.TryGet(projectId);
-            
-            if (duplicatedProject != null)
+            var projectExists = await _dbContext.Projects
+                .WithId(projectId)
+                .AnyAsync();
+
+            if (projectExists)
             {
                 throw new CustomException(
                     "CREATE_PROJECT_ID_NOT_UNIQUE",
                     "Project with specified id already exists"
                 );
             }
+        }
+
+        private async Task CreateEnvironments(string projectId, string[] environmentNames)
+        {
+            await _addEnvironment.AddMany(
+                projectId: projectId,
+                displayNames: environmentNames
+            );
+        }
+
+        private async Task<DeploymentProcess> CreateDeploymentProcess(string projectId, IFormFile zipFile)
+        {
+            var zipFileBytes = await zipFile.ToByteArray();
+
+            _validateZipFile.Validate(zipFileBytes);
+
+            var deploymentProcess = await _deploymentProcessFactory.Create(
+                projectId: projectId,
+                zipFileBytes: zipFileBytes
+            );
+
+            _dbContext.DeploymentProcesses.Add(deploymentProcess);
+            
+            return deploymentProcess;
+        }
+
+        private async Task CreatePackage(string projectId, int deploymentProcessId)
+        {
+            var firstPackage = await _packageFactory.CreateFirstPackage(
+                projectId: projectId,
+                deploymentProcessId: deploymentProcessId
+            );
+
+            _dbContext.Packages.Add(firstPackage);
         }
     }
 
