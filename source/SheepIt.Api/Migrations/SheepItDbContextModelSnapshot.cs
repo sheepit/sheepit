@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SheepIt.Api.Core.Deployments;
 using SheepIt.Api.Core.Packages;
@@ -35,6 +36,7 @@ namespace SheepIt.Api.Migrations
                         .HasColumnType("bytea");
 
                     b.Property<string>("ProjectId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -61,6 +63,7 @@ namespace SheepIt.Api.Migrations
                         .HasColumnType("jsonb");
 
                     b.Property<string>("ProjectId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("StartedAt")
@@ -92,6 +95,7 @@ namespace SheepIt.Api.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ProjectId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("Rank")
@@ -121,6 +125,7 @@ namespace SheepIt.Api.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ProjectId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<VariableCollection>("Variables")
@@ -149,7 +154,9 @@ namespace SheepIt.Api.Migrations
                 {
                     b.HasOne("SheepIt.Api.Core.Projects.Project", "Project")
                         .WithMany()
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SheepIt.Api.Core.Deployments.Deployment", b =>
@@ -168,14 +175,18 @@ namespace SheepIt.Api.Migrations
 
                     b.HasOne("SheepIt.Api.Core.Projects.Project", "Project")
                         .WithMany("Deployments")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SheepIt.Api.Core.Environments.Environment", b =>
                 {
                     b.HasOne("SheepIt.Api.Core.Projects.Project", "Project")
                         .WithMany("Environments")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SheepIt.Api.Core.Packages.Package", b =>
@@ -188,7 +199,9 @@ namespace SheepIt.Api.Migrations
 
                     b.HasOne("SheepIt.Api.Core.Projects.Project", "Project")
                         .WithMany("Packages")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

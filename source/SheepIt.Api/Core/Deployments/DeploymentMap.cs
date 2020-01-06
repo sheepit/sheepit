@@ -12,10 +12,13 @@ namespace SheepIt.Api.Core.Deployments
 
             builder.HasKey(deployment => deployment.Id);
             
-            builder.Property(package => package.ProcessOutput)
+            builder.Property(deployment => deployment.ProjectId)
+                .IsRequired();
+            
+            builder.Property(deployment => deployment.ProcessOutput)
                 .HasColumnType("jsonb");
 
-            builder.Property(package => package.Status)
+            builder.Property(deployment => deployment.Status)
                 .HasConversion(new EnumToStringConverter<DeploymentStatus>());
         }
     }

@@ -10,6 +10,9 @@ namespace SheepIt.Api.Core.Packages
             builder.ToTable("Package");
 
             builder.HasKey(package => package.Id);
+            
+            builder.Property(package => package.ProjectId)
+                .IsRequired();
 
             builder.Property(package => package.Variables)
                 .HasColumnType("jsonb");

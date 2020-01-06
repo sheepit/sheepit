@@ -10,6 +10,9 @@ namespace SheepIt.Api.Core.Environments
             builder.ToTable("Environment");
 
             builder.HasKey(environment => environment.Id);
+            
+            builder.Property(environment => environment.ProjectId)
+                .IsRequired();
         }
     }
 }

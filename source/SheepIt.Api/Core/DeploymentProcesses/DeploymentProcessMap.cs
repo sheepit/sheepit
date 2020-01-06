@@ -10,6 +10,9 @@ namespace SheepIt.Api.Core.DeploymentProcesses
             builder.ToTable("DeploymentProcess");
             
             builder.HasKey(deploymentProcess => deploymentProcess.Id);
+
+            builder.Property(deploymentProcess => deploymentProcess.ProjectId)
+                .IsRequired();
         }
     }
 }
