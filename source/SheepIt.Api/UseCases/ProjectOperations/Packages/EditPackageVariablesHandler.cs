@@ -75,7 +75,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         {
             BuildRegistration.Type<EditPackageVariablesHandler>()
                 .WithDefaultResponse()
-                .InProjectContext()
+                .InProjectLock()
                 .RegisterAsHandlerIn(builder);
         }
     }

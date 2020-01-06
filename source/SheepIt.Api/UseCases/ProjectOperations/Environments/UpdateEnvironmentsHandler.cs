@@ -62,7 +62,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         {
             BuildRegistration.Type<UpdateEnvironmentsHandler>()
                 .WithDefaultResponse()
-                .InProjectContext()
+                .InProjectLock()
                 .RegisterAsHandlerIn(builder);
         }
     }

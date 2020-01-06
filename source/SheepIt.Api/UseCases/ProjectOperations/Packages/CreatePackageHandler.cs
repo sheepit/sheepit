@@ -134,7 +134,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<CreatePackageHandler>()
-                .InProjectContext()
+                .InProjectLock()
                 .RegisterAsHandlerIn(builder);
         }
     }

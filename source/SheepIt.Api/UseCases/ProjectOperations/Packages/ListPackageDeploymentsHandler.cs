@@ -50,14 +50,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class ListPackageDeploymentsHandler : IHandler<ListPackageDeploymentsRequest, ListPackageDeploymentsResponse>
     {
-        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
         private readonly SheepItDbContext _dbContext;
 
-        public ListPackageDeploymentsHandler(
-            GetEnvironmentsQuery getEnvironmentsQuery,
-            SheepItDbContext dbContext)
+        public ListPackageDeploymentsHandler(SheepItDbContext dbContext)
         {
-            _getEnvironmentsQuery = getEnvironmentsQuery;
             _dbContext = dbContext;
         }
 
@@ -90,7 +86,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<ListPackageDeploymentsHandler>()
-                .InProjectContext()
                 .RegisterAsHandlerIn(builder);
         }
     }

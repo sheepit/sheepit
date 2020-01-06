@@ -6,11 +6,10 @@ namespace SheepIt.Api.Core.ProjectContext
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance<IProjectLock>(new ProjectLock());
-            
-            builder.RegisterType<ProjectContextFactory>()
-                .As<IProjectContextFactory>()
-                .InstancePerDependency();
+            // since this is a lock, it's important, that it's registered as a single instance
+            builder.RegisterType<ProjectLock>()
+                .As<IProjectLock>()
+                .SingleInstance();
         }
     }
 }

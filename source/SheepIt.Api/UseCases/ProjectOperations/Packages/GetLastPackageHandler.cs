@@ -89,7 +89,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         protected override void Load(ContainerBuilder builder)
         {
             BuildRegistration.Type<GetLastPackageHandler>()
-                .InProjectContext()
+                .InProjectLock()
                 .RegisterAsHandlerIn(builder);
         }
     }

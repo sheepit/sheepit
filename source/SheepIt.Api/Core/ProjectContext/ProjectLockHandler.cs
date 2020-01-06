@@ -5,20 +5,21 @@ using SheepIt.Api.Infrastructure.Resolvers;
 
 namespace SheepIt.Api.Core.ProjectContext
 {
-    public class ProjectContextHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
+    public class ProjectLockHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
         where TRequest : IProjectRequest
     {
         private readonly ILifetimeScope _lifetimeScope;
         private readonly IResolver<IHandler<TRequest, TResponse>> _innerResolver;
         private readonly IProjectLock _projectLock;
-        private readonly IProjectContextFactory _projectContextFactory;
 
-        public ProjectContextHandler(ILifetimeScope lifetimeScope, IResolver<IHandler<TRequest, TResponse>> innerResolver, IProjectLock projectLock, IProjectContextFactory projectContextFactory)
+        public ProjectLockHandler(
+            ILifetimeScope lifetimeScope,
+            IResolver<IHandler<TRequest, TResponse>> innerResolver,
+            IProjectLock projectLock)
         {
             _lifetimeScope = lifetimeScope;
             _innerResolver = innerResolver;
             _projectLock = projectLock;
-            _projectContextFactory = projectContextFactory;
         }
 
         public async Task<TResponse> Handle(TRequest request)
@@ -27,31 +28,20 @@ namespace SheepIt.Api.Core.ProjectContext
             // todo: [ts] I'm not sure if it the best option here - it might influence the overall performance
             // on the other hand the system rather will no be used simultaneously by many users
             using (await _projectLock.LockAsync(request.ProjectId))
-            using (var projectScope = await BeginProjectScope(request.ProjectId))
             {
                 return await _innerResolver
-                    .Resolve(projectScope)
+                    .Resolve(_lifetimeScope)
                     .Handle(request);
             }
         }
-
-        private async Task<ILifetimeScope> BeginProjectScope(string projectId)
-        {
-            var projectContext = await _projectContextFactory.Create(projectId);
-
-            return _lifetimeScope.BeginLifetimeScope(builder =>
-            {
-                builder.RegisterInstance(projectContext);
-            });
-        }
     }
 
-    public class ProjectContextResolver<TRequest, TResponse> : IResolver<IHandler<TRequest, TResponse>>
+    public class ProjectLockResolver<TRequest, TResponse> : IResolver<IHandler<TRequest, TResponse>>
         where TRequest : IProjectRequest
     {
         private readonly IResolver<IHandler<TRequest, TResponse>> _innerResolver;
 
-        public ProjectContextResolver(IResolver<IHandler<TRequest, TResponse>> innerResolver)
+        public ProjectLockResolver(IResolver<IHandler<TRequest, TResponse>> innerResolver)
         {
             _innerResolver = innerResolver;
         }
@@ -59,28 +49,22 @@ namespace SheepIt.Api.Core.ProjectContext
         public IHandler<TRequest, TResponse> Resolve(IComponentContext context)
         {
             var lifetimeScope = context.Resolve<ILifetimeScope>();
-            
-            return new ProjectContextHandler<TRequest, TResponse>(
+
+            return new ProjectLockHandler<TRequest, TResponse>(
                 innerResolver: _innerResolver,
                 lifetimeScope: lifetimeScope,
-                projectLock: new ProjectLock(),
-                projectContextFactory: context.Resolve<IProjectContextFactory>()
+                projectLock: new ProjectLock()
             );
         }
     }
 
-    public static class ProjectContextHandler
+    public static class ProjectLockHandlerExtensions
     {
-        public static IResolver<IHandler<TRequest, TResponse>> InProjectContext<TRequest, TResponse>(
+        public static IResolver<IHandler<TRequest, TResponse>> InProjectLock<TRequest, TResponse>(
             this IResolver<IHandler<TRequest, TResponse>> innerResolver)
             where TRequest : IProjectRequest
         {
-            return new ProjectContextResolver<TRequest, TResponse>(innerResolver);
+            return new ProjectLockResolver<TRequest, TResponse>(innerResolver);
         }
-    }
-    
-    public interface IProjectRequest
-    {
-        string ProjectId { get; }
     }
 }
