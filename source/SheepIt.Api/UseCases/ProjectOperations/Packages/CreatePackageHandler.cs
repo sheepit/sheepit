@@ -63,6 +63,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         }
     }
 
+    public class CreatePackageModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<CreatePackageHandler>()
+                .InProjectLock()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
     public class CreatePackageHandler : IHandler<CreatePackageRequest, CreatePackageResponse>
     {
         private readonly SheepItDbContext _dbContext;
@@ -123,16 +133,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                 defaultValue: variableUpdate.DefaultValue,
                 environmentValues: variableUpdate.EnvironmentValues ?? new Dictionary<int, string>()
             );
-        }
-    }
-    
-    public class CreatePackageModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<CreatePackageHandler>()
-                .InProjectLock()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }

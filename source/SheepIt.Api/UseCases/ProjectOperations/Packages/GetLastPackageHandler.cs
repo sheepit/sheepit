@@ -46,6 +46,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         }
     }
 
+    public class GetLastPackageModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<GetLastPackageHandler>()
+                .InProjectLock()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
     public class GetLastPackageHandler : IHandler<GetLastPackageRequest, GetLastPackageResponse>
     {
         private readonly SheepItDbContext _dbContext;
@@ -81,16 +91,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                     })
                     .ToArray()
             };
-        }
-    }
-    
-    public class GetLastPackageModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<GetLastPackageHandler>()
-                .InProjectLock()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }

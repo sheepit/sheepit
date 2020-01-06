@@ -55,6 +55,16 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         }
     }
 
+    public class CreateProjectModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<CreateProjectHandler>()
+                .WithDefaultResponse()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
     public class CreateProjectHandler : IHandler<CreateProjectRequest>
     {
         private readonly SheepItDbContext _dbContext;
@@ -118,16 +128,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
                 currentEnvironmentRank++;
             }
-        }
-    }
-
-    public class CreateProjectModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<CreateProjectHandler>()
-                .WithDefaultResponse()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }

@@ -71,6 +71,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         }
     }
 
+    public class GetProjectDashboardModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<GetProjectDashboardHandler>()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
     public class GetProjectDashboardHandler : IHandler<GetProjectDashboardRequest, GetProjectDashboardResponse>
     {
         private readonly SheepItDbContext _dbContext;
@@ -155,15 +164,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                     Description = package.Description
                 })
                 .ToArrayAsync();
-        }
-    }
-    
-    public class GetProjectDashboardModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<GetProjectDashboardHandler>()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }

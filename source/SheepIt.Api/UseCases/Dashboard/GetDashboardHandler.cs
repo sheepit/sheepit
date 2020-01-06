@@ -42,6 +42,15 @@ namespace SheepIt.Api.UseCases.Dashboard
         }
     }
 
+    public class GetDashboardModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<GetDashboardHandler>()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
     public class GetDashboardHandler : IHandler<GetDashboardRequest, GetDashboardResponse>
     {
         private readonly SheepItDbContext _dbContext;
@@ -71,15 +80,6 @@ namespace SheepIt.Api.UseCases.Dashboard
             {
                 LastDeployments = deployments
             };
-        }
-    }
-
-    public class GetDashboardModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<GetDashboardHandler>()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }

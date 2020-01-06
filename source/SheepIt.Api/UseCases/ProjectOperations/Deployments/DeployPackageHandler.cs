@@ -41,6 +41,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         }
     }
 
+    public class DeployPackageModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<DeployPackageHandler>()
+                .InProjectLock()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
     public class DeployPackageHandler : IHandler<DeployPackageRequest, DeployPackageResponse>
     {
         private readonly SheepItDbContext _dbContext;
@@ -90,16 +100,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
             {
                 CreatedDeploymentId = deployment.Id
             };
-        }
-    }
-    
-    public class DeployPackageModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<DeployPackageHandler>()
-                .InProjectLock()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }

@@ -35,6 +35,15 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         }
     }
 
+    public class ListProjectsModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<ListProjectsHandler>()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
     public class ListProjectsHandler : IHandler<ListProjectsRequest, ListProjectsResponse>
     {
         private readonly SheepItDbContext _dbContext;
@@ -58,15 +67,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             {
                 Projects = projects
             };
-        }
-    }
-    
-    public class ListProjectsModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<ListProjectsHandler>()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }

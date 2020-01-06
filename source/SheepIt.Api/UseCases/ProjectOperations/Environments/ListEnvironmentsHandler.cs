@@ -39,6 +39,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         }
     }
 
+    public class ListEnvironmentsModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<ListEnvironmentsHandler>()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
     public class ListEnvironmentsHandler : IHandler<ListEnvironmentsRequest, ListEnvironmentsResponse>
     {
         private readonly SheepItDbContext _dbContext;
@@ -64,15 +73,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
             {
                 Environments = environments
             };
-        }
-    }
-    
-    public class ListEnvironmentsModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<ListEnvironmentsHandler>()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }

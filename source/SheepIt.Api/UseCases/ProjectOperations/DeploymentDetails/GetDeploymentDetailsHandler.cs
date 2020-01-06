@@ -56,6 +56,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
         }
     }
 
+    public class GetDeploymentDetailsModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<GetDeploymentDetailsHandler>()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
     public class GetDeploymentDetailsHandler : IHandler<GetDeploymentDetailsRequest, GetDeploymentDetailsResponse>
     {
         private readonly SheepItDbContext _dbContext;
@@ -105,15 +114,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
                     })
                     .ToArray()
             };
-        }
-    }
-    
-    public class GetDeploymentDetailsModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<GetDeploymentDetailsHandler>()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }

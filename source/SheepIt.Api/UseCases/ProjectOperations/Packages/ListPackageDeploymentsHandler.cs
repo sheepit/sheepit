@@ -45,6 +45,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         }
     }
 
+    public class ListPackageDeploymentsModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            BuildRegistration.Type<ListPackageDeploymentsHandler>()
+                .RegisterAsHandlerIn(builder);
+        }
+    }
+
     public class ListPackageDeploymentsHandler : IHandler<ListPackageDeploymentsRequest, ListPackageDeploymentsResponse>
     {
         private readonly SheepItDbContext _dbContext;
@@ -75,15 +84,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             {
                 Deployments = deployments
             };
-        }
-    }
-    
-    public class ListPackageDeploymentsModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            BuildRegistration.Type<ListPackageDeploymentsHandler>()
-                .RegisterAsHandlerIn(builder);
         }
     }
 }
