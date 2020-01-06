@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SheepIt.Api.Core.Environments;
 using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.Core.Projects;
@@ -67,35 +69,33 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
 
     public class UpdateEnvironmentsHandler : IHandler<UpdateEnvironmentsRequest>
     {
-        private readonly GetEnvironmentsQuery _getEnvironmentsQuery;
-        private readonly IdStorage _idStorage;
         private readonly SheepItDbContext _dbContext;
+        private readonly EnvironmentFactory _environmentFactory;
 
         public UpdateEnvironmentsHandler(
-            GetEnvironmentsQuery getEnvironmentsQuery,
-            IdStorage idStorage,
-            SheepItDbContext dbContext)
+            SheepItDbContext dbContext,
+            EnvironmentFactory environmentFactory)
         {
-            _getEnvironmentsQuery = getEnvironmentsQuery;
-            _idStorage = idStorage;
             _dbContext = dbContext;
+            _environmentFactory = environmentFactory;
         }
         
         public async Task Handle(UpdateEnvironmentsRequest request)
         {
-            var currentEnvironments = await _getEnvironmentsQuery.GetOrderedByRank(request.ProjectId); 
+            var currentEnvironments = await _dbContext.Environments
+                .FromProject(request.ProjectId)
+                .OrderByRank()
+                .ToArrayAsync();
 
             foreach (var environmentDto in request.Environments)
             {
                 if (environmentDto.Id == 0)
                 {
-                    var newEnvironment = new Environment
-                    {
-                        Id = await _idStorage.GetNext(IdSequence.Environment),
-                        ProjectId = request.ProjectId,
-                        Rank = environmentDto.Rank,
-                        DisplayName = environmentDto.DisplayName
-                    };
+                    var newEnvironment = await _environmentFactory.Create(
+                        projectId: request.ProjectId,
+                        rank: environmentDto.Rank,
+                        displayName: environmentDto.DisplayName
+                    );
 
                     _dbContext.Environments.Add(newEnvironment);
                 }

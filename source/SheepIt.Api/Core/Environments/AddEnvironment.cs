@@ -1,21 +1,19 @@
 using System.Threading.Tasks;
-using SheepIt.Api.Core.Environments.Queries;
 using SheepIt.Api.DataAccess;
-using SheepIt.Api.DataAccess.Sequencing;
 
 namespace SheepIt.Api.Core.Environments
 {
     public class AddEnvironment
     {
-        private readonly IdStorage _idStorage;
         private readonly SheepItDbContext _dbContext;
+        private readonly EnvironmentFactory _environmentFactory;
 
         public AddEnvironment(
-            IdStorage idStorage,
-            SheepItDbContext dbContext)
+            SheepItDbContext dbContext,
+            EnvironmentFactory environmentFactory)
         {
-            _idStorage = idStorage;
             _dbContext = dbContext;
+            _environmentFactory = environmentFactory;
         }
 
         public async Task AddMany(string projectId, string[] displayNames)
@@ -24,13 +22,11 @@ namespace SheepIt.Api.Core.Environments
             
             foreach (var environmentName in displayNames)
             {
-                var environment = new Environment
-                {
-                    Id = await _idStorage.GetNext(IdSequence.Environment),
-                    ProjectId = projectId,
-                    DisplayName = environmentName,
-                    Rank = currentEnvironmentRank
-                };
+                var environment = await _environmentFactory.Create(
+                    projectId: projectId,
+                    rank: currentEnvironmentRank,
+                    displayName: environmentName
+                );
 
                 _dbContext.Environments.Add(environment);
 
