@@ -10,8 +10,6 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
         public CustomException(string errorCode, string humanReadableMessage, Exception innerException)
             : base(humanReadableMessage, innerException)
         {
-            ErrorCode = errorCode;
-            HumanReadableMessage = humanReadableMessage;
         }
         
         public CustomException(string errorCode, string humanReadableMessage)

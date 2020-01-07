@@ -27,11 +27,7 @@ namespace SheepIt.Api.Model.DeploymentProcesses
             }
             catch (Exception exception)
             {
-                throw new CustomException(
-                    errorCode: "CREATE_DEPLOYMENT_STORAGE_ZIP_CANNOT_BE_OPENED",
-                    humanReadableMessage: "The provided file cannot be opened - please check if it's a valid zip file.",
-                    innerException: exception
-                );
+                throw new ZipArchiveCannotBeOpenedException(exception);
             }
         }
 
@@ -42,10 +38,7 @@ namespace SheepIt.Api.Model.DeploymentProcesses
 
             if (processFileEntryOrNull == null)
             {
-                throw new CustomException(
-                    errorCode: "CREATE_DEPLOYMENT_STORAGE_ZIP_DOES_NOT_CONTAIN_PROCESS_YAML",
-                    humanReadableMessage: "The provided zip file does not contain process.yaml in its root."
-                );
+                throw new ZipArchiveDoesNotContainProcessYamlException();
             }
 
             return processFileEntryOrNull;
@@ -61,12 +54,42 @@ namespace SheepIt.Api.Model.DeploymentProcesses
             }
             catch (Exception exception)
             {
-                throw new CustomException(
-                    errorCode: "CREATE_DEPLOYMENT_STORAGE_CANNOT_DESERIALIZE_PROCESS_YAML",
-                    humanReadableMessage: "Deserializing provided process.yaml file failed - please check its formatting.",
-                    innerException: exception
-                );
+                throw new ZipArchiveDeserializingFailedException(exception);
             }
+        }
+    }
+    
+    public class ZipArchiveCannotBeOpenedException : CustomException
+    {
+        public ZipArchiveCannotBeOpenedException(Exception innerException)
+            : base(
+                "CREATE_DEPLOYMENT_STORAGE_ZIP_CANNOT_BE_OPENED",
+                "The provided file cannot be opened - please check if it's a valid zip file.",
+                innerException)
+        {
+        }
+    }
+        
+        
+    public class ZipArchiveDoesNotContainProcessYamlException : CustomException
+    {
+        public ZipArchiveDoesNotContainProcessYamlException() 
+            : base(
+                "CREATE_DEPLOYMENT_STORAGE_ZIP_DOES_NOT_CONTAIN_PROCESS_YAML",
+                "Project The provided zip file does not contain process.yaml in its root.")
+        {
+        }
+    }
+        
+    public class ZipArchiveDeserializingFailedException : CustomException
+    {
+        public ZipArchiveDeserializingFailedException(Exception innerException) 
+            : base(
+                "CREATE_DEPLOYMENT_STORAGE_CANNOT_DESERIALIZE_PROCESS_YAML",
+                "Deserializing provided process.yaml file failed - please check its formatting.",
+                innerException)
+        {
+                
         }
     }
 }

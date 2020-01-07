@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.DataAccess;
@@ -32,11 +33,18 @@ namespace SheepIt.Api.Model.Projects
 
             if (projectExists)
             {
-                throw new CustomException(
-                    "CREATE_PROJECT_ID_NOT_UNIQUE",
-                    "Project with specified id already exists"
-                );
+                throw new ProjectIdNotUniqueException();
             }
+        }
+    }
+
+    public class ProjectIdNotUniqueException : CustomException
+    {
+        public ProjectIdNotUniqueException() 
+            : base(
+                "CREATE_PROJECT_ID_NOT_UNIQUE",
+                "Project with specified id already exists")
+        {
         }
     }
 }

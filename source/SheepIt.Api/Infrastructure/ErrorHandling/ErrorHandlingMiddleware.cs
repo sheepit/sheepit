@@ -18,35 +18,29 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
             this.next = next;
         }
 
+        // ReSharper disable once UnusedMember.Global - it's called by reflection
         public async Task Invoke(HttpContext context, ErrorHandlingSettings settings)
         {
             try
             {
                 await next(context);
             }
-            catch (CustomException ex)
+            catch (CustomException exception)
             {
                 await HandleExceptionAsync(
-                    context,
-                    _customHttpStatusCode,
-                    new ErrorResponse(ex, settings));
+                    context: context,
+                    httpStatusCode: _customHttpStatusCode,
+                    errorResponse: new ErrorResponse(exception, settings)
+                );
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 await HandleExceptionAsync(
-                    context,
-                    new ErrorResponse(ex, settings));
+                    context: context,
+                    httpStatusCode: (int)HttpStatusCode.InternalServerError,
+                    errorResponse: new ErrorResponse(exception, settings)
+                );
             }
-        }
-
-        private Task HandleExceptionAsync(
-            HttpContext context,
-            ErrorResponse errorResponse)
-        {
-            return HandleExceptionAsync(
-                context,
-                (int)HttpStatusCode.InternalServerError,
-                errorResponse);
         }
 
         private Task HandleExceptionAsync(
@@ -59,6 +53,8 @@ namespace SheepIt.Api.Infrastructure.ErrorHandling
                 new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
             );
             
+            // todo: [rt] why log json, instead of an exception as-is?
+            // todo: [rt] should we even log custom exceptions?
             Log.Error(result);
 
             context.Response.ContentType = "application/json";

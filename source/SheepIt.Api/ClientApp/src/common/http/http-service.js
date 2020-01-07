@@ -84,15 +84,14 @@ export default {
             
             response
                 .json()
-                .then(error => {
-                    if(error.Type && error.Type === "CustomException") {
+                .then(error => {                    
+                    if(error.IsCustom) {
                         messageService.error(error.HumanReadableMessage);
-                    }
-                    else {
+                    } else {
                         messageService.error('Server error. Please try again later.');
                     }
-                    console.log(error)
-                    return;
+                    
+                    console.log(error);
                 });
 
             return Promise.reject(response.statusText);

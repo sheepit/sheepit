@@ -1,14 +1,17 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
-using SheepIt.Api.Infrastructure.ErrorHandling;
+using SheepIt.Api.Model.DeploymentProcesses;
+using SheepIt.Api.Model.Projects;
 using SheepIt.Api.Tests.FeatureObjects;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Api.Tests.TestProcess;
 using SheepIt.Api.UseCases.ProjectManagement;
+using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
 
-namespace SheepIt.Api.Tests.UseCases
+namespace SheepIt.Api.Tests.UseCases.ProjectManagement
 {
     public class CreateProjectTests : Test<IntegrationTestsFixture>
     {
@@ -20,46 +23,44 @@ namespace SheepIt.Api.Tests.UseCases
             await Fixture.Handle(new CreateProjectRequest
             {
                 ProjectId = "foo",
-                ZipFile = TestProcessZipArchives.TestProcess,
-                EnvironmentNames = new[] {"dev", "test", "prod"}
+                EnvironmentNames = new[] {"dev", "test", "prod"},
+                ZipFile = TestProcessZipArchives.TestProcess
             });
             
             // then
-            
-            var projects = await Fixture.Handle(new ListProjectsRequest());
-            
-            projects.Should().BeEquivalentTo(new ListProjectsResponse
+
+            var listProjectsResponse = await Fixture.Handle(new ListProjectsRequest());
+
+            listProjectsResponse.Projects
+                .Select(project => project.Id)
+                .Should().Contain("foo");
+
+            var getProjectDashboardResponse = await Fixture.Handle(new GetProjectDashboardRequest
             {
-                Projects = new[]
-                {
-                    new ListProjectsResponse.ProjectDto
-                    {
-                        Id = "foo"
-                    }
-                }
+                ProjectId = "foo"
             });
+
+            getProjectDashboardResponse.Environments
+                .Select(environment => environment.DisplayName)
+                .Should().Equal("dev", "test", "prod");
         }
 
         [Test]
-        public async Task cannot_create_project_with_duplicated_id()
+        public async Task cannot_create_a_project_with_duplicated_id()
         {
             // given
-
+            
             await Fixture.CreateProject("foo")
                 .Create();
             
             // when
             
-            Func<Task> creatingProjectWithSameName = () => Fixture
-                .CreateProject("foo")
+            Func<Task> creatingProject = () => Fixture.CreateProject("foo")
                 .Create();
-            
-            // then
 
-            creatingProjectWithSameName.Should().ThrowExactly<CustomException>()
-                .Which.ErrorCode.Should().Be("CREATE_PROJECT_ID_NOT_UNIQUE");
+            creatingProject.Should().Throw<ProjectIdNotUniqueException>();
         }
-
+        
         [Test]
         public void cannot_create_project_when_zip_file_does_not_contain_process_yaml()
         {
@@ -71,9 +72,9 @@ namespace SheepIt.Api.Tests.UseCases
                 .Create();
             
             // then
-            
-            creatingProjectWithSameName.Should().ThrowExactly<CustomException>()
-                .Which.ErrorCode.Should().Be("CREATE_DEPLOYMENT_STORAGE_ZIP_DOES_NOT_CONTAIN_PROCESS_YAML");
+
+            creatingProjectWithSameName.Should()
+                .ThrowExactly<ZipArchiveDoesNotContainProcessYamlException>();
         }
 
         [Test]
@@ -87,9 +88,9 @@ namespace SheepIt.Api.Tests.UseCases
                 .Create();
             
             // then
-            
-            creatingProjectWithSameName.Should().ThrowExactly<CustomException>()
-                .Which.ErrorCode.Should().Be("CREATE_DEPLOYMENT_STORAGE_CANNOT_DESERIALIZE_PROCESS_YAML");
+
+            creatingProjectWithSameName.Should()
+                .ThrowExactly<ZipArchiveDeserializingFailedException>();
         }
     }
 }
