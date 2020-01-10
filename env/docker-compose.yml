@@ -16,6 +16,7 @@ services:
       ASPNETCORE_HTTPS_PORT: 443
       ASPNETCORE_Kestrel__Certificates__Default__Password: password
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+      ConnectionStrings:SheepItContext: Host=postgres;Database=sheepit;Username=postgres;Password=postgres
     networks:
       - sheepit-network
     volumes:
