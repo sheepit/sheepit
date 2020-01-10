@@ -108,7 +108,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                 projectId: basePackage.ProjectId,
                 deploymentProcessId: deploymentProcess.Id,
                 description: request.Description,
-                variableCollection: basePackage.Variables.WithUpdatedVariables(newVariables)
+                variableCollection: basePackage.Variables.WithNewVariables(newVariables)
             );
 
             _dbContext.Packages.Add(newPackage);

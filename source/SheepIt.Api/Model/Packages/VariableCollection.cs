@@ -20,25 +20,11 @@ namespace SheepIt.Api.Model.Packages
                 .ToArray();
         }
 
-        public VariableCollection WithUpdatedVariables(VariableValues[] newVariables)
+        public VariableCollection WithNewVariables(VariableValues[] newVariables)
         {
-            var dict = Variables.ToDictionary(
-                variable => variable.Name,
-                variable => variable
-            );
-
-            foreach (var newVariable in newVariables)
-            {
-                dict[newVariable.Name] = newVariable;
-            }
-
-            var updatedVariables = dict
-                .Select(pair => pair.Value)
-                .ToArray();
-
             return new VariableCollection
             {
-                Variables = updatedVariables
+                Variables = newVariables
             };
         }
     }

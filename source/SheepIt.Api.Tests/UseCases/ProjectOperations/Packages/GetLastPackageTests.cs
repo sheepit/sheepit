@@ -14,32 +14,50 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
         [Test]
         public async Task can_get_last_package_from_project()
         {
+            // given
+            
             var projectId = "foo";
 
             await Fixture.CreateProject(projectId)
-                .WithEnvironmentNames("dev", "test", "prod")
+                .WithEnvironmentNames("test", "prod")
                 .Create();
 
-            await Fixture.Handle(new CreatePackageRequest
-            {
-                ProjectId = projectId,
-                Description = "first",
-                ZipFile = TestProcessZipArchives.TestProcess,
-                VariableUpdates = new[]
+            await Fixture.CreatePackage("foo")
+                .WithDescription("first")
+                .Create();
+            
+            await Fixture.CreatePackage("foo")
+                .WithDescription("second")
+                .Create();
+            
+            await Fixture.CreatePackage("foo")
+                .WithDescription("third")
+                .WithVariables(new []
                 {
                     new CreatePackageRequest.UpdateVariable
                     {
                         Name = "var-1",
-                        DefaultValue = "default",
+                        DefaultValue = "var-1-default",
                         EnvironmentValues = new Dictionary<int, string>
                         {
-                            {1, "dev-value"},
-                            {2, "test-value"},
-                            {3, "prod-value"},
+                            {1, "var-1-test"},
+                            {2, "var-1-prod"}
+                        }
+                    },
+                    new CreatePackageRequest.UpdateVariable
+                    {
+                        Name = "var-2",
+                        DefaultValue = "var-2-default",
+                        EnvironmentValues = new Dictionary<int, string>
+                        {
+                            {1, "var-2-test"},
+                            {2, "var-2-prod"}
                         }
                     }
-                }
-            });
+                })
+                .Create();
+            
+            // when
 
             var response = await Fixture.Handle(new GetLastPackageRequest
             {
@@ -49,17 +67,28 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             // then
 
             response.ProjectId.Should().Be(projectId);
+            response.Description.Should().Be("third");
+
             response.Variables.Should().BeEquivalentTo(new[]
             {
                 new GetLastPackageResponse.VariableDto
                 {
                     Name = "var-1",
-                    DefaultValue = "default",
+                    DefaultValue = "var-1-default",
                     EnvironmentValues = new Dictionary<int, string>
                     {
-                        {1, "dev-value"},
-                        {2, "test-value"},
-                        {3, "prod-value"},
+                        {1, "var-1-test"},
+                        {2, "var-1-prod"}
+                    }
+                },
+                new GetLastPackageResponse.VariableDto
+                {
+                    Name = "var-2",
+                    DefaultValue = "var-2-default",
+                    EnvironmentValues = new Dictionary<int, string>
+                    {
+                        {1, "var-2-test"},
+                        {2, "var-2-prod"}
                     }
                 }
             });

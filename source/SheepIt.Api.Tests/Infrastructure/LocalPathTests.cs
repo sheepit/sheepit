@@ -4,7 +4,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.Api.Infrastructure;
 
-namespace SheepIt.Api.Tests.Infrastructure.Utils
+namespace SheepIt.Api.Tests.Infrastructure
 {
     public class LocalPathTests
     {
