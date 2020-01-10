@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Autofac;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.DeploymentProcessRunning;
@@ -36,6 +37,21 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         public async Task<DeployPackageResponse> DeployPackage(DeployPackageRequest request)
         {
             return await Handle(request);
+        }
+    }
+    
+    public class DeployPackageValidator : AbstractValidator<DeployPackageRequest>
+    {
+        public DeployPackageValidator()
+        {
+            RuleFor(request => request.ProjectId)
+                .NotNull();
+
+            RuleFor(request => request.PackageId)
+                .NotEqual(0);
+            
+            RuleFor(request => request.EnvironmentId)
+                .NotEqual(0);
         }
     }
 
