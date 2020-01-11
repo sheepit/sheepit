@@ -17,10 +17,12 @@ namespace SheepIt.Api.Tests.TestInfrastructure
             
             builder.RegisterModule<SheepItModule>();
             builder.RegisterModule<TestConfiguration>();
+            builder.RegisterModule<TestClockModule>();
 
             _container = builder.Build();
 
             await ClearDatabase();
+            TestWorkingDir.Clear(this);
         }
 
         private async Task ClearDatabase()

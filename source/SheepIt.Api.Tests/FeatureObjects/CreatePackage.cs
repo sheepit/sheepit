@@ -45,14 +45,14 @@ namespace SheepIt.Api.Tests.FeatureObjects
                 return this;
             }
 
-            public async Task Create()
+            public async Task<CreatePackageResponse> Create()
             {
                 if (_request.VariableUpdates == null)
                 {
                     _request.VariableUpdates = await GetLastPackageVariables();
                 }
-                
-                await _fixture.Handle(_request);
+
+                return await _fixture.Handle(_request);
             }
 
             private async Task<CreatePackageRequest.UpdateVariable[]> GetLastPackageVariables()

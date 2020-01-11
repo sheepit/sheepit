@@ -21,14 +21,20 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             await Fixture.CreateProject(projectId)
                 .WithEnvironmentNames("test", "prod")
                 .Create();
+            
+            Fixture.MomentLater();
 
             await Fixture.CreatePackage("foo")
                 .WithDescription("first")
                 .Create();
             
+            Fixture.MomentLater();
+            
             await Fixture.CreatePackage("foo")
                 .WithDescription("second")
                 .Create();
+            
+            Fixture.MomentLater();
             
             await Fixture.CreatePackage("foo")
                 .WithDescription("third")

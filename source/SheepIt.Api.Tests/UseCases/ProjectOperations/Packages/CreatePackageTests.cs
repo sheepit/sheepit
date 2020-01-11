@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -24,28 +25,10 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
         [Test]
         public async Task can_create_a_package()
         {
-            // when
+            // given
             
-            await Fixture.CreatePackage("foo")
-                .WithDescription("last")
-                .Create();
-            
-            // then
-            
-            var response = await Fixture.Handle(new GetLastPackageRequest
-            {
-                ProjectId = _projectId
-            });
-            
-            response.Description.Should().Be("last");
-        }
-
-        [Test]
-        public async Task can_create_a_package_with_variables()
-        {
-            // when
-            
-            await Fixture.CreatePackage("foo")
+            var createPackageResponse = await Fixture.CreatePackage(_projectId)
+                .WithDescription("a package")
                 .WithVariables(new []
                 {
                     new CreatePackageRequest.UpdateVariable
@@ -70,35 +53,46 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                     }
                 })
                 .Create();
+
+            // when
+
+            var packageDetailsResponse = await Fixture.Handle(new GetPackageDetailsRequest
+            {
+                ProjectId = _projectId,
+                PackageId = createPackageResponse.CreatedPackageId 
+            });
             
             // then
-            
-            var response = await Fixture.Handle(new GetLastPackageRequest
-            {
-                ProjectId = _projectId
-            });
 
-            response.Variables.Should().BeEquivalentTo(new[]
+            packageDetailsResponse.Should().BeEquivalentTo(new GetPackageDetailsResponse
             {
-                new GetLastPackageResponse.VariableDto
+                ProjectId = _projectId,
+                Id = createPackageResponse.CreatedPackageId,
+                Description = "a package",
+                CreatedAt = Fixture.GetUtcNow(),
+                Variables = new []
                 {
-                    Name = "var-1",
-                    DefaultValue = "var-1-default",
-                    EnvironmentValues = new Dictionary<int, string>
+                    new GetPackageDetailsResponse.VariableDto
                     {
-                        {1, "var-1-test"},
-                        {2, "var-1-prod"}
-                    }
-                },
-                new GetLastPackageResponse.VariableDto
-                {
-                    Name = "var-2",
-                    DefaultValue = "var-2-default",
-                    EnvironmentValues = new Dictionary<int, string>
+                        Name = "var-1",
+                        DefaultValue = "var-1-default",
+                        EnvironmentValues = new Dictionary<int, string>
+                        {
+                            {1, "var-1-test"},
+                            {2, "var-1-prod"}
+                        }
+                    },
+                    new GetPackageDetailsResponse.VariableDto
                     {
-                        {1, "var-2-test"},
-                        {2, "var-2-prod"}
+                        Name = "var-2",
+                        DefaultValue = "var-2-default",
+                        EnvironmentValues = new Dictionary<int, string>
+                        {
+                            {1, "var-2-test"},
+                            {2, "var-2-prod"}
+                        }
                     }
+
                 }
             });
         }
@@ -135,8 +129,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                 .Create();
             
             // when
-            
-            await Fixture.CreatePackage("foo")
+
+            var createPackageResponse = await Fixture.CreatePackage("foo")
                 .WithVariables(new []
                 {
                     new CreatePackageRequest.UpdateVariable
@@ -161,17 +155,18 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                     }
                 })
                 .Create();
-            
+
             // then
             
-            var response = await Fixture.Handle(new GetLastPackageRequest
+            var response = await Fixture.Handle(new GetPackageDetailsRequest
             {
-                ProjectId = _projectId
+                ProjectId = _projectId,
+                PackageId = createPackageResponse.CreatedPackageId
             });
 
             response.Variables.Should().BeEquivalentTo(new[]
             {
-                new GetLastPackageResponse.VariableDto
+                new GetPackageDetailsResponse.VariableDto
                 {
                     Name = "var-1",
                     DefaultValue = "var-1-updated-default",
@@ -181,7 +176,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                         {2, "var-1-prod-updated-value"}
                     }
                 },
-                new GetLastPackageResponse.VariableDto
+                new GetPackageDetailsResponse.VariableDto
                 {
                     Name = "new-var",
                     DefaultValue = "new-var-default",
@@ -193,6 +188,5 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                 }
             });
         }
-
     }
 }
