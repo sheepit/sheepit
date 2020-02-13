@@ -3,6 +3,8 @@
         data-event-handler 
         @unauthorized="handleUnauthorized()"
     >
+        <Navvv />
+
         <navigation />
 
         <breadcrumb />
@@ -17,6 +19,7 @@
 
 <script>
 import Navigation from '../../components/layout/navigation.vue'
+import Navvv from '../../components/layout/navBar.vue'
 import Breadcrumb from "../../components/breadcrumb.vue";
 
 export default {
@@ -24,7 +27,8 @@ export default {
 
     components: {
         Navigation,
-        Breadcrumb
+        Breadcrumb,
+        Navvv
     },
 
     methods: {
