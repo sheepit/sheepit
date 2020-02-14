@@ -4,12 +4,19 @@ import Vuelidate from 'vuelidate'
 
 import App from './App.vue'
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import jQuery from 'jquery'
 
 window.jQuery = jQuery
 window.$ = jQuery
+
+library.add(faUserSecret)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false;
 
