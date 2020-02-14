@@ -35,11 +35,6 @@ const router = new VueRouter({
                     name: 'default',
                     component: Default,
                     meta: {
-                        breadcrumbs: [
-                            {
-                                name: 'dahsboard'
-                            }
-                        ]
                     }
                 },
                 {
@@ -50,7 +45,7 @@ const router = new VueRouter({
                         breadcrumbs: [
                             {
                                 name: 'projects',
-                                link: 'project-list'
+                                link: 'projects'
                             },
                             {
                                 name: 'create project'
@@ -59,19 +54,14 @@ const router = new VueRouter({
                     }
                 },
                 {
-                    path: '/project-list',
-                    name: 'project-list',
+                    path: '/projects',
+                    name: 'projects',
                     component: ProjectList,
                     meta: {
-                        breadcrumbs: [
-                            {
-                                name: 'projects'
-                            }
-                        ]
                     }
                 },
                 {
-                    path: '/project/:projectId',
+                    path: '/projects/:projectId',
                     component: ProjectLayout,
                     children: [
                         {
@@ -82,7 +72,7 @@ const router = new VueRouter({
                                 breadcrumbs: [
                                     {
                                         name: 'projects',
-                                        link: 'project-list'
+                                        link: 'projects'
                                     },
                                     {
                                         name: ':projectId'
@@ -98,7 +88,7 @@ const router = new VueRouter({
                                 breadcrumbs: [
                                     {
                                         name: 'projects',
-                                        link: 'project-list'
+                                        link: 'projects'
                                     },
                                     {
                                         name: ':projectId',
@@ -118,7 +108,7 @@ const router = new VueRouter({
                                 breadcrumbs: [
                                     {
                                         name: 'projects',
-                                        link: 'project-list'
+                                        link: 'projects'
                                     },
                                     {
                                         name: ':projectId',
@@ -138,7 +128,7 @@ const router = new VueRouter({
                                 breadcrumbs: [
                                     {
                                         name: 'projects',
-                                        link: 'project-list'
+                                        link: 'projects'
                                     },
                                     {
                                         name: ':projectId',
@@ -161,7 +151,7 @@ const router = new VueRouter({
                                 breadcrumbs: [
                                     {
                                         name: 'projects',
-                                        link: 'project-list'
+                                        link: 'projects'
                                     },
                                     {
                                         name: ':projectId',
@@ -187,7 +177,7 @@ const router = new VueRouter({
                                 breadcrumbs: [
                                     {
                                         name: 'projects',
-                                        link: 'project-list'
+                                        link: 'projects'
                                     },
                                     {
                                         name: ':projectId',

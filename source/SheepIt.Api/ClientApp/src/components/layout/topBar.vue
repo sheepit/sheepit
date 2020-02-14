@@ -15,7 +15,7 @@
             <div class="navigation__menu--item">
                 <router-link 
                     class="navigation__menu--item--link"
-                    :to="{ name: 'project-list' }"
+                    :to="{ name: 'projects' }"
                 >
                     Projects
                 </router-link>
