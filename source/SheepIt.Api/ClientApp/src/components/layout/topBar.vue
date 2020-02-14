@@ -6,8 +6,8 @@
                     class="navigation__logo--link"
                     :to="{ name: 'default' }"
                 >
-                    <font-awesome-icon icon="dog" />
-                    Sheep It
+                    <font-awesome-icon icon="dog" size="lg" />
+                    <span class="navigation__logo--text">SheepIt</span>
                 </router-link>
             </div>
         </div>
@@ -24,7 +24,9 @@
         </div>
         <div class="navigation__profile">
             <div class="navigation__profile--icon">
-                <font-awesome-icon icon="user-circle" @click="signOut()" />
+                <div class="navigation__profile--icon--link">
+                    <font-awesome-icon icon="user-circle"  size="lg" @click="signOut()" />
+                </div>
             </div>
         </div>
     </div>
@@ -67,16 +69,21 @@ export default {
         flex: 0 0 250px;
 
         &--brand {
-            margin-left: 20px;
+            margin-left: 10px;
         }
 
         &--link {
+            padding: 12px;
             color: #EBEBEB;
             text-decoration: none;
 
             &:hover {
-                color: #797979;
+                color: #FFFFFF;
             }
+        }
+
+        &--text {
+            margin-left: 8px;
         }
     }
 
@@ -89,13 +96,18 @@ export default {
             margin-left: 30px;
 
             &--link {
+                padding: 12px;
                 color: #EBEBEB;
                 text-decoration: none;
 
                 &:hover {
-                    color: #797979;
+                    color: #FFFFFF;
                 }
             }
+        }
+
+        .router-link-active {
+            background: #3B8A86;
         }
     }
 
@@ -106,11 +118,17 @@ export default {
         flex: 10;
 
         &--icon {
-            margin-right: 20px;
+            margin-right: 10px;
 
-            &:hover {
-                color: #797979;
+            &--link {
+                padding: 10px;
+                color: #EBEBEB;
+                text-decoration: none;
                 cursor: pointer;
+
+                &:hover {
+                    color: #FFFFFF;
+                }
             }
         }
     }
