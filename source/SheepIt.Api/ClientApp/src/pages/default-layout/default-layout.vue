@@ -3,9 +3,7 @@
         data-event-handler 
         @unauthorized="handleUnauthorized()"
     >
-        <Navvv />
-
-        <navigation />
+        <top-bar />
 
         <breadcrumb />
 
@@ -18,17 +16,15 @@
 </template>
 
 <script>
-import Navigation from '../../components/layout/navigation.vue'
-import Navvv from '../../components/layout/navBar.vue'
+import TopBar from '../../components/layout/topBar.vue'
 import Breadcrumb from "../../components/breadcrumb.vue";
 
 export default {
     name: "DefaultLayout",
 
     components: {
-        Navigation,
-        Breadcrumb,
-        Navvv
+        TopBar,
+        Breadcrumb
     },
 
     methods: {

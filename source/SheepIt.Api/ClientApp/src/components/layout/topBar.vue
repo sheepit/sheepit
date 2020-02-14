@@ -1,14 +1,12 @@
 <template>
     <div class="navigation">
         <div class="navigation__logo">
-            <div class="navigation__logo--icon">
-                ICO
-            </div>
             <div class="navigation__logo--brand">
                 <router-link
                     class="navigation__logo--link"
                     :to="{ name: 'default' }"
                 >
+                    <font-awesome-icon icon="dog" />
                     Sheep It
                 </router-link>
             </div>
@@ -22,10 +20,11 @@
                     Projects
                 </router-link>
             </div>
+
         </div>
         <div class="navigation__profile">
             <div class="navigation__profile--icon">
-                PROFIL
+                <font-awesome-icon icon="user-circle" @click="signOut()" />
             </div>
         </div>
     </div>
@@ -37,7 +36,7 @@ import jwtTokenStorage from "../../common/authentication/jwt-token-storage.js";
 
 
 export default {
-    name: 'Navvv',
+    name: 'TopBar',
         
     methods: {
         signOut() {
@@ -67,12 +66,8 @@ export default {
         align-items: center;
         flex: 0 0 250px;
 
-        &--icon {
-            margin-left: 20px;
-        }
-
         &--brand {
-            margin-left: 5px;
+            margin-left: 20px;
         }
 
         &--link {
@@ -112,6 +107,11 @@ export default {
 
         &--icon {
             margin-right: 20px;
+
+            &:hover {
+                color: #797979;
+                cursor: pointer;
+            }
         }
     }
 }
