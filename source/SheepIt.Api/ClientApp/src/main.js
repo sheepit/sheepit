@@ -8,13 +8,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faDog, faUserCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import jQuery from 'jquery'
-
-window.jQuery = jQuery
-window.$ = jQuery
-
 library.add(faDog)
 library.add(faUserCircle)
 
