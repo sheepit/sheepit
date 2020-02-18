@@ -5,10 +5,25 @@ import Vuelidate from 'vuelidate'
 import App from './App.vue'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faDog, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import { 
+    faBox,
+    faCheckCircle,
+    faCode,
+    faCogs,
+    faCubes,
+    faDog,
+    faServer,
+    faUserCircle
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+library.add(faBox)
+library.add(faCheckCircle)
+library.add(faCode)
+library.add(faCogs)
+library.add(faCubes)
 library.add(faDog)
+library.add(faServer)
 library.add(faUserCircle)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
