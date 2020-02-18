@@ -66,14 +66,14 @@ export default {
     &__logo {
         display: flex;
         align-items: center;
-        flex: 0 0 250px;
+        flex: 0 0 220px;
 
         &--brand {
             margin-left: 10px;
         }
 
         &--link {
-            padding: 12px;
+            padding: 11px;
             color: #EBEBEB;
             text-decoration: none;
 
@@ -91,12 +91,12 @@ export default {
         display: flex;
         align-items: center;
         flex: 75;
+        margin-left: 1px;
 
         &--item {
-            margin-left: 30px;
 
             &--link {
-                padding: 12px;
+                padding: 11px;
                 color: #EBEBEB;
                 text-decoration: none;
 
