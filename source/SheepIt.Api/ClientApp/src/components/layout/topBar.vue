@@ -66,22 +66,21 @@ export default {
     justify-content: space-between;
 
     height: 50px;
-    background: #45A29E;
+    background: $green-main;
 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 20px;
     font-weight: 400;
-    color: #EBEBEB;
+    color: $font-color-light;
 
     &__link {
         padding: 11px;
-        color: #EBEBEB;
+        color: $font-color-light;
         text-decoration: none;
         cursor: pointer;
 
         &:hover {
-            background: #419692;
-            color: #FFFFFF;
+            background: $green-hover;
+            color: $white;
         }
     }
 
@@ -89,13 +88,16 @@ export default {
         display: flex;
         align-items: center;
         flex: 0 0 220px;
+        color: $font-color-light;
 
         &--brand {
             margin-left: 10px;
+            color: $font-color-light;
         }
 
         &--text {
             margin-left: 8px;
+            color: $font-color-light;
         }
     }
 
@@ -107,7 +109,7 @@ export default {
 
         &--item {
             .router-link-active {
-                background: #3B8A86;
+                background: $green-active;
             }
         }
 

@@ -13,13 +13,14 @@
             </nav>
 
             <main>
+                <breadcrumb />
                 <div class="ddd2">
                     <router-view />
                 </div>
             </main>
         </div>
 
-        <breadcrumb />
+        
     </div>
 </template>
 
@@ -63,25 +64,25 @@ export default {
 .ddd {
     border-style: solid;
     border-width: 0 1px 0 0;
-    border-color: #EBEBEB;
+    border-color: $font-color-light;
 
     height: 100%;
     width: 100%;
 
-    background: #FAFAFA;
+    background: $gray-main;
 }
 
 .ddd2 {
     border-style: solid;
     border-width: 0 1px 0 1px;
-    border-color: #EBEBEB;
+    border-color: $font-color-light;
 
     height: 100%;
 
     max-width: 990px;
     width: 990px;
 
-    background: #FAFAFA;
+    background: $gray-main;
 
     justify-self: center;
     align-self: center;

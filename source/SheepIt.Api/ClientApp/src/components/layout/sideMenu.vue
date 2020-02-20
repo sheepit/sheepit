@@ -7,6 +7,7 @@
                 <router-link
                     class="sidemenu__link"
                     :to="{ name: 'default' }"
+                    exact
                 >
                     <div class="sidemenu__link--icon">
                         <font-awesome-icon icon="code" />
@@ -17,34 +18,43 @@
                 </router-link>
             </li>
             <li>
-                <a class="sidemenu__link" href="#">
+                <router-link
+                    class="sidemenu__link"
+                    :to="{ name: 'create-project' }"
+                >
                     <div class="sidemenu__link--icon">
                         <font-awesome-icon icon="server" />
                     </div>
                     <div class="sidemenu__link--name">
                         Environments
                     </div>
-                </a>
+                </router-link>
             </li>
             <li>
-                <a class="sidemenu__link" href="#">
+                <router-link
+                    class="sidemenu__link"
+                    :to="{ name: 'create-project' }"
+                >
                     <div class="sidemenu__link--icon">
                         <font-awesome-icon icon="cubes" />
                     </div>
                     <div class="sidemenu__link--name">
                         Packages
                     </div>
-                </a>
+                </router-link>
             </li>
             <li>
-                <a class="sidemenu__link" href="#">
+                <router-link
+                    class="sidemenu__link"
+                    :to="{ name: 'create-project' }"
+                >
                     <div class="sidemenu__link--icon">
                         <font-awesome-icon icon="cogs" />
                     </div>
                     <div class="sidemenu__link--name">
                         Deployments
                     </div>
-                </a>
+                </router-link>
             </li>
         </ul>
     </div>
@@ -62,17 +72,16 @@ export default {
 }
 
 .sidemenu {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding-left: 0px;
     list-style: none;
 
-    color: #898989;
+    color: $font-color;
     font-size: 16px;
 
     &__item {
         .router-link-active {
-            background: #BABABA;
-            color: #FFFFFF;
+            background: $gray-active;
+            color: $white;
         }
     }
 
@@ -81,7 +90,7 @@ export default {
         align-items: center;
         padding: 12px;
         line-height: 21px;
-        color: #898989;
+        color: $font-color;
         text-decoration: none;
 
         &--icon {
@@ -101,8 +110,8 @@ export default {
         }
 
         &:hover {
-            background: #D7D7D7;
-            color: #FFFFFF;
+            background: $gray-hover;
+            color: $white;
         }
     }
 }
