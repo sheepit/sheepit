@@ -4,14 +4,17 @@
 
         <ul class="sidemenu">
             <li class="sidemenu__item">
-                <a class="sidemenu__link" href="#">
+                <router-link
+                    class="sidemenu__link"
+                    :to="{ name: 'default' }"
+                >
                     <div class="sidemenu__link--icon">
                         <font-awesome-icon icon="code" />
                     </div>
                     <div class="sidemenu__link--name">
                         Components
                     </div>
-                </a>
+                </router-link>
             </li>
             <li>
                 <a class="sidemenu__link" href="#">
@@ -59,6 +62,7 @@ export default {
 }
 
 .sidemenu {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding-left: 0px;
     list-style: none;
 
@@ -66,6 +70,10 @@ export default {
     font-size: 16px;
 
     &__item {
+        .router-link-active {
+            background: #BABABA;
+            color: #FFFFFF;
+        }
     }
 
     &__link {
@@ -93,7 +101,7 @@ export default {
         }
 
         &:hover {
-            background: #BABABA;
+            background: #D7D7D7;
             color: #FFFFFF;
         }
     }
