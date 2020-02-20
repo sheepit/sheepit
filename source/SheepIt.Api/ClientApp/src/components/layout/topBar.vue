@@ -3,7 +3,7 @@
         <div class="navigation__logo">
             <div class="navigation__logo--brand">
                 <router-link
-                    class="navigation__logo--link"
+                    class="navigation__link"
                     :to="{ name: 'default' }"
                 >
                     <font-awesome-icon icon="dog" size="lg" />
@@ -14,7 +14,17 @@
         <div class="navigation__menu">
             <div class="navigation__menu--item">
                 <router-link 
-                    class="navigation__menu--item--link"
+                    class="navigation__link"
+                    :to="{ name: 'default' }"
+                    exact
+                >
+                    Dashboard
+                </router-link>
+            </div>
+
+            <div class="navigation__menu--item">
+                <router-link 
+                    class="navigation__link"
                     :to="{ name: 'projects' }"
                 >
                     Projects
@@ -24,7 +34,7 @@
         </div>
         <div class="navigation__profile">
             <div class="navigation__profile--icon">
-                <div class="navigation__profile--icon--link">
+                <div class="navigation__link">
                     <font-awesome-icon icon="user-circle"  size="lg" @click="signOut()" />
                 </div>
             </div>
@@ -63,6 +73,18 @@ export default {
     font-weight: 400;
     color: #EBEBEB;
 
+    &__link {
+        padding: 11px;
+        color: #EBEBEB;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+            background: #419692;
+            color: #FFFFFF;
+        }
+    }
+
     &__logo {
         display: flex;
         align-items: center;
@@ -70,16 +92,6 @@ export default {
 
         &--brand {
             margin-left: 10px;
-        }
-
-        &--link {
-            padding: 11px;
-            color: #EBEBEB;
-            text-decoration: none;
-
-            &:hover {
-                color: #FFFFFF;
-            }
         }
 
         &--text {
@@ -94,21 +106,12 @@ export default {
         margin-left: 1px;
 
         &--item {
-
-            &--link {
-                padding: 11px;
-                color: #EBEBEB;
-                text-decoration: none;
-
-                &:hover {
-                    color: #FFFFFF;
-                }
+            .router-link-active {
+                background: #3B8A86;
             }
         }
 
-        .router-link-active {
-            background: #3B8A86;
-        }
+
     }
 
     &__profile {
@@ -119,17 +122,6 @@ export default {
 
         &--icon {
             margin-right: 10px;
-
-            &--link {
-                padding: 10px;
-                color: #EBEBEB;
-                text-decoration: none;
-                cursor: pointer;
-
-                &:hover {
-                    color: #FFFFFF;
-                }
-            }
         }
     }
 }
