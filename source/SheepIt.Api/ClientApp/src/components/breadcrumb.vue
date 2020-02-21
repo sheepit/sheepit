@@ -1,24 +1,23 @@
 <template>
-    <div>
-        <nav v-if="breadcrumbs && breadcrumbs.length > 0">
-            <ol class="breadcrumb">
-                <li
-                    v-for="(breadcrumb, index) in breadcrumbs"
-                    :key="index"
-                    class="breadcrumb-item"
+    <div class="breadcrumbs" v-if="breadcrumbs && breadcrumbs.length > 0">
+        <ol class="breadcrumbs__main">
+            <li
+                v-for="(breadcrumb, index) in breadcrumbs"
+                :key="index"
+                class="breadcrumbs__item"
+            >
+                <router-link
+                    class="breadcrumbs__link"
+                    v-if="breadcrumb.link" 
+                    :to="{ name: breadcrumb.link }"
                 >
-                    <router-link
-                        v-if="breadcrumb.link" 
-                        :to="{ name: breadcrumb.link }"
-                    >
-                        {{ breadcrumb.text }}
-                    </router-link>
-                    <span v-else>
-                        {{ breadcrumb.text }}
-                    </span>
-                </li>
-            </ol>
-        </nav>
+                    {{ breadcrumb.text }}
+                </router-link>
+                <span v-else class="breadcrumbs__link">
+                    {{ breadcrumb.text }}
+                </span>
+            </li>
+        </ol>
     </div>
 </template>
 
@@ -69,3 +68,44 @@ export default {
     }
 }
 </script>
+
+
+<style lang="scss" scoped>
+.breadcrumbs {
+    height: 35px;
+    background: $font-color-light;
+    font-size: 16px;
+    display: flex;
+
+    &__main {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        list-style: none;
+        margin: 0;
+    }
+
+    &__item {
+        margin-right: 5px;
+        color: $font-color;
+
+        &:before {
+            content: '/'
+        }
+
+        &:first-child {
+            margin-left: 16px;
+
+            &:before {
+                content: none;
+            }
+        }
+    }
+
+    &__link {
+        color: $font-color;
+        text-transform: uppercase;
+        text-decoration: none;
+    }
+}
+</style>

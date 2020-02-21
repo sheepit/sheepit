@@ -12,8 +12,10 @@
                 <side-menu />
             </nav>
 
+            <breadcrumb />
+
             <main>
-                <breadcrumb />
+                
                 <div class="ddd2">
                     <router-view />
                 </div>
@@ -52,11 +54,12 @@ export default {
 
     grid-template-areas:
     "header header"
+    "nav breadcrumb"
     "nav content";
 
     grid-template-columns: 220px 1fr;
-    grid-template-rows: auto 1fr;
-    grid-column-gap: 10px;
+    grid-template-rows: auto 35px 1fr;
+    grid-column-gap: 0px;
 
     height: 100vh;
 }
@@ -96,9 +99,12 @@ nav {
   grid-area: nav;
 }
 
+breadcrumb {
+    grid-area: breadcrumb;
+}
+
 main {
     grid-area: content;
-
     justify-self: center;
 }
 </style>
