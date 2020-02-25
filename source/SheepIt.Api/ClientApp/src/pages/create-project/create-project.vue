@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="view-title">
-            Add new project
+            Create project
         </div>
 
         <div class="form">
@@ -10,35 +10,44 @@
                     Details
                 </div>
 
-                <div class="form-group">
-                    <label
-                        for="projectId"
-                        class="form-label"
-                    >Project id</label>
-                    <input
-                        id="projectId"
-                        v-model="projectId"
-                        type="text"
-                        class="form-control"
-                        :class="{ 'is-invalid': submitted && $v.projectId.$error }"
-                    >
-                    <div
-                        v-if="submitted && $v.projectId.$error"
-                        class="invalid-feedback"
-                    >
-                        <span v-if="!$v.projectId.required">Field is required</span>
-                        <span v-if="!$v.projectId.minLength">Field should have at least 3 characters</span>
+                <div class="form-row">
+                    <div class="form-column">
+                        <label
+                            for="projectId"
+                            class="form-label"
+                        >Project id</label>
+                        <input
+                            id="projectId"
+                            v-model="projectId"
+                            type="text"
+                            class="form-control"
+                            :class="{ 'is-invalid': submitted && $v.projectId.$error }"
+                        >
+                        <div
+                            v-if="submitted && $v.projectId.$error"
+                            class="form-error-section"
+                        >
+                            <span v-if="!$v.projectId.required">Field is required</span>
+                            <span v-if="!$v.projectId.minLength">Field should have at least 3 characters</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="zipFile">Process definition</label>
-                    <input
-                        id="zipFile" 
-                        ref="zipFile"
-                        type="file"
-                        class="form-control-file"
-                    >
+                    <div class="form-column">
+                        <label
+                            for="zipFile"
+                            class="form-label"
+                        >
+                            Process definition
+                        </label>
+                        <input
+                            id="zipFile" 
+                            ref="zipFile"
+                            type="file"
+                            class="form-control-file"
+                        >
+                    </div>
+
+                    <div class="form-column"></div>
                 </div>
             </div>
 
@@ -46,33 +55,27 @@
                 <div class="form-title">
                     Environments
                 </div>
-                <div class="form-group">
-                    <label>List of environments</label>
 
-                    <div
-                        v-for="(environment, environmentIndex) in environments"
-                        :key="environmentIndex"
-                        class="input-group mb-3"
-                    >
+                <div class="form-row">
+                    <div class="form-column">
+                        <label class="form-label">List of environments</label>
+                    </div>                   
+                </div>
+
+                <div class="form-row"
+                    v-for="(environment, environmentIndex) in environments"
+                    :key="environmentIndex"
+                >
+                    <div class="form-column">
                         <input
                             v-model="environments[environmentIndex]"
                             type="text"
                             class="form-control"
                             :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].$error }"
                         >
-                        <div class="input-group-append">
-                            <button
-                                class="btn btn-outline-secondary"
-                                type="button"
-                                :disabled="environments.length < 2"
-                                @click="removeEnvironment(environmentIndex)"
-                            >
-                                <span class="icon icon-trash" />
-                            </button>
-                        </div>
                         <div
                             v-if="submitted && $v.environments.$each[environmentIndex].$error"
-                            class="invalid-feedback"
+                            class="form-error-section"
                         >
                             <span v-if="!$v.environments.$each[environmentIndex].required">Field is required</span>
                             <span
@@ -80,11 +83,24 @@
                             >Field should have at least 3 characters</span>
                         </div>
                     </div>
+                    <div class="form-column">
+                        <div class="input-group-append">
+                            <button
+                                class="button button--inline button--secondary"
+                                type="button"
+                                :disabled="environments.length < 2"
+                                @click="removeEnvironment(environmentIndex)"
+                            >
+                                <font-awesome-icon icon="trash" />
+                            </button>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div class="button-container">
                     <button
-                        class="btn btn-secondary"
+                        class="button button--secondary"
                         @click="newEnvironment()"
                     >
                         Add new
@@ -95,7 +111,7 @@
             <div class="submit-button-container">
                 <button
                     type="button"
-                    class="btn btn-primary"
+                    class="button button--primary"
                     @click="onSubmit()"
                 >
                     Save

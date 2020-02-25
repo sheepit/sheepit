@@ -35,7 +35,7 @@
         <div class="navigation__profile">
             <div class="navigation__profile--icon">
                 <div class="navigation__link">
-                    <font-awesome-icon icon="user-circle"  size="lg" @click="signOut()" />
+                    <font-awesome-icon icon="user-circle" size="lg" @click="signOut()" />
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@ export default {
     display: flex;
     justify-content: space-between;
 
-    height: 50px;
+    height: 42px;
     background: $green-main;
 
     font-size: 20px;
@@ -73,7 +73,7 @@ export default {
     color: $font-color-light;
 
     &__link {
-        padding: 11px;
+        padding: 10px;
         color: $font-color-light;
         text-decoration: none;
         cursor: pointer;
@@ -108,6 +108,8 @@ export default {
         margin-left: 1px;
 
         &--item {
+            font-size: 16px;
+
             .router-link-active {
                 background: $green-active;
             }

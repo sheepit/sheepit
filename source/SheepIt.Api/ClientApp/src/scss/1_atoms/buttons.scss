@@ -2,12 +2,19 @@
     border: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: 400;
-    height: 34px;
     display: inline-block;
+    border-radius: 0.25rem;
+    padding: 8px 16px;
+    border: 1px solid $gray-border;
+    cursor: pointer;
 
     &--primary {
         color: $white;
         background-color: $green-main;
+
+        &:hover {
+            background: $green-hover;
+        }
     }
 
     &--secondary {
@@ -18,5 +25,9 @@
     &--error {
         color: $white;
         background-color: $error;
+    }
+
+    &--inline {
+        padding: 4px 16px;
     }
 }

@@ -1,4 +1,27 @@
 .form {
+
+    &-row {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 10px -10px;
+    }
+
+    &-column {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 0 10px;
+    }
+
+    &-column-2 {
+        display: flex;
+        flex-direction: column;
+        flex: 2;
+        padding: 0 10px;
+    }
+
     &-section {
         padding: 15px;
         overflow: hidden;
@@ -8,18 +31,36 @@
         border-radius: 0.25rem;
     }
 
+    &-control {
+        display: block;
+        border: 1px solid $gray-border;
+        border-radius: 0.25rem;
+        padding: 4px 8px;
+    }
+
     &-title {
-        font-size: 2rem;
+        font-size: 16px;
+        font-weight: bold;
         margin-bottom: 1rem;
+        text-transform: uppercase;
     }
 
     &-draggable {
         cursor: grab;
     }
 
-    label {
+    &-label {
         margin: 0;
-        font-weight: 500;
+        margin-bottom: 5px;
+        font-weight: 400;
+        text-transform: uppercase;
+        font-size: 14px;
+        display: inline-block;
+    }
+
+    &-error-section {
+        font-size: 13px;
+        color: $error;
     }
 
     .button-container {

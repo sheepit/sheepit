@@ -13,6 +13,7 @@ import {
     faCubes,
     faDog,
     faServer,
+    faTrash,
     faUserCircle
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -24,6 +25,7 @@ library.add(faCogs)
 library.add(faCubes)
 library.add(faDog)
 library.add(faServer)
+library.add(faTrash)
 library.add(faUserCircle)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

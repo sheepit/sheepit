@@ -76,16 +76,10 @@ export default {
 }
 
 .ddd2 {
-    border-style: solid;
-    border-width: 0 1px 0 1px;
-    border-color: $font-color-light;
-
     height: 100%;
 
     max-width: 990px;
     width: 990px;
-
-    background: $gray-main;
 
     justify-self: center;
     align-self: center;
