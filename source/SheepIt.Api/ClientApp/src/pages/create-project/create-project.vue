@@ -5,37 +5,37 @@
         </div>
 
         <div class="form">
-            <div class="form-section">
-                <div class="form-title">
+            <div class="form__section">
+                <div class="form__title">
                     Details
                 </div>
 
-                <div class="form-row">
-                    <div class="form-column">
+                <div class="form__row">
+                    <div class="form__column">
                         <label
                             for="projectId"
-                            class="form-label"
+                            class="form__label"
                         >Project id</label>
                         <input
                             id="projectId"
                             v-model="projectId"
                             type="text"
-                            class="form-control"
+                            class="form__control"
                             :class="{ 'is-invalid': submitted && $v.projectId.$error }"
                         >
                         <div
                             v-if="submitted && $v.projectId.$error"
-                            class="form-error-section"
+                            class="form__error-section"
                         >
                             <span v-if="!$v.projectId.required">Field is required</span>
                             <span v-if="!$v.projectId.minLength">Field should have at least 3 characters</span>
                         </div>
                     </div>
 
-                    <div class="form-column">
+                    <div class="form__column">
                         <label
                             for="zipFile"
-                            class="form-label"
+                            class="form__label"
                         >
                             Process definition
                         </label>
@@ -43,39 +43,39 @@
                             id="zipFile" 
                             ref="zipFile"
                             type="file"
-                            class="form-control-file"
+                            class="form__control-file"
                         >
                     </div>
 
-                    <div class="form-column"></div>
+                    <div class="form__column"></div>
                 </div>
             </div>
 
-            <div class="form-section">
-                <div class="form-title">
+            <div class="form__section">
+                <div class="form__title">
                     Environments
                 </div>
 
-                <div class="form-row">
-                    <div class="form-column">
-                        <label class="form-label">List of environments</label>
+                <div class="form__row">
+                    <div class="form__column">
+                        <label class="form__label">List of environments</label>
                     </div>                   
                 </div>
 
-                <div class="form-row"
+                <div class="form__row"
                     v-for="(environment, environmentIndex) in environments"
                     :key="environmentIndex"
                 >
-                    <div class="form-column">
+                    <div class="form__column">
                         <input
                             v-model="environments[environmentIndex]"
                             type="text"
-                            class="form-control"
+                            class="form__control"
                             :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].$error }"
                         >
                         <div
                             v-if="submitted && $v.environments.$each[environmentIndex].$error"
-                            class="form-error-section"
+                            class="form__error-section"
                         >
                             <span v-if="!$v.environments.$each[environmentIndex].required">Field is required</span>
                             <span
@@ -83,7 +83,7 @@
                             >Field should have at least 3 characters</span>
                         </div>
                     </div>
-                    <div class="form-column">
+                    <div class="form__column">
                         <div class="input-group-append">
                             <button
                                 class="button button--inline button--secondary"

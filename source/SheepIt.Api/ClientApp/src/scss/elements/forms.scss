@@ -2,7 +2,7 @@
 
     color: $font-form-color;
     
-    &-row {
+    &__row {
         display: flex;
         flex-wrap: wrap;
         flex-direction: row;
@@ -10,21 +10,21 @@
         margin: 10px -10px;
     }
 
-    &-column {
+    &__column {
         display: flex;
         flex-direction: column;
         flex: 1;
         padding: 0 10px;
     }
 
-    &-column-2 {
+    &__column-2 {
         display: flex;
         flex-direction: column;
         flex: 2;
         padding: 0 10px;
     }
 
-    &-section {
+    &__section {
         padding: 15px;
         overflow: hidden;
         background: $white;
@@ -33,25 +33,25 @@
         border-radius: 0.25rem;
     }
 
-    &-control {
+    &__control {
         display: block;
         border: 1px solid $gray-border;
         border-radius: 0.25rem;
         padding: 4px 8px;
     }
 
-    &-title {
+    &__title {
         font-size: 16px;
         font-weight: bold;
         margin-bottom: 1rem;
         text-transform: uppercase;
     }
 
-    &-draggable {
+    &__draggable {
         cursor: grab;
     }
 
-    &-label {
+    &__label {
         margin: 0;
         margin-bottom: 5px;
         font-weight: 400;
@@ -60,7 +60,7 @@
         display: inline-block;
     }
 
-    &-error-section {
+    &__error-section {
         font-size: 13px;
         color: $error;
     }
