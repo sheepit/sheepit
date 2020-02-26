@@ -5,108 +5,114 @@
         </div>
 
         <div class="form">
-            <div class="form-section">
-                <div class="form-title">
+            <div class="form__section">
+                <div class="form__title">
                     Environments
                 </div>
 
-                <div class="form-group">
-                    <label>List of environments</label>
+                <div class="form__row">
+                    <div class="form__column">
+                        <label class="form__label">List of environments</label>
+                    </div>                   
+                </div>
 
-                    <draggable
-                        v-model="environments"
-                        draggable=".dragMe"
-                    >
-                        <div
-                            v-for="(environment, environmentIndex) in environments"
-                            :key="environmentIndex"
-                            :class="{'dragMe': !environments[environmentIndex].edition}"
+                <div class="form__row">
+                    <div class="form__column">
+                        <draggable
+                            v-model="environments"
+                            draggable=".dragMe"
                         >
                             <div
-                                v-if="environments[environmentIndex].edition"
-                                class="input-group mb-3"
+                                v-for="(environment, environmentIndex) in environments"
+                                :key="environmentIndex"
+                                :class="{'dragMe': !environments[environmentIndex].edition}"
                             >
-                                <input
-                                    v-model="environments[environmentIndex].displayName"
-                                    type="text"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].displayName.$error }"
+                                <div
+                                    v-if="environments[environmentIndex].edition"
+                                    class="input-group mb-3"
                                 >
-                                <div class="input-group-append">
-                                    <button 
-                                        class="btn btn-outline-secondary"
-                                        type="button"
-                                        @click="disableEnvironmentEdition(environmentIndex)"
+                                    <input
+                                        v-model="environments[environmentIndex].displayName"
+                                        type="text"
+                                        class="form__control"
+                                        :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].displayName.$error }"
                                     >
-                                        <span class="icon icon-ok" />
-                                    </button>
-                                </div>
-                                <div class="input-group-append">
-                                    <button
-                                        class="btn btn-outline-secondary"
-                                        type="button"
-                                        :disabled="environment.persisted || environments.length < 2"
-                                        @click="removeEnvironment(environmentIndex)"
+                                    <div class="input-group-append">
+                                        <button 
+                                            class="button button-outline-secondary"
+                                            type="button"
+                                            @click="disableEnvironmentEdition(environmentIndex)"
+                                        >
+                                            <span class="icon icon-ok" />
+                                        </button>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button
+                                            class="button button-outline-secondary"
+                                            type="button"
+                                            :disabled="environment.persisted || environments.length < 2"
+                                            @click="removeEnvironment(environmentIndex)"
+                                        >
+                                            <span class="icon icon-trash" />
+                                        </button>
+                                    </div>
+
+                                    <div
+                                        v-if="submitted && $v.environments.$each[environmentIndex].displayName.$error"
+                                        class="invalid-feedback"
                                     >
-                                        <span class="icon icon-trash" />
-                                    </button>
+                                        <span v-if="!$v.environments.$each[environmentIndex].displayName.required">Field is required</span>
+                                        <span v-if="!$v.environments.$each[environmentIndex].displayName.minLength">Field should have at least 3 characters</span>
+                                    </div>
                                 </div>
 
                                 <div
-                                    v-if="submitted && $v.environments.$each[environmentIndex].displayName.$error"
-                                    class="invalid-feedback"
+                                    v-else
+                                    class="input-group mb-3 form__draggable"
                                 >
-                                    <span v-if="!$v.environments.$each[environmentIndex].displayName.required">Field is required</span>
-                                    <span v-if="!$v.environments.$each[environmentIndex].displayName.minLength">Field should have at least 3 characters</span>
+                                    <input
+                                        v-model="environments[environmentIndex].displayName"
+                                        type="text"
+                                        class="form__control form__draggable"
+                                        :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].displayName.$error }"
+                                        disabled="disabled"
+                                    >
+                                    <div class="input-group-append">
+                                        <button 
+                                            class="button button-outline-secondary"
+                                            type="button"
+                                            @click="enableEnvironmentEdition(environmentIndex)"
+                                        >
+                                            <span class="icon icon-pencil" />
+                                        </button>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button 
+                                            class="button button-outline-secondary"
+                                            type="button"
+                                            :disabled="environments.length < 2 || environment.persisted"
+                                            @click="removeEnvironment(environmentIndex)"
+                                        >
+                                            <span class="icon icon-trash" />
+                                        </button>
+                                    </div>
+
+                                    <div
+                                        v-if="submitted && $v.environments.$each[environmentIndex].displayName.$error"
+                                        class="invalid-feedback"
+                                    >
+                                        <span v-if="!$v.environments.$each[environmentIndex].displayName.required">Field is required</span>
+                                        <span v-if="!$v.environments.$each[environmentIndex].displayName.minLength">Field should have at least 3 characters</span>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div
-                                v-else
-                                class="input-group mb-3 form-draggable"
-                            >
-                                <input
-                                    v-model="environments[environmentIndex].displayName"
-                                    type="text"
-                                    class="form-control form-draggable"
-                                    :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].displayName.$error }"
-                                    disabled="disabled"
-                                >
-                                <div class="input-group-append">
-                                    <button 
-                                        class="btn btn-outline-secondary"
-                                        type="button"
-                                        @click="enableEnvironmentEdition(environmentIndex)"
-                                    >
-                                        <span class="icon icon-pencil" />
-                                    </button>
-                                </div>
-                                <div class="input-group-append">
-                                    <button 
-                                        class="btn btn-outline-secondary"
-                                        type="button"
-                                        :disabled="environments.length < 2 || environment.persisted"
-                                        @click="removeEnvironment(environmentIndex)"
-                                    >
-                                        <span class="icon icon-trash" />
-                                    </button>
-                                </div>
-
-                                <div
-                                    v-if="submitted && $v.environments.$each[environmentIndex].displayName.$error"
-                                    class="invalid-feedback"
-                                >
-                                    <span v-if="!$v.environments.$each[environmentIndex].displayName.required">Field is required</span>
-                                    <span v-if="!$v.environments.$each[environmentIndex].displayName.minLength">Field should have at least 3 characters</span>
-                                </div>
-                            </div>
-                        </div>
-                    </draggable>
+                        </draggable>
+                    </div>
                 </div>
 
                 <div class="button-container">
                     <button
-                        class="btn btn-secondary"
+                        class="button button--secondary"
                         @click="addNewEnvironment()"
                     >
                         Add new
@@ -117,7 +123,7 @@
             <div class="submit-button-container">
                 <button
                     type="button"
-                    class="btn btn-primary"
+                    class="button button--primary"
                     @click="save()"
                 >
                     Save

@@ -67,12 +67,22 @@
                     :key="environmentIndex"
                 >
                     <div class="form__column">
-                        <input
-                            v-model="environments[environmentIndex]"
-                            type="text"
-                            class="form__control"
-                            :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].$error }"
-                        >
+                        <div class="form__inline">
+                            <input
+                                v-model="environments[environmentIndex]"
+                                type="text"
+                                class="form__control form__inline__control"
+                                :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].$error }"
+                            >
+                            <button
+                                class="button button--inline button--secondary"
+                                type="button"
+                                :disabled="environments.length < 2"
+                                @click="removeEnvironment(environmentIndex)"
+                            >
+                                <font-awesome-icon icon="trash" />
+                            </button>
+                        </div>
                         <div
                             v-if="submitted && $v.environments.$each[environmentIndex].$error"
                             class="form__error-section"
@@ -83,19 +93,9 @@
                             >Field should have at least 3 characters</span>
                         </div>
                     </div>
-                    <div class="form__column">
-                        <div class="input-group-append">
-                            <button
-                                class="button button--inline button--secondary"
-                                type="button"
-                                :disabled="environments.length < 2"
-                                @click="removeEnvironment(environmentIndex)"
-                            >
-                                <font-awesome-icon icon="trash" />
-                            </button>
-                        </div>
 
-                    </div>
+                    <div class="form__column"></div>
+                    <div class="form__column"></div>
                 </div>
 
                 <div class="button-container">
