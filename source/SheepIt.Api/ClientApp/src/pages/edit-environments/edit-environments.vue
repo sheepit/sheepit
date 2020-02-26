@@ -104,6 +104,8 @@
                             </div>
                         </draggable>
                     </div>
+                
+                    <div class="form__column"></div>
                 </div>
 
                 <div class="button-container">
