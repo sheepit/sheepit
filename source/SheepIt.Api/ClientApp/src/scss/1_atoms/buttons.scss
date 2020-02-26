@@ -20,6 +20,10 @@
     &--secondary {
         color: $font-color;
         background-color: $white;
+
+        &:hover {
+            background: $gray-hover;
+        }
     }
 
     &--error {

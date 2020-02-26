@@ -72,9 +72,9 @@ export default {
 
 <style lang="scss" scoped>
 .breadcrumbs {
-    height: 35px;
+    height: 33px;
     background: $font-color-light;
-    font-size: 16px;
+    font-size: 14px;
     display: flex;
 
     &__main {
@@ -88,6 +88,13 @@ export default {
     &__item {
         margin-right: 5px;
         color: $font-color;
+
+        a {
+            &:hover {
+                background-color: $gray-hover;
+                border-radius: 0.25rem;
+            }
+        }
 
         &:before {
             content: '/'
