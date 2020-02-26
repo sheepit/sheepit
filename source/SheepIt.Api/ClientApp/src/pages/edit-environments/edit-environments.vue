@@ -31,13 +31,13 @@
                                     v-if="environments[environmentIndex].edition"
                                     class="input-group mb-3"
                                 >
-                                    <input
-                                        v-model="environments[environmentIndex].displayName"
-                                        type="text"
-                                        class="form__control"
-                                        :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].displayName.$error }"
-                                    >
-                                    <div class="input-group-append">
+                                    <div class="form__inline">
+                                        <input
+                                            v-model="environments[environmentIndex].displayName"
+                                            type="text"
+                                            class="form__control"
+                                            :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].displayName.$error }"
+                                        >
                                         <button 
                                             class="button button-outline-secondary"
                                             type="button"
@@ -45,8 +45,6 @@
                                         >
                                             <span class="icon icon-ok" />
                                         </button>
-                                    </div>
-                                    <div class="input-group-append">
                                         <button
                                             class="button button-outline-secondary"
                                             type="button"
@@ -70,30 +68,28 @@
                                     v-else
                                     class="input-group mb-3 form__draggable"
                                 >
-                                    <input
-                                        v-model="environments[environmentIndex].displayName"
-                                        type="text"
-                                        class="form__control form__draggable"
-                                        :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].displayName.$error }"
-                                        disabled="disabled"
-                                    >
-                                    <div class="input-group-append">
+                                    <div class="form__inline">
+                                        <input
+                                            v-model="environments[environmentIndex].displayName"
+                                            type="text"
+                                            class="form__control form__draggable form__inline__control"
+                                            :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].displayName.$error }"
+                                            disabled="disabled"
+                                        >
                                         <button 
-                                            class="button button-outline-secondary"
+                                            class="button button--inline button--secondary form__inline__control"
                                             type="button"
                                             @click="enableEnvironmentEdition(environmentIndex)"
                                         >
-                                            <span class="icon icon-pencil" />
+                                            <font-awesome-icon icon="pen" />
                                         </button>
-                                    </div>
-                                    <div class="input-group-append">
                                         <button 
-                                            class="button button-outline-secondary"
+                                            class="button button--inline button--secondary"
                                             type="button"
                                             :disabled="environments.length < 2 || environment.persisted"
                                             @click="removeEnvironment(environmentIndex)"
                                         >
-                                            <span class="icon icon-trash" />
+                                            <font-awesome-icon icon="trash" />
                                         </button>
                                     </div>
 

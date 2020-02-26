@@ -12,6 +12,7 @@ import {
     faCogs,
     faCubes,
     faDog,
+    faPen,
     faServer,
     faTrash,
     faUserCircle
@@ -24,6 +25,7 @@ library.add(faCode)
 library.add(faCogs)
 library.add(faCubes)
 library.add(faDog)
+library.add(faPen)
 library.add(faServer)
 library.add(faTrash)
 library.add(faUserCircle)
