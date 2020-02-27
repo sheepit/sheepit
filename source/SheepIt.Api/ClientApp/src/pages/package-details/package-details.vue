@@ -5,29 +5,29 @@
         </div>
 
         <div v-if="packagee">
-            <div class="form-group row">
-                <label class="col-2 col-form-label">Id</label>
+            <div class="form__row row">
+                <label class="col-2 col-form__label">Id</label>
                 <div class="col-10 value">
                     <span>{{ packagee.id }}</span>
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label class="col-2 col-form-label">Project</label>
+            <div class="form__row row">
+                <label class="col-2 col-form__label">Project</label>
                 <div class="col-10 value">
                     <span>{{ packagee.projectId }}</span>
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label class="col-2 col-form-label">Description</label>
+            <div class="form__row row">
+                <label class="col-2 col-form__label">Description</label>
                 <div class="col-10 value">
                     <span>{{ packagee.description }}</span>
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label class="col-2 col-form-label">Created At</label>
+            <div class="form__row row">
+                <label class="col-2 col-form__label">Created At</label>
                 <div class="col-10 value">
                     <humanized-date :date="packagee.createdAt" />
                 </div>

@@ -30,7 +30,7 @@
         </div>
 
         <p v-if="environments">
-            <!-- <select class="form-control" id="exampleFormControlSelect1">
+            <!-- <select class="form__control" id="exampleFormControlSelect1">
                 <option
                     v-for="environment in environments"
                     :key="environment.id">

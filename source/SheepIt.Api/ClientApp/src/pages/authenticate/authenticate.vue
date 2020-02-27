@@ -20,7 +20,7 @@
                 id="password"
                 v-model="password"
                 type="password"
-                class="form-control"
+                class="form__control"
                 placeholder="password"
             >
             <button

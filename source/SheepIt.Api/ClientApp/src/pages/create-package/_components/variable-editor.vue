@@ -31,7 +31,7 @@
                             <input
                                 v-model="variable.name"
                                 type="text"
-                                class="form-control"
+                                class="form__control"
                             >
                         </div>
                     </td>
@@ -39,14 +39,14 @@
                         <input
                             v-model="variable.defaultValue"
                             type="text"
-                            class="form-control"
+                            class="form__control"
                         >
                     </td>
                     <td v-for="environment in environments">
                         <input
                             v-model="variable.environmentValues[environment.id]"
                             type="text"
-                            class="form-control"
+                            class="form__control"
                         >
                     </td>
                 </tr>

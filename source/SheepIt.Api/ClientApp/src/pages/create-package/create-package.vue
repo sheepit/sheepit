@@ -5,36 +5,42 @@
         </div>
             
         <div class="form">
-            <div class="form-section">
-                <div class="form-group">
-                    <label
-                        for="description"
-                        class="form-label"
-                    >Description</label>
-                    <input
-                        id="description"
-                        v-model="description"
-                        type="text"
-                        class="form-control"
-                        :class="{ 'is-invalid': submitted && $v.description.$error }"
-                    >
-                    <div
-                        v-if="submitted && $v.description.$error"
-                        class="invalid-feedback"
-                    >
-                        <span v-if="!$v.description.required">Field is required</span>
-                        <span v-if="!$v.description.minLength">Field should have at least 1 character</span>
+            <div class="form__section">
+                <div class="form__row">
+                    <div class="form__column">
+                        <label
+                            for="description"
+                            class="form__label"
+                        >
+                            Description
+                        </label>
+                        <input
+                            id="description"
+                            v-model="description"
+                            type="text"
+                            class="form__control"
+                            :class="{ 'is-invalid': submitted && $v.description.$error }"
+                        >
+                        <div
+                            v-if="submitted && $v.description.$error"
+                            class="invalid-feedback"
+                        >
+                            <span v-if="!$v.description.required">Field is required</span>
+                            <span v-if="!$v.description.minLength">Field should have at least 1 character</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="zipFile">Process definition</label>
-                    <input
-                        id="zipFile" 
-                        ref="zipFile"
-                        type="file"
-                        class="form-control-file"
-                    >
+                    <div class="form__column">
+                        <label for="zipFile" class="form__label">Process definition</label>
+                        <input
+                            id="zipFile" 
+                            ref="zipFile"
+                            type="file"
+                            class="form__control-file"
+                        >
+                    </div>
+
+                    <div class="form__column"></div>
                 </div>
             </div>
         </div>
@@ -67,7 +73,7 @@
             <div class="submit-button-container">
                 <button
                     type="button"
-                    class="btn btn-primary"
+                    class="button button--primary"
                     @click="createPackage()"
                 >
                     Create package

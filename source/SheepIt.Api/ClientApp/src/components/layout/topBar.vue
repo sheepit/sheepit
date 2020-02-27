@@ -34,9 +34,7 @@
         </div>
         <div class="navigation__profile">
             <div class="navigation__profile--icon">
-                <div class="navigation__link">
-                    <font-awesome-icon icon="user-circle" size="lg" @click="signOut()" />
-                </div>
+                <font-awesome-icon icon="user-circle" size="lg" @click="signOut()" />
             </div>
         </div>
     </div>
@@ -123,10 +121,14 @@ export default {
         justify-content: flex-end;
         align-items: center;
         flex: 10;
+        padding: 8px;
+        cursor: pointer;
 
         &--icon {
             margin-right: 10px;
         }
+
+
     }
 }
 </style>
