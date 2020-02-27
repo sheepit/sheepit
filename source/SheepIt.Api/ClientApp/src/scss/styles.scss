@@ -1,9 +1,13 @@
 @import 'variables/colours.scss';
 
-@import 'elements/forms.scss';
-@import 'elements/tables.scss';
+@import 'mixins/font.scss';
+
 @import 'elements/views.scss';
 
 @import '0_layout/root.scss';
 
 @import '1_atoms/buttons.scss';
+
+@import '2_molecules/forms.scss';
+
+@import '3_organisms/table.scss';

@@ -1,11 +1,9 @@
 <template>
     <div v-if="project">
-        <div class="row project-title">
-            <h2 class="display-4">
-                {{ project.id }}
-            </h2>
+        <div class="view__title">
+            {{ project.id }}
         </div>
-        
+
         <div class="row">
             <div class="col">
                 <h3>

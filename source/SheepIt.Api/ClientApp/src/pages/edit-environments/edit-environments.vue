@@ -1,6 +1,6 @@
 <template>
     <div v-if="environments">
-        <div class="view-title">
+        <div class="view__title">
             Edit environments
         </div>
 
@@ -35,23 +35,23 @@
                                         <input
                                             v-model="environments[environmentIndex].displayName"
                                             type="text"
-                                            class="form__control"
+                                            class="form__control form__inline__control"
                                             :class="{ 'is-invalid': submitted && $v.environments.$each[environmentIndex].displayName.$error }"
                                         >
                                         <button 
-                                            class="button button-outline-secondary"
+                                            class="button button--inline button--secondary form__inline__control"
                                             type="button"
                                             @click="disableEnvironmentEdition(environmentIndex)"
                                         >
-                                            <span class="icon icon-ok" />
+                                            <font-awesome-icon icon="check" />
                                         </button>
                                         <button
-                                            class="button button-outline-secondary"
+                                            class="button button--inline button--secondary"
                                             type="button"
                                             :disabled="environment.persisted || environments.length < 2"
                                             @click="removeEnvironment(environmentIndex)"
                                         >
-                                            <span class="icon icon-trash" />
+                                            <font-awesome-icon icon="trash" />
                                         </button>
                                     </div>
 

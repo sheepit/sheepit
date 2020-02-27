@@ -24,7 +24,7 @@
                 placeholder="password"
             >
             <button
-                class="btn btn-lg btn-primary btn-block mt-3"
+                class="button button--primary"
                 type="submit"
                 :disabled="!password"
             >

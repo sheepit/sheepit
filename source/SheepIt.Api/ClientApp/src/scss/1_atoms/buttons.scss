@@ -1,7 +1,8 @@
 .button {
+    @include font;
     border: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 400;
+    text-decoration: none; 
+
     display: inline-block;
     border-radius: 0.25rem;
     padding: 8px 16px;
@@ -11,6 +12,7 @@
     &--primary {
         color: $white;
         background-color: $green-main;
+        border: 1px solid $green-main;
 
         &:hover {
             background: $green-hover;

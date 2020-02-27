@@ -1,19 +1,22 @@
 <template>
     <div>
-        <h2>Projects</h2>
-        <div class="row">
-            <div class="col text-right">
-                <router-link
-                    class="btn btn-primary"
-                    :to="{ name: 'create-project' }"
-                >
-                    Create project
-                </router-link>
-            </div>
+        <div class="view__title">
+            Projects
         </div>
+
+        <div class="view__row view__row--right">
+            <router-link
+                class="button button--primary"
+                :to="{ name: 'create-project' }"
+            >
+                Create project
+            </router-link>
+        </div>
+
         <div v-if="loading">
             <preloader />
         </div>
+
         <div v-else>
             <expanding-list
                     v-if="projects && projects.length > 0"

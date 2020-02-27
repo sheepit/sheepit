@@ -1,5 +1,9 @@
 <template>
     <div v-if="deployment">
+        <div class="view__title">
+            Deployment details
+        </div>
+
         <table>
             <thead>
                 <tr>

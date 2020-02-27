@@ -1,6 +1,17 @@
-.view-title {
-    margin-top: 1rem;
-    margin-bottom: 2.5rem;
-    font-size: 32px;
-    color: $font-form-color;
+.view {
+    &__title {
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 32px;
+        color: $font-form-color;
+    }
+
+    &__row {
+        display: flex;
+        flex-direction: row;
+
+        &--right {
+            justify-content: flex-end;
+        }
+    }
 }

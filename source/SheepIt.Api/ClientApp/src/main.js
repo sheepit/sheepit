@@ -7,6 +7,7 @@ import App from './App.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { 
     faBox,
+    faCheck,
     faCheckCircle,
     faCode,
     faCogs,
@@ -20,6 +21,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faBox)
+library.add(faCheck)
 library.add(faCheckCircle)
 library.add(faCode)
 library.add(faCogs)

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="view-title">
+        <div class="view__title">
             Package details
         </div>
 

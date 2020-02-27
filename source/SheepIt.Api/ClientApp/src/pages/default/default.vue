@@ -1,7 +1,8 @@
 <template>
     <div>
-        <h2>Dashboard</h2>
-        <br>
+        <div class="view__title">
+            Dashboard
+        </div>
         <h3>Last deployments</h3>
         <expanding-list
             v-if="deployments && deployments.length > 0"
