@@ -3,7 +3,7 @@
         data-placement="top"
         :text="formattedDate"
     >
-        <mark>{{ humanizedDate }}</mark>
+        <span>{{ humanizedDate }}</span>
     </tooltip>
 </template>
 
