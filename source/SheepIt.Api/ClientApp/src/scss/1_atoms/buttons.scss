@@ -9,6 +9,10 @@
     border: 1px solid $gray-border;
     cursor: pointer;
 
+    &:disabled {
+        opacity: 0.5;
+    }
+
     &--primary {
         color: $white;
         background-color: $green-main;
