@@ -6,7 +6,21 @@
             <li class="sidemenu__item">
                 <router-link
                     class="sidemenu__link"
-                    :to="{ name: 'default' }"
+                    :to="{ name: 'project' }"
+                    exact
+                >
+                    <div class="sidemenu__link--icon">
+                        <font-awesome-icon icon="code" />
+                    </div>
+                    <div class="sidemenu__link--name">
+                        Details
+                    </div>
+                </router-link>
+            </li>
+            <li class="sidemenu__item">
+                <router-link
+                    class="sidemenu__link"
+                    :to="{ name: 'components-list' }"
                     exact
                 >
                     <div class="sidemenu__link--icon">
@@ -20,7 +34,7 @@
             <li>
                 <router-link
                     class="sidemenu__link"
-                    :to="{ name: 'create-project' }"
+                    :to="{ name: 'environments-list' }"
                 >
                     <div class="sidemenu__link--icon">
                         <font-awesome-icon icon="server" />
@@ -33,7 +47,7 @@
             <li>
                 <router-link
                     class="sidemenu__link"
-                    :to="{ name: 'create-project' }"
+                    :to="{ name: 'packages-list' }"
                 >
                     <div class="sidemenu__link--icon">
                         <font-awesome-icon icon="cubes" />
@@ -46,7 +60,7 @@
             <li>
                 <router-link
                     class="sidemenu__link"
-                    :to="{ name: 'create-project' }"
+                    :to="{ name: 'deployments-list' }"
                 >
                     <div class="sidemenu__link--icon">
                         <font-awesome-icon icon="cogs" />
