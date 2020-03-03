@@ -7,13 +7,17 @@
 <script>
 import VueRouter from 'vue-router';
 import Authenticate from './pages/authenticate/authenticate.vue'
+import ComponentsList from './pages/components/list/components-list'
 import CreateProject from './pages/create-project/create-project.vue'
 import CreatePackage from './pages/create-package/create-package.vue'
 import Default from './pages/default/default.vue'
 import DefaultLayout from './pages/default-layout/default-layout.vue'
 import DeployPackage from './pages/deploy-package/deploy-package.vue'
 import DeploymentDetails from './pages/deployment-details/deployment-details.vue'
+import DeploymentsList from './pages/deloyments/list/deployments-list'
+import EnvironmentsList from './pages/environments/list/environments-list'
 import EditEnvironments from './pages/edit-environments/edit-environments.vue'
+import PackagesList from './pages/package/list/packages-list'
 import Project from './pages/project/project.vue'
 import ProjectLayout from './pages/project-layout/project-layout.vue'
 import ProjectList from './pages/project-list/project-list.vue'
@@ -33,9 +37,7 @@ const router = new VueRouter({
                 {
                     path: '',
                     name: 'default',
-                    component: Default,
-                    meta: {
-                    }
+                    component: Default
                 },
                 {
                     path: '/create-project',
@@ -69,6 +71,7 @@ const router = new VueRouter({
                             name: 'project',
                             component: Project,
                             meta: {
+                                sideMenu: true,
                                 breadcrumbs: [
                                     {
                                         name: 'projects',
@@ -81,10 +84,32 @@ const router = new VueRouter({
                             }
                         },
                         {
+                            path: 'environments',
+                            name: 'environments-list',
+                            component: EnvironmentsList,
+                            meta: {
+                                sideMenu: true,
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'projects'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'environments'
+                                    }
+                                ]
+                            }
+                        },
+                        {
                             path: 'edit-environments',
                             name: 'edit-environments',
                             component: EditEnvironments,
                             meta: {
+                                sideMenu: true,
                                 breadcrumbs: [
                                     {
                                         name: 'projects',
@@ -96,6 +121,27 @@ const router = new VueRouter({
                                     },
                                     {
                                         name: 'edit environments'
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            path: 'packages',
+                            name: 'packages-list',
+                            component: PackagesList,
+                            meta: {
+                                sideMenu: true,
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'projects'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'packages'
                                     }
                                 ]
                             }
@@ -139,6 +185,27 @@ const router = new VueRouter({
                                     },
                                     {
                                         name: ':deploymentId'
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            path: 'deployments',
+                            name: 'deployments-list',
+                            component: DeploymentsList,
+                            meta: {
+                                sideMenu: true,
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'projects'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'deployments'
                                     }
                                 ]
                             }
@@ -188,6 +255,27 @@ const router = new VueRouter({
                                     },
                                     {
                                         name: ':packageId'
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            path: 'components',
+                            name: 'components-list',
+                            component: ComponentsList,
+                            meta: {
+                                sideMenu: true,
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'projects'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'components'
                                     }
                                 ]
                             }
