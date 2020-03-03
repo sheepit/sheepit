@@ -3,19 +3,18 @@
         data-event-handler 
         @unauthorized="handleUnauthorized()"
     >
-        <div class="container">
+        <div class="container" :class="{ 'container--basic': !sideMenuEnabled, 'container--side-menu': sideMenuEnabled }">
             <header>
                 <top-bar />
             </header>
 
-            <nav class="ddd">
+            <nav v-if="sideMenuEnabled" class="container__navigation">
                 <side-menu />
             </nav>
 
-            <breadcrumb />
+            <breadcrumb v-if="sideMenuEnabled" />
 
-            <main>
-                
+            <main>      
                 <div class="ddd2">
                     <router-view />
                 </div>
@@ -40,9 +39,33 @@ export default {
         Breadcrumb
     },
 
+    mounted() {
+        this.updateSideMenu();
+    },
+
+    data: function() {
+        return {
+            sideMenuEnabled: false
+        }
+    },
+
+    watch: { 
+        '$route' () { 
+            this.updateSideMenu() 
+        } 
+    },
+
     methods: {
         handleUnauthorized() {
             this.$router.push({ name: 'sign-in' })
+        },
+
+        updateSideMenu() {
+            if(this.$route.meta && this.$route.meta.sideMenu) {
+                this.sideMenuEnabled = true;
+            } else {
+                this.sideMenuEnabled = false;
+            }
         }
     }
 }   
@@ -52,27 +75,39 @@ export default {
 .container {
     display: grid;
 
-    grid-template-areas:
-    "header header"
-    "nav breadcrumb"
-    "nav content";
-
-    grid-template-columns: 220px 1fr;
-    grid-template-rows: auto 35px 1fr;
     grid-column-gap: 0px;
 
     height: 100vh;
-}
 
-.ddd {
-    border-style: solid;
-    border-width: 0 1px 0 0;
-    border-color: $font-color-light;
+    &--side-menu {
+        grid-template-areas:
+        "header header"
+        "nav breadcrumb"
+        "nav content";
 
-    height: 100%;
-    width: 100%;
+        grid-template-columns: 220px 1fr;
+        grid-template-rows: auto 35px 1fr;
+    }
 
-    background: $gray-main;
+    &--basic {
+        grid-template-areas:
+        "header"
+        "content";
+
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+
+    &__navigation {
+        border-style: solid;
+        border-width: 0 1px 0 0;
+        border-color: $font-color-light;
+
+        height: 100%;
+        width: 100%;
+
+        background: $gray-main;
+    }
 }
 
 .ddd2 {
@@ -101,4 +136,5 @@ main {
     grid-area: content;
     justify-self: center;
 }
+
 </style>

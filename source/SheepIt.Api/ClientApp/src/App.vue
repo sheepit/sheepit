@@ -171,6 +171,7 @@ const router = new VueRouter({
                             name: 'deployment-details',
                             component: DeploymentDetails,
                             meta: {
+                                sideMenu: true,
                                 breadcrumbs: [
                                     {
                                         name: 'projects',
@@ -215,6 +216,7 @@ const router = new VueRouter({
                             name: 'deploy-package',
                             component: DeployPackage,
                             meta: {
+                                sideMenu: true,
                                 breadcrumbs: [
                                     {
                                         name: 'projects',
@@ -241,6 +243,7 @@ const router = new VueRouter({
                             name: 'package-details',
                             component: PackageDetails,
                             meta: {
+                                sideMenu: true,
                                 breadcrumbs: [
                                     {
                                         name: 'projects',
