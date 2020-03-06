@@ -46,15 +46,6 @@
             :project="project"
             :packages="packages"
         />
-
-        <h3 class="mt-5">
-            Deployments
-        </h3>
-        <project-deployments
-            :project="project"
-            :deployments="deployments"
-            class="deployments-section"
-        />
     </div>
 </template>
 
@@ -63,7 +54,6 @@ import getDashboardService from "./../_services/get-dashboard-service.js";
 
 import ProjectDashboard from "./../_components/project-dashboard.vue";
 import ProjectPackages from "./../_components/project-packages.vue";
-import ProjectDeployments from "./../_components/project-deployments.vue";
 
 export default {
     name: 'ProjectDetails',
@@ -71,7 +61,6 @@ export default {
     components: {
         'project-dashboard': ProjectDashboard,
         'project-packages': ProjectPackages,
-        'project-deployments': ProjectDeployments
     },
     
     props: [
@@ -80,7 +69,6 @@ export default {
     
     data() {
         return {
-            deployments: null,
             environments: null,
             packages: null
         }
@@ -100,7 +88,6 @@ export default {
                 .getDashboard(this.project.id)
                 .then(response => {
                     this.environments = response.environments
-                    this.deployments = response.deployments
                     this.packages = response.packages
                 });
         }

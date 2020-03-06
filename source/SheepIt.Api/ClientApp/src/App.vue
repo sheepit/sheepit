@@ -172,7 +172,7 @@ const router = new VueRouter({
                             }
                         },
                         {
-                            path: 'deployment-details/:deploymentId',
+                            path: 'deployments/:deploymentId',
                             name: 'deployment-details',
                             component: DeploymentDetails,
                             meta: {
@@ -187,7 +187,8 @@ const router = new VueRouter({
                                         link: 'project'
                                     },
                                     {
-                                        name: 'deployments'
+                                        name: 'deployments',
+                                        link: 'deployments-list'
                                     },
                                     {
                                         name: ':deploymentId'

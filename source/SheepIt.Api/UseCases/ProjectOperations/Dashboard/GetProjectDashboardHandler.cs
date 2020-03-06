@@ -22,7 +22,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
     public class GetProjectDashboardResponse
     {
         public EnvironmentDto[] Environments { get; set; }
-        public DeploymentDto[] Deployments { get; set; }
         public PackageDto[] Packages { get; set; }
 
         public class EnvironmentDto
@@ -38,17 +37,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             public int CurrentDeploymentId { get; set; }
             public int CurrentPackageId { get; set; }
             public string CurrentPackageDescription { get; set; }
-        }
-        
-        public class DeploymentDto
-        {
-            public int Id { get; set; }
-            public int PackageId { get; set; }
-            public string PackageDescription { get; set; }
-            public DateTime DeployedAt { get; set; } // todo: [rt] started at
-            public int EnvironmentId { get; set; }
-            public string EnvironmentDisplayName { get; set; }
-            public string Status { get; set; }
         }
 
         public class PackageDto
@@ -94,7 +82,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             return new GetProjectDashboardResponse
             {
                 Environments = await GetEnvironments(request.ProjectId),
-                Deployments = await GetDeployments(request.ProjectId),
                 Packages = await GetPackages(request.ProjectId)
             };
         }
@@ -131,24 +118,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                     Deployment = result.Deployments.FirstOrDefault()
                 })
                 .ToArray();
-        }
-
-        private async Task<GetProjectDashboardResponse.DeploymentDto[]> GetDeployments(string projectId)
-        {
-            return await _dbContext.Deployments
-                .FromProject(projectId)
-                .OrderByNewest()
-                .Select(deployment => new GetProjectDashboardResponse.DeploymentDto
-                {
-                    Id = deployment.Id,
-                    EnvironmentId = deployment.Environment.Id,
-                    EnvironmentDisplayName = deployment.Environment.DisplayName,
-                    DeployedAt = deployment.StartedAt,
-                    PackageId = deployment.PackageId,
-                    PackageDescription = deployment.Package.Description,
-                    Status = deployment.Status.ToString()
-                })
-                .ToArrayAsync();
         }
 
         private async Task<GetProjectDashboardResponse.PackageDto[]> GetPackages(string projectId)
