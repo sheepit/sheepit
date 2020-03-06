@@ -86,8 +86,8 @@
 <script>
 import { required, minLength } from "vuelidate/lib/validators";
 
-import httpService from "./../../common/http/http-service.js";
-import messageService from "./../../common/message/message-service.js";
+import httpService from "./../../../common/http/http-service";
+import messageService from "./../../../common/message/message-service.js";
 
 import createPackageService from "./_services/create-package-service.js";
 

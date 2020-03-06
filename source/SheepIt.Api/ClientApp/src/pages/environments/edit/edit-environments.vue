@@ -134,9 +134,9 @@
 <script>
 import { required, minLength, url } from 'vuelidate/lib/validators'
 
-import httpService from "./../../common/http/http-service.js";
+import httpService from "./../../../common/http/http-service.js";
 import draggable from 'vuedraggable';
-import messageService from "../../common/message/message-service";
+import messageService from "./../../../common/message/message-service";
 
 export default {
     name: 'EditEnvironments',

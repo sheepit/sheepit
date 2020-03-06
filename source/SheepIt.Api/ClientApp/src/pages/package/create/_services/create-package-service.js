@@ -1,4 +1,4 @@
-import httpService from './../../../common/http/http-service'
+import httpService from './../../../../common/http/http-service'
 
 export default {
     createPackage(

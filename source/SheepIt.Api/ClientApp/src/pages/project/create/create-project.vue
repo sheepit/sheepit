@@ -124,7 +124,7 @@
 <script>
 import { required, minLength, url } from "vuelidate/lib/validators";
 
-import messageService from "./../../common/message/message-service";
+import messageService from "./../../../common/message/message-service";
 import createProjectService from "./_services/create-project-service";
 
 export default {

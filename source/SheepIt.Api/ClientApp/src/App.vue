@@ -8,20 +8,25 @@
 import VueRouter from 'vue-router';
 import Authenticate from './pages/authenticate/authenticate.vue'
 import ComponentsList from './pages/components/list/components-list'
-import CreateProject from './pages/create-project/create-project.vue'
-import CreatePackage from './pages/create-package/create-package.vue'
+
 import Default from './pages/default/default.vue'
 import DefaultLayout from './pages/default-layout/default-layout.vue'
-import DeployPackage from './pages/deploy-package/deploy-package.vue'
-import DeploymentDetails from './pages/deployment-details/deployment-details.vue'
+
+import DeployPackage from './pages/package/deploy/deploy-package.vue'
+import DeploymentDetails from './pages/deloyments/details/deployment-details'
 import DeploymentsList from './pages/deloyments/list/deployments-list'
+
 import EnvironmentsList from './pages/environments/list/environments-list'
-import EditEnvironments from './pages/edit-environments/edit-environments.vue'
+import EditEnvironments from './pages/environments/edit/edit-environments.vue'
+
+import PackageCreate from './pages/package/create/create-package'
 import PackagesList from './pages/package/list/packages-list'
+import PackageDetails from './pages/package/details/package-details.vue'
+
+import ProjectCreate from './pages/project/create/create-project.vue'
 import ProjectDetails from './pages/project/details/project-details.vue'
 import ProjectLayout from './pages/project/layout/project-layout'
 import ProjectList from './pages/project/list/project-list.vue'
-import PackageDetails from './pages/package-details/package-details.vue'
 
 const router = new VueRouter({
     routes: [
@@ -42,7 +47,7 @@ const router = new VueRouter({
                 {
                     path: '/create-project',
                     name: 'create-project',
-                    component: CreateProject,
+                    component: ProjectCreate,
                     meta: {
                         breadcrumbs: [
                             {
@@ -149,7 +154,7 @@ const router = new VueRouter({
                         {
                             path: 'create-package',
                             name: 'create-package',
-                            component: CreatePackage,
+                            component: PackageCreate,
                             meta: {
                                 breadcrumbs: [
                                     {
