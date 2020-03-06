@@ -59,14 +59,14 @@
 </template>
 
 <script>
-import getDashboardService from "./_services/get-dashboard-service.js";
+import getDashboardService from "./../_services/get-dashboard-service.js";
 
-import ProjectDashboard from "./_components/project-dashboard.vue";
-import ProjectPackages from "./_components/project-packages.vue";
-import ProjectDeployments from "./_components/project-deployments.vue";
+import ProjectDashboard from "./../_components/project-dashboard.vue";
+import ProjectPackages from "./../_components/project-packages.vue";
+import ProjectDeployments from "./../_components/project-deployments.vue";
 
 export default {
-    name: 'Project',
+    name: 'ProjectDetails',
     
     components: {
         'project-dashboard': ProjectDashboard,

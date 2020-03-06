@@ -18,9 +18,9 @@ import DeploymentsList from './pages/deloyments/list/deployments-list'
 import EnvironmentsList from './pages/environments/list/environments-list'
 import EditEnvironments from './pages/edit-environments/edit-environments.vue'
 import PackagesList from './pages/package/list/packages-list'
-import Project from './pages/project/project.vue'
-import ProjectLayout from './pages/project-layout/project-layout.vue'
-import ProjectList from './pages/project-list/project-list.vue'
+import ProjectDetails from './pages/project/details/project-details.vue'
+import ProjectLayout from './pages/project/layout/project-layout'
+import ProjectList from './pages/project/list/project-list.vue'
 import PackageDetails from './pages/package-details/package-details.vue'
 
 const router = new VueRouter({
@@ -69,7 +69,7 @@ const router = new VueRouter({
                         {
                             path: '',
                             name: 'project',
-                            component: Project,
+                            component: ProjectDetails,
                             meta: {
                                 sideMenu: true,
                                 breadcrumbs: [
