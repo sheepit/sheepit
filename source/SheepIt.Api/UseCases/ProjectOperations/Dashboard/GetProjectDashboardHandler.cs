@@ -22,7 +22,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
     public class GetProjectDashboardResponse
     {
         public EnvironmentDto[] Environments { get; set; }
-        public PackageDto[] Packages { get; set; }
 
         public class EnvironmentDto
         {
@@ -37,13 +36,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             public int CurrentDeploymentId { get; set; }
             public int CurrentPackageId { get; set; }
             public string CurrentPackageDescription { get; set; }
-        }
-
-        public class PackageDto
-        {
-            public int Id { get; set; }
-            public DateTime CreatedAt { get; set; }
-            public string Description { get; set; }
         }
     }
 
@@ -81,8 +73,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         {
             return new GetProjectDashboardResponse
             {
-                Environments = await GetEnvironments(request.ProjectId),
-                Packages = await GetPackages(request.ProjectId)
+                Environments = await GetEnvironments(request.ProjectId)
             };
         }
 
@@ -118,20 +109,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                     Deployment = result.Deployments.FirstOrDefault()
                 })
                 .ToArray();
-        }
-
-        private async Task<GetProjectDashboardResponse.PackageDto[]> GetPackages(string projectId)
-        {
-            return await _dbContext.Packages
-                .FromProject(projectId)
-                .OrderByNewest()
-                .Select(package => new GetProjectDashboardResponse.PackageDto
-                {
-                    Id = package.Id,
-                    CreatedAt = package.CreatedAt,
-                    Description = package.Description
-                })
-                .ToArrayAsync();
         }
     }
 }

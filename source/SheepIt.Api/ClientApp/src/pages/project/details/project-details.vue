@@ -26,26 +26,6 @@
             :environments="environments"
         />
 
-        <div class="row">
-            <div class="col">
-                <h3>
-                    Packages
-                </h3>
-            </div>
-            <div class="col text-right">
-                <router-link
-                    class="btn btn-primary link-button"
-                    :to="{ name: 'create-package', params: { projectId: project.id }}"
-                >
-                    Create package
-                </router-link> 
-            </div>
-        </div>
-
-        <project-packages
-            :project="project"
-            :packages="packages"
-        />
     </div>
 </template>
 
@@ -53,14 +33,12 @@
 import getDashboardService from "./../_services/get-dashboard-service.js";
 
 import ProjectDashboard from "./../_components/project-dashboard.vue";
-import ProjectPackages from "./../_components/project-packages.vue";
 
 export default {
     name: 'ProjectDetails',
     
     components: {
-        'project-dashboard': ProjectDashboard,
-        'project-packages': ProjectPackages,
+        'project-dashboard': ProjectDashboard
     },
     
     props: [
@@ -69,8 +47,7 @@ export default {
     
     data() {
         return {
-            environments: null,
-            packages: null
+            environments: null
         }
     },
      
@@ -88,7 +65,6 @@ export default {
                 .getDashboard(this.project.id)
                 .then(response => {
                     this.environments = response.environments
-                    this.packages = response.packages
                 });
         }
     }

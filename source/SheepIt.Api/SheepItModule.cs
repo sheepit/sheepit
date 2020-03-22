@@ -63,6 +63,7 @@ namespace SheepIt.Api
             // Package
             builder.RegisterModule<DeployPackageModule>();
             builder.RegisterModule<GetLastPackageModule>();
+            builder.RegisterModule<GetPackagesListModule>();
             builder.RegisterModule<GetPackageDetailsModule>();
             builder.RegisterModule<CreatePackageModule>();
         }
