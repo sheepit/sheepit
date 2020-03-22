@@ -56,7 +56,7 @@
                                         projectId: project.id,
                                         packageId: _package.id
                                     } }"
-                                    class="btn btn-success"
+                                    class="button button--inline button--secondary"
                                 >
                                     Deploy!
                                 </router-link>
