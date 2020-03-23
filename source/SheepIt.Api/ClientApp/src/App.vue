@@ -152,6 +152,30 @@ const router = new VueRouter({
                             }
                         },
                         {
+                            path: 'packages/:packageId',
+                            name: 'package-details',
+                            component: PackageDetails,
+                            meta: {
+                                sideMenu: true,
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'projects'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'packages'
+                                    },
+                                    {
+                                        name: ':packageId'
+                                    }
+                                ]
+                            }
+                        },
+                        {
                             path: 'create-package',
                             name: 'create-package',
                             component: PackageCreate,
@@ -240,30 +264,6 @@ const router = new VueRouter({
                                     },
                                     {
                                         name: 'deploy'
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            path: 'package-details/:packageId',
-                            name: 'package-details',
-                            component: PackageDetails,
-                            meta: {
-                                sideMenu: true,
-                                breadcrumbs: [
-                                    {
-                                        name: 'projects',
-                                        link: 'projects'
-                                    },
-                                    {
-                                        name: ':projectId',
-                                        link: 'project'
-                                    },
-                                    {
-                                        name: 'packages'
-                                    },
-                                    {
-                                        name: ':packageId'
                                     }
                                 ]
                             }

@@ -31,7 +31,7 @@
                     </div>
                 </router-link>
             </li>
-            <li>
+            <li class="sidemenu__item">
                 <router-link
                     class="sidemenu__link"
                     :to="{ name: 'environments-list' }"
@@ -44,7 +44,7 @@
                     </div>
                 </router-link>
             </li>
-            <li>
+            <li class="sidemenu__item">
                 <router-link
                     class="sidemenu__link"
                     :to="{ name: 'packages-list' }"
@@ -57,7 +57,7 @@
                     </div>
                 </router-link>
             </li>
-            <li>
+            <li class="sidemenu__item">
                 <router-link
                     class="sidemenu__link"
                     :to="{ name: 'deployments-list' }"
