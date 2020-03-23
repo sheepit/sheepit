@@ -10,6 +10,7 @@ using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Api.Tests.TestProcess;
 using SheepIt.Api.UseCases.ProjectManagement;
 using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
+using SheepIt.Api.UseCases.ProjectOperations.Environments;
 
 namespace SheepIt.Api.Tests.UseCases.ProjectManagement
 {
@@ -35,7 +36,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectManagement
                 .Select(project => project.Id)
                 .Should().Contain("foo");
 
-            var getProjectDashboardResponse = await Fixture.Handle(new GetProjectDashboardRequest
+            var getProjectDashboardResponse = await Fixture.Handle(new GetEnvironmentsListRequest
             {
                 ProjectId = "foo"
             });

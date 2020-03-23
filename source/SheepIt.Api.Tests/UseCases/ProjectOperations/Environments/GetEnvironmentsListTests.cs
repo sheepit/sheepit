@@ -4,12 +4,12 @@ using FluentAssertions;
 using NUnit.Framework;
 using SheepIt.Api.Tests.FeatureObjects;
 using SheepIt.Api.Tests.TestInfrastructure;
-using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
 using SheepIt.Api.UseCases.ProjectOperations.Deployments;
+using SheepIt.Api.UseCases.ProjectOperations.Environments;
 
-namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Dashboard
+namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
 {
-    public class GetProjectDashboardTests : Test<IntegrationTestsFixture>
+    public class GetEnvironmentsListTests : Test<IntegrationTestsFixture>
     {
         private string _projectId;
         private DateTime _projectCreationTime;
@@ -71,7 +71,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Dashboard
 
             // when
 
-            var response = await Fixture.Handle(new GetProjectDashboardRequest
+            var response = await Fixture.Handle(new GetEnvironmentsListRequest
             {
                 ProjectId = _projectId
             });
@@ -80,11 +80,11 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Dashboard
 
             response.Environments.Should().BeEquivalentTo(new[]
             {
-                new GetProjectDashboardResponse.EnvironmentDto
+                new GetEnvironmentsListResponse.EnvironmentDto
                 {
                     EnvironmentId = 1,
                     DisplayName = "dev",
-                    Deployment = new GetProjectDashboardResponse.EnvironmentDeploymentDto
+                    Deployment = new GetEnvironmentsListResponse.EnvironmentDeploymentDto
                     {
                         CurrentDeploymentId = firstDeployment.CreatedDeploymentId,
                         CurrentPackageId = firstPackage.CreatedPackageId, 
@@ -92,11 +92,11 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Dashboard
                         LastDeployedAt = firstDeploymentTime
                     }
                 },
-                new GetProjectDashboardResponse.EnvironmentDto
+                new GetEnvironmentsListResponse.EnvironmentDto
                 {
                     EnvironmentId = 2,
                     DisplayName = "test",
-                    Deployment = new GetProjectDashboardResponse.EnvironmentDeploymentDto
+                    Deployment = new GetEnvironmentsListResponse.EnvironmentDeploymentDto
                     {
                         CurrentDeploymentId = secondDeployment.CreatedDeploymentId,
                         CurrentPackageId = secondPackage.CreatedPackageId, 
@@ -104,7 +104,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Dashboard
                         LastDeployedAt = secondDeploymentTime
                     }
                 },
-                new GetProjectDashboardResponse.EnvironmentDto
+                new GetEnvironmentsListResponse.EnvironmentDto
                 {
                     EnvironmentId = 3,
                     DisplayName = "prod",

@@ -1,10 +1,11 @@
 <template>
-    <tooltip
+    <span>{{ humanizedDate }}</span>
+    <!-- <tooltip
         data-placement="top"
         :text="formattedDate"
     >
-        <span>{{ humanizedDate }}</span>
-    </tooltip>
+        
+    </tooltip> -->
 </template>
 
 <script>
