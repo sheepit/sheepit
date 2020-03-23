@@ -7,6 +7,7 @@ using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Time;
 using SheepIt.Api.UseCases.Dashboard;
 using SheepIt.Api.UseCases.ProjectManagement;
+using SheepIt.Api.UseCases.ProjectOperations.Components;
 using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
 using SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails;
 using SheepIt.Api.UseCases.ProjectOperations.Deployments;
@@ -66,6 +67,9 @@ namespace SheepIt.Api
             builder.RegisterModule<GetPackagesListModule>();
             builder.RegisterModule<GetPackageDetailsModule>();
             builder.RegisterModule<CreatePackageModule>();
+            
+            // Component
+            builder.RegisterModule<ListComponentsModule>();
         }
     }
 }

@@ -9,6 +9,7 @@ using SheepIt.Api.Tests.FeatureObjects;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Api.Tests.TestProcess;
 using SheepIt.Api.UseCases.ProjectManagement;
+using SheepIt.Api.UseCases.ProjectOperations.Components;
 using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
 using SheepIt.Api.UseCases.ProjectOperations.Environments;
 
@@ -44,6 +45,15 @@ namespace SheepIt.Api.Tests.UseCases.ProjectManagement
             getProjectDashboardResponse.Environments
                 .Select(environment => environment.DisplayName)
                 .Should().Equal("dev", "test", "prod");
+
+            var listComponentsResponse = await Fixture.Handle(new ListComponentsRequest
+            {
+                ProjectId = "foo"
+            });
+
+            listComponentsResponse.Components
+                .Select(component => component.Name)
+                .Should().Equal("Default component");
         }
 
         [Test]

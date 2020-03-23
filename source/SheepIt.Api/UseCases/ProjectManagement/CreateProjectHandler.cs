@@ -7,6 +7,7 @@ using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Web;
+using SheepIt.Api.Model.Components;
 using SheepIt.Api.Model.DeploymentProcesses;
 using SheepIt.Api.Model.Environments;
 using SheepIt.Api.Model.Packages;
@@ -70,19 +71,22 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         private readonly DeploymentProcessFactory _deploymentProcessFactory;
         private readonly EnvironmentFactory _environmentFactory;
         private readonly ProjectFactory _projectFactory;
+        private readonly ComponentFactory _componentFactory;
 
         public CreateProjectHandler(
             SheepItDbContext dbContext,
             PackageFactory packageFactory,
             DeploymentProcessFactory deploymentProcessFactory,
             EnvironmentFactory environmentFactory,
-            ProjectFactory projectFactory)
+            ProjectFactory projectFactory,
+            ComponentFactory componentFactory)
         {
             _dbContext = dbContext;
             _packageFactory = packageFactory;
             _deploymentProcessFactory = deploymentProcessFactory;
             _environmentFactory = environmentFactory;
             _projectFactory = projectFactory;
+            _componentFactory = componentFactory;
         }
 
         public async Task Handle(CreateProjectRequest request)
@@ -97,7 +101,14 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 projectId: request.ProjectId,
                 environmentNames: request.EnvironmentNames
             );
-            
+
+            var defaultComponent = await _componentFactory.Create(
+                projectId: project.Id,
+                name: "Default component"
+            );
+
+            _dbContext.Components.Add(defaultComponent);
+
             var deploymentProcess = await _deploymentProcessFactory.Create(
                 projectId: request.ProjectId,
                 zipFileBytes: await request.ZipFile.ToByteArray()

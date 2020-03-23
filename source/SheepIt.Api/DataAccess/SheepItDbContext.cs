@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.DataAccess.Sequencing;
+using SheepIt.Api.Model.Components;
 using SheepIt.Api.Model.DeploymentProcesses;
 using SheepIt.Api.Model.Deployments;
 using SheepIt.Api.Model.Environments;
@@ -20,6 +21,7 @@ namespace SheepIt.Api.DataAccess
         public DbSet<Package> Packages { get; private set; }
         public DbSet<Deployment> Deployments { get; private set; }
         public DbSet<DeploymentProcess> DeploymentProcesses { get; private set; }
+        public DbSet<Component> Components { get; set; }
         
         public SheepItDbContext(DbContextOptions<SheepItDbContext> option)
             : base(option)
