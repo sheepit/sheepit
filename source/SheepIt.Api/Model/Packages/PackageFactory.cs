@@ -20,6 +20,7 @@ namespace SheepIt.Api.Model.Packages
         public async Task<Package> Create(
             string projectId,
             int deploymentProcessId,
+            int componentId,
             string description,
             VariableCollection variableCollection)
         {
@@ -27,8 +28,9 @@ namespace SheepIt.Api.Model.Packages
             {
                 Id = await _idStorage.GetNext(IdSequence.Package),
                 
-                DeploymentProcessId = deploymentProcessId,
                 ProjectId = projectId,
+                DeploymentProcessId = deploymentProcessId,
+                ComponentId = componentId,
 
                 Description = description,
                 Variables = variableCollection,
