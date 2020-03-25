@@ -1,6 +1,6 @@
 <template>
     <div class="preloader-container">
-        <img src="./../assets/preloader.gif">
+        <img src="./../assets/preloader.svg">
     </div>
 </template>
 
@@ -16,7 +16,7 @@ export default {
 }
 
 img {
-    width: 6rem;
+    width: 10rem;
     display: block;
     margin-left: auto;
     margin-right: auto;
