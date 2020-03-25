@@ -20,6 +20,19 @@
             <li class="sidemenu__item">
                 <router-link
                     class="sidemenu__link"
+                    :to="{ name: 'environments-list' }"
+                >
+                    <div class="sidemenu__link--icon">
+                        <font-awesome-icon icon="server" />
+                    </div>
+                    <div class="sidemenu__link--name">
+                        Environments
+                    </div>
+                </router-link>
+            </li>
+            <li class="sidemenu__item">
+                <router-link
+                    class="sidemenu__link"
                     :to="{ name: 'components-list' }"
                     exact
                 >
@@ -28,19 +41,6 @@
                     </div>
                     <div class="sidemenu__link--name">
                         Components
-                    </div>
-                </router-link>
-            </li>
-            <li class="sidemenu__item">
-                <router-link
-                    class="sidemenu__link"
-                    :to="{ name: 'environments-list' }"
-                >
-                    <div class="sidemenu__link--icon">
-                        <font-awesome-icon icon="server" />
-                    </div>
-                    <div class="sidemenu__link--name">
-                        Environments
                     </div>
                 </router-link>
             </li>

@@ -142,7 +142,7 @@ export default {
                 )
                 .then(response => {
                     messageService.success('Package created');
-                    this.$router.push({ name: 'project', params: { projectId: this.project.id }});
+                    this.$router.push({ name: 'packages-list', params: { projectId: this.project.id }});
                 });
         },
 

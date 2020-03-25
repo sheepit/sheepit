@@ -1,36 +1,32 @@
 <template>
-    <div class="component-signin d-flex align-items-center text-center">
-        <form
-            class="form-signin"
-            @submit.prevent="authenticate()"
-        >
-            <h1 class="h3 mb-3 font-weight-normal">
-                SheepIt
-            </h1>
-            <p>
-                Please enter a single user password:
-            </p>
-            <label
-                for="password"
-                class="sr-only"
+    <div class="login">
+        <div class="login__container">
+            <form
+                class="login__form"
+                @submit.prevent="authenticate()"
             >
-                Password
-            </label>
-            <input
-                id="password"
-                v-model="password"
-                type="password"
-                class="form__control"
-                placeholder="password"
-            >
-            <button
-                class="button button--primary"
-                type="submit"
-                :disabled="!password"
-            >
-                Sign in
-            </button>
-        </form>
+                <h1 class="h3 mb-3 font-weight-normal">
+                    SheepIt
+                </h1>
+                <p>
+                    Please enter a single user password:
+                </p>
+                <input
+                    id="password"
+                    v-model="password"
+                    type="password"
+                    class="form__control login__form__input"
+                    placeholder="password"
+                >
+                <button
+                    class="button button--primary login__form__button"
+                    type="submit"
+                    :disabled="!password"
+                >
+                    SIGN IN
+                </button>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -73,17 +69,38 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.login {
+    height: 100vh;
+    background: $green-main;
 
-    .component-signin {
-        height: 100vh;
+    display: flex;
+    justify-content: center;
+
+    &__container {
+        display: flex;
+        align-items: center;
     }
 
-    .form-signin {
-        width: 100%;
-        max-width: 330px;
-        padding: 15px;
-        margin: auto;
+    &__form {
+        background: #FFFFFF;
+        max-width: 360px;
+        margin: 0 auto 100px;
+        padding: 45px;
+        text-align: center;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+
+        &__input {
+            width: 100%;
+            margin: 0 0 10px;
+            padding: 10px;
+            box-sizing: border-box;
+            //font-size: 14px;
+        }
+
+        &__button {
+            width: 100%;
+        }
     }
-    
+}
 </style>
