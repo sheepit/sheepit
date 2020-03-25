@@ -30,8 +30,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Components
     [ApiController]
     public class ListComponentsController : MediatorController
     {
-        [HttpGet]
-        [Route("list-components")]
+        [HttpPost]
+        [Route("project/components")]
         public async Task<ListComponentsResponse> ListProjects(ListComponentsRequest request)
         {
             return await Handle(request);
