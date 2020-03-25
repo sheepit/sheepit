@@ -1,9 +1,9 @@
 <template>
     <div>
-        <h3 class="mt-5">
+        <h3>
             Deployment variables
         </h3>
-        <table>
+        <table v-if="usedVariables && usedVariables.length > 0">
             <thead>
                 <tr>
                     <th>name</th>
@@ -24,6 +24,10 @@
                 </tr>
             </tbody>
         </table>
+        <div v-else-if="usedVariables && usedVariables.length === 0">
+            <span class="not-found">Variables has not been defined for this deployment</span>
+        </div>
+        <preloader v-else />
     </div>
 </template>
 
@@ -34,3 +38,9 @@ export default {
     props: ['usedVariables']
 }
 </script>
+
+<style lang="scss" scoped>
+.not-found {
+    @include font($size: 14px)
+}
+</style>
