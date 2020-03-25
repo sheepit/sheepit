@@ -33,7 +33,7 @@
                         />
                     </td>
                     <td>
-                        <span class="badge badge-warning">{{ deployment.environmentDisplayName }}</span>
+                        {{ deployment.environmentDisplayName }}
                     </td>
                     <td>
                         <humanized-date :date="deployment.deployedAt" />
@@ -42,16 +42,17 @@
             </tbody>
         </table>
         
-        <div>
+        
+        <div class="code__container">
+            <h3>Output</h3>
             <div
                 v-for="stepResult in deployment.stepResults"
-                class="mt-4"
+                class="code__steps"
             >
-                <pre
-                    class="mb-0"
-                    :class="stepResult.successful ? '' : 'text-danger'"
-                ><b><code>{{ stepResult.command }}</code></b></pre>
-                <pre :class="stepResult.successful ? '' : 'text-danger'"><code>{{ stepResult.output.join("\n") }}</code></pre>
+                <pre :class="stepResult.successful ? '' : 'code__line--danger'"
+                ><b><code class="code__line">{{ stepResult.command }}</code></b></pre>
+                <pre :class="stepResult.successful ? '' : 'code__line--danger'"
+                ><code class="code__line">{{ stepResult.output.join("\n") }}</code></pre>
             </div>
         </div>
         
@@ -111,3 +112,28 @@ function getDeploymentDetails(projectId, deploymentId) {
     return httpService.post('api/project/deployment/get-deployment-details', { projectId, deploymentId });
 }
 </script>
+
+<style lang="scss" scoped>
+.code {
+
+    &__container {
+        margin: 30px 0;
+    }
+
+    &__steps {
+        border-radius: 0.25rem;
+        padding: 15px;
+        background: $font-form-color;
+        color: white;
+        font-family: monospace;
+    }
+
+    &__line {
+        font-family: monospace;
+
+        &--danger {
+            color: $error;
+        }
+    }
+}
+</style>
