@@ -66,19 +66,25 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                     {
                         Id = secondPackage.CreatedPackageId,
                         Description = secondPackageDescription,
-                        CreatedAt = secondPackageCreationTime
+                        CreatedAt = secondPackageCreationTime,
+                        ComponentId = 1,
+                        ComponentName = "Default component"
                     },
                     new GetPackagesListResponse.PackageDto
                     {
                         Id = firstPackage.CreatedPackageId,
                         Description = firstPackageDescription,
-                        CreatedAt = firstPackageCreationTime
+                        CreatedAt = firstPackageCreationTime,
+                        ComponentId = 1,
+                        ComponentName = "Default component"
                     },
                     new GetPackagesListResponse.PackageDto
                     {
                         Id = 1,
                         Description = "Initial package",
-                        CreatedAt = _projectCreationTime 
+                        CreatedAt = _projectCreationTime,
+                        ComponentId = 1,
+                        ComponentName = "Default component"
                     }
                 });
         }

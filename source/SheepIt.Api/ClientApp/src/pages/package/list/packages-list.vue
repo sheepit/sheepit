@@ -27,6 +27,9 @@
                                 id
                             </th>
                             <th scope="col">
+                                component
+                            </th>
+                            <th scope="col">
                                 created
                             </th>
                             <th scope="col">
@@ -45,6 +48,9 @@
                                     :package-id="_package.id"
                                     :description="_package.description"
                                 />
+                            </td>
+                            <td scope="row">
+                                {{ _package.componentName }}
                             </td>
                             <td>
                                 <humanized-date :date="_package.createdAt" />

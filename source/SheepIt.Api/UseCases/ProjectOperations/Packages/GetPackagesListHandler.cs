@@ -26,6 +26,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             public int Id { get; set; }
             public DateTime CreatedAt { get; set; }
             public string Description { get; set; }
+            public int ComponentId { get; set; }
+            public string ComponentName { get; set; }
         }
     }
 
@@ -76,7 +78,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                 {
                     Id = package.Id,
                     CreatedAt = package.CreatedAt,
-                    Description = package.Description
+                    Description = package.Description,
+                    ComponentId = package.ComponentId,
+                    ComponentName = package.Component.Name
                 })
                 .ToArrayAsync();
         }
