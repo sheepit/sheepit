@@ -10,6 +10,7 @@ using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Web;
+using SheepIt.Api.Model.Components;
 using SheepIt.Api.Model.DeploymentProcesses;
 using SheepIt.Api.Model.Packages;
 
@@ -91,6 +92,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
         public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
         {
+            var defaultComponent = _dbContext.Components
+                .FromProject(request.ProjectId)
+                .Single();
+
             var basePackage = await _dbContext.Packages.FindNewestInProject(
                 projectId: request.ProjectId
             );
@@ -107,6 +112,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             var newPackage = await _packageFactory.Create(
                 projectId: basePackage.ProjectId,
                 deploymentProcessId: deploymentProcess.Id,
+                componentId: defaultComponent.Id,
                 description: request.Description,
                 variableCollection: basePackage.Variables.WithNewVariables(newVariables)
             );

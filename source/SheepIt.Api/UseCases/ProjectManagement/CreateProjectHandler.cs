@@ -108,7 +108,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             );
 
             _dbContext.Components.Add(defaultComponent);
-
+            
             var deploymentProcess = await _deploymentProcessFactory.Create(
                 projectId: request.ProjectId,
                 zipFileBytes: await request.ZipFile.ToByteArray()
@@ -120,6 +120,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             var firstPackage = await _packageFactory.Create(
                 projectId: request.ProjectId,
                 deploymentProcessId: deploymentProcess.Id,
+                componentId: defaultComponent.Id,
                 description: "Initial package",
                 variableCollection: new VariableCollection()
             );

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Principal;
+using SheepIt.Api.Model.Components;
 using SheepIt.Api.Model.DeploymentProcesses;
 using SheepIt.Api.Model.Deployments;
 using SheepIt.Api.Model.Projects;
@@ -19,6 +21,9 @@ namespace SheepIt.Api.Model.Packages
         
         public int DeploymentProcessId { get; set; }
         public virtual DeploymentProcess DeploymentProcess { get; set; }
+
+        public int ComponentId { get; set; }
+        public virtual Component Component { get; set; }
 
         public virtual List<Deployment> Deployments { get; set; }
         
