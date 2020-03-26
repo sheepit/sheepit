@@ -1,5 +1,5 @@
 <template>
-    <div v-if="deployment">
+    <div v-if="deployment" class="details">
         <div class="view__title">
             Deployment details
         </div>
@@ -44,15 +44,23 @@
         
         
         <div class="code__container">
-            <h3>Output</h3>
-            <div
-                v-for="stepResult in deployment.stepResults"
-                class="code__steps"
-            >
-                <pre :class="stepResult.successful ? '' : 'code__line--danger'"
-                ><b><code class="code__line">{{ stepResult.command }}</code></b></pre>
-                <pre :class="stepResult.successful ? '' : 'code__line--danger'"
-                ><code class="code__line">{{ stepResult.output.join("\n") }}</code></pre>
+            <div class="section__title">
+                Output
+            </div>
+            
+            <div v-if="deployment.stepResults && deployment.stepResults.length > 0">
+                <div
+                    v-for="stepResult in deployment.stepResults"
+                    class="code__steps"
+                >
+                    <pre :class="stepResult.successful ? '' : 'code__line--danger'"
+                    ><b><code class="code__line">{{ stepResult.command }}</code></b></pre>
+                    <pre :class="stepResult.successful ? '' : 'code__line--danger'"
+                    ><code class="code__line">{{ stepResult.output.join("\n") }}</code></pre>
+                </div>
+            </div>
+            <div v-else>
+                Dupa
             </div>
         </div>
         

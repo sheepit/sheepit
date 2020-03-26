@@ -1,8 +1,8 @@
 <template>
     <div>
-        <h3>
+        <div class="section__title">
             Deployment variables
-        </h3>
+        </div>
         <table v-if="usedVariables && usedVariables.length > 0">
             <thead>
                 <tr>

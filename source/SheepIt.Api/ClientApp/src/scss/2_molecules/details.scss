@@ -1,0 +1,9 @@
+.details {
+
+    .section {
+        &__title {
+            @include font($size: 20px);
+            margin: 1rem 0;
+        }
+    }
+}
