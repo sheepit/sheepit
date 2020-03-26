@@ -20,6 +20,13 @@
             </div>
 
             <div class="form__row row">
+                <label class="col-2 col-form__label">Component</label>
+                <div class="col-10 value">
+                    <span>{{ packagee.componentName }}</span>
+                </div>
+            </div>
+
+            <div class="form__row row">
                 <label class="col-2 col-form__label">Description</label>
                 <div class="col-10 value">
                     <span>{{ packagee.description }}</span>

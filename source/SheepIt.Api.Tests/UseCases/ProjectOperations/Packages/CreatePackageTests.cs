@@ -66,10 +66,15 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 
             packageDetailsResponse.Should().BeEquivalentTo(new GetPackageDetailsResponse
             {
-                ProjectId = _projectId,
                 Id = createPackageResponse.CreatedPackageId,
                 Description = "a package",
                 CreatedAt = Fixture.GetUtcNow(),
+                
+                ProjectId = _projectId,
+                
+                ComponentId = 1,
+                ComponentName = "Default component",
+                
                 Variables = new []
                 {
                     new GetPackageDetailsResponse.VariableDto
@@ -92,7 +97,6 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                             {2, "var-2-prod"}
                         }
                     }
-
                 }
             });
         }

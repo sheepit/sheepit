@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
@@ -21,10 +22,14 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
     public class GetPackageDetailsResponse
     {
         public int Id { get; set; }
-        public string ProjectId { get; set; }
         public string Description { get; set; }
-        
         public DateTime CreatedAt { get; set; }
+
+        public string ProjectId { get; set; }
+        
+        public int ComponentId { get; set; }
+        public string ComponentName { get; set; }
+        
         public VariableDto[] Variables { get; set; }
 
         public class VariableDto
@@ -68,18 +73,25 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
         public async Task<GetPackageDetailsResponse> Handle(GetPackageDetailsRequest request)
         {
-            var package = await _dbContext.Packages.FindByIdAndProjectId(
-                packageId: request.PackageId,
-                projectId: request.ProjectId
-            );
+            var foundPackage = await _dbContext.Packages
+                .Include(package => package.Component)
+                .FindByIdAndProjectId(
+                    packageId: request.PackageId,
+                    projectId: request.ProjectId
+                );
             
             return new GetPackageDetailsResponse
             {
-                Id = package.Id,
-                ProjectId = package.ProjectId,
-                Description = package.Description,
-                CreatedAt = package.CreatedAt,
-                Variables = package.Variables.Variables
+                Id = foundPackage.Id,
+                Description = foundPackage.Description,
+                CreatedAt = foundPackage.CreatedAt,
+                
+                ComponentId = foundPackage.ComponentId,
+                ComponentName = foundPackage.Component.Name,
+                
+                ProjectId = foundPackage.ProjectId,
+                
+                Variables = foundPackage.Variables.Variables
                     .Select(values => new GetPackageDetailsResponse.VariableDto
                     {
                         Name = values.Name,
