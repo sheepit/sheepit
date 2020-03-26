@@ -41,8 +41,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UseCases\ProjectOperations\Dashboard" />
-  </ItemGroup>
-
 </Project>

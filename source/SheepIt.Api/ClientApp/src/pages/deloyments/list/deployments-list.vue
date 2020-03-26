@@ -21,6 +21,9 @@
                                 status
                             </th>
                             <th scope="col">
+                                component
+                            </th>
+                            <th scope="col">
                                 package id
                             </th>
                             <th scope="col">
@@ -44,6 +47,9 @@
                             </td>
                             <td>
                                 <deployment-status-badge :status="deployment.status" />
+                            </td>
+                            <td>
+                                {{deployment.componentName}}
                             </td>
                             <td>
                                 <package-badge

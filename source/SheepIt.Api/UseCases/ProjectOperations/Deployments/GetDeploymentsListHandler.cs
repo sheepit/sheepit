@@ -30,6 +30,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
             public int EnvironmentId { get; set; }
             public string EnvironmentDisplayName { get; set; }
             public string Status { get; set; }
+            public int ComponentId { get; set; }
+            public string ComponentName { get; set; }
         }
     }
 
@@ -84,7 +86,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
                     DeployedAt = deployment.StartedAt,
                     PackageId = deployment.PackageId,
                     PackageDescription = deployment.Package.Description,
-                    Status = deployment.Status.ToString()
+                    Status = deployment.Status.ToString(),
+                    ComponentId = deployment.Package.ComponentId,
+                    ComponentName = deployment.Package.Component.Name
                 })
                 .ToArrayAsync();
         }

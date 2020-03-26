@@ -10,7 +10,7 @@ using SheepIt.Api.UseCases.ProjectOperations.Deployments;
 
 namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
 {
-    public class GetDeploymentsListHandler : Test<IntegrationTestsFixture>
+    public class GetDeploymentsListHandlerTests : Test<IntegrationTestsFixture>
     {
         private string _projectId;
         private DateTime _projectCreationTime;
@@ -90,7 +90,9 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
                     EnvironmentId = 1,
                     PackageId = firstPackage.CreatedPackageId,
                     PackageDescription = firstPackageDescription,
-                    EnvironmentDisplayName = "dev"
+                    EnvironmentDisplayName = "dev",
+                    ComponentId = 1,
+                    ComponentName = "Default component"
                 },
                 new GetDeploymentsListResponse.DeploymentDto
                 {
@@ -100,7 +102,9 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
                     EnvironmentId = 2,
                     PackageId = secondPackage.CreatedPackageId,
                     PackageDescription = secondPackageDescription,
-                    EnvironmentDisplayName = "test"
+                    EnvironmentDisplayName = "test",
+                    ComponentId = 1,
+                    ComponentName = "Default component"
                 }
             });
         }
