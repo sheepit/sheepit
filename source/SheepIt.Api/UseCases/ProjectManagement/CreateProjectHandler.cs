@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     {
         public string ProjectId { get; set; }
         public string[] EnvironmentNames { get; set; }
+        public string[] ComponentNames { get; set; }
         public IFormFile ZipFile { get; set; }
     }
 
@@ -31,6 +33,11 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 .MinimumLength(3);
 
             RuleFor(request => request.EnvironmentNames)
+                .ForEach(environment => environment.NotEmpty())
+                .NotNull();
+            
+            RuleFor(request => request.ComponentNames)
+                .ForEach(component => component.NotEmpty())
                 .NotNull();
 
             RuleForEach(request => request.EnvironmentNames)
@@ -102,13 +109,11 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 environmentNames: request.EnvironmentNames
             );
 
-            var defaultComponent = await _componentFactory.Create(
-                projectId: project.Id,
-                name: "Default component"
+            var defaultComponentId = await CreateComponents(
+                projectId: request.ProjectId,
+                componentNames: request.ComponentNames
             );
 
-            _dbContext.Components.Add(defaultComponent);
-            
             var deploymentProcess = await _deploymentProcessFactory.Create(
                 projectId: request.ProjectId,
                 zipFileBytes: await request.ZipFile.ToByteArray()
@@ -120,7 +125,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             var firstPackage = await _packageFactory.Create(
                 projectId: request.ProjectId,
                 deploymentProcessId: deploymentProcess.Id,
-                componentId: defaultComponent.Id,
+                componentId: defaultComponentId,
                 description: "Initial package",
                 variableCollection: new VariableCollection()
             );
@@ -146,6 +151,28 @@ namespace SheepIt.Api.UseCases.ProjectManagement
 
                 currentEnvironmentRank++;
             }
+        }
+
+        private async Task<int> CreateComponents(string projectId, string[] componentNames)
+        {
+            int? defaultComponentId = null;
+            
+            foreach (var componentName in componentNames)
+            {
+                var component = await _componentFactory.Create(
+                    projectId: projectId,
+                    name: componentName
+                );
+                
+                _dbContext.Components.Add(component);
+
+                if (componentName == componentNames.First())
+                {
+                    defaultComponentId = component.Id;
+                }
+            }
+
+            return defaultComponentId.Value;
         }
     }
 }

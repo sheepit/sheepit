@@ -108,6 +108,63 @@
                 </div>
             </div>
 
+            <div class="form__section">
+                <div class="form__title">
+                    Components
+                </div>
+
+                <div class="form__row">
+                    <div class="form__column">
+                        <label class="form__label">List of components</label>
+                    </div>
+                </div>
+
+                <div class="form__row"
+                     v-for="(component, componentIndex) in components"
+                     :key="componentIndex"
+                >
+                    <div class="form__column">
+                        <div class="form__inline">
+                            <input
+                                    v-model="components[componentIndex]"
+                                    type="text"
+                                    class="form__control form__inline__control"
+                                    :class="{ 'is-invalid': submitted && $v.components.$each[componentIndex].$error }"
+                            >
+                            <button
+                                    class="button button--inline button--secondary"
+                                    type="button"
+                                    :disabled="components.length < 2"
+                                    @click="removeComponent(componentIndex)"
+                            >
+                                <font-awesome-icon icon="trash" />
+                            </button>
+                        </div>
+                        <div
+                                v-if="submitted && $v.components.$each[componentIndex].$error"
+                                class="form__error-section"
+                        >
+                            <span v-if="!$v.components.$each[componentIndex].required">Field is required</span>
+                            <span
+                                    v-if="!$v.components.$each[componentIndex].minLength"
+                            >Field should have at least 3 characters</span>
+                        </div>
+                    </div>
+
+                    <div class="form__column"></div>
+                    <div class="form__column"></div>
+                </div>
+
+                <div class="button-container">
+                    <button
+                            class="button button--secondary"
+                            @click="newComponent()"
+                    >
+                        Add new
+                    </button>
+                </div>
+            </div>
+
             <div class="submit-button-container">
                 <button
                     type="button"
@@ -133,6 +190,7 @@ export default {
         return {
             projectId: "",
             environments: [""],
+            components: [""],
 
             submitted: false
         };
@@ -146,14 +204,15 @@ export default {
                 return;
             }
 
-            let zipFile = this.$refs.zipFile;
-            let zipFileData = this.$refs.zipFile.files[0];
+            const zipFileData = this.$refs.zipFile.files[0];
 
-            createProjectService.createProject(
-                this.projectId,
-                this.environments,
-                zipFileData
-            )
+            createProjectService
+                .createProject(
+                    this.projectId,
+                    this.environments,
+                    this.components,
+                    zipFileData
+                )
                 .then(response => {
                     messageService.success('The project was created.');
                     this.$router.push({ name: 'project', params: { projectId: this.projectId }});
@@ -168,6 +227,16 @@ export default {
             if (this.environments.length < 2) return;
 
             this.environments.splice(index, 1);
+        },
+
+        newComponent: function() {
+            this.components.push(null);
+        },
+
+        removeComponent: function(index) {
+            if (this.components.length < 2) return;
+
+            this.components.splice(index, 1);
         }
     },
     validations: {
@@ -176,6 +245,14 @@ export default {
             minLength: minLength(3)
         },
         environments: {
+            required,
+            minLength: minLength(1),
+            $each: {
+                required,
+                minLength: minLength(3)
+            }
+        },
+        components: {
             required,
             minLength: minLength(1),
             $each: {

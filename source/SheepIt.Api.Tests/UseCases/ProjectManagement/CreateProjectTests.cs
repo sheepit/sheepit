@@ -26,6 +26,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectManagement
             {
                 ProjectId = "foo",
                 EnvironmentNames = new[] {"dev", "test", "prod"},
+                ComponentNames = new[] { "Default component" },
                 ZipFile = TestProcessZipArchives.TestProcess
             });
             

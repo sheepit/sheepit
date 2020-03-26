@@ -94,7 +94,12 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         {
             var defaultComponent = _dbContext.Components
                 .FromProject(request.ProjectId)
-                .Single();
+                .OrderBy(component => component.Id)
+                .Select(component => new
+                {
+                    component.Id
+                })
+                .First();
 
             var basePackage = await _dbContext.Packages.FindNewestInProject(
                 projectId: request.ProjectId

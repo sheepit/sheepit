@@ -26,7 +26,8 @@ namespace SheepIt.Api.Tests.FeatureObjects
                 {
                     ProjectId = projectId,
                     ZipFile = TestProcessZipArchives.TestProcess,
-                    EnvironmentNames = new[] {"dev", "test", "prod"}
+                    EnvironmentNames = new[] {"dev", "test", "prod"},
+                    ComponentNames = new[] { "Default component" } // todo: change to a list
                 };
             }
 
