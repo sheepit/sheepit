@@ -1,42 +1,40 @@
 <template>
-    <div>
+    <div class="details">
         <div class="view__title">
             Package details
         </div>
 
         <div v-if="packagee">
-            <div class="form__row row">
-                <label class="col-2 col-form__label">Id</label>
-                <div class="col-10 value">
-                    <span>{{ packagee.id }}</span>
+            <div class="details__section">
+                <div class="details__title">
+                    Details
                 </div>
-            </div>
 
-            <div class="form__row row">
-                <label class="col-2 col-form__label">Project</label>
-                <div class="col-10 value">
-                    <span>{{ packagee.projectId }}</span>
-                </div>
-            </div>
-
-            <div class="form__row row">
-                <label class="col-2 col-form__label">Component</label>
-                <div class="col-10 value">
-                    <span>{{ packagee.componentName }}</span>
-                </div>
-            </div>
-
-            <div class="form__row row">
-                <label class="col-2 col-form__label">Description</label>
-                <div class="col-10 value">
-                    <span>{{ packagee.description }}</span>
-                </div>
-            </div>
-
-            <div class="form__row row">
-                <label class="col-2 col-form__label">Created At</label>
-                <div class="col-10 value">
-                    <humanized-date :date="packagee.createdAt" />
+                <div class="details__content">
+                    <div class="details__item">
+                        <label class="details__label">id</label>
+                        <span class="details__value">
+                            {{ packagee.id }}
+                        </span>
+                    </div>
+                    <div class="details__item">
+                        <label class="details__label">component</label>
+                        <span class="details__value">
+                            {{ packagee.componentName ? packagee.componentName : '-' }}
+                        </span>
+                    </div>
+                    <div class="details__item">
+                        <label class="details__label">description</label>
+                        <span class="details__value">
+                            {{ packagee.description }}
+                        </span>
+                    </div>
+                    <div class="details__item">
+                        <label class="details__label">created at</label>
+                        <span class="details__value">
+                            <humanized-date :date="packagee.createdAt" />
+                        </span>
+                    </div>
                 </div>
             </div>
             
@@ -50,6 +48,7 @@
                 :package="packagee"
             />
         </div>
+
         <div v-else>
             <preloader />
         </div>

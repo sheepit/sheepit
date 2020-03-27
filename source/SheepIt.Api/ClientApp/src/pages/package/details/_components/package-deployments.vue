@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <h3 class="mt-5">
+    <div class="details__section">
+        <div class="details__title">
             Deployments
-        </h3>
+        </div>
 
         <div v-if="deployments && deployments.length > 0">
             <expanding-list

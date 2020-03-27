@@ -1,8 +1,9 @@
 <template>
-    <div>
-        <h3 class="mt-5">
+    <div class="details__section">
+        <div class="details__title">
             Variables
-        </h3>
+        </div>
+
         <table>
             <thead>
                 <tr>
