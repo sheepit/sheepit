@@ -118,6 +118,8 @@ export default {
 
     justify-self: center;
     align-self: center;
+
+    padding-bottom: 3rem;
 }
 
 header {
