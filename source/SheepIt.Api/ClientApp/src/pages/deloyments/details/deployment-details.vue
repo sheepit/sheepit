@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div v-else>
-                Dupa
+                No output available
             </div>
         </div>
         
