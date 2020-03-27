@@ -1,50 +1,48 @@
 <template>
     <div v-if="deployment" class="details">
         <div class="view__title">
-            Deployment details
+            Deployment {{ deployment.id }}
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>status</th>
-                    <th>package id</th>
-                    <th>environment</th>
-                    <th>deployed at</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <deployment-badge
-                            :project-id="project.id"
-                            :deployment-id="deployment.id"
-                        />
-                    </td>
-                    <td>
+        <div class="details__section">
+            <div class="details__title">
+                Details
+            </div>
+            <div class="details__content">
+                <div class="details__item">
+                    <label class="details__label">status</label>
+                    <span class="details__value">
                         <deployment-status-badge :status="deployment.status" />
-                    </td>
-                    <td>
+                    </span>
+                </div>
+                <div class="details__item">
+                    <label class="details__label">package id</label>
+                    <span class="details__value">
                         <package-badge
                             :project-id="project.id"
                             :package-id="deployment.packageId"
                             :description="deployment.packageDescription"
                         />
-                    </td>
-                    <td>
+                    </span>
+                </div>
+                <div class="details__item">
+                    <label class="details__label">environment</label>
+                    <span class="details__value">
                         {{ deployment.environmentDisplayName }}
-                    </td>
-                    <td>
+                    </span>
+                </div>
+                <div class="details__item">
+                    <label class="details__label">deployed at</label>
+                    <span class="details__value">
                         <humanized-date :date="deployment.deployedAt" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </span>
+                </div>
+            </div>
+        </div>
         
         
-        <div class="code__container">
-            <div class="section__title">
+        <div class="details__section">
+            <div class="details__title">
                 Output
             </div>
             
@@ -64,30 +62,52 @@
             </div>
         </div>
         
-        <deployment-used-variables :used-variables="deployment.variables" />
+        <div class="details__section">
+            <div class="details__title">
+                Deployment variables
+            </div>
+            <table v-if="deployment.variables && deployment.variables.length > 0">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        v-for="(variable, index) in deployment.variables"
+                        :key="index"
+                    >
+                        <td>
+                            <span>{{ variable.name }}</span>
+                        </td>
+                        <td>
+                            <span>{{ variable.value }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div v-else-if="deployment.variables && deployment.variables.length === 0">
+                <span>Variables has not been defined for this deployment</span>
+            </div>
+            <preloader v-else />
+        </div>
     </div>
 </template>
 
 <script>
 import httpService from "./../../../common/http/http-service"
 
-import DeploymentUsedVariables from "./_components/deployment-used-variables"
-
 export default {
     name: 'DeploymentDetails',
 
-    components: {
-        'deployment-used-variables': DeploymentUsedVariables
-    },
-    
     props: [
         'project'
     ],
     
     data() {
         return {
-            deployment: null,
-            usedVariables: null
+            deployment: null
         }
     },
 
@@ -124,23 +144,18 @@ function getDeploymentDetails(projectId, deploymentId) {
 <style lang="scss" scoped>
 .code {
 
-    &__container {
-        margin: 30px 0;
-    }
-
     &__steps {
         border-radius: 0.25rem;
         padding: 15px;
         background: $font-form-color;
-        color: white;
-        font-family: monospace;
     }
 
     &__line {
         font-family: monospace;
+        @include font($family: monospace, $color: $white, $size: 14px);
 
         &--danger {
-            color: $error;
+            @include font($family: monospace, $color: $error, $size: 14px);
         }
     }
 }

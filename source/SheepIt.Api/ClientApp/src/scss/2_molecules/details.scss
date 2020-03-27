@@ -1,9 +1,42 @@
 .details {
 
-    .section {
-        &__title {
-            @include font($size: 20px);
-            margin: 1rem 0;
+    &__section {
+        margin: 45px 0 0 0;
+    }
+
+    &__title {
+        @include font($size: 22px);
+        margin: 1rem 0;
+    }
+
+    &__label {
+        display: inline-block;
+        min-width: 150px;
+        text-transform: uppercase;
+
+    }
+
+    &__item {
+        display: block;
+        margin: 16px 0 0 0;
+        
+        &:first-child {
+            margin: 32px 0 0 0;
+        }
+    }
+
+    &__value {
+        min-width: 280px;
+        display: inline-block;
+        border: 1px solid $gray-border;
+        border-radius: 0.25rem;
+        padding: 4px 8px;
+    }
+
+    &__content {
+        &--center {
+            display: flex;
+            align-items: center;
         }
     }
 }

@@ -1,7 +1,12 @@
-@mixin font ($size: false, $color: false) {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+@mixin font ($size: false, $color: false, $family: false) {
     font-weight: 400;
     
+    @if $family {
+        font-family: $family;
+    } @else {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
     @if $color {
         color: $color;
     } @else {
