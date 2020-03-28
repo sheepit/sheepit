@@ -1,7 +1,7 @@
 <template>
     <div class="details">
         <div class="view__title">
-            Package details
+            Package {{ packagee.id }} ({{ packagee.description }})
         </div>
 
         <div v-if="packagee">
@@ -11,12 +11,6 @@
                 </div>
 
                 <div class="details__content">
-                    <div class="details__item">
-                        <label class="details__label">id</label>
-                        <span class="details__value">
-                            {{ packagee.id }}
-                        </span>
-                    </div>
                     <div class="details__item">
                         <label class="details__label">component</label>
                         <span class="details__value">
