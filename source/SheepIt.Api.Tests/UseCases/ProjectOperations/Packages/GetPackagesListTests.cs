@@ -12,6 +12,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
     {
         private string _projectId;
         private DateTime _projectCreationTime;
+        private int _frontendComponentId;
 
         [SetUp]
         public async Task set_up()
@@ -24,6 +25,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                 .WithEnvironmentNames("dev", "test", "prod")
                 .WithComponents("frontend", "backend")
                 .Create();
+
+            _frontendComponentId = await Fixture.FindComponentId("frontend");
             
             Fixture.MomentLater();
         }
@@ -68,7 +71,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                         Id = secondPackage.CreatedPackageId,
                         Description = secondPackageDescription,
                         CreatedAt = secondPackageCreationTime,
-                        ComponentId = 1,
+                        ComponentId = _frontendComponentId,
                         ComponentName = "frontend"
                     },
                     new GetPackagesListResponse.PackageDto
@@ -76,7 +79,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                         Id = firstPackage.CreatedPackageId,
                         Description = firstPackageDescription,
                         CreatedAt = firstPackageCreationTime,
-                        ComponentId = 1,
+                        ComponentId = _frontendComponentId,
                         ComponentName = "frontend"
                     },
                     new GetPackagesListResponse.PackageDto
@@ -84,7 +87,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                         Id = 1,
                         Description = "Initial package",
                         CreatedAt = _projectCreationTime,
-                        ComponentId = 1,
+                        ComponentId = _frontendComponentId,
                         ComponentName = "frontend"
                     }
                 });

@@ -13,6 +13,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
     public class ListPackageDeploymentsTests : Test<IntegrationTestsFixture>
     {
         private string _projectId;
+        private int _devEnvironmentId;
+        private int _testEnvironmentId;
         private int _packageInQuestionId;
         private int _otherPackageId;
 
@@ -24,6 +26,9 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             await Fixture.CreateProject(_projectId)
                 .WithEnvironmentNames("dev", "test", "prod")
                 .Create();
+            
+            _devEnvironmentId = await Fixture.FindEnvironmentId("dev");
+            _testEnvironmentId = await Fixture.FindEnvironmentId("test");
             
             var packageInQuestion = await Fixture.CreatePackage(_projectId)
                 .Create();
@@ -47,7 +52,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             {
                 ProjectId = _projectId,
                 PackageId = _packageInQuestionId,
-                EnvironmentId = 1
+                EnvironmentId = _devEnvironmentId
             });
             
             // when
@@ -67,7 +72,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                 Id = deployPackageResponse.CreatedDeploymentId,
                 Status = DeploymentStatus.Succeeded.ToString(),
                 DeployedAt = deploymentTime,
-                EnvironmentId = 1,
+                EnvironmentId = _devEnvironmentId,
                 EnvironmentDisplayName = "dev",
                 PackageId = _packageInQuestionId
             });
@@ -82,7 +87,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             {
                 ProjectId = _projectId,
                 PackageId = _packageInQuestionId,
-                EnvironmentId = 1
+                EnvironmentId = _devEnvironmentId
             });
             
             Fixture.MomentLater();
@@ -91,7 +96,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             {
                 ProjectId = _projectId,
                 PackageId = _otherPackageId,
-                EnvironmentId = 1
+                EnvironmentId = _devEnvironmentId
             });
             
             // when
@@ -118,7 +123,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             {
                 ProjectId = _projectId,
                 PackageId = _packageInQuestionId,
-                EnvironmentId = 1
+                EnvironmentId = _devEnvironmentId
             });
             
             Fixture.MomentLater();
@@ -127,7 +132,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             {
                 ProjectId = _projectId,
                 PackageId = _packageInQuestionId,
-                EnvironmentId = 2
+                EnvironmentId = _testEnvironmentId
             });
             
             // when

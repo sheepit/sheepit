@@ -23,6 +23,9 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
             await Fixture.CreateProject(projectId)
                 .WithEnvironmentNames("test", "prod")
                 .Create();
+            
+            var testEnvironmentId = await Fixture.FindEnvironmentId("test");
+            var prodEnvironmentId = await Fixture.FindEnvironmentId("prod");
 
             var description = "some package";
             
@@ -36,8 +39,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
                         DefaultValue = "var-1-default",
                         EnvironmentValues = new Dictionary<int, string>
                         {
-                            {1, "var-1-test"},
-                            {2, "var-1-prod"}
+                            {testEnvironmentId, "var-1-test"},
+                            {prodEnvironmentId, "var-1-prod"}
                         }
                     },
                     new CreatePackageRequest.UpdateVariable
@@ -46,8 +49,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
                         DefaultValue = "var-2-default",
                         EnvironmentValues = new Dictionary<int, string>
                         {
-                            {1, "var-2-test"},
-                            {2, "var-2-prod"}
+                            {testEnvironmentId, "var-2-test"},
+                            {prodEnvironmentId, "var-2-prod"}
                         }
                     }
                 })
@@ -57,7 +60,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
             {
                 ProjectId = projectId,
                 PackageId = createPackageResponse.CreatedPackageId,
-                EnvironmentId = 1
+                EnvironmentId = testEnvironmentId
             });
 
             // when
@@ -75,7 +78,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
                 Id = deployPackageResponse.CreatedDeploymentId,
                 Status = DeploymentStatus.Succeeded.ToString(),
                 DeployedAt = Fixture.GetUtcNow(),
-                EnvironmentId = 1,
+                EnvironmentId = testEnvironmentId,
                 PackageDescription = description,
                 PackageId = createPackageResponse.CreatedPackageId,
                 EnvironmentDisplayName = "test",

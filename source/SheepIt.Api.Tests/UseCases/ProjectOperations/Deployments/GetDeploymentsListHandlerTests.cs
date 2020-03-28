@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -13,6 +12,9 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
     public class GetDeploymentsListHandlerTests : Test<IntegrationTestsFixture>
     {
         private string _projectId;
+        private int _devEnvironmentId;
+        private int _testEnvironmentId;
+        private int _frontendComponentId;
 
         [SetUp]
         public async Task set_up()
@@ -23,6 +25,10 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
                 .WithEnvironmentNames("dev", "test", "prod")
                 .WithComponents("frontend", "backend")
                 .Create();
+
+            _devEnvironmentId = await Fixture.FindEnvironmentId("dev");
+            _testEnvironmentId = await Fixture.FindEnvironmentId("test");
+            _frontendComponentId = await Fixture.FindComponentId("frontend");
             
             Fixture.MomentLater();
         }
@@ -54,7 +60,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
             {
                 ProjectId = _projectId,
                 PackageId = firstPackage.CreatedPackageId,
-                EnvironmentId = 1
+                EnvironmentId = _devEnvironmentId
             });
 
             Fixture.MomentLater();
@@ -65,7 +71,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
             {
                 ProjectId = _projectId,
                 PackageId = secondPackage.CreatedPackageId,
-                EnvironmentId = 2
+                EnvironmentId = _testEnvironmentId
             });
 
             // when
@@ -84,11 +90,11 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
                     Id = firstDeployment.CreatedDeploymentId,
                     Status = DeploymentStatus.Succeeded.ToString(),
                     DeployedAt = firstDeploymentTime,
-                    EnvironmentId = 1,
+                    EnvironmentId = _devEnvironmentId,
                     PackageId = firstPackage.CreatedPackageId,
                     PackageDescription = firstPackageDescription,
                     EnvironmentDisplayName = "dev",
-                    ComponentId = 1,
+                    ComponentId = _frontendComponentId,
                     ComponentName = "frontend"
                 },
                 new GetDeploymentsListResponse.DeploymentDto
@@ -96,11 +102,11 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
                     Id = secondDeployment.CreatedDeploymentId,
                     Status = DeploymentStatus.Succeeded.ToString(),
                     DeployedAt = secondDeploymentTime,
-                    EnvironmentId = 2,
+                    EnvironmentId = _testEnvironmentId,
                     PackageId = secondPackage.CreatedPackageId,
                     PackageDescription = secondPackageDescription,
                     EnvironmentDisplayName = "test",
-                    ComponentId = 1,
+                    ComponentId = _frontendComponentId,
                     ComponentName = "frontend"
                 }
             });

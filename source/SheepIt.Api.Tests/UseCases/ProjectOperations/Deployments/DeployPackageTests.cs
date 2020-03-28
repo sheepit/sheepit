@@ -19,26 +19,29 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
             await Fixture.CreateProject("foo")
                 .WithEnvironmentNames("dev", "test", "prod")
                 .Create();
-            
+
+            var devEnvironmentId = await Fixture.FindEnvironmentId("dev");
+            var packageId = await Fixture.FindProjectsFirstPackageId("foo");
+
             // when
 
-            await Fixture.Handle(new DeployPackageRequest
+            var deployPackageResponse = await Fixture.Handle(new DeployPackageRequest
             {
                 ProjectId = "foo",
-                PackageId = 1,
-                EnvironmentId = 1
+                PackageId = packageId,
+                EnvironmentId = devEnvironmentId
             });
-            
+
             // then
 
-            var response = await Fixture.Handle(new GetDeploymentDetailsRequest
+            var getDeploymentDetailsResponse = await Fixture.Handle(new GetDeploymentDetailsRequest
             {
                 ProjectId = "foo",
-                DeploymentId = 1
+                DeploymentId = deployPackageResponse.CreatedDeploymentId
             });
 
-            response.Id.Should().Be(1);
-            response.Status.Should().Be(DeploymentStatus.Succeeded.ToString());
+            getDeploymentDetailsResponse.Id.Should().Be(deployPackageResponse.CreatedDeploymentId);
+            getDeploymentDetailsResponse.Status.Should().Be(DeploymentStatus.Succeeded.ToString());
         }
     }
 }
