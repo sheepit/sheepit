@@ -1,3 +1,4 @@
+using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using SheepIt.Api.Tests.TestInfrastructure;
@@ -27,13 +28,20 @@ namespace SheepIt.Api.Tests.FeatureObjects
                     ProjectId = projectId,
                     ZipFile = TestProcessZipArchives.TestProcess,
                     EnvironmentNames = new[] {"dev", "test", "prod"},
-                    ComponentNames = new[] { "Default component" } // todo: change to a list
+                    ComponentNames = new[] { "frontend", "backend" }
                 };
             }
 
             public Builder WithEnvironmentNames(params string[] environmentNames)
             {
                 _request.EnvironmentNames = environmentNames;
+
+                return this;
+            }
+
+            public Builder WithComponents(params string[] components)
+            {
+                _request.ComponentNames = components;
 
                 return this;
             }

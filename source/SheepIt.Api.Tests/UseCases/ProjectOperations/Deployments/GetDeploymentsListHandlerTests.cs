@@ -13,22 +13,19 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
     public class GetDeploymentsListHandlerTests : Test<IntegrationTestsFixture>
     {
         private string _projectId;
-        private DateTime _projectCreationTime;
 
         [SetUp]
         public async Task set_up()
         {
             _projectId = "foo";
 
-            _projectCreationTime = Fixture.GetUtcNow();
-
             await Fixture.CreateProject(_projectId)
                 .WithEnvironmentNames("dev", "test", "prod")
+                .WithComponents("frontend", "backend")
                 .Create();
             
             Fixture.MomentLater();
         }
-
         
         [Test]
         public async Task can_get_deployments()
@@ -92,7 +89,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
                     PackageDescription = firstPackageDescription,
                     EnvironmentDisplayName = "dev",
                     ComponentId = 1,
-                    ComponentName = "Default component"
+                    ComponentName = "frontend"
                 },
                 new GetDeploymentsListResponse.DeploymentDto
                 {
@@ -104,7 +101,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
                     PackageDescription = secondPackageDescription,
                     EnvironmentDisplayName = "test",
                     ComponentId = 1,
-                    ComponentName = "Default component"
+                    ComponentName = "frontend"
                 }
             });
         }

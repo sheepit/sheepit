@@ -22,6 +22,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 
             await Fixture.CreateProject(_projectId)
                 .WithEnvironmentNames("dev", "test", "prod")
+                .WithComponents("frontend", "backend")
                 .Create();
             
             Fixture.MomentLater();
@@ -68,7 +69,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                         Description = secondPackageDescription,
                         CreatedAt = secondPackageCreationTime,
                         ComponentId = 1,
-                        ComponentName = "Default component"
+                        ComponentName = "frontend"
                     },
                     new GetPackagesListResponse.PackageDto
                     {
@@ -76,7 +77,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                         Description = firstPackageDescription,
                         CreatedAt = firstPackageCreationTime,
                         ComponentId = 1,
-                        ComponentName = "Default component"
+                        ComponentName = "frontend"
                     },
                     new GetPackagesListResponse.PackageDto
                     {
@@ -84,7 +85,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                         Description = "Initial package",
                         CreatedAt = _projectCreationTime,
                         ComponentId = 1,
-                        ComponentName = "Default component"
+                        ComponentName = "frontend"
                     }
                 });
         }

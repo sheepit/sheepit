@@ -19,6 +19,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             await Fixture
                 .CreateProject(_projectId)
                 .WithEnvironmentNames("test", "prod")
+                .WithComponents("frontend", "backend")
                 .Create();
         }
 
@@ -73,7 +74,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                 ProjectId = _projectId,
                 
                 ComponentId = 1,
-                ComponentName = "Default component",
+                ComponentName = "frontend",
                 
                 Variables = new []
                 {
