@@ -32,6 +32,12 @@
                     </span>
                 </div>
                 <div class="details__item">
+                    <label class="details__label">component</label>
+                    <span class="details__value">
+                        {{ deployment.componentName }}
+                    </span>
+                </div>                
+                <div class="details__item">
                     <label class="details__label">deployed at</label>
                     <span class="details__value">
                         <humanized-date :date="deployment.deployedAt" />

@@ -22,10 +22,12 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
 
             await Fixture.CreateProject(projectId)
                 .WithEnvironmentNames("test", "prod")
+                .WithComponents("frontend", "backend")
                 .Create();
             
             var testEnvironmentId = await Fixture.FindEnvironmentId("test");
             var prodEnvironmentId = await Fixture.FindEnvironmentId("prod");
+            var frontendComponentId = await Fixture.FindComponentId("frontend");
 
             var description = "some package";
             
@@ -78,10 +80,16 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
                 Id = deployPackageResponse.CreatedDeploymentId,
                 Status = DeploymentStatus.Succeeded.ToString(),
                 DeployedAt = Fixture.GetUtcNow(),
+                
                 EnvironmentId = testEnvironmentId,
-                PackageDescription = description,
-                PackageId = createPackageResponse.CreatedPackageId,
                 EnvironmentDisplayName = "test",
+                
+                ComponentId = frontendComponentId,
+                ComponentName = "frontend",
+                
+                PackageId = createPackageResponse.CreatedPackageId,
+                PackageDescription = description,
+                
                 Variables = new GetDeploymentDetailsResponse.VariablesForEnvironmentDto[]
                 {
                     new GetDeploymentDetailsResponse.VariablesForEnvironmentDto

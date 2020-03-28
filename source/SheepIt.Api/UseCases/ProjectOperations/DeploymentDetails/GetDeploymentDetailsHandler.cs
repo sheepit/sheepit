@@ -22,11 +22,17 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
     {
         public int Id { get; set; }
         public string Status { get; set; }
+        public DateTime DeployedAt { get; set; }
+        
         public int PackageId { get; set; }
         public string PackageDescription { get; set; }
+        
         public int EnvironmentId { get; set; }
         public string EnvironmentDisplayName { get; set; }
-        public DateTime DeployedAt { get; set; }
+        
+        public int ComponentId { get; set; }
+        public string ComponentName { get; set; }
+        
         public CommandOutput[] StepResults { get; set; }
         public VariablesForEnvironmentDto[] Variables { get; set; }
 
@@ -77,9 +83,10 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
 
         public async Task<GetDeploymentDetailsResponse> Handle(GetDeploymentDetailsRequest request)
         {
-            var deployment = await _dbContext.Deployments
-                .Include(deployment1 => deployment1.Environment)
-                .Include(deployment1 => deployment1.Package)
+            var foundDeployment = await _dbContext.Deployments
+                .Include(deployment => deployment.Environment)
+                .Include(deployment => deployment.Package)
+                .Include(deployment => deployment.Package.Component)
                 .FindByIdAndProjectId(
                     projectId: request.ProjectId,
                     deploymentId: request.DeploymentId
@@ -87,15 +94,20 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
 
             return new GetDeploymentDetailsResponse
             {
-                Id = deployment.Id,
-                Status = deployment.Status.ToString(),
-                PackageId = deployment.PackageId,
-                PackageDescription = deployment.Package.Description,
-                EnvironmentId = deployment.Environment.Id,
-                EnvironmentDisplayName = deployment.Environment.DisplayName,
-                DeployedAt = deployment.StartedAt,
+                Id = foundDeployment.Id,
+                Status = foundDeployment.Status.ToString(),
+                DeployedAt = foundDeployment.StartedAt,
                 
-                StepResults = deployment
+                EnvironmentId = foundDeployment.Environment.Id,
+                EnvironmentDisplayName = foundDeployment.Environment.DisplayName,
+                
+                ComponentId = foundDeployment.Package.ComponentId,
+                ComponentName = foundDeployment.Package.Component.Name,
+                
+                PackageId = foundDeployment.PackageId,
+                PackageDescription = foundDeployment.Package.Description,
+                
+                StepResults = foundDeployment
                     .GetOutputStepsOrEmpty()
                     .Select(result => new GetDeploymentDetailsResponse.CommandOutput
                     {
@@ -105,8 +117,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
                     })
                     .ToArray(),
                 
-                Variables = deployment.Package
-                    .GetVariablesForEnvironment(deployment.Environment.Id)
+                Variables = foundDeployment.Package
+                    .GetVariablesForEnvironment(foundDeployment.Environment.Id)
                     .Select(variableForEnvironment => new GetDeploymentDetailsResponse.VariablesForEnvironmentDto
                     {
                         Name = variableForEnvironment.Name,
