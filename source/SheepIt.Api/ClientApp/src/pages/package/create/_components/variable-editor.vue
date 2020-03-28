@@ -3,6 +3,7 @@
         <table>
             <thead>
                 <tr>
+                    <th class="action-column"></th>
                     <th>name</th>
                     <th>default value</th>
                     <th
@@ -18,22 +19,21 @@
                     v-for="(variable, variableIndex) in variables"
                     :key="variableIndex"
                 >
+                    <td class="action-column">
+                        <button
+                            class="button button--inline button--secondary"
+                            type="button"
+                            @click="removeVariable(variableIndex)"
+                        >
+                            X
+                        </button>
+                    </td>
                     <td>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <button
-                                    class="btn btn-sm btn-danger"
-                                    @click="removeVariable(variableIndex)"
-                                >
-                                    X
-                                </button>
-                            </div>
-                            <input
-                                v-model="variable.name"
-                                type="text"
-                                class="form__control"
-                            >
-                        </div>
+                        <input
+                            v-model="variable.name"
+                            type="text"
+                            class="form__control"
+                        >
                     </td>
                     <td>
                         <input
@@ -51,16 +51,17 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td />
+                    <td />
+                    <td v-for="environment in environments" />
+                    <td class="button-container">
                         <button
-                            class="btn btn-sm btn-primary"
+                            class="button button--secondary"
                             @click="addVariable()"
                         >
                             Add variable
                         </button>
                     </td>
-                    <td />
-                    <td v-for="environment in environments" />
                 </tr>
             </tbody>
         </table>     
@@ -87,3 +88,9 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.action-column {
+    width: 35px;
+}
+</style>

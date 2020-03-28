@@ -6,6 +6,10 @@
             
         <div class="form">
             <div class="form__section">
+                <div class="form__title">
+                    Details
+                </div>
+
                 <div class="form__row">
                     <div class="form__column">
                         <label
@@ -46,37 +50,42 @@
         </div>
  
         <div class="form">
-            <div v-if="packagee">
-                <h4 class="mt-5">
-                    Editing variables based on
-                    <package-badge
-                        :project-id="project.id"
-                        :package-id="packagee.id"
-                        :description="packagee.description"
+            <div class="form__section">
+                <div class="form__title">
+                    Variables
+                </div>
+
+                <div v-if="packagee">
+                    <h4 class="mt-5">
+                        Editing variables based on
+                        <package-badge
+                            :project-id="project.id"
+                            :package-id="packagee.id"
+                            :description="packagee.description"
+                        />
+                    </h4>
+                    
+                    <variable-editor
+                        :variables="packagee.variables"
+                        :environments="environments"
                     />
-                </h4>
-                
-                <variable-editor
-                    :variables="packagee.variables"
-                    :environments="environments"
-                />
-            </div>
-            <div v-else>
-                <h4 class="mt-5">
-                    Editing variables based on
-                </h4>
+                </div>
+                <div v-else>
+                    <h4 class="mt-5">
+                        Editing variables based on
+                    </h4>
 
-                <preloader />
+                    <preloader />
+                </div>
             </div>
 
-            
             <div class="submit-button-container">
                 <button
                     type="button"
                     class="button button--primary"
                     @click="createPackage()"
                 >
-                    Create package
+                    Save
                 </button>
             </div>
         </div>
