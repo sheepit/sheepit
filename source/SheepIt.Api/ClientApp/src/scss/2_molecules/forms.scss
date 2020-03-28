@@ -86,5 +86,9 @@
     .submit-button-container {
         text-align: right !important;
         margin: 16px 0;
+
+        & .button {
+            margin-left: 16px;
+        }
     }
 }

@@ -80,6 +80,15 @@
             </div>
 
             <div class="submit-button-container">
+                <router-link
+                    class="button button--secondary"
+                    :to="{ name: 'packages-list' }"
+                    tag="button"
+                    type="button"
+                >
+                    Cancel
+                </router-link>
+
                 <button
                     type="button"
                     class="button button--primary"
