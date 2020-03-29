@@ -7,16 +7,6 @@ namespace SheepIt.Api.Model.Packages
 {
     public static class PackageQueryExtensions
     {
-        public static async Task<Package> FindNewestInProject(
-            this IQueryable<Package> query,
-            string projectId)
-        {
-            return await query
-                .FromProject(projectId)
-                .OrderByNewest()
-                .FirstAsync();
-        }
-        
         public static async Task<Package> FindByIdAndProjectId(
             this IQueryable<Package> query,
             int packageId,
@@ -49,6 +39,13 @@ namespace SheepIt.Api.Model.Packages
             string projectId)
         {
             return query.Where(package => package.ProjectId == projectId);
+        }
+
+        public static IQueryable<Package> FromComponent(
+            this IQueryable<Package> query,
+            int componentId)
+        {
+            return query.Where(package => package.ComponentId == componentId);
         }
         
         public static IQueryable<Package> OrderByNewest(

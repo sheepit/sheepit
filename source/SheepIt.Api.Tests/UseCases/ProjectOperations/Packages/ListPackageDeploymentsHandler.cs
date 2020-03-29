@@ -30,12 +30,12 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             _devEnvironmentId = await Fixture.FindEnvironmentId("dev");
             _testEnvironmentId = await Fixture.FindEnvironmentId("test");
             
-            var packageInQuestion = await Fixture.CreatePackage(_projectId)
+            var packageInQuestion = await Fixture.CreatePackageForDefaultComponent(_projectId)
                 .Create();
 
             _packageInQuestionId = packageInQuestion.CreatedPackageId;
 
-            var otherPackage = await Fixture.CreatePackage(_projectId)
+            var otherPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
                 .Create();
 
             _otherPackageId = otherPackage.CreatedPackageId;

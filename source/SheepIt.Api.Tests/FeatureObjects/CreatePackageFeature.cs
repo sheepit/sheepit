@@ -10,9 +10,17 @@ namespace SheepIt.Api.Tests.FeatureObjects
 {
     public static class CreatePackageFeature
     {
-        public static Builder CreatePackage(this IntegrationTestsFixture fixture, string projectId)
+        // todo: this a quick fix, it should be inlined
+        public static Builder CreatePackageForDefaultComponent(this IntegrationTestsFixture fixture, string projectId)
         {
-            return new Builder(fixture, projectId);
+            var latestPackageId = fixture.FindProjectsDefaultComponentId(projectId).Result;
+
+            return new Builder(fixture, projectId, latestPackageId);
+        }
+        
+        public static Builder CreatePackage(this IntegrationTestsFixture fixture, string projectId, int componentId)
+        {
+            return new Builder(fixture, projectId, componentId);
         }
 
         public class Builder
@@ -20,19 +28,20 @@ namespace SheepIt.Api.Tests.FeatureObjects
             private readonly IntegrationTestsFixture _fixture;
             private readonly CreatePackageRequest _request;
 
-            public Builder(IntegrationTestsFixture fixture, string projectId)
+            public Builder(IntegrationTestsFixture fixture, string projectId, int componentId)
             {
                 _fixture = fixture;
                 
                 _request = new CreatePackageRequest
                 {
                     ProjectId = projectId,
+                    ComponentId = componentId,
                     Description = Guid.NewGuid().ToString(),
                     ZipFile = TestProcessZipArchives.TestProcess,
                     VariableUpdates = null
                 };
             }
-
+            
             public Builder WithDescription(string description)
             {
                 _request.Description = description;
@@ -59,7 +68,8 @@ namespace SheepIt.Api.Tests.FeatureObjects
             {
                 var getLastPackageResponse = await _fixture.Handle(new GetLastPackageRequest
                 {
-                    ProjectId = _request.ProjectId
+                    ProjectId = _request.ProjectId,
+                    ComponentId = _request.ComponentId
                 });
 
                 return getLastPackageResponse.Variables

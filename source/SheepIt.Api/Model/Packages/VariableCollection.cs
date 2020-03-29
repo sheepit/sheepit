@@ -19,13 +19,5 @@ namespace SheepIt.Api.Model.Packages
                 .Select(variable => variable.ForEnvironment(environmentId))
                 .ToArray();
         }
-
-        public VariableCollection WithNewVariables(VariableValues[] newVariables)
-        {
-            return new VariableCollection
-            {
-                Variables = newVariables
-            };
-        }
     }
 }

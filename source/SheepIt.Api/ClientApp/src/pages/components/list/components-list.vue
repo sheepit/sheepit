@@ -29,6 +29,9 @@
                             <th scope="col">
                                 name
                             </th>
+                            <th scope="col">
+                                operations
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,6 +44,23 @@
                             </td>
                             <td>
                                 {{ component.name }}
+                            </td>
+                            <td>
+                                <router-link
+                                    tag="button"
+                                    :to="{
+                                        name: 'create-package',
+                                        params: {
+                                            projectId: project.id
+                                        },
+                                        query: {
+                                            componentId: component.id
+                                        }
+                                    }"
+                                    class="button button--inline button--secondary"
+                                >
+                                    add package
+                                </router-link>
                             </td>
                         </tr>
                     </tbody>

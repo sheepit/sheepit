@@ -20,26 +20,28 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 
             await Fixture.CreateProject(projectId)
                 .WithEnvironmentNames("test", "prod")
+                .WithComponents("frontend")
                 .Create();
             
             var testEnvironmentId = await Fixture.FindEnvironmentId("test");
             var prodEnvironmentId = await Fixture.FindEnvironmentId("prod");
-            
+            var frontendComponentId = await Fixture.FindComponentId("frontend");
+
             Fixture.MomentLater();
 
-            await Fixture.CreatePackage("foo")
+            await Fixture.CreatePackageForDefaultComponent("foo")
                 .WithDescription("first")
                 .Create();
             
             Fixture.MomentLater();
             
-            await Fixture.CreatePackage("foo")
+            await Fixture.CreatePackageForDefaultComponent("foo")
                 .WithDescription("second")
                 .Create();
             
             Fixture.MomentLater();
             
-            await Fixture.CreatePackage("foo")
+            await Fixture.CreatePackageForDefaultComponent("foo")
                 .WithDescription("third")
                 .WithVariables(new []
                 {
@@ -70,13 +72,15 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 
             var response = await Fixture.Handle(new GetLastPackageRequest
             {
-                ProjectId = projectId
+                ProjectId = projectId,
+                ComponentId = frontendComponentId
             });
 
             // then
 
             response.ProjectId.Should().Be(projectId);
             response.Description.Should().Be("third");
+            response.ComponentId.Should().Be(frontendComponentId);
 
             response.Variables.Should().BeEquivalentTo(new[]
             {

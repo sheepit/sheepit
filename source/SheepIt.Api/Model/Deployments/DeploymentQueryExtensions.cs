@@ -8,11 +8,11 @@ namespace SheepIt.Api.Model.Deployments
     public static class DeploymentQueryExtensions
     {
         public static async Task<Deployment> FindByIdAndProjectId(
-            this IQueryable<Deployment> dbSet,
+            this IQueryable<Deployment> query,
             string projectId,
             int deploymentId)
         {
-            var foundDeploymentOrNull = await dbSet
+            var foundDeploymentOrNull = await query
                 .FromProject(projectId)
                 .WithId(deploymentId)
                 .FirstOrDefaultAsync();

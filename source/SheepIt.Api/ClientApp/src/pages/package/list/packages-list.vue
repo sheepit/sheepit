@@ -4,15 +4,6 @@
             Packages
         </div>
 
-        <div class="view__row view__row--right">
-            <router-link
-                class="button button--primary"
-                :to="{ name: 'create-package', params: { projectId: project.id }}"
-            >
-                Create package
-            </router-link>
-        </div>
-
         <expanding-list
             v-if="packages && packages.length > 0"
             class="mt-4"

@@ -3,6 +3,7 @@ import httpService from './../../../../common/http/http-service'
 export default {
     createPackage(
         projectId,
+        componentId,
         environments,
         description,
         zipFileData,
@@ -10,6 +11,7 @@ export default {
 
         const formData = new FormData();
         formData.append('ProjectId', projectId);
+        formData.append('ComponentId', componentId);
         formData.append('Description', description);
         formData.append('ZipFile', zipFileData);
 

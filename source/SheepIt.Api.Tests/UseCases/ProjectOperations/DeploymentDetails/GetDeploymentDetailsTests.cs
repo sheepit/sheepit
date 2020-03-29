@@ -31,7 +31,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
 
             var description = "some package";
             
-            var createPackageResponse = await Fixture.CreatePackage(projectId)
+            var createPackageResponse = await Fixture.CreatePackageForDefaultComponent(projectId)
                 .WithDescription(description)
                 .WithVariables(new []
                 {

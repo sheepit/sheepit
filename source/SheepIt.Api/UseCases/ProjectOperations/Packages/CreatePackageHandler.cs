@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
@@ -19,6 +21,8 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
     public class CreatePackageRequest : IRequest<CreatePackageResponse>, IProjectRequest
     {
         public string ProjectId { get; set; }
+        public int ComponentId { get; set; }
+        
         public string Description { get; set; }
         public UpdateVariable[] VariableUpdates { get; set; }
         public IFormFile ZipFile { get; set; }
@@ -92,18 +96,17 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
         public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
         {
-            var defaultComponent = _dbContext.Components
+            var componentExists = await _dbContext.Components
                 .FromProject(request.ProjectId)
-                .OrderBy(component => component.Id)
-                .Select(component => new
-                {
-                    component.Id
-                })
-                .First();
+                .WithId(request.ComponentId)
+                .AnyAsync();
 
-            var basePackage = await _dbContext.Packages.FindNewestInProject(
-                projectId: request.ProjectId
-            );
+            if (!componentExists)
+            {
+                throw new InvalidOperationException(
+                    $"Component {request.ComponentId} in project {request.ProjectId} doesn't exist."
+                );
+            }
 
             var deploymentProcess = await _deploymentProcessFactory.Create(
                 projectId: request.ProjectId,
@@ -115,11 +118,14 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             var newVariables = MapVariableValues(request.VariableUpdates);
             
             var newPackage = await _packageFactory.Create(
-                projectId: basePackage.ProjectId,
+                projectId: request.ProjectId,
                 deploymentProcessId: deploymentProcess.Id,
-                componentId: defaultComponent.Id,
+                componentId: request.ComponentId,
                 description: request.Description,
-                variableCollection: basePackage.Variables.WithNewVariables(newVariables)
+                variableCollection: new VariableCollection
+                {
+                    Variables = newVariables
+                }
             );
 
             _dbContext.Packages.Add(newPackage);

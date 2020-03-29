@@ -55,6 +55,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectManagement
             listComponentsResponse.Components
                 .Select(component => component.Name)
                 .Should().Equal("Default component");
+            
+            // todo: check created packages
         }
 
         [Test]

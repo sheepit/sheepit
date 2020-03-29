@@ -40,7 +40,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
 
             var firstPackageDescription = "first package";
             
-            var firstPackage = await Fixture.CreatePackage(_projectId)
+            var firstPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
                 .WithDescription(firstPackageDescription)
                 .Create();
             
@@ -48,7 +48,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
 
             var secondPackageDescription = "second package";
             
-            var secondPackage = await Fixture.CreatePackage(_projectId)
+            var secondPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
                 .WithDescription(secondPackageDescription)
                 .Create();
             

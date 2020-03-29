@@ -153,6 +153,7 @@ export default {
             createPackageService
                 .createPackage(
                     this.project.id,
+                    this.$route.query.componentId,
                     this.environments,
                     this.description,
                     zipFileData,
@@ -166,7 +167,10 @@ export default {
 
         getPackage() {
             httpService
-                .post('api/project/package/get-last-package', { projectId: this.project.id })
+                .post('api/project/package/get-last-package', { 
+                    projectId: this.project.id,
+                    componentId: this.$route.query.componentId
+                })
                 .then(response => this.packagee = response);
 
             this.getProjectEnvironments();

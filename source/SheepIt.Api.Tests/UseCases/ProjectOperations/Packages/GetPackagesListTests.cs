@@ -23,7 +23,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 
             await Fixture.CreateProject(_projectId)
                 .WithEnvironmentNames("dev", "test", "prod")
-                .WithComponents("frontend", "backend")
+                .WithComponents("frontend") // todo: test for multiple components
                 .Create();
 
             _frontendComponentId = await Fixture.FindComponentId("frontend");
@@ -40,7 +40,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             
             var firstPackageDescription = "first package";
             
-            var firstPackage = await Fixture.CreatePackage(_projectId)
+            var firstPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
                 .WithDescription(firstPackageDescription)
                 .Create();
 
@@ -50,7 +50,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 
             var secondPackageDescription = "second package";
             
-            var secondPackage = await Fixture.CreatePackage(_projectId)
+            var secondPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
                 .WithDescription(secondPackageDescription)
                 .Create();
 
@@ -85,7 +85,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                     new GetPackagesListResponse.PackageDto
                     {
                         Id = 1,
-                        Description = "Initial package",
+                        Description = "frontend - initial package",
                         CreatedAt = _projectCreationTime,
                         ComponentId = _frontendComponentId,
                         ComponentName = "frontend"

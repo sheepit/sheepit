@@ -30,13 +30,15 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             
             Fixture.MomentLater();
         }
+        
+        // todo: test creating package based on earlier package
 
         [Test]
         public async Task can_create_a_package()
         {
-            // given
+            // when
             
-            var createPackageResponse = await Fixture.CreatePackage(_projectId)
+            var createPackageResponse = await Fixture.CreatePackageForDefaultComponent(_projectId)
                 .WithDescription("a package")
                 .WithVariables(new []
                 {
@@ -63,7 +65,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                 })
                 .Create();
 
-            // when
+            // then
 
             var packageDetailsResponse = await Fixture.Handle(new GetPackageDetailsRequest
             {
@@ -71,8 +73,6 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                 PackageId = createPackageResponse.CreatedPackageId 
             });
             
-            // then
-
             packageDetailsResponse.Should().BeEquivalentTo(new GetPackageDetailsResponse
             {
                 Id = createPackageResponse.CreatedPackageId,
@@ -115,7 +115,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
         {
             // given
             
-            await Fixture.CreatePackage("foo")
+            await Fixture.CreatePackageForDefaultComponent("foo")
                 .WithVariables(new []
                 {
                     new CreatePackageRequest.UpdateVariable
@@ -143,7 +143,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             
             // when
 
-            var createPackageResponse = await Fixture.CreatePackage("foo")
+            var createPackageResponse = await Fixture.CreatePackageForDefaultComponent("foo")
                 .WithVariables(new []
                 {
                     new CreatePackageRequest.UpdateVariable

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
@@ -109,28 +110,17 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 environmentNames: request.EnvironmentNames
             );
 
-            var defaultComponentId = await CreateComponents(
+            var createdComponents = await CreateComponents(
                 projectId: request.ProjectId,
                 componentNames: request.ComponentNames
             );
-
-            var deploymentProcess = await _deploymentProcessFactory.Create(
+            
+            // first packages are created so other operations can copy them
+            await CreateInitialPackages(
                 projectId: request.ProjectId,
+                createdComponents: createdComponents,
                 zipFileBytes: await request.ZipFile.ToByteArray()
             );
-
-            _dbContext.DeploymentProcesses.Add(deploymentProcess);
-
-            // first package is created so other operations can copy it
-            var firstPackage = await _packageFactory.Create(
-                projectId: request.ProjectId,
-                deploymentProcessId: deploymentProcess.Id,
-                componentId: defaultComponentId,
-                description: "Initial package",
-                variableCollection: new VariableCollection()
-            );
-
-            _dbContext.Packages.Add(firstPackage);
 
             await _dbContext.SaveChangesAsync();
         }
@@ -153,9 +143,9 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             }
         }
 
-        private async Task<int> CreateComponents(string projectId, string[] componentNames)
+        private async Task<List<CreatedComponent>> CreateComponents(string projectId, string[] componentNames)
         {
-            int? defaultComponentId = null;
+            var createdComponents = new List<CreatedComponent>();
             
             foreach (var componentName in componentNames)
             {
@@ -165,14 +155,44 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                 );
                 
                 _dbContext.Components.Add(component);
-
-                if (componentName == componentNames.First())
+                
+                createdComponents.Add(new CreatedComponent
                 {
-                    defaultComponentId = component.Id;
-                }
+                    Id = component.Id,
+                    Name = componentName
+                });
             }
 
-            return defaultComponentId.Value;
+            return createdComponents;
+        }
+
+        private async Task CreateInitialPackages(string projectId, List<CreatedComponent> createdComponents, byte[] zipFileBytes)
+        {
+            foreach (var component in createdComponents)
+            {
+                var deploymentProcess = await _deploymentProcessFactory.Create(
+                    projectId: projectId,
+                    zipFileBytes: zipFileBytes
+                );
+
+                _dbContext.DeploymentProcesses.Add(deploymentProcess);
+
+                var initialPackage = await _packageFactory.Create(
+                    projectId: projectId,
+                    deploymentProcessId: deploymentProcess.Id,
+                    componentId: component.Id,
+                    description: $"{component.Name} - initial package",
+                    variableCollection: new VariableCollection()
+                );
+                
+                _dbContext.Packages.Add(initialPackage);
+            }
+        }
+
+        class CreatedComponent
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
         }
     }
 }
