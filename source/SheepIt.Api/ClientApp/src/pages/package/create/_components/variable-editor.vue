@@ -32,21 +32,21 @@
                         <input
                             v-model="variable.name"
                             type="text"
-                            class="form__control"
+                            class="form__control table-item"
                         >
                     </td>
                     <td>
                         <input
                             v-model="variable.defaultValue"
                             type="text"
-                            class="form__control"
+                            class="form__control table-item"
                         >
                     </td>
                     <td v-for="environment in environments">
                         <input
                             v-model="variable.environmentValues[environment.id]"
                             type="text"
-                            class="form__control"
+                            class="form__control table-item"
                         >
                     </td>
                 </tr>
@@ -92,5 +92,9 @@ export default {
 <style lang="scss" scoped>
 .action-column {
     width: 35px;
+}
+
+.table-item {
+    width: 100%;
 }
 </style>

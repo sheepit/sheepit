@@ -4,53 +4,80 @@
             Deploy
         </div>
 
-        <div v-if="packagee">
-            <h3 class="mt-4 package-desciption">
-                Package: 
-                <package-badge
-                    :project-id="project.id"
-                    :package-id="packageId"
-                    :description="packagee.description"
-                />
-            </h3>
-        </div>
-        <div v-else>
-            <h3 class="mt-4 package-desciption">
-                Package: 
-                <preloader />
-            </h3>
-        </div>
-        
-        <div class="row">
-            <div class="col">
-                <h3>
-                    Environments
-                </h3>
+        <div class="details__section">
+            <div class="details__title">
+                Details
+            </div>
+
+            <div class="details__content">
+                <div v-if="packagee" class="details__item">
+                    <label class="details__label">package</label>
+                    <span class="details__value">
+                        <package-badge
+                            :project-id="project.id"
+                            :package-id="packagee.id"
+                            :description="packagee.description"
+                        />
+                    </span>
+                </div>
+                <div v-else class="details__item">
+                    <preloader />
+                </div>
             </div>
         </div>
 
-        <p v-if="environments">
-            <!-- <select class="form__control" id="exampleFormControlSelect1">
-                <option
-                    v-for="environment in environments"
-                    :key="environment.id">
-                    {{ environment.displayName }}
-                </option>
-            </select> -->
+        <div v-if="environments" class="form">
+            <div class="form__section">
+                <div class="form__title">
+                    Select Environment
+                </div>
 
-            <button
-                v-for="environment in environments"
-                :key="environment.id"
-                type="button"
-                class="btn btn-outline-success mr-1"
-                @click="deploy(environment.id)"
-            >
-                {{ environment.displayName }}
-            </button>
-        </p>
-        <p v-else>
+                <div class="form__row">
+                    <div class="form__column">
+                        <label
+                            for="description"
+                            class="form__label"
+                        >
+                            Description
+                        </label>
+                        <select class="form__control" v-model="selectedEnvironment">
+                            <option></option>
+                            <option v-for="environment in environments"  v-bind:value="environment.id">{{ environment.displayName }}</option>
+                        </select>
+                        <div
+                            v-if="submitted && $v.description.$error"
+                            class="invalid-feedback"
+                        >
+                            <span v-if="!$v.description.required">Field is required</span>
+                            <span v-if="!$v.description.minLength">Field should have at least 1 character</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="submit-button-container">
+                <router-link
+                    class="button button--secondary"
+                    :to="{ name: 'packages-list' }"
+                    tag="button"
+                    type="button"
+                >
+                    Cancel
+                </router-link>
+
+                <button
+                    type="button"
+                    class="button button--primary"
+                    @click="deploy(0)"
+                >
+                    Deploy
+                </button>
+            </div>
+        </div>
+        <div v-else>
             <preloader />
-        </p>
+        </div>
     </div>
 </template>
 
@@ -66,7 +93,8 @@ export default {
     data() {
         return {
             environments: null,
-            packagee: null
+            packagee: null,
+            selectedEnvironment: null
         }
     },
     
@@ -82,7 +110,9 @@ export default {
     },
 
     methods: {
-        deploy(environmentId) {
+        deploy() {
+            const environmentId = this.selectedEnvironment;
+
             deployPackageService
                 .deploy(this.project.id, this.packageId, environmentId)
                 .then(response => this.redirectToDeployment(response.createdDeploymentId));

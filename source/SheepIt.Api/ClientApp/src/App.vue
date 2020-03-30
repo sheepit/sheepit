@@ -167,7 +167,8 @@ const router = new VueRouter({
                                         link: 'project'
                                     },
                                     {
-                                        name: 'packages'
+                                        name: 'packages',
+                                        link: 'packages-list'
                                     },
                                     {
                                         name: ':packageId'
@@ -257,10 +258,12 @@ const router = new VueRouter({
                                         link: 'project'
                                     },
                                     {
-                                        name: 'packages'
+                                        name: 'packages',
+                                        link: 'packages-list'
                                     },
                                     {
-                                        name: ':packageId'
+                                        name: ':packageId',
+                                        link: 'package-details'
                                     },
                                     {
                                         name: 'deploy'
