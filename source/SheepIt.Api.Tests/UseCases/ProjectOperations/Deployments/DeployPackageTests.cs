@@ -18,17 +18,21 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
             
             await Fixture.CreateProject("foo")
                 .WithEnvironmentNames("dev", "test", "prod")
+                .WithComponents("frontend", "backend")
                 .Create();
 
             var devEnvironmentId = await Fixture.FindEnvironmentId("dev");
-            var packageId = await Fixture.FindProjectsFirstPackageId("foo");
+            var frontendComponentId = await Fixture.FindComponentId("frontend");
+
+            var createPackageResponse = await Fixture.CreatePackage("foo", frontendComponentId)
+                .Create();
 
             // when
 
             var deployPackageResponse = await Fixture.Handle(new DeployPackageRequest
             {
                 ProjectId = "foo",
-                PackageId = packageId,
+                PackageId = createPackageResponse.CreatedPackageId,
                 EnvironmentId = devEnvironmentId
             });
 

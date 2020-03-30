@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
@@ -22,7 +24,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         public string ProjectId { get; set; }
         public string[] EnvironmentNames { get; set; }
         public string[] ComponentNames { get; set; }
-        public IFormFile ZipFile { get; set; }
     }
 
     public class CreateProjectRequestValidator : AbstractValidator<CreateProjectRequest>
@@ -44,9 +45,6 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             RuleForEach(request => request.EnvironmentNames)
                 .NotNull()
                  .MinimumLength(3);
-            
-            RuleFor(request => request.ZipFile)
-                .NotNull();
         }
     }
 
@@ -118,8 +116,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             // first packages are created so other operations can copy them
             await CreateInitialPackages(
                 projectId: request.ProjectId,
-                createdComponents: createdComponents,
-                zipFileBytes: await request.ZipFile.ToByteArray()
+                createdComponents: createdComponents
             );
 
             await _dbContext.SaveChangesAsync();
@@ -166,8 +163,11 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             return createdComponents;
         }
 
-        private async Task CreateInitialPackages(string projectId, List<CreatedComponent> createdComponents, byte[] zipFileBytes)
+        private async Task CreateInitialPackages(string projectId, List<CreatedComponent> createdComponents)
         {
+            // todo: move zip file or handle this path in a better way (e.g. with namespace, extract to another class etc.)
+            var zipFileBytes = await File.ReadAllBytesAsync(@"UseCases\ProjectManagement\default-process.zip");
+
             foreach (var component in createdComponents)
             {
                 var deploymentProcess = await _deploymentProcessFactory.Create(

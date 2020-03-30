@@ -26,7 +26,6 @@ namespace SheepIt.Api.Tests.FeatureObjects
                 _request = new CreateProjectRequest
                 {
                     ProjectId = projectId,
-                    ZipFile = TestProcessZipArchives.TestProcess,
                     EnvironmentNames = new[] {"dev", "test", "prod"},
                     ComponentNames = new[] { "frontend", "backend" }
                 };
@@ -43,13 +42,6 @@ namespace SheepIt.Api.Tests.FeatureObjects
             {
                 _request.ComponentNames = components;
 
-                return this;
-            }
-
-            public Builder WithZipFile(IFormFile zipArchive)
-            {
-                _request.ZipFile = zipArchive;
-                
                 return this;
             }
 

@@ -82,4 +82,10 @@
     <PackageReference Include="YamlDotNet" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="UseCases\ProjectManagement\default-process.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

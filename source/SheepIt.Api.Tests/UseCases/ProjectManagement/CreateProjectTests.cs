@@ -3,14 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
-using SheepIt.Api.Model.DeploymentProcesses;
 using SheepIt.Api.Model.Projects;
 using SheepIt.Api.Tests.FeatureObjects;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Api.Tests.TestProcess;
 using SheepIt.Api.UseCases.ProjectManagement;
 using SheepIt.Api.UseCases.ProjectOperations.Components;
-using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
 using SheepIt.Api.UseCases.ProjectOperations.Environments;
 
 namespace SheepIt.Api.Tests.UseCases.ProjectManagement
@@ -26,8 +24,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectManagement
             {
                 ProjectId = "foo",
                 EnvironmentNames = new[] {"dev", "test", "prod"},
-                ComponentNames = new[] { "Default component" },
-                ZipFile = TestProcessZipArchives.TestProcess
+                ComponentNames = new[] { "Default component" }
             });
             
             // then
@@ -73,38 +70,6 @@ namespace SheepIt.Api.Tests.UseCases.ProjectManagement
                 .Create();
 
             creatingProject.Should().Throw<ProjectIdNotUniqueException>();
-        }
-        
-        [Test]
-        public void cannot_create_project_when_zip_file_does_not_contain_process_yaml()
-        {
-            // when
-
-            Func<Task> creatingProjectWithSameName = () => Fixture
-                .CreateProject("foo")
-                .WithZipFile(TestProcessZipArchives.EmptyArchive)
-                .Create();
-            
-            // then
-
-            creatingProjectWithSameName.Should()
-                .ThrowExactly<ZipArchiveDoesNotContainProcessYamlException>();
-        }
-
-        [Test]
-        public void cannot_create_project_when_process_yaml_is_invalid()
-        {
-            // when
-            
-            Func<Task> creatingProjectWithSameName = () => Fixture
-                .CreateProject("foo")
-                .WithZipFile(TestProcessZipArchives.InvalidProcessYaml)
-                .Create();
-            
-            // then
-
-            creatingProjectWithSameName.Should()
-                .ThrowExactly<ZipArchiveDeserializingFailedException>();
         }
     }
 }

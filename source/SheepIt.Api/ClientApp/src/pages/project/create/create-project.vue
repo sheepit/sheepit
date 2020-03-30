@@ -31,22 +31,6 @@
                             <span v-if="!$v.projectId.minLength">Field should have at least 3 characters</span>
                         </div>
                     </div>
-
-                    <div class="form__column">
-                        <label
-                            for="zipFile"
-                            class="form__label"
-                        >
-                            Process definition
-                        </label>
-                        <input
-                            id="zipFile" 
-                            ref="zipFile"
-                            type="file"
-                            class="form__control-file"
-                        >
-                    </div>
-
                     <div class="form__column"></div>
                 </div>
             </div>
@@ -204,14 +188,11 @@ export default {
                 return;
             }
 
-            const zipFileData = this.$refs.zipFile.files[0];
-
             createProjectService
                 .createProject(
                     this.projectId,
                     this.environments,
-                    this.components,
-                    zipFileData
+                    this.components
                 )
                 .then(response => {
                     messageService.success('The project was created.');

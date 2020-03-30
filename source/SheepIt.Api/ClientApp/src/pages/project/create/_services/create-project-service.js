@@ -4,12 +4,11 @@ export default {
     createProject(
         projectId,
         environmentNames,
-        componentNames,
-        zipFileData) {
+        componentNames) {
 
+        // todo: since package is not uploaded anymore, this doesn't have to be form data
         const formData = new FormData();
         
-        formData.append('ZipFile', zipFileData);
         formData.append('ProjectId', projectId);
 
         for (let environmentIndex = 0; environmentIndex < environmentNames.length; environmentIndex++) {
