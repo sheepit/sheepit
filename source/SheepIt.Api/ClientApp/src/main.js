@@ -5,7 +5,8 @@ import Vuelidate from 'vuelidate'
 import App from './App.vue'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { 
+import {
+    faBars,
     faBox,
     faCheck,
     faCheckCircle,
@@ -20,6 +21,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+library.add(faBars)
 library.add(faBox)
 library.add(faCheck)
 library.add(faCheckCircle)

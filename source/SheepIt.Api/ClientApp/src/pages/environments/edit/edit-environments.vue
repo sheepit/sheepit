@@ -69,6 +69,8 @@
                                     class="input-group mb-3 form__draggable"
                                 >
                                     <div class="form__inline">
+                                        <font-awesome-icon icon="bars" size="lg" class="drag-icon" />
+
                                         <input
                                             v-model="environments[environmentIndex].displayName"
                                             type="text"
@@ -308,5 +310,11 @@ function updateEnvironments(projectId, environments) {
 
 .disabled {
     background-color: $disabled-gray;
+}
+
+.drag-icon {
+    margin-right: 10px;
+    font-size: 16px;
+    color: $font-color-light;
 }
 </style>
