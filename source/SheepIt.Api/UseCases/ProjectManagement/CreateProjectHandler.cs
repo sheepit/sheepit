@@ -54,7 +54,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
     {
         [HttpPost]
         [Route("create-project")]
-        public async Task CreateProject([FromForm] CreateProjectRequest model)
+        public async Task CreateProject(CreateProjectRequest model)
         {
             await Handle(model);
         }

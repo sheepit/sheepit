@@ -194,7 +194,7 @@ export default {
                     this.environments,
                     this.components
                 )
-                .then(response => {
+                .then(() => {
                     messageService.success('The project was created.');
                     this.$router.push({ name: 'project', params: { projectId: this.projectId }});
                 });
