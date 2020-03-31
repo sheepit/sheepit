@@ -33,8 +33,8 @@
 
         </div>
         <div class="navigation__profile">
-            <div class="navigation__profile--icon">
-                <font-awesome-icon icon="user-circle" size="lg" @click="signOut()" />
+            <div class="navigation__profile--icon" @click="signOut()">
+                <font-awesome-icon icon="user-circle" size="lg" />
             </div>
         </div>
     </div>
@@ -66,15 +66,16 @@ export default {
     height: 42px;
     background: $green-main;
 
-    font-size: 20px;
-    font-weight: 400;
-    color: $font-color-light;
-
     &__link {
-        padding: 10px;
+        @include font($size: 16px, $color: $font-color-light);
+        padding-left: 10px;
+        padding-right: 10px;
         color: $font-color-light;
         text-decoration: none;
         cursor: pointer;
+        height: 100%;
+        display: flex;
+        align-items: center;
 
         &:hover {
             background: $green-hover;
@@ -89,13 +90,24 @@ export default {
         color: $font-color-light;
 
         &--brand {
+            @include font($color: $font-color-light, $size: 16px);
             margin-left: 10px;
-            color: $font-color-light;
+            display: flex;
+            align-items: center;
+            height: 100%;
+
+            svg {
+                font-size: 25px;
+
+                path {
+                    color: $font-color-light;
+                }
+            }
         }
 
         &--text {
-            margin-left: 8px;
-            color: $font-color-light;
+            @include font($color: $font-color-light, $size: 20px);
+            margin-left: 6px;
         }
     }
 
@@ -107,13 +119,12 @@ export default {
 
         &--item {
             font-size: 16px;
+            height: 100%;
 
             .router-link-active {
                 background: $green-active;
             }
         }
-
-
     }
 
     &__profile {
@@ -121,14 +132,29 @@ export default {
         justify-content: flex-end;
         align-items: center;
         flex: 10;
-        padding: 8px;
         cursor: pointer;
+        height: 100%;
 
         &--icon {
             margin-right: 10px;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: 0 10px 0 10px;
+
+            &:hover {
+                background: $green-hover;
+                color: $white;
+            }
+
+            svg {
+                font-size: 25px;
+
+                path {
+                    color: $font-color-light;
+                }
+            }
         }
-
-
     }
 }
 </style>
