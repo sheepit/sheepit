@@ -5,9 +5,13 @@
                 class="login__form"
                 @submit.prevent="authenticate()"
             >
-                <h1 class="h3 mb-3 font-weight-normal">
-                    SheepIt
-                </h1>
+                <div class="login__logo">
+                    <div class="login__logo--brand">
+                        <font-awesome-icon icon="dog" size="lg" />
+                        <span class="login__logo--text">SheepIt</span>
+                    </div>
+                </div>
+                
                 <p>
                     Please enter a single user password:
                 </p>
@@ -80,6 +84,29 @@ export default {
     &__container {
         display: flex;
         align-items: center;
+    }
+
+    &__logo {
+        display: flex;
+        justify-content: center;
+
+        &--brand {
+            display: flex;
+            align-items: center;
+
+            svg {
+                font-size: 25px;
+
+                path {
+                    color: $font-color;
+                }
+            }
+        }
+
+        &--text {
+            @include font($size: 24px, $color: $font-color);
+            margin-left: 6px;
+        }
     }
 
     &__form {
