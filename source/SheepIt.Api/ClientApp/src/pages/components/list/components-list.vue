@@ -24,9 +24,6 @@
                     <thead>
                         <tr>
                             <th scope="col">
-                                id
-                            </th>
-                            <th scope="col">
                                 name
                             </th>
                             <th scope="col">
@@ -39,9 +36,6 @@
                             v-for="component in items"
                             :key="component.id"
                         >
-                            <td scope="row">
-                                {{ component.id }}
-                            </td>
                             <td>
                                 {{ component.name }}
                             </td>
