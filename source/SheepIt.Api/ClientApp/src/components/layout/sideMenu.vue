@@ -107,19 +107,27 @@ export default {
         color: $font-color;
         text-decoration: none;
 
+        font-size: 30px;
+
         &--icon {
             display: flex;
             align-items: center;
             margin-left: 9px;
-            margin-right: 9px;
+            margin-right: 14px;
 
             svg {
-                height: 16px;
-                width: 16px;
+                height: 18px;
+                width: 18px;
+
+                path {
+                    @include font($size: 18px, $color: $font-color);
+                }
             }
         }
 
         &--name {
+            @include font($size: 16px, $color: $font-color);
+
             flex: 1;
         }
 
