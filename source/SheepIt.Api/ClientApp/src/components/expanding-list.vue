@@ -1,22 +1,22 @@
 <template>
     <div>
         <slot :items="items" />
-        <p>
+        <div class="view__row view__row--right">
             <button
                 v-if="canExpand"
-                class="btn btn-outline-primary"
+                class="button button--secondary"
                 @click="showAll = true"
             >
                 Show more ({{ allItems.length }})
             </button>
             <button
                 v-if="canCompress"
-                class="btn btn-outline-primary"
+                class="button button--secondary"
                 @click="showAll = false"
             >
                 Show less ({{ initialLength }})
             </button>
-        </p>
+        </div>
     </div>
 </template>
 
