@@ -82,7 +82,7 @@
             <div class="submit-button-container">
                 <router-link
                     class="button button--secondary"
-                    :to="{ name: 'packages-list' }"
+                    :to="{ name: 'components-list' }"
                     tag="button"
                     type="button"
                 >

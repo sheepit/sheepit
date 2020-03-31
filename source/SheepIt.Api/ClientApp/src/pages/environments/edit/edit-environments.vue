@@ -119,6 +119,15 @@
             </div>
 
             <div class="submit-button-container">
+                <router-link
+                    class="button button--secondary"
+                    :to="{ name: 'environments-list' }"
+                    tag="button"
+                    type="button"
+                >
+                    Cancel
+                </router-link>
+
                 <button
                     type="button"
                     class="button button--primary"
@@ -186,7 +195,7 @@ export default {
                 .then(() => {
                     this.markEnvironmentsAsPersisted();
                     messageService.success('Environments were updated.');
-                    this.$router.push({ name: 'project', params: { projectId: this.projectId }});
+                    this.$router.push({ name: 'environments-list' });
                 });
         },
 

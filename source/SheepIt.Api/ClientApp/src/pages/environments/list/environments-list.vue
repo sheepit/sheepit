@@ -7,7 +7,7 @@
         <div class="view__row view__row--right">
             <router-link
                 class="button button--primary"
-                :to="{ name: 'create-package' }"
+                :to="{ name: 'edit-environments' }"
             >
                 Edit environments
             </router-link>
