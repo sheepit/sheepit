@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -12,37 +11,23 @@ namespace SheepIt.Api.Tests.UseCases.Dashboard
 {
     public class GetDashboardTests : Test<IntegrationTestsFixture>
     {
-        private string _projectId;
-
-        [SetUp]
-        public async Task set_up()
-        {
-            _projectId = "foo";
-
-            await Fixture.CreateProject(_projectId)
-                .WithEnvironmentNames("dev", "test", "prod")
-                .Create();
-            
-            Fixture.MomentLater();
-        }
-        
         [Test]
         public async Task can_get_deployments()
         {
             // given
-
-            var firstPackageDescription = "first package";
             
-            var firstPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
-                .WithDescription(firstPackageDescription)
+            var project = await Fixture.CreateProject("foo")
+                .WithEnvironmentNames("dev", "test", "prod")
+                .Create();
+
+            Fixture.MomentLater();
+
+            var firstPackage = await Fixture.CreatePackage(project.Id, project.FirstComponent.Id)
                 .Create();
             
             Fixture.MomentLater();
 
-            var secondPackageDescription = "second package";
-            
-            var secondPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
-                .WithDescription(secondPackageDescription)
+            var secondPackage = await Fixture.CreatePackage(project.Id, project.FirstComponent.Id)
                 .Create();
             
             Fixture.MomentLater();
@@ -51,8 +36,8 @@ namespace SheepIt.Api.Tests.UseCases.Dashboard
 
             var firstDeployment = await Fixture.Handle(new DeployPackageRequest
             {
-                ProjectId = _projectId,
-                PackageId = firstPackage.CreatedPackageId,
+                ProjectId = project.Id,
+                PackageId = firstPackage.Id,
                 EnvironmentId = 1
             });
 
@@ -62,8 +47,8 @@ namespace SheepIt.Api.Tests.UseCases.Dashboard
 
             var secondDeployment = await Fixture.Handle(new DeployPackageRequest
             {
-                ProjectId = _projectId,
-                PackageId = secondPackage.CreatedPackageId,
+                ProjectId = project.Id,
+                PackageId = secondPackage.Id,
                 EnvironmentId = 2
             });
 
@@ -77,7 +62,7 @@ namespace SheepIt.Api.Tests.UseCases.Dashboard
             {
                 new GetDashboardResponse.DeploymentDto
                 {
-                    ProjectId = _projectId,
+                    ProjectId = project.Id,
                     DeploymentId = firstDeployment.CreatedDeploymentId,
                     Status = DeploymentStatus.Succeeded.ToString(),
                     DeployedAt = firstDeploymentTime,
@@ -86,7 +71,7 @@ namespace SheepIt.Api.Tests.UseCases.Dashboard
                 },
                 new GetDashboardResponse.DeploymentDto
                 {
-                    ProjectId = _projectId,
+                    ProjectId = project.Id,
                     DeploymentId = secondDeployment.CreatedDeploymentId,
                     Status = DeploymentStatus.Succeeded.ToString(),
                     DeployedAt = secondDeploymentTime,

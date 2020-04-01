@@ -12,15 +12,20 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
 {
     public class UpdateEnvironmentsTests : Test<IntegrationTestsFixture>
     {
-        private const string _projectId = "foo";
+        private CreateProjectFeature.CreatedProject _project;
+        
+        private CreateProjectFeature.CreatedEnvironment _test;
+        private CreateProjectFeature.CreatedEnvironment _prod;
 
         [SetUp]
         public async Task set_up()
         {
-            await Fixture
-                .CreateProject(_projectId)
+            _project = await Fixture.CreateProject("foo")
                 .WithEnvironmentNames("test", "prod")
                 .Create();
+            
+            _test = _project.FirstEnvironment;
+            _prod = _project.SecondEnvironment;
         }
 
         [Test]
@@ -30,7 +35,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
 
             var environmentsForUpdate = await Fixture.Handle(new GetEnvironmentsForUpdateRequest
             {
-                ProjectId = _projectId
+                ProjectId = _project.Id
             });
             
             // then
@@ -39,13 +44,13 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
             {
                 new GetEnvironmentsForUpdateResponse.EnvironmentDto
                 {
-                    EnvironmentId = 1,
-                    DisplayName = "test"
+                    EnvironmentId = _project.FirstEnvironment.Id,
+                    DisplayName = _project.FirstEnvironment.Name
                 },
                 new GetEnvironmentsForUpdateResponse.EnvironmentDto
                 {
-                    EnvironmentId = 2,
-                    DisplayName = "prod"
+                    EnvironmentId = _project.SecondEnvironment.Id,
+                    DisplayName = _project.SecondEnvironment.Name
                 }
             });
         }
@@ -54,29 +59,29 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
         public async Task can_add_new_environment()
         {
             // when
-            
+
             await Fixture.Handle(new UpdateEnvironmentsRequest
             {
-                ProjectId = _projectId,
+                ProjectId = _project.Id,
                 Environments = new[]
                 {
                     new UpdateEnvironmentsRequest.EnvironmentDto
                     {
                         Id = 0,
                         Rank = 0,
-                        DisplayName = "dev" 
+                        DisplayName = "dev"
                     },
                     new UpdateEnvironmentsRequest.EnvironmentDto
                     {
-                        Id = 1,
+                        Id = _test.Id,
                         Rank = 1,
-                        DisplayName = "test" 
+                        DisplayName = _test.Name
                     },
                     new UpdateEnvironmentsRequest.EnvironmentDto
                     {
-                        Id = 2,
+                        Id = _prod.Id,
                         Rank = 2,
-                        DisplayName = "prod" 
+                        DisplayName = _prod.Name
                     }
                 }
             });
@@ -85,25 +90,27 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
             
             var environmentsForUpdate = await Fixture.Handle(new GetEnvironmentsForUpdateRequest
             {
-                ProjectId = _projectId
+                ProjectId = _project.Id
             });
-            
+
+            var devId = await Fixture.FindEnvironmentId("dev");
+
             environmentsForUpdate.Environments.Should().BeEquivalentTo(new[]
             {
                 new GetEnvironmentsForUpdateResponse.EnvironmentDto
                 {
-                    EnvironmentId = 3,
+                    EnvironmentId = devId,
                     DisplayName = "dev"
                 },
                 new GetEnvironmentsForUpdateResponse.EnvironmentDto
                 {
-                    EnvironmentId = 1,
-                    DisplayName = "test"
+                    EnvironmentId = _test.Id,
+                    DisplayName = _test.Name
                 },
                 new GetEnvironmentsForUpdateResponse.EnvironmentDto
                 {
-                    EnvironmentId = 2,
-                    DisplayName = "prod"
+                    EnvironmentId = _prod.Id,
+                    DisplayName = _prod.Name
                 }
             });
         }
@@ -115,20 +122,20 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
             
             await Fixture.Handle(new UpdateEnvironmentsRequest
             {
-                ProjectId = _projectId,
+                ProjectId = _project.Id,
                 Environments = new[]
                 {
                     new UpdateEnvironmentsRequest.EnvironmentDto
                     {
-                        Id = 2,
+                        Id = _prod.Id,
                         Rank = 0,
-                        DisplayName = "prod" 
+                        DisplayName = _prod.Name 
                     },
                     new UpdateEnvironmentsRequest.EnvironmentDto
                     {
-                        Id = 1,
+                        Id = _test.Id,
                         Rank = 1,
-                        DisplayName = "test" 
+                        DisplayName = _test.Name 
                     }
                 }
             });
@@ -137,20 +144,20 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
             
             var environmentsForUpdate = await Fixture.Handle(new GetEnvironmentsForUpdateRequest
             {
-                ProjectId = _projectId
+                ProjectId = _project.Id
             });
             
             environmentsForUpdate.Environments.Should().BeEquivalentTo(new[]
             {
                 new GetEnvironmentsForUpdateResponse.EnvironmentDto
                 {
-                    EnvironmentId = 2,
-                    DisplayName = "prod"
+                    EnvironmentId = _prod.Id,
+                    DisplayName = _prod.Name
                 },
                 new GetEnvironmentsForUpdateResponse.EnvironmentDto
                 {
-                    EnvironmentId = 1,
-                    DisplayName = "test"
+                    EnvironmentId = _test.Id,
+                    DisplayName = _test.Name
                 }
             });
         }
@@ -162,18 +169,18 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
             
             await Fixture.Handle(new UpdateEnvironmentsRequest
             {
-                ProjectId = _projectId,
+                ProjectId = _project.Id,
                 Environments = new[]
                 {
                     new UpdateEnvironmentsRequest.EnvironmentDto
                     {
-                        Id = 1,
+                        Id = _test.Id,
                         Rank = 0,
                         DisplayName = "modified test" 
                     },
                     new UpdateEnvironmentsRequest.EnvironmentDto
                     {
-                        Id = 2,
+                        Id = _prod.Id,
                         Rank = 1,
                         DisplayName = "modified prod"
                     }
@@ -184,19 +191,19 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
             
             var environmentsForUpdate = await Fixture.Handle(new GetEnvironmentsForUpdateRequest
             {
-                ProjectId = _projectId
+                ProjectId = _project.Id
             });
             
             environmentsForUpdate.Environments.Should().BeEquivalentTo(new[]
             {
                 new GetEnvironmentsForUpdateResponse.EnvironmentDto
                 {
-                    EnvironmentId = 1,
+                    EnvironmentId = _test.Id,
                     DisplayName = "modified test"
                 },
                 new GetEnvironmentsForUpdateResponse.EnvironmentDto
                 {
-                    EnvironmentId = 2,
+                    EnvironmentId = _prod.Id,
                     DisplayName = "modified prod"
                 }
             });
@@ -209,20 +216,20 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
             
             Func<Task> updatingEnvironments = () => Fixture.Handle(new UpdateEnvironmentsRequest
             {
-                ProjectId = _projectId,
+                ProjectId = _project.Id,
                 Environments = new[]
                 {
                     new UpdateEnvironmentsRequest.EnvironmentDto
                     {
-                        Id = 1,
+                        Id = _test.Id,
                         Rank = 0,
-                        DisplayName = "test" 
+                        DisplayName = _test.Name 
                     },
                     new UpdateEnvironmentsRequest.EnvironmentDto
                     {
-                        Id = 2,
+                        Id = _prod.Id,
                         Rank = 1,
-                        DisplayName = "prod"
+                        DisplayName = _prod.Name
                     },
                     new UpdateEnvironmentsRequest.EnvironmentDto
                     {
@@ -245,14 +252,14 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
             
             await Fixture.Handle(new UpdateEnvironmentsRequest
             {
-                ProjectId = _projectId,
+                ProjectId = _project.Id,
                 Environments = new[]
                 {
                     new UpdateEnvironmentsRequest.EnvironmentDto
                     {
-                        Id = 2,
+                        Id = _prod.Id,
                         Rank = 0,
-                        DisplayName = "prod"
+                        DisplayName = _prod.Name
                     }
                 }
             });
@@ -263,20 +270,20 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
             
             var environmentsForUpdate = await Fixture.Handle(new GetEnvironmentsForUpdateRequest
             {
-                ProjectId = _projectId
+                ProjectId = _project.Id
             });
 
             environmentsForUpdate.Environments.Should().BeEquivalentTo(new[]
             {
                 new GetEnvironmentsForUpdateResponse.EnvironmentDto
                 {
-                    EnvironmentId = 1,
-                    DisplayName = "test"
+                    EnvironmentId = _test.Id,
+                    DisplayName = _test.Name
                 },
                 new GetEnvironmentsForUpdateResponse.EnvironmentDto
                 {
-                    EnvironmentId = 2,
-                    DisplayName = "prod"
+                    EnvironmentId = _prod.Id,
+                    DisplayName = _prod.Name
                 }
             });
         }

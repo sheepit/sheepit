@@ -14,23 +14,36 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
         public async Task can_list_project_environments()
         {
             // given
-            
-            await Fixture.CreateProject("foo")
-                .WithEnvironmentNames("dev", "test", "prod")
+
+            var project = await Fixture.CreateProject("foo")
+                .WithEnvironmentNames("test", "prod")
                 .Create();
-            
+
             // when
 
             var response = await Fixture.Handle(new ListEnvironmentsRequest
             {
-                ProjectId = "foo"
+                ProjectId = project.Id
             });
 
             // then
 
-            response.Environments
-                .Select(environment => environment.DisplayName)
-                .Should().Equal("dev", "test", "prod");
+            response.Should().BeEquivalentTo(new ListEnvironmentsResponse
+            {
+                Environments = new[]
+                {
+                    new ListEnvironmentsResponse.EnvironmentDto
+                    {
+                        Id = project.FirstEnvironment.Id,
+                        DisplayName = project.FirstEnvironment.Name,
+                    },
+                    new ListEnvironmentsResponse.EnvironmentDto
+                    {
+                        Id = project.SecondEnvironment.Id,
+                        DisplayName = project.SecondEnvironment.Name
+                    }
+                }
+            });
         }
     }
 }

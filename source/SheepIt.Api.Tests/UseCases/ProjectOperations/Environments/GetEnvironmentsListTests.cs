@@ -11,40 +11,23 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
 {
     public class GetEnvironmentsListTests : Test<IntegrationTestsFixture>
     {
-        private string _projectId;
-        private DateTime _projectCreationTime;
-
-        [SetUp]
-        public async Task set_up()
-        {
-            _projectId = "foo";
-
-            _projectCreationTime = Fixture.GetUtcNow();
-
-            await Fixture.CreateProject(_projectId)
-                .WithEnvironmentNames("dev", "test", "prod")
-                .Create();
-            
-            Fixture.MomentLater();
-        }
-
         [Test]
         public async Task can_get_environments()
         {
             // given
-
-            var firstPackageDescription = "first package";
             
-            var firstPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
-                .WithDescription(firstPackageDescription)
+            var project = await Fixture.CreateProject("foo")
+                .WithEnvironmentNames("dev", "test", "prod")
+                .Create();
+
+            Fixture.MomentLater();
+
+            var firstPackage = await Fixture.CreatePackage(project.Id, project.FirstComponent.Id)
                 .Create();
             
             Fixture.MomentLater();
 
-            var secondPackageDescription = "second package";
-            
-            var secondPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
-                .WithDescription(secondPackageDescription)
+            var secondPackage = await Fixture.CreatePackage(project.Id, project.FirstComponent.Id)
                 .Create();
             
             Fixture.MomentLater();
@@ -53,9 +36,9 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
 
             var firstDeployment = await Fixture.Handle(new DeployPackageRequest
             {
-                ProjectId = _projectId,
-                PackageId = firstPackage.CreatedPackageId,
-                EnvironmentId = 1
+                ProjectId = project.Id,
+                PackageId = firstPackage.Id,
+                EnvironmentId = project.FirstEnvironment.Id
             });
 
             Fixture.MomentLater();
@@ -64,16 +47,16 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
 
             var secondDeployment = await Fixture.Handle(new DeployPackageRequest
             {
-                ProjectId = _projectId,
-                PackageId = secondPackage.CreatedPackageId,
-                EnvironmentId = 2
+                ProjectId = project.Id,
+                PackageId = secondPackage.Id,
+                EnvironmentId = project.SecondEnvironment.Id
             });
 
             // when
 
             var response = await Fixture.Handle(new GetEnvironmentsListRequest
             {
-                ProjectId = _projectId
+                ProjectId = project.Id
             });
             
             // then
@@ -82,32 +65,32 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
             {
                 new GetEnvironmentsListResponse.EnvironmentDto
                 {
-                    EnvironmentId = 1,
-                    DisplayName = "dev",
+                    EnvironmentId = project.FirstEnvironment.Id,
+                    DisplayName = project.FirstEnvironment.Name,
                     Deployment = new GetEnvironmentsListResponse.EnvironmentDeploymentDto
                     {
                         CurrentDeploymentId = firstDeployment.CreatedDeploymentId,
-                        CurrentPackageId = firstPackage.CreatedPackageId, 
-                        CurrentPackageDescription = firstPackageDescription,
+                        CurrentPackageId = firstPackage.Id, 
+                        CurrentPackageDescription = firstPackage.Description,
                         LastDeployedAt = firstDeploymentTime
                     }
                 },
                 new GetEnvironmentsListResponse.EnvironmentDto
                 {
-                    EnvironmentId = 2,
-                    DisplayName = "test",
+                    EnvironmentId = project.SecondEnvironment.Id,
+                    DisplayName = project.SecondEnvironment.Name,
                     Deployment = new GetEnvironmentsListResponse.EnvironmentDeploymentDto
                     {
                         CurrentDeploymentId = secondDeployment.CreatedDeploymentId,
-                        CurrentPackageId = secondPackage.CreatedPackageId, 
-                        CurrentPackageDescription = secondPackageDescription,
+                        CurrentPackageId = secondPackage.Id, 
+                        CurrentPackageDescription = secondPackage.Description,
                         LastDeployedAt = secondDeploymentTime
                     }
                 },
                 new GetEnvironmentsListResponse.EnvironmentDto
                 {
-                    EnvironmentId = 3,
-                    DisplayName = "prod",
+                    EnvironmentId = project.ThirdEnvironment.Id,
+                    DisplayName = project.ThirdEnvironment.Name,
                     Deployment = null
                 }
             });

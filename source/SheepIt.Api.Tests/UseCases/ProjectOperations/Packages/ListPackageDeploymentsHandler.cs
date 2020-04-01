@@ -12,33 +12,26 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 {
     public class ListPackageDeploymentsTests : Test<IntegrationTestsFixture>
     {
-        private string _projectId;
-        private int _devEnvironmentId;
-        private int _testEnvironmentId;
-        private int _packageInQuestionId;
-        private int _otherPackageId;
+        private CreateProjectFeature.CreatedProject _project;
+
+        private CreateProjectFeature.CreatedEnvironment _dev => _project.FirstEnvironment;
+        private CreateProjectFeature.CreatedEnvironment _test => _project.SecondEnvironment;
+
+        private CreatePackageFeature.CreatedPackage _packageInQuestion;
+        private CreatePackageFeature.CreatedPackage _otherPackage;
 
         [SetUp]
         public async Task set_up()
         {
-            _projectId = "foo";
-            
-            await Fixture.CreateProject(_projectId)
+            _project = await Fixture.CreateProject("foo")
                 .WithEnvironmentNames("dev", "test", "prod")
                 .Create();
-            
-            _devEnvironmentId = await Fixture.FindEnvironmentId("dev");
-            _testEnvironmentId = await Fixture.FindEnvironmentId("test");
-            
-            var packageInQuestion = await Fixture.CreatePackageForDefaultComponent(_projectId)
+
+            _packageInQuestion = await Fixture.CreatePackage(_project.Id, _project.FirstComponent.Id)
                 .Create();
 
-            _packageInQuestionId = packageInQuestion.CreatedPackageId;
-
-            var otherPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
+            _otherPackage = await Fixture.CreatePackage(_project.Id, _project.FirstComponent.Id)
                 .Create();
-
-            _otherPackageId = otherPackage.CreatedPackageId;
         }
 
         [Test]
@@ -50,17 +43,17 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 
             var deployPackageResponse = await Fixture.Handle(new DeployPackageRequest
             {
-                ProjectId = _projectId,
-                PackageId = _packageInQuestionId,
-                EnvironmentId = _devEnvironmentId
+                ProjectId = _project.Id,
+                PackageId = _packageInQuestion.Id,
+                EnvironmentId = _dev.Id
             });
             
             // when
 
             var listPackageDeploymentsResponse = await Fixture.Handle(new ListPackageDeploymentsRequest
             {
-                ProjectId = _projectId,
-                PackageId = _packageInQuestionId
+                ProjectId = _project.Id,
+                PackageId = _packageInQuestion.Id
             });
             
             // then
@@ -72,9 +65,9 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                 Id = deployPackageResponse.CreatedDeploymentId,
                 Status = DeploymentStatus.Succeeded.ToString(),
                 DeployedAt = deploymentTime,
-                EnvironmentId = _devEnvironmentId,
-                EnvironmentDisplayName = "dev",
-                PackageId = _packageInQuestionId
+                EnvironmentId = _dev.Id,
+                EnvironmentDisplayName = _dev.Name,
+                PackageId = _packageInQuestion.Id
             });
         }
         
@@ -85,26 +78,26 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 
             var deploymentInQuestion = await Fixture.Handle(new DeployPackageRequest
             {
-                ProjectId = _projectId,
-                PackageId = _packageInQuestionId,
-                EnvironmentId = _devEnvironmentId
+                ProjectId = _project.Id,
+                PackageId = _packageInQuestion.Id,
+                EnvironmentId = _dev.Id
             });
             
             Fixture.MomentLater();
 
             await Fixture.Handle(new DeployPackageRequest
             {
-                ProjectId = _projectId,
-                PackageId = _otherPackageId,
-                EnvironmentId = _devEnvironmentId
+                ProjectId = _project.Id,
+                PackageId = _otherPackage.Id,
+                EnvironmentId = _dev.Id
             });
             
             // when
 
             var listPackageDeploymentsResponse = await Fixture.Handle(new ListPackageDeploymentsRequest
             {
-                ProjectId = _projectId,
-                PackageId = _packageInQuestionId
+                ProjectId = _project.Id,
+                PackageId = _packageInQuestion.Id
             });
             
             // then
@@ -121,26 +114,26 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 
             var firstDeployment = await Fixture.Handle(new DeployPackageRequest
             {
-                ProjectId = _projectId,
-                PackageId = _packageInQuestionId,
-                EnvironmentId = _devEnvironmentId
+                ProjectId = _project.Id,
+                PackageId = _packageInQuestion.Id,
+                EnvironmentId = _dev.Id
             });
             
             Fixture.MomentLater();
             
             var secondDeployment = await Fixture.Handle(new DeployPackageRequest
             {
-                ProjectId = _projectId,
-                PackageId = _packageInQuestionId,
-                EnvironmentId = _testEnvironmentId
+                ProjectId = _project.Id,
+                PackageId = _packageInQuestion.Id,
+                EnvironmentId = _test.Id
             });
             
             // when
 
             var listPackageDeploymentsResponse = await Fixture.Handle(new ListPackageDeploymentsRequest
             {
-                ProjectId = _projectId,
-                PackageId = _packageInQuestionId
+                ProjectId = _project.Id,
+                PackageId = _packageInQuestion.Id
             });
             
             // then

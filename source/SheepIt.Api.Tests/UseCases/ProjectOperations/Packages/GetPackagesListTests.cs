@@ -10,55 +10,37 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 {
     public class GetPackagesListTests : Test<IntegrationTestsFixture>
     {
-        private string _projectId;
-        private DateTime _projectCreationTime;
-        private int _frontendComponentId;
-
-        [SetUp]
-        public async Task set_up()
-        {
-            _projectId = "foo";
-
-            _projectCreationTime = Fixture.GetUtcNow();
-
-            await Fixture.CreateProject(_projectId)
-                .WithEnvironmentNames("dev", "test", "prod")
-                .WithComponents("frontend") // todo: test for multiple components
-                .Create();
-
-            _frontendComponentId = await Fixture.FindComponentId("frontend");
-            
-            Fixture.MomentLater();
-        }
-        
         [Test]
         public async Task can_get_packages()
         {
             // given
+            
+            var projectCreationTime = Fixture.GetUtcNow();
+
+            var project = await Fixture.CreateProject("foo")
+                .WithEnvironmentNames("dev", "test", "prod")
+                .WithComponents("frontend") // todo: test for multiple components
+                .Create();
+
+            Fixture.MomentLater();
 
             var firstPackageCreationTime = Fixture.GetUtcNow();
             
-            var firstPackageDescription = "first package";
-            
-            var firstPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
-                .WithDescription(firstPackageDescription)
+            var firstPackage = await Fixture.CreatePackage(project.Id, project.FirstComponent.Id)
                 .Create();
 
             Fixture.MomentLater();
 
             var secondPackageCreationTime = Fixture.GetUtcNow();
 
-            var secondPackageDescription = "second package";
-            
-            var secondPackage = await Fixture.CreatePackageForDefaultComponent(_projectId)
-                .WithDescription(secondPackageDescription)
+            var secondPackage = await Fixture.CreatePackage(project.Id, project.FirstComponent.Id)
                 .Create();
 
             // when
 
             var response = await Fixture.Handle(new GetPackagesListRequest
             {
-                ProjectId = _projectId
+                ProjectId = project.Id
             });
             
             // then
@@ -68,27 +50,27 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                 {
                     new GetPackagesListResponse.PackageDto
                     {
-                        Id = secondPackage.CreatedPackageId,
-                        Description = secondPackageDescription,
+                        Id = secondPackage.Id,
+                        Description = secondPackage.Description,
                         CreatedAt = secondPackageCreationTime,
-                        ComponentId = _frontendComponentId,
-                        ComponentName = "frontend"
+                        ComponentId = project.FirstComponent.Id,
+                        ComponentName = project.FirstComponent.Name
                     },
                     new GetPackagesListResponse.PackageDto
                     {
-                        Id = firstPackage.CreatedPackageId,
-                        Description = firstPackageDescription,
+                        Id = firstPackage.Id,
+                        Description = firstPackage.Description,
                         CreatedAt = firstPackageCreationTime,
-                        ComponentId = _frontendComponentId,
-                        ComponentName = "frontend"
+                        ComponentId = project.FirstComponent.Id,
+                        ComponentName = project.FirstComponent.Name
                     },
                     new GetPackagesListResponse.PackageDto
                     {
                         Id = 1,
-                        Description = "frontend - initial package",
-                        CreatedAt = _projectCreationTime,
-                        ComponentId = _frontendComponentId,
-                        ComponentName = "frontend"
+                        Description = $"{project.FirstComponent.Name} - initial package",
+                        CreatedAt = projectCreationTime,
+                        ComponentId = project.FirstComponent.Id,
+                        ComponentName = project.FirstComponent.Name
                     }
                 });
         }

@@ -18,21 +18,13 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
         {
             // given
 
-            var projectId = "foo";
-
-            await Fixture.CreateProject(projectId)
+            var project = await Fixture.CreateProject("foo")
                 .WithEnvironmentNames("test", "prod")
                 .WithComponents("frontend", "backend")
                 .Create();
-            
-            var testEnvironmentId = await Fixture.FindEnvironmentId("test");
-            var prodEnvironmentId = await Fixture.FindEnvironmentId("prod");
-            var frontendComponentId = await Fixture.FindComponentId("frontend");
 
-            var description = "some package";
-            
-            var createPackageResponse = await Fixture.CreatePackageForDefaultComponent(projectId)
-                .WithDescription(description)
+            var createdPackage = await Fixture
+                .CreatePackage(project.Id, project.FirstComponent.Id)
                 .WithVariables(new []
                 {
                     new CreatePackageRequest.UpdateVariable
@@ -41,8 +33,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
                         DefaultValue = "var-1-default",
                         EnvironmentValues = new Dictionary<int, string>
                         {
-                            {testEnvironmentId, "var-1-test"},
-                            {prodEnvironmentId, "var-1-prod"}
+                            {project.FirstEnvironment.Id, "var-1-test"},
+                            {project.SecondEnvironment.Id, "var-1-prod"}
                         }
                     },
                     new CreatePackageRequest.UpdateVariable
@@ -51,8 +43,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
                         DefaultValue = "var-2-default",
                         EnvironmentValues = new Dictionary<int, string>
                         {
-                            {testEnvironmentId, "var-2-test"},
-                            {prodEnvironmentId, "var-2-prod"}
+                            {project.FirstEnvironment.Id, "var-2-test"},
+                            {project.SecondEnvironment.Id, "var-2-prod"}
                         }
                     }
                 })
@@ -60,16 +52,16 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
 
             var deployPackageResponse = await Fixture.Handle(new DeployPackageRequest
             {
-                ProjectId = projectId,
-                PackageId = createPackageResponse.CreatedPackageId,
-                EnvironmentId = testEnvironmentId
+                ProjectId = project.Id,
+                PackageId = createdPackage.Id,
+                EnvironmentId = project.FirstEnvironment.Id
             });
 
             // when
 
             var getDeploymentDetailsResponse = await Fixture.Handle(new GetDeploymentDetailsRequest
             {
-                ProjectId = projectId,
+                ProjectId = project.Id,
                 DeploymentId = deployPackageResponse.CreatedDeploymentId
             });
             
@@ -81,14 +73,14 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.DeploymentDetails
                 Status = DeploymentStatus.Succeeded.ToString(),
                 DeployedAt = Fixture.GetUtcNow(),
                 
-                EnvironmentId = testEnvironmentId,
-                EnvironmentDisplayName = "test",
+                EnvironmentId = project.FirstEnvironment.Id,
+                EnvironmentDisplayName = project.FirstEnvironment.Name,
                 
-                ComponentId = frontendComponentId,
-                ComponentName = "frontend",
+                ComponentId = project.FirstComponent.Id,
+                ComponentName = project.FirstComponent.Name,
                 
-                PackageId = createPackageResponse.CreatedPackageId,
-                PackageDescription = description,
+                PackageId = createdPackage.Id,
+                PackageDescription = createdPackage.Description,
                 
                 Variables = new GetDeploymentDetailsResponse.VariablesForEnvironmentDto[]
                 {

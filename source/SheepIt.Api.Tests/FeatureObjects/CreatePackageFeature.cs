@@ -10,17 +10,13 @@ namespace SheepIt.Api.Tests.FeatureObjects
 {
     public static class CreatePackageFeature
     {
-        // todo: this a quick fix, it should be inlined
-        public static Builder CreatePackageForDefaultComponent(this IntegrationTestsFixture fixture, string projectId)
-        {
-            var latestPackageId = fixture.FindProjectsDefaultComponentId(projectId).Result;
-
-            return new Builder(fixture, projectId, latestPackageId);
-        }
-        
         public static Builder CreatePackage(this IntegrationTestsFixture fixture, string projectId, int componentId)
         {
-            return new Builder(fixture, projectId, componentId);
+            return new Builder(
+                fixture: fixture,
+                projectId: projectId,
+                componentId: componentId
+            );
         }
 
         public class Builder
@@ -36,7 +32,7 @@ namespace SheepIt.Api.Tests.FeatureObjects
                 {
                     ProjectId = projectId,
                     ComponentId = componentId,
-                    Description = Guid.NewGuid().ToString(),
+                    Description = $"package {Guid.NewGuid()}",
                     ZipFile = TestProcessZipArchives.TestProcess,
                     VariableUpdates = null
                 };
@@ -54,14 +50,20 @@ namespace SheepIt.Api.Tests.FeatureObjects
                 return this;
             }
 
-            public async Task<CreatePackageResponse> Create()
+            public async Task<CreatedPackage> Create()
             {
                 if (_request.VariableUpdates == null)
                 {
                     _request.VariableUpdates = await GetLastPackageVariables();
                 }
 
-                return await _fixture.Handle(_request);
+                var createPackageResponse = await _fixture.Handle(_request);
+
+                return new CreatedPackage
+                {
+                    Id = createPackageResponse.CreatedPackageId,
+                    Description = _request.Description
+                };
             }
 
             private async Task<CreatePackageRequest.UpdateVariable[]> GetLastPackageVariables()
@@ -81,6 +83,12 @@ namespace SheepIt.Api.Tests.FeatureObjects
                     })
                     .ToArray();
             }
+        }
+
+        public class CreatedPackage
+        {
+            public int Id { get; set; }
+            public string Description { get; set; }
         }
     }
 }

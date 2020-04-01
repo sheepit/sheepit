@@ -6,9 +6,9 @@ using NUnit.Framework;
 using SheepIt.Api.Model.Projects;
 using SheepIt.Api.Tests.FeatureObjects;
 using SheepIt.Api.Tests.TestInfrastructure;
-using SheepIt.Api.Tests.TestProcess;
 using SheepIt.Api.UseCases.ProjectManagement;
 using SheepIt.Api.UseCases.ProjectOperations.Components;
+using SheepIt.Api.UseCases.ProjectOperations.Dashboard;
 using SheepIt.Api.UseCases.ProjectOperations.Environments;
 
 namespace SheepIt.Api.Tests.UseCases.ProjectManagement
@@ -24,9 +24,9 @@ namespace SheepIt.Api.Tests.UseCases.ProjectManagement
             {
                 ProjectId = "foo",
                 EnvironmentNames = new[] {"dev", "test", "prod"},
-                ComponentNames = new[] { "Default component" }
+                ComponentNames = new[] { "frontend", "backend" }
             });
-            
+
             // then
 
             var listProjectsResponse = await Fixture.Handle(new ListProjectsRequest());
@@ -51,9 +51,16 @@ namespace SheepIt.Api.Tests.UseCases.ProjectManagement
 
             listComponentsResponse.Components
                 .Select(component => component.Name)
-                .Should().Equal("Default component");
-            
-            // todo: check created packages
+                .Should().Equal("frontend", "backend");
+
+            var getPackagesListResponse = await Fixture.Handle(new GetPackagesListRequest
+            {
+                ProjectId = "foo"
+            });
+
+            getPackagesListResponse.Packages
+                .Select(package => package.ComponentName)
+                .Should().Equal("frontend", "backend");
         }
 
         [Test]

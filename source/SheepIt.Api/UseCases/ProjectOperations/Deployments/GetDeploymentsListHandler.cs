@@ -24,12 +24,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         public class DeploymentDto
         {
             public int Id { get; set; }
+            public string Status { get; set; }
+            public DateTime DeployedAt { get; set; } // todo: [rt] started at
+            
             public int PackageId { get; set; }
             public string PackageDescription { get; set; }
-            public DateTime DeployedAt { get; set; } // todo: [rt] started at
+            
             public int EnvironmentId { get; set; }
             public string EnvironmentDisplayName { get; set; }
-            public string Status { get; set; }
+            
             public int ComponentId { get; set; }
             public string ComponentName { get; set; }
         }

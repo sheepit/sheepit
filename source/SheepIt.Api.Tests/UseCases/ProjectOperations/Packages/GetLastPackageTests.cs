@@ -16,33 +16,27 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
         {
             // given
             
-            var projectId = "foo";
-
-            await Fixture.CreateProject(projectId)
+            var project = await Fixture.CreateProject("foo")
                 .WithEnvironmentNames("test", "prod")
                 .WithComponents("frontend")
                 .Create();
             
-            var testEnvironmentId = await Fixture.FindEnvironmentId("test");
-            var prodEnvironmentId = await Fixture.FindEnvironmentId("prod");
-            var frontendComponentId = await Fixture.FindComponentId("frontend");
+            var test = project.FirstEnvironment;
+            var prod = project.SecondEnvironment;
 
             Fixture.MomentLater();
 
-            await Fixture.CreatePackageForDefaultComponent("foo")
-                .WithDescription("first")
+            await Fixture.CreatePackage(project.Id, project.FirstComponent.Id)
                 .Create();
             
             Fixture.MomentLater();
             
-            await Fixture.CreatePackageForDefaultComponent("foo")
-                .WithDescription("second")
+            await Fixture.CreatePackage(project.Id, project.FirstComponent.Id)
                 .Create();
             
             Fixture.MomentLater();
-            
-            await Fixture.CreatePackageForDefaultComponent("foo")
-                .WithDescription("third")
+
+            var thirdPackage = await Fixture.CreatePackage(project.Id, project.FirstComponent.Id)
                 .WithVariables(new []
                 {
                     new CreatePackageRequest.UpdateVariable
@@ -51,8 +45,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                         DefaultValue = "var-1-default",
                         EnvironmentValues = new Dictionary<int, string>
                         {
-                            {testEnvironmentId, "var-1-test"},
-                            {prodEnvironmentId, "var-1-prod"}
+                            {test.Id, "var-1-test"},
+                            {prod.Id, "var-1-prod"}
                         }
                     },
                     new CreatePackageRequest.UpdateVariable
@@ -61,8 +55,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                         DefaultValue = "var-2-default",
                         EnvironmentValues = new Dictionary<int, string>
                         {
-                            {testEnvironmentId, "var-2-test"},
-                            {prodEnvironmentId, "var-2-prod"}
+                            {test.Id, "var-2-test"},
+                            {prod.Id, "var-2-prod"}
                         }
                     }
                 })
@@ -72,15 +66,15 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
 
             var response = await Fixture.Handle(new GetLastPackageRequest
             {
-                ProjectId = projectId,
-                ComponentId = frontendComponentId
+                ProjectId = project.Id,
+                ComponentId = project.FirstComponent.Id
             });
 
             // then
 
-            response.ProjectId.Should().Be(projectId);
-            response.Description.Should().Be("third");
-            response.ComponentId.Should().Be(frontendComponentId);
+            response.ProjectId.Should().Be(project.Id);
+            response.Description.Should().Be(thirdPackage.Description);
+            response.ComponentId.Should().Be(project.FirstComponent.Id);
 
             response.Variables.Should().BeEquivalentTo(new[]
             {
@@ -90,8 +84,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                     DefaultValue = "var-1-default",
                     EnvironmentValues = new Dictionary<int, string>
                     {
-                        {testEnvironmentId, "var-1-test"},
-                        {prodEnvironmentId, "var-1-prod"}
+                        {test.Id, "var-1-test"},
+                        {prod.Id, "var-1-prod"}
                     }
                 },
                 new GetLastPackageResponse.VariableDto
@@ -100,8 +94,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                     DefaultValue = "var-2-default",
                     EnvironmentValues = new Dictionary<int, string>
                     {
-                        {testEnvironmentId, "var-2-test"},
-                        {prodEnvironmentId, "var-2-prod"}
+                        {test.Id, "var-2-test"},
+                        {prod.Id, "var-2-prod"}
                     }
                 }
             });

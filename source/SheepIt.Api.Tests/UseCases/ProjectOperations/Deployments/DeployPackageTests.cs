@@ -15,32 +15,29 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
         public async Task can_deploy_a_project()
         {
             // given
-            
-            await Fixture.CreateProject("foo")
+
+            var project = await Fixture.CreateProject("foo")
                 .WithEnvironmentNames("dev", "test", "prod")
                 .WithComponents("frontend", "backend")
                 .Create();
 
-            var devEnvironmentId = await Fixture.FindEnvironmentId("dev");
-            var frontendComponentId = await Fixture.FindComponentId("frontend");
-
-            var createPackageResponse = await Fixture.CreatePackage("foo", frontendComponentId)
+            var createdPackage = await Fixture.CreatePackage(project.Id, project.FirstComponent.Id)
                 .Create();
 
             // when
 
             var deployPackageResponse = await Fixture.Handle(new DeployPackageRequest
             {
-                ProjectId = "foo",
-                PackageId = createPackageResponse.CreatedPackageId,
-                EnvironmentId = devEnvironmentId
+                ProjectId = project.Id,
+                PackageId = createdPackage.Id,
+                EnvironmentId = project.FirstEnvironment.Id
             });
 
             // then
 
             var getDeploymentDetailsResponse = await Fixture.Handle(new GetDeploymentDetailsRequest
             {
-                ProjectId = "foo",
+                ProjectId = project.Id,
                 DeploymentId = deployPackageResponse.CreatedDeploymentId
             });
 
