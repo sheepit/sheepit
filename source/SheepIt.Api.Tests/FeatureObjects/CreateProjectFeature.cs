@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -12,9 +13,9 @@ namespace SheepIt.Api.Tests.FeatureObjects
 {
     public static class CreateProjectFeature
     {
-        public static Builder CreateProject(this IntegrationTestsFixture fixture, string projectId)
+        public static Builder CreateProject(this IntegrationTestsFixture fixture)
         {
-            return new Builder(fixture, projectId);
+            return new Builder(fixture);
         }
 
         public class Builder
@@ -22,16 +23,23 @@ namespace SheepIt.Api.Tests.FeatureObjects
             private readonly IntegrationTestsFixture _fixture;
             private readonly CreateProjectRequest _request;
 
-            public Builder(IntegrationTestsFixture fixture, string projectId)
+            public Builder(IntegrationTestsFixture fixture)
             {
                 _fixture = fixture;
                 
                 _request = new CreateProjectRequest
                 {
-                    ProjectId = projectId,
+                    ProjectId = $"project-{Guid.NewGuid()}",
                     EnvironmentNames = new[] {"dev", "test", "prod"},
                     ComponentNames = new[] { "frontend", "backend", "other-service" }
                 };
+            }
+
+            public Builder WithId(string id)
+            {
+                _request.ProjectId = id;
+
+                return this;
             }
 
             public Builder WithEnvironmentNames(params string[] environmentNames)

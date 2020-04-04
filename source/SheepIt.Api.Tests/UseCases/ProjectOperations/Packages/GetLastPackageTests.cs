@@ -16,9 +16,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
         {
             // given
             
-            var project = await Fixture.CreateProject("foo")
+            var project = await Fixture.CreateProject()
                 .WithEnvironmentNames("test", "prod")
-                .WithComponents("frontend")
                 .Create();
             
             var test = project.FirstEnvironment;

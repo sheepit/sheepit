@@ -15,7 +15,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Environments
         {
             // given
 
-            var project = await Fixture.CreateProject("foo")
+            var project = await Fixture.CreateProject()
                 .WithEnvironmentNames("test", "prod")
                 .Create();
 

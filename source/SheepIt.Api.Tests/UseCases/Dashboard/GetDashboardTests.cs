@@ -16,8 +16,7 @@ namespace SheepIt.Api.Tests.UseCases.Dashboard
         {
             // given
             
-            var project = await Fixture.CreateProject("foo")
-                .WithEnvironmentNames("dev", "test", "prod")
+            var project = await Fixture.CreateProject()
                 .Create();
 
             Fixture.MomentLater();
@@ -38,7 +37,7 @@ namespace SheepIt.Api.Tests.UseCases.Dashboard
             {
                 ProjectId = project.Id,
                 PackageId = firstPackage.Id,
-                EnvironmentId = 1
+                EnvironmentId = project.FirstEnvironment.Id
             });
 
             Fixture.MomentLater();
@@ -49,7 +48,7 @@ namespace SheepIt.Api.Tests.UseCases.Dashboard
             {
                 ProjectId = project.Id,
                 PackageId = secondPackage.Id,
-                EnvironmentId = 2
+                EnvironmentId = project.SecondEnvironment.Id
             });
 
             // when
@@ -66,8 +65,8 @@ namespace SheepIt.Api.Tests.UseCases.Dashboard
                     DeploymentId = firstDeployment.CreatedDeploymentId,
                     Status = DeploymentStatus.Succeeded.ToString(),
                     DeployedAt = firstDeploymentTime,
-                    EnvironmentId = 1,
-                    EnvironmentDisplayName = "dev"
+                    EnvironmentId = project.FirstEnvironment.Id,
+                    EnvironmentDisplayName = project.FirstEnvironment.Name
                 },
                 new GetDashboardResponse.DeploymentDto
                 {
@@ -75,8 +74,8 @@ namespace SheepIt.Api.Tests.UseCases.Dashboard
                     DeploymentId = secondDeployment.CreatedDeploymentId,
                     Status = DeploymentStatus.Succeeded.ToString(),
                     DeployedAt = secondDeploymentTime,
-                    EnvironmentId = 2,
-                    EnvironmentDisplayName = "test"
+                    EnvironmentId = project.SecondEnvironment.Id,
+                    EnvironmentDisplayName = project.SecondEnvironment.Name
                 }
             });
         }

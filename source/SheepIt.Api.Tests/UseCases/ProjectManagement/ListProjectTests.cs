@@ -14,15 +14,12 @@ namespace SheepIt.Api.Tests.UseCases.ProjectManagement
         {
             // given
 
-            await Fixture.CreateProject("aaa")
+            var firstProject = await Fixture.CreateProject()
                 .Create();
-            
-            await Fixture.CreateProject("bbb")
+
+            var secondProject = await Fixture.CreateProject()
                 .Create();
-            
-            await Fixture.CreateProject("ccc")
-                .Create();
-            
+
             // when
 
             var response = await Fixture.Handle(new ListProjectsRequest());
@@ -35,15 +32,11 @@ namespace SheepIt.Api.Tests.UseCases.ProjectManagement
                 {
                     new ListProjectsResponse.ProjectDto
                     {
-                        Id = "aaa"
+                        Id = firstProject.Id
                     },
                     new ListProjectsResponse.ProjectDto
                     {
-                        Id = "bbb"
-                    },
-                    new ListProjectsResponse.ProjectDto
-                    {
-                        Id = "ccc"
+                        Id = secondProject.Id
                     }
                 }
             });

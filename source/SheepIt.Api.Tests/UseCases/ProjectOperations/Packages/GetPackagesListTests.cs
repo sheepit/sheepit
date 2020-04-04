@@ -17,9 +17,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
             
             var projectCreationTime = Fixture.GetUtcNow();
 
-            var project = await Fixture.CreateProject("foo")
-                .WithEnvironmentNames("dev", "test", "prod")
-                .WithComponents("frontend") // todo: test for multiple components
+            var project = await Fixture.CreateProject()
+                .WithComponents("frontend")
                 .Create();
 
             Fixture.MomentLater();

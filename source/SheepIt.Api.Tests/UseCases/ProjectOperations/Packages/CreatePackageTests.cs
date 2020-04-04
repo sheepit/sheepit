@@ -18,10 +18,8 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
         [SetUp]
         public async Task set_up()
         {
-            _project = await Fixture
-                .CreateProject("foo")
+            _project = await Fixture.CreateProject()
                 .WithEnvironmentNames("test", "prod")
-                .WithComponents("frontend", "backend")
                 .Create();
 
             Fixture.MomentLater();

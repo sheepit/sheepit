@@ -38,12 +38,6 @@ namespace SheepIt.Api.Tests.FeatureObjects
                 };
             }
             
-            public Builder WithDescription(string description)
-            {
-                _request.Description = description;
-                return this;
-            }
-
             public Builder WithVariables(CreatePackageRequest.UpdateVariable[] variables)
             {
                 _request.VariableUpdates = variables;

@@ -16,9 +16,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Deployments
         {
             // given
             
-            var project = await Fixture.CreateProject("foo")
-                .WithEnvironmentNames("dev", "test", "prod")
-                .WithComponents("frontend", "backend")
+            var project = await Fixture.CreateProject()
                 .Create();
 
             Fixture.MomentLater();

@@ -68,12 +68,14 @@ namespace SheepIt.Api.Tests.UseCases.ProjectManagement
         {
             // given
             
-            await Fixture.CreateProject("foo")
+            await Fixture.CreateProject()
+                .WithId("foo")
                 .Create();
             
             // when
             
-            Func<Task> creatingProject = () => Fixture.CreateProject("foo")
+            Func<Task> creatingProject = () => Fixture.CreateProject()
+                .WithId("foo")
                 .Create();
 
             creatingProject.Should().Throw<ProjectIdNotUniqueException>();
