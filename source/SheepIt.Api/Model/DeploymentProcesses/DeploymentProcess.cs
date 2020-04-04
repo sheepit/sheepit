@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using SheepIt.Api.Model.Components;
 using SheepIt.Api.Model.Packages;
-using SheepIt.Api.Model.Projects;
 
 namespace SheepIt.Api.Model.DeploymentProcesses
 {
@@ -11,9 +11,9 @@ namespace SheepIt.Api.Model.DeploymentProcesses
         public int Id { get; set; }
         
         // relations
-        
-        public string ProjectId { get; set; }
-        public virtual Project Project { get; set; }
+
+        public int ComponentId { get; set; }
+        public virtual Component Component { get; set; }
         
         public virtual List<Package> Packages { get; set; }
         

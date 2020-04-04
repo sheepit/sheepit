@@ -109,7 +109,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             }
 
             var deploymentProcess = await _deploymentProcessFactory.Create(
-                projectId: request.ProjectId,
+                componentId: request.ComponentId,
                 zipFileBytes: await request.ZipFile.ToByteArray()
             );
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SheepIt.Api.DataAccess;
@@ -11,9 +12,10 @@ using SheepIt.Api.Model.Packages;
 namespace SheepIt.Api.Migrations
 {
     [DbContext(typeof(SheepItDbContext))]
-    partial class SheepItDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200404132515_deployment process is now related with component not project")]
+    partial class deploymentprocessisnowrelatedwithcomponentnotproject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

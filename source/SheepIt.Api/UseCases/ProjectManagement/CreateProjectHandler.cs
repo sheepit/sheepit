@@ -171,7 +171,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
             foreach (var component in createdComponents)
             {
                 var deploymentProcess = await _deploymentProcessFactory.Create(
-                    projectId: projectId,
+                    componentId: component.Id,
                     zipFileBytes: zipFileBytes
                 );
 

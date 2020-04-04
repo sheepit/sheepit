@@ -11,7 +11,7 @@ namespace SheepIt.Api.Model.DeploymentProcesses
             
             builder.HasKey(deploymentProcess => deploymentProcess.Id);
 
-            builder.Property(deploymentProcess => deploymentProcess.ProjectId)
+            builder.Property(deploymentProcess => deploymentProcess.ComponentId)
                 .IsRequired();
         }
     }

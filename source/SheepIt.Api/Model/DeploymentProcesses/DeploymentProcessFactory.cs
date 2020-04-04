@@ -16,14 +16,14 @@ namespace SheepIt.Api.Model.DeploymentProcesses
             _validateZipFile = validateZipFile;
         }
 
-        public async Task<DeploymentProcess> Create(string projectId, byte[] zipFileBytes)
+        public async Task<DeploymentProcess> Create(int componentId, byte[] zipFileBytes)
         {
             _validateZipFile.Validate(zipFileBytes);
 
             return new DeploymentProcess
             {
                 Id = await _idStorage.GetNext(IdSequence.DeploymentProcess),
-                ProjectId = projectId,
+                ComponentId = componentId,
                 File = zipFileBytes
             };
         }
