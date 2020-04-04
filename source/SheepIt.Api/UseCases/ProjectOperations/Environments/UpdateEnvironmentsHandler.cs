@@ -35,6 +35,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
                 .NotNull();
 
             RuleForEach(request => request.Environments)
+                .NotEmpty()
                 .NotNull();
         }
     }

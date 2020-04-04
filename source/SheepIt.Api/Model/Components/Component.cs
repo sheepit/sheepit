@@ -22,5 +22,6 @@ namespace SheepIt.Api.Model.Components
         // data
 
         public string Name { get; set; }
+        public int Rank { get; set; }
     }
 }

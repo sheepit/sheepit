@@ -13,5 +13,10 @@ namespace SheepIt.Api.Model.Components
         {
             return query.Where(component => component.ProjectId == projectId);
         }
+
+        public static IQueryable<Component> OrderByRank(this IQueryable<Component> query)
+        {
+            return query.OrderBy(component => component.Rank);
+        }
     }
 }

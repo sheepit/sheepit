@@ -32,7 +32,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Components
     {
         [HttpPost]
         [Route("project/components")]
-        public async Task<ListComponentsResponse> ListProjects(ListComponentsRequest request)
+        public async Task<ListComponentsResponse> ListComponents(ListComponentsRequest request)
         {
             return await Handle(request);
         }
@@ -60,6 +60,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Components
         {
             var components = await _dbContext.Components
                 .FromProject(request.ProjectId)
+                .OrderByRank()
                 .Select(component => new ListComponentsResponse.ComponentDto
                 {
                     Id = component.Id,

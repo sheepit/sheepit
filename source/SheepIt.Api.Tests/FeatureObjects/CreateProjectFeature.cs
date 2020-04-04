@@ -102,6 +102,7 @@ namespace SheepIt.Api.Tests.FeatureObjects
             public CreatedEnvironment ThirdEnvironment => Environments[2];
             
             public CreatedComponent FirstComponent => Components[0];
+            public CreatedComponent SecondComponent => Components[1];
         }
 
         public class CreatedEnvironment

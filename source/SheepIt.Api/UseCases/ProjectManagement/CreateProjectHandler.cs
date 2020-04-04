@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
-using SheepIt.Api.Infrastructure.Web;
 using SheepIt.Api.Model.Components;
 using SheepIt.Api.Model.DeploymentProcesses;
 using SheepIt.Api.Model.Environments;
@@ -144,13 +140,16 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         {
             var createdComponents = new List<CreatedComponent>();
             
+            var currentComponentRank = 1;
+            
             foreach (var componentName in componentNames)
             {
                 var component = await _componentFactory.Create(
                     projectId: projectId,
-                    name: componentName
+                    name: componentName,
+                    rank: currentComponentRank
                 );
-                
+
                 _dbContext.Components.Add(component);
                 
                 createdComponents.Add(new CreatedComponent
@@ -158,6 +157,8 @@ namespace SheepIt.Api.UseCases.ProjectManagement
                     Id = component.Id,
                     Name = componentName
                 });
+                
+                currentComponentRank++;
             }
 
             return createdComponents;

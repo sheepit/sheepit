@@ -12,7 +12,7 @@ namespace SheepIt.Api.Model.Components
             _idStorage = idStorage;
         }
 
-        public async Task<Component> Create(string projectId, string name)
+        public async Task<Component> Create(string projectId, string name, int rank)
         {
             return new Component
             {
