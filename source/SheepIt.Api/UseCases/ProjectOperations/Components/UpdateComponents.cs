@@ -116,17 +116,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Components
             IEnumerable<Component> currentComponents,
             IEnumerable<UpdateComponentsRequest.ComponentDto> updatedComponents)
         {
-            var currentComponentIds = currentComponents
-                .Select(component => component.Id)
-                .ToArray();
-
-            var removedComponentIds = updatedComponents
+            var updatedComponentIds = updatedComponents
                 .Where(component => component.Id != null)
                 .Select(component => component.Id.Value)
-                .Except(currentComponentIds)
-                .ToArray();
+                .ToHashSet();
+            
+            var currentComponentIds = currentComponents
+                .Select(component => component.Id)
+                .ToHashSet();
 
-            if (!removedComponentIds.Any())
+            if (!updatedComponentIds.SetEquals(currentComponentIds))
             {
                 throw new InvalidOperationException("Removing components is not supported.");
             }

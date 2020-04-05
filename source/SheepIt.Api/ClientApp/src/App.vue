@@ -7,7 +7,6 @@
 <script>
 import VueRouter from 'vue-router';
 import Authenticate from './pages/authenticate/authenticate.vue'
-import ComponentsList from './pages/components/list/components-list'
 
 import Default from './pages/default/default.vue'
 import DefaultLayout from './pages/default-layout/default-layout.vue'
@@ -18,6 +17,9 @@ import DeploymentsList from './pages/deloyments/list/deployments-list'
 
 import EnvironmentsList from './pages/environments/list/environments-list'
 import EditEnvironments from './pages/environments/edit/edit-environments.vue'
+
+import ComponentsList from './pages/components/list/components-list'
+import EditComponents from './pages/components/edit/edit-components'
 
 import PackageCreate from './pages/package/create/create-package'
 import PackagesList from './pages/package/list/packages-list'
@@ -291,7 +293,28 @@ const router = new VueRouter({
                                     }
                                 ]
                             }
-                        }
+                        },
+                        {
+                            path: 'edit-components',
+                            name: 'edit-components',
+                            component: EditComponents,
+                            meta: {
+                                sideMenu: true,
+                                breadcrumbs: [
+                                    {
+                                        name: 'projects',
+                                        link: 'projects'
+                                    },
+                                    {
+                                        name: ':projectId',
+                                        link: 'project'
+                                    },
+                                    {
+                                        name: 'edit components'
+                                    }
+                                ]
+                            }
+                        },
                     ]
                 }
             ]

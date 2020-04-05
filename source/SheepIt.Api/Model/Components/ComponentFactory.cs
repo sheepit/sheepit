@@ -18,7 +18,8 @@ namespace SheepIt.Api.Model.Components
             {
                 Id = await _idStorage.GetNext(IdSequence.Component),
                 ProjectId = projectId,
-                Name = name
+                Name = name,
+                Rank = rank
             };
         }
     }

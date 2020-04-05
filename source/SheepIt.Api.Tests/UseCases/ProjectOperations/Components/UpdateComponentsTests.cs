@@ -76,7 +76,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Components
                     Id = Frontend.Id,
                     Name = Frontend.Name
                 }
-            });
+            }, options => options.WithStrictOrdering());
         }
 
         [Test]

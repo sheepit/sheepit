@@ -7,9 +7,9 @@
         <div class="view__row view__row--right">
             <router-link
                 class="button button--primary"
-                :to="{ name: 'create-component', params: { projectId: project.id }}"
+                :to="{ name: 'edit-components', params: { projectId: project.id }}"
             >
-                Create component
+                Edit components
             </router-link>
         </div>
 
@@ -65,7 +65,7 @@
             No components found for this project
         </div>
         <preloader v-else />
-    </div>    
+    </div>
 </template>
 
 <script>
