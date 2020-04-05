@@ -71,6 +71,7 @@ namespace SheepIt.Api
             // Component
             builder.RegisterModule<ListComponentsModule>();
             builder.RegisterModule<UpdateComponentsModule>();
+            builder.RegisterModule<GetComponentsForUpdateModule>();
         }
     }
 }
