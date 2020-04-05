@@ -31,7 +31,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Components
     public class GetComponentsForUpdateController : MediatorController
     {
         [HttpPost]
-        [Route("project/components")]
+        [Route("project/components/get-for-update")]
         public async Task<GetComponentsForUpdateResponse> GetComponentsForUpdate(GetComponentsForUpdateRequest request)
         {
             return await Handle(request);
