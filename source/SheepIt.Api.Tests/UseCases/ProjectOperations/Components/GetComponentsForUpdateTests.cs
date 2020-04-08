@@ -42,7 +42,7 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Components
                     Id = prod.Id,
                     Name = prod.Name
                 }
-            });
+            }, options => options.WithStrictOrdering());
         }
     }
 }
