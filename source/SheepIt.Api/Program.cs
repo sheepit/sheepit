@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -7,6 +8,8 @@ using Serilog;
 using SheepIt.Api.Infrastructure;
 using SheepIt.Api.Infrastructure.Configuration;
 using SheepIt.Api.Infrastructure.Logger;
+
+[assembly: InternalsVisibleTo("SheepIt.Api.Tests")]
 
 namespace SheepIt.Api
 {
