@@ -47,6 +47,7 @@ namespace SheepIt.Api
             builder.RegisterModule<GetDashboardModule>();
 
             // Project
+            builder.RegisterModule<GetProjectDashboardModule>();
             builder.RegisterModule<CreateProjectModule>();
             builder.RegisterModule<GetEnvironmentsForUpdateModule>();
             builder.RegisterModule<ListProjectsModule>();
