@@ -106,6 +106,7 @@ export default {
         line-height: 21px;
         color: $font-color;
         text-decoration: none;
+        cursor: pointer;
 
         font-size: 30px;
 

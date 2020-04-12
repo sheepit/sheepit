@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.Core.ProjectContext;
@@ -16,6 +17,17 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
     {
         public string ProjectId { get; set; }
     }
+    
+    public class GetProjectDashboardRequestValidator : AbstractValidator<GetProjectDashboardRequest>
+    {
+        public GetProjectDashboardRequestValidator()
+        {
+            RuleFor(request => request.ProjectId)
+                .NotNull()
+                .MinimumLength(1);
+        }
+    }
+
 
     public class GetProjectDashboardResponse
     {
