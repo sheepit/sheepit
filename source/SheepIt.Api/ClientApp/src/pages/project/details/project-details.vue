@@ -34,16 +34,18 @@
                         :key="environment.environmentId"
                     >
                         <div v-if="found = getDeployment(environment.environmentId, component.componentId)">
-                            <deployment-badge
-                                :project-id="project.id"
-                                :deployment-id="found.deploymentId"
-                            />
-                            <br />
                             <package-badge
                                 :project-id="project.id"
                                 :package-id="found.packageId"
                                 :description="found.packageDescription"
                             />
+                            <br />
+                            <deployment-badge
+                                :project-id="project.id"
+                                :deployment-id="found.deploymentId"
+                            />
+                            <br />
+                            <humanized-date :date="found.startedAt" />
                         </div>
                         <div v-else>
                             -
