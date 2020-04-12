@@ -41,7 +41,7 @@ FROM (
 		public.""Package"" package
 		JOIN public.""Deployment"" deployment ON deployment.""PackageId"" = package.""Id""
 	WHERE
-		package.""ProjectId"" = '{0}' AND
+		package.""ProjectId"" = @ProjectId AND
 		deployment.""Status"" = 'Succeeded'
 	) as lastDeployments
 WHERE lastDeployments.""RowNumber"" = 1";
@@ -60,41 +60,36 @@ WHERE lastDeployments.""RowNumber"" = 1";
 		        await connection.OpenAsync();
 	        }
 
-	        var sqlQuery = GetLastDeploymentsSqlQuery(projectId);
-
 	        var results = new List<GetProjectDashboardLastDeploymentsQueryResult>();
 	        
-	        using (var tx = connection.BeginTransaction())
+		    using (var command = connection.CreateCommand())
 	        {
-		        using (var command = connection.CreateCommand())
-		        {
-			        command.Transaction = tx;
-			        command.CommandText = sqlQuery;
+		        command.CommandText = SqlQueryTemplate;
 
-			        using (var reader = await command.ExecuteReaderAsync())
+		        var parameter = command.CreateParameter();
+		        parameter.ParameterName = "@ProjectId";
+		        parameter.Value = projectId;
+		        
+		        command.Parameters.Add(parameter);
+
+		        using (var reader = await command.ExecuteReaderAsync())
+		        {
+			        while (await reader.ReadAsync())
 			        {
-				        while (await reader.ReadAsync())
+				        results.Add(new GetProjectDashboardLastDeploymentsQueryResult
 				        {
-					        results.Add(new GetProjectDashboardLastDeploymentsQueryResult
-					        {
-						        ComponentId = Convert.ToInt32(reader["ComponentId"]),
-						        EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]),
-						        DeploymentId = Convert.ToInt32(reader["DeploymentId"]),
-						        PackageId = Convert.ToInt32(reader["PackageId"]),
-						        PackageDescription = reader["PackageDescription"].ToString(),
-						        StartedAt = Convert.ToDateTime(reader["StartedAt"])
-					        });
-				        }
+					        ComponentId = Convert.ToInt32(reader["ComponentId"]),
+					        EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]),
+					        DeploymentId = Convert.ToInt32(reader["DeploymentId"]),
+					        PackageId = Convert.ToInt32(reader["PackageId"]),
+					        PackageDescription = reader["PackageDescription"].ToString(),
+					        StartedAt = Convert.ToDateTime(reader["StartedAt"])
+				        });
 			        }
 		        }
 	        }
 
 	        return results;
-        }
-        
-        private string GetLastDeploymentsSqlQuery(string projectId)
-        {
-	        return string.Format(SqlQueryTemplate, projectId);
         }
     }
 }
