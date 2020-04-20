@@ -4,7 +4,7 @@
             Variables
         </div>
 
-        <div v-if="environments.variables && environments.variables.length > 0">
+        <div v-if="variables && variables.length > 0">
             <table>
                 <thead>
                     <tr>
@@ -37,7 +37,7 @@
             </table>
         </div>
 
-        <div v-if="!environments.variables || environments.variables.length === 0">
+        <div v-if="!variables || variables.length === 0">
             Variables are not defined for this package
         </div>
         
