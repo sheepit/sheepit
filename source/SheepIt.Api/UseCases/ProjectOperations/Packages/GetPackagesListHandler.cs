@@ -31,7 +31,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         }
     }
 
-    [Route("api")]
+    [Route("frontendApi")]
     [ApiController]
     public class GetPackagesListController : MediatorController
     {

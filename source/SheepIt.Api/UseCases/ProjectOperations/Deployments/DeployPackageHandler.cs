@@ -28,7 +28,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
         public int CreatedDeploymentId { get; set; }
     }
 
-    [Route("api")]
+    [Route("frontendApi")]
     [ApiController]
     public class DeployPackageController : MediatorController
     {

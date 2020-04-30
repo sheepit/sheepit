@@ -252,7 +252,7 @@ export default {
 
         getEnvironments() {
             httpService
-                .post('api/project/environment/get-environments-for-update', {
+                .post('frontendApi/project/environment/get-environments-for-update', {
                     projectId: this.projectId
                 })
                 .then(response => {
@@ -279,7 +279,7 @@ export default {
 }
 
 function updateEnvironments(projectId, environments) {
-    return httpService.post('api/project/environment/update-environments', {
+    return httpService.post('frontendApi/project/environment/update-environments', {
         projectId: projectId,
         environments: environments
     }, false);

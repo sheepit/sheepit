@@ -30,7 +30,7 @@ namespace SheepIt.Api.UseCases.Dashboard
         }
     }
 
-    [Route("api")]
+    [Route("frontendApi")]
     [ApiController]
     public class GetDashboardController : MediatorController
     {

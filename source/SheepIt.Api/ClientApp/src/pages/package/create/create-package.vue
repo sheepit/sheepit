@@ -167,7 +167,7 @@ export default {
 
         getPackage() {
             httpService
-                .post('api/project/package/get-last-package', { 
+                .post('frontendApi/project/package/get-last-package', { 
                     projectId: this.project.id,
                     componentId: this.$route.query.componentId
                 })
@@ -178,7 +178,7 @@ export default {
 
         getProjectEnvironments() {
             httpService
-                .post('api/project/environment/list-environments', { projectId: this.project.id })
+                .post('frontendApi/project/environment/list-environments', { projectId: this.project.id })
                 .then(response => this.environments = response.environments);
         }
     },

@@ -50,7 +50,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
         }
     }
 
-    [Route("api")]
+    [Route("frontendApi")]
     [ApiController]
     public class GetDeploymentDetailsController : MediatorController
     {

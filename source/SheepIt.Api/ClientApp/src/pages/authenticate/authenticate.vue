@@ -55,7 +55,7 @@ export default {
     methods: {
         authenticate() {
             httpService
-                .post("api/authenticate", {
+                .post("frontendApi/authenticate", {
                     password: this.password
                 })
                 .then(response => {

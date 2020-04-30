@@ -32,7 +32,7 @@ export default {
     methods: {
         updateProjects() {
             return httpService
-                .get('api/list-projects', null)
+                .get('frontendApi/list-projects', null)
                 .then(response => this.projects = response.projects)
         }
     }

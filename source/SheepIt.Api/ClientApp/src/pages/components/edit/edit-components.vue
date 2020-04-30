@@ -248,7 +248,7 @@ export default {
 
         getComponents() {
             httpService
-                .post('api/project/components/get-for-update', {
+                .post('frontendApi/project/components/get-for-update', {
                     projectId: this.projectId
                 })
                 .then(response => {
@@ -275,7 +275,7 @@ export default {
 }
 
 function updateComponents(projectId, components) {
-    return httpService.post('api/project/components/update', {
+    return httpService.post('frontendApi/project/components/update', {
         projectId: projectId,
         components: components
     }, false);

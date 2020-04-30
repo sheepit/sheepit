@@ -4,7 +4,7 @@ using SheepIt.Api.Infrastructure.Authorization;
 
 namespace SheepIt.Api.UseCases.Authentication
 {
-    [Route("api")]
+    [Route("frontendApi")]
     [ApiController]
     public class AuthenticationController : Controller
     {

@@ -96,6 +96,6 @@ export default {
 };
 
 function getDeployments(projectId, packageId) {
-    return httpService.post('api/project/package/list-deployments', { projectId, packageId });
+    return httpService.post('frontendApi/project/package/list-deployments', { projectId, packageId });
 }
 </script>

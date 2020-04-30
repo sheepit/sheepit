@@ -19,7 +19,7 @@ export default {
 
         return httpService
             .postFormData(
-                'api/project/package/create-package',
+                'frontendApi/project/package/create-package',
                 formData
             );
     },

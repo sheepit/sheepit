@@ -26,7 +26,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Components
         }
     }
     
-    [Route("api")]
+    [Route("frontendApi")]
     [ApiController]
     public class ListComponentsController : MediatorController
     {

@@ -38,7 +38,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
         }
     }
 
-    [Route("api")]
+    [Route("frontendApi")]
     [ApiController]
     public class GetDeploymentsListController : MediatorController
     {

@@ -40,7 +40,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         }
     }
 
-    [Route("api")]
+    [Route("frontendApi")]
     [ApiController]
     public class GetPackageDetailsController : MediatorController
     {

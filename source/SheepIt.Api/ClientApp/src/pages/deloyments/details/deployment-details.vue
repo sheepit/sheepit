@@ -143,7 +143,7 @@ export default {
 };
 
 function getDeploymentDetails(projectId, deploymentId) {
-    return httpService.post('api/project/deployment/get-deployment-details', { projectId, deploymentId });
+    return httpService.post('frontendApi/project/deployment/get-deployment-details', { projectId, deploymentId });
 }
 </script>
 

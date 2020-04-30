@@ -27,7 +27,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Environments
         }
     }
     
-    [Route("api")]
+    [Route("frontendApi")]
     [ApiController]
     public class ListEnvironmentsController : MediatorController
     {

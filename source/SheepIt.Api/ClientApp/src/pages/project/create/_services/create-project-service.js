@@ -6,7 +6,7 @@ export default {
         environmentNames,
         componentNames) {
 
-        return httpService.post('api/create-project', {
+        return httpService.post('frontendApi/create-project', {
             projectId,
             environmentNames,
             componentNames

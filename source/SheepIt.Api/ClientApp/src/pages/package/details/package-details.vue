@@ -104,7 +104,7 @@ export default {
         },
         
         getProjectEnvironments() {
-            httpService.post('api/project/environment/list-environments', { projectId: this.project.id })
+            httpService.post('frontendApi/project/environment/list-environments', { projectId: this.project.id })
                 .then(response => this.environments = response.environments);
         }
     }
@@ -112,7 +112,7 @@ export default {
 
 function getPackageDetails(projectId, packageId) {
     return httpService
-        .post('api/project/package/get-package-details', { projectId, packageId });
+        .post('frontendApi/project/package/get-package-details', { projectId, packageId });
 }
 </script>
 

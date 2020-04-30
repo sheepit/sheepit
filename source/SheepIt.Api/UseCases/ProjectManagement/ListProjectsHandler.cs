@@ -23,7 +23,7 @@ namespace SheepIt.Api.UseCases.ProjectManagement
         }
     }
 
-    [Route("api")]
+    [Route("frontendApi")]
     [ApiController]
     public class ListProjectsController : MediatorController
     {

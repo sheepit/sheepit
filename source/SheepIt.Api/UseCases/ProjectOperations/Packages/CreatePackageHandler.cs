@@ -55,7 +55,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         public int CreatedPackageId { get; set; }
     }
 
-    [Route("api")]
+    [Route("frontendApi")]
     [ApiController]
     public class CreatePackageController : MediatorController
     {
