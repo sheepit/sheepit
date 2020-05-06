@@ -1,10 +1,10 @@
 ﻿using System.Linq;
-using SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning;
-using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Model.Deployments;
 using SheepIt.Api.Model.Packages;
+using SheepIt.Api.Runner.DeploymentProcessRunning.CommandsRunning;
+using SheepIt.Api.Runner.DeploymentProcessRunning.DeploymentProcessAccess;
 
-namespace SheepIt.Api.Core.DeploymentProcessRunning
+namespace SheepIt.Api.Runner.DeploymentProcessRunning
 {
     // todo: we should handle error output for all runners
 

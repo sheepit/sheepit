@@ -3,7 +3,7 @@ using System.Linq;
 using SheepIt.Api.Infrastructure.Utils;
 using SheepIt.Api.Model.Packages;
 
-namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning
+namespace SheepIt.Api.Runner.DeploymentProcessRunning.CommandsRunning
 {
     public class BashCommandsRunner : ICommandsRunner
     {

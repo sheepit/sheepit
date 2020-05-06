@@ -3,7 +3,7 @@ using Autofac;
 using SheepIt.Api.Infrastructure.Handlers;
 using SheepIt.Api.Infrastructure.Resolvers;
 
-namespace SheepIt.Api.Core.ProjectContext
+namespace SheepIt.Api.Infrastructure.ProjectContext
 {
     public class ProjectLockHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
         where TRequest : IProjectRequest

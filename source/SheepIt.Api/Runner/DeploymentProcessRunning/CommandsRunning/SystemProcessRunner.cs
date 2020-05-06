@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using SheepIt.Api.Model.Packages;
 
-namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning
+namespace SheepIt.Api.Runner.DeploymentProcessRunning.CommandsRunning
 {
     public class SystemProcessRunner
     {

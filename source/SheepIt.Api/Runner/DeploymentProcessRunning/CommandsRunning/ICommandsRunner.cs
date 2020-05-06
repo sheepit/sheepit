@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using SheepIt.Api.Model.Packages;
 
-namespace SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning
+namespace SheepIt.Api.Runner.DeploymentProcessRunning.CommandsRunning
 {
     public interface ICommandsRunner
     {

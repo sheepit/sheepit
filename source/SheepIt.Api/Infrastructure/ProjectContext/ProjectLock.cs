@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
 
-namespace SheepIt.Api.Core.ProjectContext
+namespace SheepIt.Api.Infrastructure.ProjectContext
 {
     public interface IProjectLock
     {

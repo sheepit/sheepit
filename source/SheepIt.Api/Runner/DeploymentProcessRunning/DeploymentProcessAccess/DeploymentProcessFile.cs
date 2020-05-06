@@ -4,7 +4,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 // ReSharper disable ClassNeverInstantiated.Global - it is instantiated by yaml deserializer
 
-namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
+namespace SheepIt.Api.Runner.DeploymentProcessRunning.DeploymentProcessAccess
 {
     public class DeploymentProcessFile
     {

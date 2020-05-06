@@ -1,5 +1,5 @@
 using System.IO;
-using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
+using SheepIt.Api.Runner.DeploymentProcessRunning.DeploymentProcessAccess;
 
 namespace SheepIt.Api.Tests.TestInfrastructure
 {

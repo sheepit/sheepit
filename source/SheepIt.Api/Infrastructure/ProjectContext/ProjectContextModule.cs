@@ -1,6 +1,6 @@
 using Autofac;
 
-namespace SheepIt.Api.Core.ProjectContext
+namespace SheepIt.Api.Infrastructure.ProjectContext
 {
     public class ProjectContextModule : Module
     {

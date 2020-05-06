@@ -1,7 +1,7 @@
 using Autofac;
-using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
+using SheepIt.Api.Runner.DeploymentProcessRunning.DeploymentProcessAccess;
 
-namespace SheepIt.Api.Core.DeploymentProcessRunning
+namespace SheepIt.Api.Runner.DeploymentProcessRunning
 {
     public class DeploymentProcessModule : Module
     {

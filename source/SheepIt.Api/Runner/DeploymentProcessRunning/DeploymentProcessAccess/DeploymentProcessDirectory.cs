@@ -1,6 +1,6 @@
 using SheepIt.Api.Infrastructure;
 
-namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
+namespace SheepIt.Api.Runner.DeploymentProcessRunning.DeploymentProcessAccess
 {
     public class DeploymentProcessDirectory
     {

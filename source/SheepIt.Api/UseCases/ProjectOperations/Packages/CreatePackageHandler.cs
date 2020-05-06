@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SheepIt.Api.Core.ProjectContext;
-using SheepIt.Api.DataAccess;
+using SheepIt.Api.Core.Packages;
+using SheepIt.Api.Core.Packages.CreatePackage;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.ProjectContext;
 using SheepIt.Api.Infrastructure.Resolvers;
-using SheepIt.Api.Infrastructure.Web;
-using SheepIt.Api.Model.Components;
-using SheepIt.Api.Model.DeploymentProcesses;
-using SheepIt.Api.Model.Packages;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 {
@@ -80,80 +75,38 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class CreatePackageHandler : IHandler<CreatePackageRequest, CreatePackageResponse>
     {
-        private readonly SheepItDbContext _dbContext;
-        private readonly PackageFactory _packageFactory;
-        private readonly DeploymentProcessFactory _deploymentProcessFactory;
+        private readonly PackageService _packageService;
 
         public CreatePackageHandler(
-            SheepItDbContext dbContext,
-            PackageFactory packageFactory,
-            DeploymentProcessFactory deploymentProcessFactory)
+            PackageService packageService)
         {
-            _dbContext = dbContext;
-            _packageFactory = packageFactory;
-            _deploymentProcessFactory = deploymentProcessFactory;
+            _packageService = packageService;
         }
 
         public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
         {
-            var componentExists = await _dbContext.Components
-                .FromProject(request.ProjectId)
-                .WithId(request.ComponentId)
-                .AnyAsync();
-
-            if (!componentExists)
+            var command = new CreatePackageCommand
             {
-                throw new InvalidOperationException(
-                    $"Component {request.ComponentId} in project {request.ProjectId} doesn't exist."
-                );
-            }
+                ProjectId = request.ProjectId,
+                ComponentId = request.ComponentId,
+                Description = request.Description,
+                ZipFile = request.ZipFile,
+                VariableUpdates = request.VariableUpdates
+                    .Select(x => new
+                        CreatePackageCommand.UpdateVariable {
+                            Name = x.Name,
+                            DefaultValue = x.DefaultValue,
+                            EnvironmentValues = x.EnvironmentValues
+                        })
+                    .ToArray()
+            };
 
-            var deploymentProcess = await _deploymentProcessFactory.Create(
-                componentId: request.ComponentId,
-                zipFileBytes: await request.ZipFile.ToByteArray()
-            );
-
-            _dbContext.DeploymentProcesses.Add(deploymentProcess);
-
-            var newVariables = MapVariableValues(request.VariableUpdates);
-            
-            var newPackage = await _packageFactory.Create(
-                projectId: request.ProjectId,
-                deploymentProcessId: deploymentProcess.Id,
-                componentId: request.ComponentId,
-                description: request.Description,
-                variableCollection: new VariableCollection
-                {
-                    Variables = newVariables
-                }
-            );
-
-            _dbContext.Packages.Add(newPackage);
-
-            await _dbContext.SaveChangesAsync();
+            var createdPackageId = await _packageService.CreatePackage(command);
 
             return new CreatePackageResponse
             {
-                CreatedPackageId = newPackage.Id
+                CreatedPackageId = createdPackageId
             };
-        }
-
-        private VariableValues[] MapVariableValues(CreatePackageRequest.UpdateVariable[] variableUpdates)
-        {
-            var updatesOrNull = variableUpdates
-                ?.Select(MapVariableValue)
-                .ToArray();
-            
-            return updatesOrNull ?? new VariableValues[0];
-        }
-
-        private VariableValues MapVariableValue(CreatePackageRequest.UpdateVariable variableUpdate)
-        {
-            return VariableValues.Create(
-                name: variableUpdate.Name,
-                defaultValue: variableUpdate.DefaultValue,
-                environmentValues: variableUpdate.EnvironmentValues ?? new Dictionary<int, string>()
-            );
         }
     }
 }

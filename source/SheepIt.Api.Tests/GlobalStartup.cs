@@ -1,8 +1,6 @@
-using System.Data;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
-using SheepIt.Api.DataAccess;
 using SheepIt.Api.Tests.TestInfrastructure;
 
 namespace SheepIt.Api.Tests

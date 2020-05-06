@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using SheepIt.Api.Core.DeploymentProcessRunning.CommandsRunning;
-using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Infrastructure.Utils;
 using SheepIt.Api.Model.Packages;
+using SheepIt.Api.Runner.DeploymentProcessRunning.CommandsRunning;
+using SheepIt.Api.Runner.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Tests.TestInfrastructure;
 
 namespace SheepIt.Api.Tests.Core.DeploymentProcessRunning.CommandsRunning

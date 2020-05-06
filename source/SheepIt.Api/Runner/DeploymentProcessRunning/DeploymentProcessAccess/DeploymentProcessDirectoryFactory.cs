@@ -2,7 +2,7 @@ using System.IO;
 using System.IO.Compression;
 using SheepIt.Api.Infrastructure;
 
-namespace SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess
+namespace SheepIt.Api.Runner.DeploymentProcessRunning.DeploymentProcessAccess
 {
     public class DeploymentProcessDirectoryFactory
     {
