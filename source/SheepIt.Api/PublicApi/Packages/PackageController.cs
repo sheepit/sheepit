@@ -9,11 +9,11 @@ namespace SheepIt.Api.PublicApi.Packages
 {
     public class PackageController : Controller
     {
-        private readonly PackageService _packageService;
+        private readonly CreatePackageCommandHandler _createPackageCommandHandler;
 
-        public PackageController(PackageService packageService)
+        public PackageController(CreatePackageCommandHandler createPackageCommandHandler)
         {
-            _packageService = packageService;
+            _createPackageCommandHandler = createPackageCommandHandler;
         }
         
         [HttpPost("/projects/{projectId}/components/{componentId}/packages")]
@@ -38,7 +38,7 @@ namespace SheepIt.Api.PublicApi.Packages
                     .ToArray()
             };
 
-            var createdPackageId = await _packageService.CreatePackage(command);
+            var createdPackageId = await _createPackageCommandHandler.Handle(command);
             
             return Ok(createdPackageId);
         }

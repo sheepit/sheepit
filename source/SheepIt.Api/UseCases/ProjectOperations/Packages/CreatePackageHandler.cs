@@ -75,12 +75,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 
     public class CreatePackageHandler : IHandler<CreatePackageRequest, CreatePackageResponse>
     {
-        private readonly PackageService _packageService;
+        private readonly CreatePackageCommandHandler _createPackageCommandHandler;
 
-        public CreatePackageHandler(
-            PackageService packageService)
+        public CreatePackageHandler(CreatePackageCommandHandler createPackageCommandHandler)
         {
-            _packageService = packageService;
+            _createPackageCommandHandler = createPackageCommandHandler;
         }
 
         public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
@@ -101,7 +100,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                     .ToArray()
             };
 
-            var createdPackageId = await _packageService.CreatePackage(command);
+            var createdPackageId = await _createPackageCommandHandler.Handle(command);
 
             return new CreatePackageResponse
             {

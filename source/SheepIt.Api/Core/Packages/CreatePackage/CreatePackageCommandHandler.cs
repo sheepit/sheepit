@@ -45,7 +45,7 @@ namespace SheepIt.Api.Core.Packages.CreatePackage
             _deploymentProcessFactory = deploymentProcessFactory;
         }
         
-        public async Task<int> Execute(CreatePackageCommand command)
+        public async Task<int> Handle(CreatePackageCommand command)
         {
             var componentExists = await _dbContext.Components
                 .FromProject(command.ProjectId)

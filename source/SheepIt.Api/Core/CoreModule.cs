@@ -9,8 +9,6 @@ namespace SheepIt.Api.Core
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<CreatePackageCommandHandler>().InstancePerDependency();
-
-            builder.RegisterType<PackageService>().InstancePerDependency();
         }   
     }
 }
