@@ -34,11 +34,8 @@
 
                 <div class="form__row">
                     <div class="form__column">
-                        <label
-                            for="description"
-                            class="form__label"
-                        >
-                            Description
+                        <label class="form__label">
+                            Environment
                         </label>
                         <select class="form__control" v-model="selectedEnvironment">
                             <option></option>

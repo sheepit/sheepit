@@ -20,7 +20,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         
         public string Description { get; set; }
         public UpdateVariable[] VariableUpdates { get; set; }
-        public IFormFile ZipFile { get; set; }
+        public IFormFile ZipFile { get; set; } // todo: zip file or null
 
         public class UpdateVariable
         {
@@ -38,9 +38,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                 .NotNull();
             
             RuleFor(request => request.Description)
-                .NotNull();
-            
-            RuleFor(request => request.ZipFile)
                 .NotNull();
         }
     }

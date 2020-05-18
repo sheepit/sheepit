@@ -59,18 +59,13 @@ namespace SheepIt.Api.Core.Packages.CreatePackage
                 );
             }
 
-            var deploymentProcess = await _deploymentProcessFactory.Create(
-                componentId: command.ComponentId,
-                zipFileBytes: await command.ZipFile.ToByteArray()
-            );
-
-            _dbContext.DeploymentProcesses.Add(deploymentProcess);
-
+            var deploymentProcessId = await GetOrCreateDeploymentProcess(command);
+            
             var newVariables = MapVariableValues(command.VariableUpdates);
             
             var newPackage = await _packageFactory.Create(
                 projectId: command.ProjectId,
-                deploymentProcessId: deploymentProcess.Id,
+                deploymentProcessId: deploymentProcessId,
                 componentId: command.ComponentId,
                 description: command.Description,
                 variableCollection: new VariableCollection
@@ -84,6 +79,28 @@ namespace SheepIt.Api.Core.Packages.CreatePackage
             await _dbContext.SaveChangesAsync();
 
             return newPackage.Id;
+        }
+
+        private async Task<int> GetOrCreateDeploymentProcess(CreatePackageCommand command)
+        {
+            if (command.ZipFile == null)
+            {
+                return await _dbContext.Packages
+                    .FromProject(command.ProjectId)
+                    .FromComponent(command.ComponentId)
+                    .OrderByNewest()
+                    .Select(lastPackage => lastPackage.DeploymentProcessId)
+                    .FirstAsync();
+            }
+            
+            var deploymentProcess = await _deploymentProcessFactory.Create(
+                componentId: command.ComponentId,
+                zipFileBytes: await command.ZipFile.ToByteArray()
+            );
+            
+            _dbContext.DeploymentProcesses.Add(deploymentProcess);
+
+            return deploymentProcess.Id;
         }
 
         private VariableValues[] MapVariableValues(CreatePackageCommand.UpdateVariable[] variableUpdates)

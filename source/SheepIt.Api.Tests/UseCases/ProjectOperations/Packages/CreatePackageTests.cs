@@ -1,7 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
+using SheepIt.Api.DataAccess;
+using SheepIt.Api.Model.Packages;
 using SheepIt.Api.Tests.FeatureObjects;
 using SheepIt.Api.Tests.TestInfrastructure;
 using SheepIt.Api.UseCases.ProjectOperations.Packages;
@@ -191,6 +196,40 @@ namespace SheepIt.Api.Tests.UseCases.ProjectOperations.Packages
                     }
                 }
             });
+        }
+
+        [Test]
+        public async Task when_no_deployment_process_zip_is_specified_previous_one_will_be_used()
+        {
+            // given
+            
+            var previousPackage = await Fixture.CreatePackage(_project.Id, _project.FirstComponent.Id)
+                .Create();
+            
+            // when
+            
+            var newPackage = await Fixture.CreatePackage(_project.Id, _project.FirstComponent.Id)
+                .WithoutDeploymentProcessZip()
+                .Create();
+
+            // then
+
+            using var scope = Fixture.BeginDbContextScope();
+
+            var dbContext = scope.Resolve<SheepItDbContext>();
+
+            var previousDeploymentProcessId = await GetDeploymentProcessId(previousPackage.Id);
+            var newDeploymentProcessId = await GetDeploymentProcessId(newPackage.Id);
+
+            newDeploymentProcessId.Should().Be(previousDeploymentProcessId);
+            
+            async Task<int> GetDeploymentProcessId(int packageId)
+            {
+                return await dbContext.Packages
+                    .WithId(packageId)
+                    .Select(package => package.DeploymentProcessId)
+                    .FirstAsync();
+            }
         }
     }
 }

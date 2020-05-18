@@ -44,6 +44,12 @@ namespace SheepIt.Api.Tests.FeatureObjects
                 return this;
             }
 
+            public Builder WithoutDeploymentProcessZip()
+            {
+                _request.ZipFile = null;
+                return this;
+            }
+
             public async Task<CreatedPackage> Create()
             {
                 if (_request.VariableUpdates == null)
