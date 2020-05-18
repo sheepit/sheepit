@@ -25,16 +25,21 @@ export default {
     },
 
     convertVariablesToFormData(formData, newVariables, environments) {
-        if(!newVariables)
+        if (!newVariables) {
             return;
+        }
 
-        for(let i = 0; i < newVariables.length; i++) {
-            let variables = newVariables[i];
-            formData.append('VariableUpdates[' + i + '].Name', variables.name);
-            formData.append('VariableUpdates[' + i + '].DefaultValue', variables.defaultValue);
+        for(let variablesIndex = 0; variablesIndex < newVariables.length; variablesIndex++) {
+            const variables = newVariables[variablesIndex];
+            
+            formData.append('VariableUpdates[' + variablesIndex + '].Name', variables.name);
+            
+            if (variables.defaultValue) {
+                formData.append('VariableUpdates[' + variablesIndex + '].DefaultValue', variables.defaultValue);
+            }
 
             this.mapEnvironmentValuesToFormData(
-                formData, i, variables.environmentValues, environments);
+                formData, variablesIndex, variables.environmentValues, environments);
         }
     },
 
