@@ -1,11 +1,7 @@
 <template>
-    <span>{{ humanizedDate }}</span>
-    <!-- <tooltip
-        data-placement="top"
-        :text="formattedDate"
-    >
-        
-    </tooltip> -->
+    <span :title="formattedDate">
+        {{ humanizedDate }}
+    </span>
 </template>
 
 <script>
@@ -18,10 +14,10 @@ export default {
 
     computed: {
         humanizedDate() {
-            return moment.duration(moment(this.date).diff(moment())).humanize(true);
+            return moment.duration(moment.utc(this.date).diff(moment())).humanize(true);
         },
         formattedDate() {
-            return moment(this.date).format('YYYY-MM-DD hh:mm')
+            return moment.utc(this.date).local().format('YYYY-MM-DD hh:mm A');
         }
     }
 }
