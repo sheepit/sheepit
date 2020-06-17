@@ -15,7 +15,7 @@ namespace SheepIt.Api.UseCases.Authentication
             _singleUserAuthentication = singleUserAuthentication;
         }
 
-        [Route("authenticate")]
+        [HttpPost("authenticate")]
         [AllowAnonymous]
         public AuthenticationResponse Authenticate(AuthenticateRequest request)
         {

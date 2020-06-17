@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,20 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.ProjectContext;
-using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Infrastructure.Web;
-using SheepIt.Api.Model.Components;
 using SheepIt.Api.Model.DeploymentProcesses;
+using SheepIt.Api.Model.Components;
 using SheepIt.Api.Model.Packages;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.Packages
+namespace SheepIt.Api.PublicApi.Packages
 {
-    public class CreatePackageRequest : IRequest<CreatePackageResponse>, IProjectRequest
+    public class CreatePackageRequest : IRequest<CreatePackageResponse>
     {
-        public string ProjectId { get; set; }
-        public int ComponentId { get; set; }
-        
         public string Description { get; set; }
         public UpdateVariable[] VariableUpdates { get; set; }
         public IFormFile ZipFile { get; set; }
@@ -35,13 +30,15 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         }
     }
 
+    public class CreatePackageResponse
+    {
+        public int CreatedPackageId { get; set; }
+    }
+    
     public class CreatePackageRequestValidator : AbstractValidator<CreatePackageRequest>
     {
         public CreatePackageRequestValidator()
         {
-            RuleFor(request => request.ProjectId)
-                .NotNull();
-            
             RuleFor(request => request.Description)
                 .NotNull();
             
@@ -50,21 +47,24 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         }
     }
 
-    public class CreatePackageResponse
-    {
-        public int CreatedPackageId { get; set; }
-    }
-
-    [Route("frontendApi")]
+    [Route("api")]
     [ApiController]
-    public class CreatePackageController : MediatorController
+    public class PackageController
     {
-        [HttpPost]
-        [Route("project/package/create-package")]
-        public async Task<CreatePackageResponse> CreatePackage(
-            [FromForm] CreatePackageRequest request)
+        private readonly CreatePackageHandler _handler;
+
+        public PackageController(CreatePackageHandler handler)
         {
-            return await Handle(request);
+            _handler = handler;
+        }
+
+        [HttpPost("/projects/{projectId}/components/{componentId}/packages")]
+        public async Task<CreatePackageResponse> CreatePackage(
+            [FromRoute] string projectId,
+            [FromRoute] int componentId,
+            [FromBody] CreatePackageRequest request)
+        {
+            return await _handler.Handle(projectId, componentId, request);
         }
     }
 
@@ -72,13 +72,11 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
     {
         protected override void Load(ContainerBuilder builder)
         {
-            BuildRegistration.Type<CreatePackageHandler>()
-                .InProjectLock()
-                .RegisterAsHandlerIn(builder);
+            builder.RegisterType<CreatePackageHandler>();
         }
     }
 
-    public class CreatePackageHandler : IHandler<CreatePackageRequest, CreatePackageResponse>
+    public class CreatePackageHandler
     {
         private readonly SheepItDbContext _dbContext;
         private readonly PackageFactory _packageFactory;
@@ -94,22 +92,22 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             _deploymentProcessFactory = deploymentProcessFactory;
         }
 
-        public async Task<CreatePackageResponse> Handle(CreatePackageRequest request)
+        public async Task<CreatePackageResponse> Handle(string projectId, int componentId, CreatePackageRequest request)
         {
             var componentExists = await _dbContext.Components
-                .FromProject(request.ProjectId)
-                .WithId(request.ComponentId)
+                .FromProject(projectId)
+                .WithId(componentId)
                 .AnyAsync();
 
             if (!componentExists)
             {
                 throw new InvalidOperationException(
-                    $"Component {request.ComponentId} in project {request.ProjectId} doesn't exist."
+                    $"Component {componentId} in project {projectId} doesn't exist."
                 );
             }
 
             var deploymentProcess = await _deploymentProcessFactory.Create(
-                componentId: request.ComponentId,
+                componentId: componentId,
                 zipFileBytes: await request.ZipFile.ToByteArray()
             );
 
@@ -118,9 +116,9 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             var newVariables = MapVariableValues(request.VariableUpdates);
             
             var newPackage = await _packageFactory.Create(
-                projectId: request.ProjectId,
+                projectId: projectId,
                 deploymentProcessId: deploymentProcess.Id,
-                componentId: request.ComponentId,
+                componentId: componentId,
                 description: request.Description,
                 variableCollection: new VariableCollection
                 {

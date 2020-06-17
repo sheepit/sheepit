@@ -1,6 +1,5 @@
 using Autofac;
 using Autofac.Features.ResolveAnything;
-using SheepIt.Api.Core;
 using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.ProjectContext;
@@ -27,7 +26,7 @@ namespace SheepIt.Api
             RegisterInfrastructure(builder);
             RegisterRunner(builder);
             RegisterUseCases(builder);
-            RegisterCore(builder);
+            RegisterPublicApi(builder);
         }
 
         private static void RegisterInfrastructure(ContainerBuilder builder)
@@ -77,10 +76,10 @@ namespace SheepIt.Api
             builder.RegisterModule<GetComponentsForUpdateModule>();
         }
 
-        private void RegisterCore(ContainerBuilder builder)
+        private void RegisterPublicApi(ContainerBuilder builder)
         {
             // Package
-            builder.RegisterModule<CoreModule>();
+            builder.RegisterModule<PublicApi.Packages.CreatePackageModule>();
         }
     }
 }

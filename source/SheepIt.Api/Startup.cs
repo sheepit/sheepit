@@ -11,6 +11,7 @@ using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.Logger;
+using SheepIt.Api.Infrastructure.Swagger;
 
 namespace SheepIt.Api
 {
@@ -40,7 +41,9 @@ namespace SheepIt.Api
                 .AddFluentValidation(configuration =>
                     configuration.RegisterValidatorsFromAssemblyContaining<SheepItModule>()
                 );
-                
+
+            services.AddSwaggerDocumentation(_configuration);
+            
             services.AddDbContext<SheepItDbContext>(options =>
                 options.UseNpgsql(_configuration.GetConnectionString(SheepItDbContext.ConnectionStringName))
             );
@@ -84,6 +87,8 @@ namespace SheepIt.Api
             app.UseRouting();
             app.UseAuthorization();
             app.UseAuthentication();
+
+            app.UseSwaggerDocumentation(_configuration);
 
             app.UseEndpoints(endpoints =>
             {
