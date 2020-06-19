@@ -10,7 +10,7 @@ using SheepIt.Api.Infrastructure.ProjectContext;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Model.Deployments;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
+namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 {
     public class GetDeploymentsListRequest : IRequest<GetDeploymentsListResponse>, IProjectRequest
     {

@@ -26,7 +26,7 @@ namespace SheepIt.Api.PublicApi.Packages
         {
             public string Name { get; set; }
             public string DefaultValue { get; set; }
-            public Dictionary<int, string> EnvironmentValues { get; set; }
+            public Dictionary<string, string> EnvironmentValues { get; set; }
         }
     }
 
@@ -62,7 +62,7 @@ namespace SheepIt.Api.PublicApi.Packages
         public async Task<CreatePackageResponse> CreatePackage(
             [FromRoute] string projectId,
             [FromRoute] int componentId,
-            [FromBody] CreatePackageRequest request)
+            [FromForm] CreatePackageRequest request)
         {
             return await _handler.Handle(projectId, componentId, request);
         }
@@ -94,7 +94,8 @@ namespace SheepIt.Api.PublicApi.Packages
 
         public async Task<CreatePackageResponse> Handle(string projectId, int componentId, CreatePackageRequest request)
         {
-            var componentExists = await _dbContext.Components
+            var componentExists = await _dbContext
+                .Components
                 .FromProject(projectId)
                 .WithId(componentId)
                 .AnyAsync();
@@ -106,23 +107,22 @@ namespace SheepIt.Api.PublicApi.Packages
                 );
             }
 
-            var deploymentProcess = await _deploymentProcessFactory.Create(
-                componentId: componentId,
-                zipFileBytes: await request.ZipFile.ToByteArray()
-            );
+            var deploymentProcessId = await GetOrCreateDeploymentProcess(projectId, componentId, request);
 
-            _dbContext.DeploymentProcesses.Add(deploymentProcess);
+            var lastPackage = await GetLastPackage(projectId, componentId);
 
-            var newVariables = MapVariableValues(request.VariableUpdates);
+            var mappedVariables = MapVariables(request.VariableUpdates);
+            
+            var updatedVariables = UpdateExistingValues(lastPackage.Variables.Variables, mappedVariables);
             
             var newPackage = await _packageFactory.Create(
                 projectId: projectId,
-                deploymentProcessId: deploymentProcess.Id,
+                deploymentProcessId: deploymentProcessId,
                 componentId: componentId,
                 description: request.Description,
                 variableCollection: new VariableCollection
                 {
-                    Variables = newVariables
+                    Variables = updatedVariables
                 }
             );
 
@@ -135,23 +135,70 @@ namespace SheepIt.Api.PublicApi.Packages
                 CreatedPackageId = newPackage.Id
             };
         }
-
-        private VariableValues[] MapVariableValues(CreatePackageRequest.UpdateVariable[] variableUpdates)
+        
+        private async Task<int> GetOrCreateDeploymentProcess(string projectId, int componentId, CreatePackageRequest request)
         {
-            var updatesOrNull = variableUpdates
-                ?.Select(MapVariableValue)
-                .ToArray();
+            if (request.ZipFile == null)
+            {
+                return await _dbContext.Packages
+                    .FromProject(projectId)
+                    .FromComponent(componentId)
+                    .OrderByNewest()
+                    .Select(lastPackage => lastPackage.DeploymentProcessId)
+                    .FirstAsync();
+            }
             
-            return updatesOrNull ?? new VariableValues[0];
+            var deploymentProcess = await _deploymentProcessFactory.Create(
+                componentId: componentId,
+                zipFileBytes: await request.ZipFile.ToByteArray()
+            );
+            
+            _dbContext.DeploymentProcesses.Add(deploymentProcess);
+
+            return deploymentProcess.Id;
         }
 
-        private VariableValues MapVariableValue(CreatePackageRequest.UpdateVariable variableUpdate)
+        private async Task<Package> GetLastPackage(string projectId, int componentId)
         {
-            return VariableValues.Create(
-                name: variableUpdate.Name,
-                defaultValue: variableUpdate.DefaultValue,
-                environmentValues: variableUpdate.EnvironmentValues ?? new Dictionary<int, string>()
-            );
+            return await _dbContext.Packages
+                .FromProject(projectId)
+                .FromComponent(componentId)
+                .OrderByNewest()
+                .FirstAsync();
+        }
+
+        internal static VariableValues[] UpdateExistingValues(
+            VariableValues[] lastPackageVariables, VariableValues[] mappedRequest)
+        {
+            return lastPackageVariables
+                .Concat(mappedRequest)
+                .ToLookup(ks => ks.Name)
+                .Select(g => g.Aggregate((item1, item2) => new VariableValues
+                {
+                    Name = item2.Name,
+                    DefaultValue = item2.DefaultValue,
+                    ActualEnvironmentValues = item1
+                        .ActualEnvironmentValues
+                        .Concat(item2.ActualEnvironmentValues)
+                        .ToLookup(envValue => envValue.Key)
+                        .Select(g2 => g2.Aggregate(
+                            (_, value2) =>
+                            new KeyValuePair<string, string>(value2.Key, value2.Value)))
+                        .ToDictionary(pair => pair.Key, pair => pair.Value)
+                }))
+                .ToArray();
+        }
+
+        internal static VariableValues[] MapVariables(CreatePackageRequest.UpdateVariable[] requestVariableUpdates)
+        {
+            return requestVariableUpdates
+                .Select(x => new VariableValues
+                {
+                    Name = x.Name,
+                    DefaultValue = x.DefaultValue,
+                    ActualEnvironmentValues = x.EnvironmentValues
+                })
+                .ToArray();
         }
     }
 }

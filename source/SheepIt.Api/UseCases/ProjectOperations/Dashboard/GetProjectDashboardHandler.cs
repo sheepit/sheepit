@@ -11,7 +11,7 @@ using SheepIt.Api.Infrastructure.ProjectContext;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Model.Environments;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
+namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 {
     public class GetProjectDashboardRequest : IRequest<GetProjectDashboardResponse>, IProjectRequest
     {

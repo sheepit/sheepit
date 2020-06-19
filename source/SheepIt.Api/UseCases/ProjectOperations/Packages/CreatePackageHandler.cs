@@ -108,18 +108,13 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
                 );
             }
 
-            var deploymentProcess = await _deploymentProcessFactory.Create(
-                componentId: request.ComponentId,
-                zipFileBytes: await request.ZipFile.ToByteArray()
-            );
-
-            _dbContext.DeploymentProcesses.Add(deploymentProcess);
+            var deploymentProcessId = await GetOrCreateDeploymentProcess(request);
 
             var newVariables = MapVariableValues(request.VariableUpdates);
             
             var newPackage = await _packageFactory.Create(
                 projectId: request.ProjectId,
-                deploymentProcessId: deploymentProcess.Id,
+                deploymentProcessId: deploymentProcessId,
                 componentId: request.ComponentId,
                 description: request.Description,
                 variableCollection: new VariableCollection
@@ -138,6 +133,28 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             };
         }
 
+        private async Task<int> GetOrCreateDeploymentProcess(CreatePackageRequest request)
+        {
+            if (request.ZipFile == null)
+            {
+                return await _dbContext.Packages
+                    .FromProject(request.ProjectId)
+                    .FromComponent(request.ComponentId)
+                    .OrderByNewest()
+                    .Select(lastPackage => lastPackage.DeploymentProcessId)
+                    .FirstAsync();
+            }
+            
+            var deploymentProcess = await _deploymentProcessFactory.Create(
+                componentId: request.ComponentId,
+                zipFileBytes: await request.ZipFile.ToByteArray()
+            );
+            
+            _dbContext.DeploymentProcesses.Add(deploymentProcess);
+
+            return deploymentProcess.Id;
+        }
+        
         private VariableValues[] MapVariableValues(CreatePackageRequest.UpdateVariable[] variableUpdates)
         {
             var updatesOrNull = variableUpdates
