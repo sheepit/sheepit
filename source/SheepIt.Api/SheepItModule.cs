@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Features.ResolveAnything;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.ErrorHandling;
 using SheepIt.Api.Infrastructure.ProjectContext;
@@ -22,6 +23,8 @@ namespace SheepIt.Api
         {
             // this is mainly used to resolve handlers before decorating them
             builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
+
+            builder.RegisterModule<DataAccessModule>();
             
             RegisterInfrastructure(builder);
             RegisterRunner(builder);
