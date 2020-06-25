@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SheepIt.Api.Core.ProjectContext;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
+using SheepIt.Api.Infrastructure.ProjectContext;
 using SheepIt.Api.Infrastructure.Resolvers;
 using SheepIt.Api.Model.Packages;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
+namespace SheepIt.Api.UseCases.ProjectOperations.Packages
 {
     public class GetPackagesListRequest : IRequest<GetPackagesListResponse>, IProjectRequest
     {

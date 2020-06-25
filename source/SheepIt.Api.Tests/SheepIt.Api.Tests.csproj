@@ -27,18 +27,22 @@
     <Content Include="appsettings.os-windows.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="TestFiles\simple-process.zip" />
-    <Content Include="TestProcess\test-process.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="IntegrationTests\TestProcess\empty-archive.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Remove="TestProcess\empty-archive.zip" />
-    <Content Include="TestProcess\empty-archive.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="IntegrationTests\TestProcess\invalid-process-yaml.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Remove="TestProcess\invalid-process-yaml.zip" />
-    <Content Include="TestProcess\invalid-process-yaml.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="IntegrationTests\TestProcess\test-process.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Remove="IntegrationTests\TestFiles\simple-process.zip" />
+    <None Remove="IntegrationTests\TestProcess\empty-archive.zip" />
+    <None Remove="IntegrationTests\TestProcess\invalid-process-yaml.zip" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UnitTests" />
   </ItemGroup>
 
 </Project>

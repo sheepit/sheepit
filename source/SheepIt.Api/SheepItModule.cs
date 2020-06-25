@@ -1,10 +1,11 @@
 using Autofac;
 using Autofac.Features.ResolveAnything;
-using SheepIt.Api.Core.DeploymentProcessRunning;
-using SheepIt.Api.Core.ProjectContext;
+using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Authorization;
 using SheepIt.Api.Infrastructure.ErrorHandling;
+using SheepIt.Api.Infrastructure.ProjectContext;
 using SheepIt.Api.Infrastructure.Time;
+using SheepIt.Api.Runner.DeploymentProcessRunning;
 using SheepIt.Api.UseCases.Dashboard;
 using SheepIt.Api.UseCases.ProjectManagement;
 using SheepIt.Api.UseCases.ProjectOperations.Components;
@@ -22,10 +23,13 @@ namespace SheepIt.Api
         {
             // this is mainly used to resolve handlers before decorating them
             builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
+
+            builder.RegisterModule<DataAccessModule>();
             
             RegisterInfrastructure(builder);
-            RegisterCore(builder);
+            RegisterRunner(builder);
             RegisterUseCases(builder);
+            RegisterPublicApi(builder);
         }
 
         private static void RegisterInfrastructure(ContainerBuilder builder)
@@ -33,11 +37,11 @@ namespace SheepIt.Api
             builder.RegisterModule<ErrorHandlingModule>();
             builder.RegisterModule<SheepItAuthenticationModule>();
             builder.RegisterModule<TimeModule>();
+            builder.RegisterModule<ProjectContextModule>();
         }
 
-        private void RegisterCore(ContainerBuilder builder)
+        private void RegisterRunner(ContainerBuilder builder)
         {
-            builder.RegisterModule<ProjectContextModule>();
             builder.RegisterModule<DeploymentProcessModule>();
         }
 
@@ -73,6 +77,12 @@ namespace SheepIt.Api
             builder.RegisterModule<ListComponentsModule>();
             builder.RegisterModule<UpdateComponentsModule>();
             builder.RegisterModule<GetComponentsForUpdateModule>();
+        }
+
+        private void RegisterPublicApi(ContainerBuilder builder)
+        {
+            // Package
+            builder.RegisterModule<PublicApi.Packages.CreatePackageModule>();
         }
     }
 }

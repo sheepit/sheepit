@@ -145,8 +145,8 @@ export default {
                 return;
             }
 
-            let zipFileData = this.$refs.zipFile.files[0];
-            let newVariables = this.packagee
+            const zipFileData = this.$refs.zipFile.files[0];
+            const newVariables = this.packagee
                 ? this.packagee.variables
                 : [];
 

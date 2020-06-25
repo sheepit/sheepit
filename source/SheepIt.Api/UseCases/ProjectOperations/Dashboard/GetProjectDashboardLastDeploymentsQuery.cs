@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.DataAccess;
 
-namespace SheepIt.Api.UseCases.ProjectOperations.DeploymentDetails
+namespace SheepIt.Api.UseCases.ProjectOperations.Dashboard
 {
 	public class GetProjectDashboardLastDeploymentsQueryResult
 	{

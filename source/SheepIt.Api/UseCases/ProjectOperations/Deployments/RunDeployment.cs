@@ -1,11 +1,11 @@
 using System;
-using SheepIt.Api.Core.DeploymentProcessRunning;
-using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Infrastructure.Time;
 using SheepIt.Api.Model.DeploymentProcesses;
 using SheepIt.Api.Model.Deployments;
 using SheepIt.Api.Model.Packages;
 using SheepIt.Api.Model.Projects;
+using SheepIt.Api.Runner.DeploymentProcessRunning;
+using SheepIt.Api.Runner.DeploymentProcessRunning.DeploymentProcessAccess;
 
 namespace SheepIt.Api.UseCases.ProjectOperations.Deployments
 {

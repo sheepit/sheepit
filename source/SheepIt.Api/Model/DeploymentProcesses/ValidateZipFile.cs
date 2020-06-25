@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using SheepIt.Api.Core.DeploymentProcessRunning.DeploymentProcessAccess;
 using SheepIt.Api.Infrastructure.ErrorHandling;
+using SheepIt.Api.Runner.DeploymentProcessRunning.DeploymentProcessAccess;
 
 namespace SheepIt.Api.Model.DeploymentProcesses
 {

@@ -21,10 +21,11 @@ namespace SheepIt.Api.Infrastructure.Handlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            return await (Task<TResponse>) GetType()
-                .GetMethod(nameof(Handle), BindingFlags.NonPublic | BindingFlags.Instance)
-                .MakeGenericMethod(request.GetType(), typeof(TResponse))
-                .Invoke(this, new object[] { request });
+            var type = GetType();
+            var method = type.GetMethod(nameof(Handle), BindingFlags.NonPublic | BindingFlags.Instance);
+            var gene = method.MakeGenericMethod(request.GetType(), typeof(TResponse));
+            var inv = gene.Invoke(this, new object[] { request });
+            return await (Task<TResponse>) inv;
         }
 
         private async Task<TResponse> Handle<TRequest, TResponse>(TRequest request)
