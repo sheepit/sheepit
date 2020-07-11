@@ -8,6 +8,6 @@ namespace SheepIt.Api.DataAccess
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<IdStorage>().AsSelf();
-;        }
+        }
     }
 }

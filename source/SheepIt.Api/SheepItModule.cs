@@ -27,9 +27,15 @@ namespace SheepIt.Api
             builder.RegisterModule<DataAccessModule>();
             
             RegisterInfrastructure(builder);
+            RegisterDataAccess(builder);
             RegisterRunner(builder);
             RegisterUseCases(builder);
             RegisterPublicApi(builder);
+        }
+
+        private static void RegisterDataAccess(ContainerBuilder builder)
+        {
+            builder.RegisterModule<DataAccessModule>();
         }
 
         private static void RegisterInfrastructure(ContainerBuilder builder)
