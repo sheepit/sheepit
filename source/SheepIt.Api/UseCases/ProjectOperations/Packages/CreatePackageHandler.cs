@@ -44,9 +44,6 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             
             RuleFor(request => request.Description)
                 .NotNull();
-            
-            RuleFor(request => request.ZipFile)
-                .NotNull();
         }
     }
 
