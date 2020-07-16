@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -49,16 +50,17 @@ namespace SheepIt.Api.PublicApi.Packages
 
     [Route("api")]
     [ApiController]
-    public class PackageController
+    [AllowAnonymous]
+    public class CreatePackageController
     {
         private readonly CreatePackageHandler _handler;
 
-        public PackageController(CreatePackageHandler handler)
+        public CreatePackageController(CreatePackageHandler handler)
         {
             _handler = handler;
         }
 
-        [HttpPost("/projects/{projectId}/components/{componentId}/packages")]
+        [HttpPost("projects/{projectId}/components/{componentId}/packages")]
         public async Task<CreatePackageResponse> CreatePackage(
             [FromRoute] string projectId,
             [FromRoute] int componentId,

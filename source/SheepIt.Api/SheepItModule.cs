@@ -89,6 +89,7 @@ namespace SheepIt.Api
         {
             // Package
             builder.RegisterModule<PublicApi.Packages.CreatePackageModule>();
+            builder.RegisterModule<PublicApi.Packages.UploadPackageModule>();
         }
     }
 }

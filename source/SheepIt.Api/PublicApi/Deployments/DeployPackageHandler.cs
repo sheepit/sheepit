@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.DataAccess;
@@ -23,6 +24,7 @@ namespace SheepIt.Api.PublicApi.Deployments
 
     [Route("api")]
     [ApiController]
+    [AllowAnonymous]
     public class DeployPackageController
     {
         private readonly DeployPackageHandler _deployPackageHandler;
