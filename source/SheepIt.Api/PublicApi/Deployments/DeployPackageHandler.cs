@@ -13,7 +13,6 @@ namespace SheepIt.Api.PublicApi.Deployments
 {
     public class DeployPackageRequest : IRequest<DeployPackageResponse>
     {
-        public int PackageId { get; set; }
         public int EnvironmentId { get; set; }
     }
 
@@ -34,10 +33,10 @@ namespace SheepIt.Api.PublicApi.Deployments
         }
         
         [HttpPost]
-        [Route("project/{projectId}/deploy")]
-        public async Task<DeployPackageResponse> DeployPackage(string projectId, DeployPackageRequest request)
+        [Route("projects/{projectId}/components/{componentId}/packages/{packageId}/deployments")]
+        public async Task<DeployPackageResponse> DeployPackage(string projectId, int componentId, int packageId, DeployPackageRequest request)
         {
-            return await _deployPackageHandler.Handle(projectId, request);
+            return await _deployPackageHandler.Handle(projectId, packageId, request);
         }
     }
     
@@ -45,9 +44,6 @@ namespace SheepIt.Api.PublicApi.Deployments
     {
         public DeployPackageValidator()
         {
-            RuleFor(request => request.PackageId)
-                .NotEqual(0);
-            
             RuleFor(request => request.EnvironmentId)
                 .NotEqual(0);
         }
@@ -77,20 +73,20 @@ namespace SheepIt.Api.PublicApi.Deployments
             _runDeployment = runDeployment;
         }
 
-        public async Task<DeployPackageResponse> Handle(string projectId, DeployPackageRequest request)
+        public async Task<DeployPackageResponse> Handle(string projectId, int packageId, DeployPackageRequest request)
         {
             var deployedPackage = await _dbContext.Packages
                 .Include(package => package.Project)
                 .Include(package => package.DeploymentProcess)
                 .FindByIdAndProjectId(
-                    packageId: request.PackageId,
+                    packageId: packageId,
                     projectId: projectId
                 );
 
             var deployment = await _deploymentFactory.Create(
                 projectId: projectId,
                 environmentId: request.EnvironmentId,
-                packageId: request.PackageId
+                packageId: packageId
             );
 
             _dbContext.Deployments.Add(deployment);
