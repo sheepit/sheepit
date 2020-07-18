@@ -39,7 +39,6 @@ namespace SheepIt.Api.Tests.IntegrationTests.PublicApi.FeatureObjects
                 _request = new CreatePackageRequest
                 {
                     Description = $"package {Guid.NewGuid()}",
-                    ZipFile = TestProcessZipArchives.TestProcess,
                     VariableUpdates = null
                 };
             }
@@ -47,12 +46,6 @@ namespace SheepIt.Api.Tests.IntegrationTests.PublicApi.FeatureObjects
             public Builder WithVariables(CreatePackageRequest.UpdateVariable[] variables)
             {
                 _request.VariableUpdates = variables;
-                return this;
-            }
-
-            public Builder WithoutDeploymentProcessZip()
-            {
-                _request.ZipFile = null;
                 return this;
             }
 

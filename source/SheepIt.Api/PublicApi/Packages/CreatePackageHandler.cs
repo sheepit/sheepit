@@ -5,13 +5,10 @@ using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheepIt.Api.DataAccess;
 using SheepIt.Api.Infrastructure.Handlers;
-using SheepIt.Api.Infrastructure.Web;
-using SheepIt.Api.Model.DeploymentProcesses;
 using SheepIt.Api.Model.Components;
 using SheepIt.Api.Model.Packages;
 
@@ -19,9 +16,9 @@ namespace SheepIt.Api.PublicApi.Packages
 {
     public class CreatePackageRequest : IRequest<CreatePackageResponse>
     {
+        public int DeploymentProcessId { get; set; }
         public string Description { get; set; }
         public UpdateVariable[] VariableUpdates { get; set; }
-        public IFormFile ZipFile { get; set; }
 
         public class UpdateVariable
         {
@@ -40,11 +37,6 @@ namespace SheepIt.Api.PublicApi.Packages
     {
         public CreatePackageRequestValidator()
         {
-            RuleFor(request => request.Description)
-                .NotNull();
-            
-            RuleFor(request => request.ZipFile)
-                .NotNull();
         }
     }
 
@@ -64,7 +56,7 @@ namespace SheepIt.Api.PublicApi.Packages
         public async Task<CreatePackageResponse> CreatePackage(
             [FromRoute] string projectId,
             [FromRoute] int componentId,
-            [FromForm] CreatePackageRequest request)
+            [FromBody] CreatePackageRequest request)
         {
             return await _handler.Handle(projectId, componentId, request);
         }
@@ -82,16 +74,13 @@ namespace SheepIt.Api.PublicApi.Packages
     {
         private readonly SheepItDbContext _dbContext;
         private readonly PackageFactory _packageFactory;
-        private readonly DeploymentProcessFactory _deploymentProcessFactory;
 
         public CreatePackageHandler(
             SheepItDbContext dbContext,
-            PackageFactory packageFactory,
-            DeploymentProcessFactory deploymentProcessFactory)
+            PackageFactory packageFactory)
         {
             _dbContext = dbContext;
             _packageFactory = packageFactory;
-            _deploymentProcessFactory = deploymentProcessFactory;
         }
 
         public async Task<CreatePackageResponse> Handle(string projectId, int componentId, CreatePackageRequest request)
@@ -109,7 +98,7 @@ namespace SheepIt.Api.PublicApi.Packages
                 );
             }
 
-            var deploymentProcessId = await GetOrCreateDeploymentProcess(projectId, componentId, request);
+            var deploymentProcessId = await GetDeploymentProcess(componentId, request.DeploymentProcessId);
 
             var lastPackage = await GetLastPackage(projectId, componentId);
 
@@ -137,27 +126,14 @@ namespace SheepIt.Api.PublicApi.Packages
                 CreatedPackageId = newPackage.Id
             };
         }
-        
-        private async Task<int> GetOrCreateDeploymentProcess(string projectId, int componentId, CreatePackageRequest request)
-        {
-            if (request.ZipFile == null)
-            {
-                return await _dbContext.Packages
-                    .FromProject(projectId)
-                    .FromComponent(componentId)
-                    .OrderByNewest()
-                    .Select(lastPackage => lastPackage.DeploymentProcessId)
-                    .FirstAsync();
-            }
-            
-            var deploymentProcess = await _deploymentProcessFactory.Create(
-                componentId: componentId,
-                zipFileBytes: await request.ZipFile.ToByteArray()
-            );
-            
-            _dbContext.DeploymentProcesses.Add(deploymentProcess);
 
-            return deploymentProcess.Id;
+        private async Task<int> GetDeploymentProcess(int componentId, int deploymentProcessId)
+        {
+            return await _dbContext.DeploymentProcesses
+                .Where(x => x.ComponentId == componentId)
+                .Where(x => x.Id == deploymentProcessId)
+                .Select(x => x.Id)
+                .FirstAsync();
         }
 
         private async Task<Package> GetLastPackage(string projectId, int componentId)

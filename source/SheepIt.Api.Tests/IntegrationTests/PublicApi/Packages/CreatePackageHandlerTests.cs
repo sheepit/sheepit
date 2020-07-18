@@ -221,7 +221,6 @@ namespace SheepIt.Api.Tests.IntegrationTests.PublicApi.Packages
             // when
             
             var newPackage = await CreatePackageFeature.CreatePackage(Fixture, _project.Id, _project.FirstComponent.Id)
-                .WithoutDeploymentProcessZip()
                 .Create();
 
             // then

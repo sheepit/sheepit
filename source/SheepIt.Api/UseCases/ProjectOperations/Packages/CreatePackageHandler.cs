@@ -134,12 +134,7 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
         {
             if (request.ZipFile == null)
             {
-                return await _dbContext.Packages
-                    .FromProject(request.ProjectId)
-                    .FromComponent(request.ComponentId)
-                    .OrderByNewest()
-                    .Select(lastPackage => lastPackage.DeploymentProcessId)
-                    .FirstAsync();
+                return await GetLastDeploymentProcess(request);
             }
             
             var deploymentProcess = await _deploymentProcessFactory.Create(
@@ -150,6 +145,16 @@ namespace SheepIt.Api.UseCases.ProjectOperations.Packages
             _dbContext.DeploymentProcesses.Add(deploymentProcess);
 
             return deploymentProcess.Id;
+        }
+
+        private async Task<int> GetLastDeploymentProcess(CreatePackageRequest request)
+        {
+            return await _dbContext.Packages
+                .FromProject(request.ProjectId)
+                .FromComponent(request.ComponentId)
+                .OrderByNewest()
+                .Select(lastPackage => lastPackage.DeploymentProcessId)
+                .FirstAsync();
         }
         
         private VariableValues[] MapVariableValues(CreatePackageRequest.UpdateVariable[] variableUpdates)
