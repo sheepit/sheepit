@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuelidate from 'vuelidate'
 
+import Clipboard from 'v-clipboard';
+
 import App from './App.vue'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -40,6 +42,8 @@ Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
 Vue.use(Vuelidate);
+
+Vue.use(Clipboard);
 
 import DeploymentBadge from "./components/deployment-badge.vue";
 import DeploymentStatusBadge from "./components/deployment-status-badge.vue";

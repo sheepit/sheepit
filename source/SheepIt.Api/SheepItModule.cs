@@ -65,6 +65,7 @@ namespace SheepIt.Api
             
             // Deployment
             builder.RegisterModule<GetDeploymentDetailsModule>();
+            builder.RegisterModule<GetDeploymentCurlModule>();
             builder.RegisterModule<ListPackageDeploymentsModule>();
             builder.RegisterModule<GetDeploymentsListModule>();
             

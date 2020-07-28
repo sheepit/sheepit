@@ -57,6 +57,11 @@
                                 >
                                     Deploy!
                                 </router-link>
+
+                                <button class="button button--inline button--secondary"
+                                    @click="cUrlToClipboard(_package.id)">
+                                    cUrl
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -72,6 +77,7 @@
 
 <script>
 import packagesService from "./../_services/packages.service";
+import messageService from "./../../../common/message/message-service";
 
 export default {
     name: 'PackagesList',
@@ -97,6 +103,17 @@ export default {
                 .then(response => {
                     this.packages = response.packages
                 });
+        },
+
+        cUrlToClipboard(packageId) {
+            packagesService
+                .getCurl(this.project.id, packageId)
+                .then(response => {
+                    debugger;
+                    this.$clipboard(response.curl);
+                    messageService.success('curl copied to clipboard');
+                });
+            
         }
     }
 }
